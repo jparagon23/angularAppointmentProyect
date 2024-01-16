@@ -1,1 +1,110 @@
-<p>sign-up works!</p>
+<section id="wrapper" class="login-register login-sidebar" style="background-image:url(../assets/images/tennis.png);">
+  <div class="login-box card" style="overflow-y: auto; max-height: 85vh;">
+    <div class="card-body">
+      <form class="form-horizontal form-material" (ngSubmit)="createUser()" id="registerForm"
+        [formGroup]="registerForm">
+
+        <div>
+
+          <a href="javascript:void(0)" class="text-center db"><img src="../assets/images/logo-icon.png"
+              alt="Home" /><br /><img src="../assets/images/logo-text.png" alt="Home" /></a>
+          <h3 class="box-title m-t-40 m-b-0">Register Now</h3>
+          <small>Create your account and enjoy</small>
+        </div>
+
+        <div class="form-group">
+          <input class="form-control m-0" formControlName="name" type="text" required placeholder="Name">
+        </div>
+        <div class="form-group">
+          <input class="form-control m-0" formControlName="lastname" type="text" required placeholder="Lastname">
+        </div>
+
+        <div class="form-group m-t-20">
+          <div class="col-xs-12">
+            <input class="form-control" formControlName="birthdate" type="date" required placeholder="Birthdate">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <select class="form-control" formControlName="documentTypeId" required id="documentTypeId">
+            <option value=''>Identification type</option>
+            <option *ngFor="let documentType of initialData?.documentTypes" [value]=parseToInt(documentType.id)>
+              {{ documentType.description }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <input class="form-control" formControlName="document" type="text" required placeholder="Document">
+        </div>
+
+        <div class="form-group">
+          <select class="form-control" formControlName="phoneTypeId" required id="phoneTypeId">
+            <option value=''>Phone Type</option>
+            <option *ngFor="let phoneType of initialData?.phoneTypes" [value]=parseToInt(phoneType.id)>
+              {{ phoneType.description }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <input class="form-control" formControlName="phone" type="text" placeholder="Phone">
+        </div>
+
+        <div class="form-group m-t-20">
+          <div class="col-xs-12">
+            <select class="form-control" formControlName="gender" required id="gender">
+              <option value>Gender</option>
+              <option *ngFor="let gender of initialData?.genders" [value]="gender">
+                {{ gender}}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group ">
+          <div class="col-xs-12">
+            <input class="form-control" formControlName="email" type="text" required placeholder="Email">
+          </div>
+        </div>
+        <div class="form-group ">
+          <div class="col-xs-12">
+            <input class="form-control" formControlName="password" type="password" required placeholder="Password">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-xs-12">
+            <input class="form-control" formControlName="confirmationPassword" type="password" required
+              placeholder="Confirm password">
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-md-12">
+            <div class="checkbox checkbox-primary p-t-0">
+              <input id="checkbox-signup" formControlName="allowNotification" type="checkbox">
+              <label for="checkbox-signup"> Allow notifications</label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-md-12">
+            <div class="checkbox checkbox-primary p-t-0">
+              <input id="checkbox-terms" formControlName="agreeTerms" type="checkbox">
+              <label for="checkbox-terms"> I agree to all <a href="#">Terms</a></label>
+            </div>
+          </div>
+        </div>
+        <div class="form-group text-center m-t-20">
+          <div class="col-xs-12">
+            <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit">Sign
+              Up</button>
+          </div>
+        </div>
+        <div class="form-group m-b-0">
+          <div class="col-sm-12 text-center">
+            <p>Already have an account? <a href="pages-login-2.html" class="text-info m-l-5"><b>Sign In</b></a></p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

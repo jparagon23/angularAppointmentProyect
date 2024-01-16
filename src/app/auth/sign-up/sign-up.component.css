@@ -1,0 +1,59 @@
+/* Add the following styles to your existing CSS */
+
+/*Theme Colors*/
+/*bootstrap Color*/
+/*Light colors*/
+/*Normal Color*/
+/*Extra Variable*/
+/*******************
+Login register and recover password Page
+******************/
+
+.login-register {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 100%;
+  width: 100%;
+  padding: 10% 0;
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-box {
+  margin: 0 auto;
+  position: relative;
+  left: 0;
+  right: 0;
+}
+
+.login-box .card-body {
+  padding: 30px;
+}
+
+.login-box .footer {
+  width: 100%;
+  left: 0px;
+  right: 0px;
+}
+
+.login-box .social {
+  display: block;
+  margin-bottom: 30px;
+}
+
+#recoverform {
+  display: none;
+}
+
+.form-horizontal {
+  text-align: center;
+}
+
+.double {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
