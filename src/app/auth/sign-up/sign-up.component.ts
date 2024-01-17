@@ -57,6 +57,11 @@ export class SignUpComponent implements OnInit {
     });
   }
 
+  hasError(controlName: string): boolean {
+    const control = this.registerForm.get(controlName);
+    return control ? control.invalid && control.touched : false;
+  }
+
   parseToInt(value: any): number | null {
     return value !== null && value !== '' ? +value : null;
   }
