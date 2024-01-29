@@ -6,6 +6,9 @@ module.exports = {
   content: ["./src/**/*.{html,ts}"],
   theme: {
     extend: {
+      backgroundImage: {
+        authBackGround: "url('../src/assets/backgrounds/tennis.png')",
+      },
       colors: {
         success: colors.green,
         primary: colors.blue,
