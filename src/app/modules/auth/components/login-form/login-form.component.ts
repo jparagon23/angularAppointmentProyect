@@ -15,6 +15,13 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './login-form.component.html',
 })
 export class LoginFormComponent {
+  faPen = faPen;
+  faEye = faEye;
+  faEyeSlash = faEyeSlash;
+  showPassword = false;
+  status: RequestStatus = 'init';
+  faLock = faLock;
+
   loginForm = this.formBuilder.group({
     email: [
       localStorage.getItem('email') || '',
@@ -23,13 +30,6 @@ export class LoginFormComponent {
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
-  faPen = faPen;
-  faEye = faEye;
-  faEyeSlash = faEyeSlash;
-  showPassword = false;
-  status: RequestStatus = 'init';
-  faLock = faLock;
-
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -37,47 +37,36 @@ export class LoginFormComponent {
     private authService: AuthService
   ) {
     this.route.queryParamMap.subscribe((params) => {
-      const email = params.get('email');
-      if (email) {
-        this.loginForm.controls.email.setValue(email);
+      const emailParam = params.get('email');
+      if (emailParam !== null) {
+        this.loginForm.controls.email.setValue(emailParam);
       }
     });
   }
 
-  shouldApplyRedBorder(controlName: string): boolean {
-    const control = this.loginForm.get(controlName)!; // Non-null assertion
-    return (control.touched || control.dirty) && control.invalid;
-  }
-
-  shouldShowError(controlName: string): boolean {
-    const control = this.loginForm.get(controlName)!; // Non-null assertion
-    return control.touched && control.invalid;
-  }
-
-  hasError(controlName: string, errorType: string): boolean {
-    const control = this.loginForm.get(controlName)!; // Non-null assertion
-    return control.hasError(errorType);
-  }
-
   doLogin() {
-    console.log(this.loginForm.controls.email.errors);
+    if (this.loginForm.valid) {
+      this.status = 'loading';
+      const { email, password } = this.loginForm.value;
 
-    // if (this.loginForm.valid) {
-    //   console.log(this.loginForm.errors);
-
-    //   this.status = 'loading';
-    //   const { email, password } = this.loginForm.getRawValue();
-    //   this.authService.login(email, password).subscribe({
-    //     next: () => {
-    //       this.status = 'success';
-    //       this.router.navigate(['/app']);
-    //     },
-    //     error: () => {
-    //       this.status = 'failed';
-    //     },
-    //   });
-    // } else {
-    //   this.loginForm.markAllAsTouched();
-    // }
+      if (
+        email !== null &&
+        email !== undefined &&
+        password !== null &&
+        password !== undefined
+      ) {
+        this.authService.login({ email, password }).subscribe({
+          next: () => {
+            this.status = 'success';
+            this.router.navigate(['/app']);
+          },
+          error: () => {
+            this.status = 'failed';
+          },
+        });
+      } else {
+        console.error('Email o contraseña no válidos');
+      }
+    }
   }
 }

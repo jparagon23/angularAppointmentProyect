@@ -7,11 +7,6 @@
   (ngSubmit)="doLogin()"
 >
   <div>
-    <label
-      for="email"
-      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-      >Your email</label
-    >
     <app-input
       [control]="loginForm.controls['email']"
       [name]="'email'"
@@ -20,12 +15,6 @@
     ></app-input>
   </div>
   <div>
-    <label
-      for="password"
-      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-      >Password</label
-    >
-
     <app-input
       [control]="loginForm.controls['password']"
       [name]="'password'"

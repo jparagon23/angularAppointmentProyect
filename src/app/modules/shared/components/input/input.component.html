@@ -1,4 +1,9 @@
 <div>
+  <label
+    for="email"
+    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+    >{{ capitalizeFirstLetter(name) }}</label
+  >
   <input
     [type]="type"
     [name]="name"
@@ -11,10 +16,9 @@
     }"
     [placeholder]="placeholder"
     [formControl]="control"
+    (blur)="markAsBlurred()"
   />
-  <div *ngIf="shouldShowError()">
-    <p class="font-medium text-red-500 text-xs">
-      {{ getErrorMessage() }}
-    </p>
+  <div *ngIf="blurred">
+    <app-error-message [control]="control"></app-error-message>
   </div>
 </div>

@@ -15,12 +15,9 @@ export class InputComponent {
   @Input() placeholder!: string;
   @Input() formControlName!: string;
 
-  shouldApplyRedBorder(): boolean {
-    console.log('!!this.control ' + !!this.control);
-    console.log('invalid ' + !!this.control?.invalid);
-    console.log('dirty ' + !!this.control?.dirty);
-    console.log('Touched ' + !!this.control?.touched);
+  blurred: boolean = false;
 
+  shouldApplyRedBorder(): boolean {
     return (
       !!this.control &&
       this.control.invalid &&
@@ -29,38 +26,14 @@ export class InputComponent {
   }
 
   shouldDisplayError(): boolean {
-    console.log(
-      'should display error ' +
-        !!(this.control?.touched && this.control?.invalid)
-    );
-
     return !!(this.control?.touched && this.control?.invalid);
   }
 
-  shouldShowError(): boolean {
-    console.log('shouldShowError called');
-    console.log('Control:', this.control);
-    return (
-      !!this.control &&
-      this.control.invalid &&
-      (this.control.dirty || this.control.touched)
-    );
+  capitalizeFirstLetter(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  getErrorMessage(): string {
-    console.log('getErrorMessage called');
-    console.log('Control:', this.control);
-    if (!this.control?.errors) {
-      return '';
-    }
-
-    const errors = this.control.errors;
-
-    for (const error of errorMessages) {
-      if (errors[error.type]) {
-        return error.description;
-      }
-    }
-    return 'Invalid value.';
+  markAsBlurred() {
+    this.blurred = true;
   }
 }
