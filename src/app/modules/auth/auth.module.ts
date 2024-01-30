@@ -14,6 +14,8 @@ import { RegisterComponent } from './pages/register/register.component';
 import { SharedModule } from '../shared/shared.module';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 import { RegisterFormComponent } from './components/register-form/register-form.component';
+import { AccountAuthenticationComponent } from './pages/account-authentication/account-authentication.component';
+import { AccountAuthFormComponent } from './components/account-auth-form/account-auth-form.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { RegisterFormComponent } from './components/register-form/register-form.
     RegisterComponent,
     AuthLayoutComponent,
     RegisterFormComponent,
+    AccountAuthenticationComponent,
+    AccountAuthFormComponent,
   ],
   imports: [
     CommonModule,

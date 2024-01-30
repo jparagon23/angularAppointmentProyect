@@ -1,9 +1,11 @@
 <div>
-  <label
-    for="email"
-    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-    >{{ capitalizeFirstLetter(name) }}</label
-  >
+  <div *ngIf="showLabel">
+    <label
+      for="email"
+      class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+      >{{ capitalizeFirstLetter(name) }}</label
+    >
+  </div>
   <input
     [type]="type"
     [name]="name"

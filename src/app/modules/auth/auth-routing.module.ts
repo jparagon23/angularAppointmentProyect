@@ -5,6 +5,7 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
 import { RegisterComponent } from './pages/register/register.component';
 import { RecoveryComponent } from './pages/recovery/recovery.component';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
+import { AccountAuthenticationComponent } from './pages/account-authentication/account-authentication.component';
 
 const routes: Routes = [
   {
@@ -27,12 +28,18 @@ const routes: Routes = [
         component: ForgotPasswordComponent,
         title: 'Forgot Password',
       },
+
       {
         path: 'register',
-
         component: RegisterComponent,
         title: 'Register',
       },
+      {
+        path: 'register/authAccount',
+        component: AccountAuthenticationComponent,
+        title: 'Account Authentication',
+      },
+
       {
         path: 'recovery',
 
