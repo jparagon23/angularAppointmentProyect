@@ -14,7 +14,7 @@ export class AuthService {
 
   login(email: string, password: string) {
     return this.http
-      .post<ResponseLogin>(`${this.apiUrl}/api/v1/auth/login`, {
+      .post<ResponseLogin>(`${this.apiUrl}/v1/auth/login`, {
         email,
         password,
       })

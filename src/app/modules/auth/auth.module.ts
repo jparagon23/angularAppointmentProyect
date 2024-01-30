@@ -12,6 +12,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { RecoveryComponent } from './pages/recovery/recovery.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { SharedModule } from '../shared/shared.module';
+import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { SharedModule } from '../shared/shared.module';
     LoginComponent,
     RecoveryComponent,
     RegisterComponent,
+    AuthLayoutComponent,
   ],
   imports: [
     CommonModule,

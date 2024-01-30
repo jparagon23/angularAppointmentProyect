@@ -15,7 +15,7 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './login-form.component.html',
 })
 export class LoginFormComponent {
-  loginForm = this.formBuilder.nonNullable.group({
+  loginForm = this.formBuilder.group({
     email: [
       localStorage.getItem('email') || '',
       [Validators.required, Validators.email],
@@ -60,20 +60,24 @@ export class LoginFormComponent {
   }
 
   doLogin() {
-    if (this.loginForm.valid) {
-      this.status = 'loading';
-      const { email, password } = this.loginForm.getRawValue();
-      this.authService.login(email, password).subscribe({
-        next: () => {
-          this.status = 'success';
-          this.router.navigate(['/app']);
-        },
-        error: () => {
-          this.status = 'failed';
-        },
-      });
-    } else {
-      this.loginForm.markAllAsTouched();
-    }
+    console.log(this.loginForm.controls.email.errors);
+
+    // if (this.loginForm.valid) {
+    //   console.log(this.loginForm.errors);
+
+    //   this.status = 'loading';
+    //   const { email, password } = this.loginForm.getRawValue();
+    //   this.authService.login(email, password).subscribe({
+    //     next: () => {
+    //       this.status = 'success';
+    //       this.router.navigate(['/app']);
+    //     },
+    //     error: () => {
+    //       this.status = 'failed';
+    //     },
+    //   });
+    // } else {
+    //   this.loginForm.markAllAsTouched();
+    // }
   }
 }
