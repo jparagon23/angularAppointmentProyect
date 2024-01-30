@@ -1,0 +1,30 @@
+<div class="w-full h-screen bg-authBackGround bg-cover">
+  <div
+    class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+  >
+    <div
+      class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+    >
+      <div class="p-6 space-y-1 md:space-y-3 sm:p-8">
+        <div>
+          <h1
+            class="mb-2 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center"
+          >
+            Authenticate your account
+            <fa-icon [icon]="faLock" class="ml-3"></fa-icon>
+          </h1>
+          <h3 class="text-sm text-center">
+            A code has been sent to your email. Please enter it below
+          </h3>
+        </div>
+        <div>
+          <app-account-auth-form></app-account-auth-form>
+        </div>
+        <h3 class="text-sm text-center">
+          If you haven't received the code, <a href="#">click here</a> to resend
+          it
+        </h3>
+      </div>
+    </div>
+  </div>
+</div>
