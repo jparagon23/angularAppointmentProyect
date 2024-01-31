@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CommonType } from 'src/app/models/InitialSignUpData.interface';
+import { Functions } from 'src/app/utils/funcitons';
 
 @Component({
   selector: 'app-select',
@@ -12,6 +13,7 @@ export class SelectComponent {
 
   @Input() options!: CommonType[];
   blurred: boolean = false;
+  functions = Functions;
 
   shouldApplyRedBorder(): boolean {
     return (

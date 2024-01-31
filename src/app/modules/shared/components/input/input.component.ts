@@ -2,6 +2,7 @@
 import { Component, Input } from '@angular/core';
 import { AbstractControl, FormControl } from '@angular/forms';
 import { errorMessages } from '../../constants/Constants.constants';
+import { Functions } from 'src/app/utils/funcitons';
 
 @Component({
   selector: 'app-input',
@@ -18,6 +19,7 @@ export class InputComponent {
   @Input() displayErrorMessage: boolean = true;
 
   blurred: boolean = false;
+  functions = Functions;
 
   shouldApplyRedBorder(): boolean {
     return (
