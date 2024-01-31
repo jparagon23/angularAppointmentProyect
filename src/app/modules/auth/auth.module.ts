@@ -16,6 +16,8 @@ import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component'
 import { RegisterFormComponent } from './components/register-form/register-form.component';
 import { AccountAuthenticationComponent } from './pages/account-authentication/account-authentication.component';
 import { AccountAuthFormComponent } from './components/account-auth-form/account-auth-form.component';
+import { ForgotPasswordFormComponent } from './components/forgot-password/forgot-password-form.component';
+import { RecoveryFormComponent } from './components/recovery-form/recovery-form.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +32,8 @@ import { AccountAuthFormComponent } from './components/account-auth-form/account
     RegisterFormComponent,
     AccountAuthenticationComponent,
     AccountAuthFormComponent,
+    ForgotPasswordFormComponent,
+    RecoveryFormComponent,
   ],
   imports: [
     CommonModule,

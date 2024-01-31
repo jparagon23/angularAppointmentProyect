@@ -39,10 +39,8 @@ const routes: Routes = [
         component: AccountAuthenticationComponent,
         title: 'Account Authentication',
       },
-
       {
         path: 'recovery',
-
         component: RecoveryComponent,
         title: 'Recovery',
       },
