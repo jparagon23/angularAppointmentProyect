@@ -14,7 +14,8 @@ export class InputComponent {
   @Input() label!: string;
   @Input() placeholder!: string;
   @Input() formControlName!: string;
-  @Input() showLabel: boolean = true;
+  @Input() displayLabel: boolean = true;
+  @Input() displayErrorMessage: boolean = true;
 
   blurred: boolean = false;
 

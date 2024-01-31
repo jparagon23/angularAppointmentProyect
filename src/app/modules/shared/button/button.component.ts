@@ -49,9 +49,17 @@ export class ButtonComponent {
   constructor() {}
 
   get colors() {
-    const colors = this.mapColors[this.color];
-    if (colors) {
-      return colors;
+    if (this.disabled) {
+      return {
+        'bg-gray-400': true, // or any other color for disabled state
+        'cursor-not-allowed': true,
+        'text-white': true,
+      };
+    }
+
+    const selectedColors = this.mapColors[this.color];
+    if (selectedColors) {
+      return selectedColors;
     }
     return {};
   }

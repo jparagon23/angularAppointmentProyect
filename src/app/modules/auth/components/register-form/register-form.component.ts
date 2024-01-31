@@ -6,13 +6,15 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   Gender,
   InitialSignUpData,
 } from 'src/app/models/InitialSignUpData.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import * as moment from 'moment-timezone';
+import { RequestStatus } from 'src/app/models/request-status.model';
+import { CustomValidators } from 'src/app/utils/validators';
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
@@ -21,6 +23,13 @@ export class RegisterFormComponent implements OnInit {
   public formSubmitted = false;
   public initialData!: InitialSignUpData;
   public blurredFields: Set<string> = new Set<string>();
+  showRegisterForm = false;
+  status: RequestStatus = 'init';
+  statusUser: RequestStatus = 'init';
+
+  formUser = this.fb.nonNullable.group({
+    email: ['', [Validators.email, Validators.required]],
+  });
 
   public registerForm = this.fb.group({
     name: ['', [Validators.required]],
@@ -47,10 +56,17 @@ export class RegisterFormComponent implements OnInit {
       ],
     ],
     gender: ['', [Validators.required]],
-    email: ['', [Validators.required, Validators.email]],
+    email: [
+      '',
+      [Validators.required, Validators.email],
+      [CustomValidators.checkIfEmailIsAvailable(this.authService)],
+    ],
     roleId: 2,
     password: ['', [Validators.required]],
-    confirmationPassword: ['', [Validators.required]],
+    confirmationPassword: [
+      '',
+      [Validators.required, this.matchPassword.bind(this)],
+    ],
     allowNotification: [''],
     agreeTerms: [false, [this.agreeTermsValidation.bind(this)]],
   });
@@ -58,7 +74,8 @@ export class RegisterFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -71,37 +88,29 @@ export class RegisterFormComponent implements OnInit {
   }
 
   checkEmailAvailabe(): void {
-    const email = this.registerForm.get('email')?.value;
+    if (this.formUser.valid) {
+      this.statusUser = 'loading';
+      const { email } = this.formUser.getRawValue();
+      this.authService.checkEmailAvailability(email).subscribe({
+        next: (response: HttpResponse<boolean>) => {
+          this.statusUser = 'success';
 
-    if (email !== null && email !== undefined) {
-      this.authService.checkEmailAvailability(email).subscribe(
-        (response: HttpResponse<boolean>) => {
-          const isAvailable = response.body;
-
-          if (!isAvailable) {
-            this.registerForm
-              .get('email')
-              ?.setErrors({ emailAlreadyInUse: true });
+          if (response.body) {
+            this.registerForm.controls.email.setValue(email);
+            this.showRegisterForm = true;
+          } else {
+            this.router.navigate(['/login'], {
+              queryParams: { email },
+            });
           }
         },
-        (error) => {
+        error: () => {
           // Handle error if needed
-          console.error(error);
-        }
-      );
-    }
-  }
-
-  checkPasswordMatch(): void {
-    const password = this.registerForm.get('password')?.value;
-    const confirmationPassword = this.registerForm.get(
-      'confirmationPassword'
-    )?.value;
-
-    if (password !== confirmationPassword) {
-      this.registerForm
-        .get('confirmationPassword')
-        ?.setErrors({ passwordsDoNotMatch: true });
+          this.statusUser = 'failed';
+        },
+      });
+    } else {
+      this.formUser.markAllAsTouched();
     }
   }
 
@@ -109,8 +118,19 @@ export class RegisterFormComponent implements OnInit {
     return control.value === true ? null : { invalidAgreeTerms: true };
   }
 
-  markAsBlurred(controlName: string): void {
-    this.blurredFields.add(controlName);
+  matchPassword(control: AbstractControl): ValidationErrors | null {
+    const passwordControl = this.registerForm
+      ? this.registerForm.get('password')
+      : null;
+
+    if (!passwordControl) {
+      // Handle the case where 'password' control is not found
+      return null;
+    }
+
+    return control.value === passwordControl.value
+      ? null
+      : { passwordMismatch: true };
   }
 
   birthdateValidator(control: AbstractControl): ValidationErrors | null {
@@ -122,18 +142,6 @@ export class RegisterFormComponent implements OnInit {
     return ageInYears >= 5 ? null : { invalidBirthdate: true };
   }
 
-  hasError(controlName: string): boolean {
-    const control = this.registerForm.get(controlName);
-    return control
-      ? control.invalid &&
-          (control.touched || this.blurredFields.has(controlName))
-      : false;
-  }
-
-  parseToInt(value: any): number | null {
-    return value !== null && value !== '' ? +value : null;
-  }
-
   register(): void {
     this.formSubmitted = true;
 
@@ -141,18 +149,18 @@ export class RegisterFormComponent implements OnInit {
       return;
     }
 
-    const documentTypeControl = this.registerForm.get('documentTypeId');
+    const documentTypeIdControl = this.registerForm.get('documentTypeId');
     const phoneTypeIdControl = this.registerForm.get('phoneTypeId');
     const phoneControl = this.registerForm.get('phone');
 
     if (
-      documentTypeControl?.value != null &&
+      documentTypeIdControl?.value != null &&
       phoneTypeIdControl?.value != null &&
       phoneControl?.value != null
     ) {
       const formData = {
         ...this.registerForm.value,
-        documentType: +documentTypeControl.value,
+        documentTypeId: +documentTypeIdControl.value,
         allowNotification: this.registerForm.get('allowNotification')!.value
           ? 'T'
           : 'F',
@@ -165,10 +173,14 @@ export class RegisterFormComponent implements OnInit {
       };
 
       delete formData.confirmationPassword;
+      delete formData.phoneTypeId;
+
+      console.log('this is the data');
+      console.log(formData);
 
       this.authService.createUser(formData).subscribe((response) => {
         console.log(response);
-        this.router.navigate(['/authAccount']);
+        this.router.navigate(['authAccount'], { relativeTo: this.route });
       });
     } else {
       console.error('documentType is null or undefined.');

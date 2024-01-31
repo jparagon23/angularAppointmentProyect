@@ -7,6 +7,7 @@ import { InputComponent } from './components/input/input.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SelectComponent } from './components/select/select.component';
 import { ErrorMessageComponent } from './components/error-message/error-message.component';
+import { CheckboxComponent } from './components/chechbox/chechbox.component';
 
 @NgModule({
   declarations: [
@@ -14,8 +15,14 @@ import { ErrorMessageComponent } from './components/error-message/error-message.
     InputComponent,
     SelectComponent,
     ErrorMessageComponent,
+    CheckboxComponent,
   ],
   imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule],
-  exports: [ButtonComponent, InputComponent, SelectComponent],
+  exports: [
+    ButtonComponent,
+    InputComponent,
+    SelectComponent,
+    CheckboxComponent,
+  ],
 })
 export class SharedModule {}

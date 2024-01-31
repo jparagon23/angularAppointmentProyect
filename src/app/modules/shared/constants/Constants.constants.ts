@@ -5,6 +5,8 @@ export const errorMessages: CustomError[] = [
   { type: 'minlength', description: 'Minimum length is ${requiredLength}.' },
   { type: 'maxlength', description: 'Maximum length is ${requiredLength}.' },
   { type: 'pattern', description: 'Invalid format.' },
+  { type: 'passwordMismatch', description: 'The passwords dont match' },
+  { type: 'emailNotAvailable', description: 'The emai is already in use' },
   {
     type: 'invalidBirthdate',
     description: 'The user must be at least 5 years old.',

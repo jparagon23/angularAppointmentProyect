@@ -1,146 +1,171 @@
-<!-- Your component template (e.g., login.component.html) -->
-<form
-  [formGroup]="registerForm"
-  novalidate
-  class="space-y-4 md:space-y-6 flex flex-wrap"
-  action="#"
-  (ngSubmit)="register()"
->
-  <div class="flex space-x-5 w-full">
-    <div class="w-1/2">
+<div *ngIf="!showRegisterForm" class="mt-0">
+  <form
+    [formGroup]="formUser"
+    novalidate
+    class="space-y-4"
+    (ngSubmit)="checkEmailAvailabe()"
+  >
+    <div class="relative">
       <app-input
-        [control]="registerForm.controls['name']"
-        [name]="'name'"
-        [type]="'text'"
-        [placeholder]="'Enter your name'"
-      ></app-input>
-    </div>
-    <div class="w-1/2">
-      <app-input
-        [control]="registerForm.controls['lastname']"
-        [name]="'lastname'"
-        [type]="'text'"
-        [placeholder]="'Enter your lastname'"
-      ></app-input>
-    </div>
-  </div>
-
-  <div class="flex space-x-5 w-full">
-    <div class="w-1/2">
-      <app-select
-        [control]="registerForm.controls['gender']"
-        [name]="'gender'"
-        [options]="
-          initialData && initialData.genders ? initialData.genders : []
-        "
-      ></app-select>
-    </div>
-    <div class="w-1/2">
-      <app-input
-        [control]="registerForm.controls['birthdate']"
-        [name]="'birthdate'"
-        [type]="'date'"
-        [placeholder]="'Select your birthdate'"
-      ></app-input>
-    </div>
-  </div>
-  <div class="flex space-x-5 w-full">
-    <div class="w-1/2">
-      <app-select
-        [control]="registerForm.controls['documentTypeId']"
-        [name]="'documentType'"
-        [options]="
-          initialData && initialData.documentTypes
-            ? initialData.documentTypes
-            : []
-        "
-      ></app-select>
-    </div>
-    <div class="w-1/2">
-      <app-input
-        [control]="registerForm.controls['document']"
-        [name]="'document'"
-        [type]="'text'"
-        [placeholder]="'Enter your document'"
-      ></app-input>
-    </div>
-  </div>
-  <div class="flex space-x-5 w-full">
-    <div class="w-1/2">
-      <app-select
-        [control]="registerForm.controls['phoneTypeId']"
-        [name]="'phoneType'"
-        [options]="
-          initialData && initialData.phoneTypes ? initialData.phoneTypes : []
-        "
-      ></app-select>
-    </div>
-    <div class="w-1/2">
-      <app-input
-        [control]="registerForm.controls['phone']"
-        [name]="'phone'"
-        [type]="'text'"
-        [placeholder]="'Enter your phone number'"
-      ></app-input>
-    </div>
-  </div>
-  <div class="w-full">
-    <div>
-      <app-input
-        [control]="registerForm.controls['email']"
+        [control]="formUser.controls.email"
         [name]="'email'"
         [type]="'email'"
         [placeholder]="'Enter your email'"
+        [displayLabel]="false"
       ></app-input>
     </div>
-  </div>
-  <div class="flex space-x-5 w-full">
-    <div class="w-1/2">
-      <app-input
-        [control]="registerForm.controls['password']"
-        [name]="'password'"
-        [type]="'password'"
-        [placeholder]="'••••••••'"
-      ></app-input>
+    <div>
+      <app-button
+        typeBtn="submit"
+        color="success"
+        [loading]="statusUser === 'loading'"
+        >Continue</app-button
+      >
     </div>
-    <div class="w-1/2">
-      <app-input
-        [control]="registerForm.controls['confirmationPassword']"
-        [name]="'confirmationPassword'"
-        [type]="'password'"
-        [placeholder]="'••••••••'"
-      ></app-input>
-    </div>
-  </div>
-  <div class="flex items-center justify-between">
-    <div class="flex items-start cursor-pointer">
-      <div class="flex items-center h-5">
-        <input
-          id="remember"
-          aria-describedby="remember"
-          type="checkbox"
-          class="cursor-pointer w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-          required=""
-        />
-      </div>
-      <div class="ml-3 text-sm">
-        <label
-          for="remember"
-          class="cursor-pointer text-gray-500 dark:text-gray-300"
-          >Remember me</label
-        >
-      </div>
-    </div>
-    <a
-      href="#"
-      class="text-sm font-medium text-green-800 hover:underline dark:text-green-900"
-      >Forgot password?</a
-    >
-  </div>
-  <button
-    type="submit"
-    class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+  </form>
+</div>
+
+<div *ngIf="showRegisterForm">
+  <!-- Your component template (e.g., login.component.html) -->
+  <form
+    [formGroup]="registerForm"
+    novalidate
+    class="space-y-3 md:space-y-4 flex flex-wrap"
+    action="#"
+    (ngSubmit)="register()"
   >
-    Sign in
-  </button>
-</form>
+    <div class="flex space-x-5 w-full">
+      <div class="w-1/2">
+        <app-input
+          [control]="registerForm.controls['name']"
+          [name]="'name'"
+          [type]="'text'"
+          [placeholder]="'Enter your name'"
+        ></app-input>
+      </div>
+      <div class="w-1/2">
+        <app-input
+          [control]="registerForm.controls['lastname']"
+          [name]="'lastname'"
+          [type]="'text'"
+          [placeholder]="'Enter your lastname'"
+        ></app-input>
+      </div>
+    </div>
+
+    <div class="flex space-x-5 w-full">
+      <div class="w-1/2">
+        <app-select
+          [control]="registerForm.controls['gender']"
+          [name]="'gender'"
+          [options]="
+            initialData && initialData.genders ? initialData.genders : []
+          "
+        ></app-select>
+      </div>
+      <div class="w-1/2">
+        <app-input
+          [control]="registerForm.controls['birthdate']"
+          [name]="'birthdate'"
+          [type]="'date'"
+          [placeholder]="'Select your birthdate'"
+        ></app-input>
+      </div>
+    </div>
+    <div class="flex space-x-5 w-full">
+      <div class="w-1/2">
+        <app-select
+          [control]="registerForm.controls['documentTypeId']"
+          [name]="'documentType'"
+          [options]="
+            initialData && initialData.documentTypes
+              ? initialData.documentTypes
+              : []
+          "
+        ></app-select>
+      </div>
+      <div class="w-1/2">
+        <app-input
+          [control]="registerForm.controls['document']"
+          [name]="'document'"
+          [type]="'text'"
+          [placeholder]="'Enter your document'"
+        ></app-input>
+      </div>
+    </div>
+    <div class="flex space-x-5 w-full">
+      <div class="w-1/2">
+        <app-select
+          [control]="registerForm.controls['phoneTypeId']"
+          [name]="'phoneType'"
+          [options]="
+            initialData && initialData.phoneTypes ? initialData.phoneTypes : []
+          "
+        ></app-select>
+      </div>
+      <div class="w-1/2">
+        <app-input
+          [control]="registerForm.controls['phone']"
+          [name]="'phone'"
+          [type]="'text'"
+          [placeholder]="'Enter your phone number'"
+        ></app-input>
+      </div>
+    </div>
+    <div class="w-full">
+      <div>
+        <app-input
+          [control]="registerForm.controls['email']"
+          [name]="'email'"
+          [type]="'email'"
+          [placeholder]="'Enter your email'"
+        ></app-input>
+      </div>
+    </div>
+    <div class="flex space-x-5 w-full">
+      <div class="w-1/2">
+        <app-input
+          [control]="registerForm.controls['password']"
+          [name]="'password'"
+          [type]="'password'"
+          [placeholder]="'••••••••'"
+        ></app-input>
+      </div>
+      <div class="w-1/2">
+        <app-input
+          [control]="registerForm.controls['confirmationPassword']"
+          [name]="'confirmationPassword'"
+          [type]="'password'"
+          [placeholder]="'••••••••'"
+        ></app-input>
+      </div>
+    </div>
+    <div class="flex w-full text-center justify-center">
+      <div class="flex items-start cursor-pointer justify-center text-center">
+        <app-checkbox
+          [control]="registerForm.controls.allowNotification"
+          [name]="'allowNotification'"
+        ></app-checkbox>
+      </div>
+    </div>
+    <div class="flex w-full text-center justify-center">
+      <div class="flex items-start cursor-pointer">
+        <app-checkbox
+          [control]="registerForm.controls.agreeTerms"
+          [name]="'agreeTerms'"
+        >
+        </app-checkbox>
+      </div>
+    </div>
+    <div class="w-full">
+      <app-button
+        typeBtn="submit"
+        color="success"
+        [loading]="status === 'loading'"
+        [disabled]="registerForm.invalid"
+      >
+        Sign in
+      </app-button>
+    </div>
+  </form>
+</div>
