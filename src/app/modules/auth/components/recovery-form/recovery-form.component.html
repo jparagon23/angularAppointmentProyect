@@ -1,0 +1,50 @@
+<h1 class="text-center font-bold py-2 text-gray-700">Set your new password</h1>
+<form [formGroup]="form" novalidate class="space-y-4" (ngSubmit)="recovery()">
+  <div>
+    <div class="relative">
+      <div class="mb-2">
+        <app-input
+          [control]="form.controls.newPassword"
+          [placeholder]="'Enter new password'"
+          [type]="showPassword ? 'text' : 'password'"
+          [showLabel]="false"
+        ></app-input>
+      </div>
+      <div class="absolute top-1/2 right-0 transform -translate-y-1/2">
+        <button
+          type="button"
+          class="p-2"
+          (click)="showPassword = !showPassword"
+        >
+          <fa-icon [icon]="showPassword ? faEye : faEyeSlash"></fa-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="relative">
+      <app-input
+        [control]="form.controls.confirmPassword"
+        [placeholder]="'Confirm new password'"
+        [type]="'password'"
+        [showLabel]="false"
+      ></app-input>
+    </div>
+  </div>
+  <div *ngIf="form.controls.confirmPassword.touched">
+    <p
+      *ngIf="form.hasError('mismatch')"
+      class="font-medium text-red-500 text-xs mt-1 ml-1"
+    >
+      The password are not the same
+    </p>
+  </div>
+  <div>
+    <app-button
+      typeBtn="submit"
+      color="success"
+      [loading]="status === 'loading'"
+      >Recovery</app-button
+    >
+  </div>
+</form>
