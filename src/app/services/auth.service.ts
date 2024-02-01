@@ -4,6 +4,7 @@ import { ResponseLogin } from '../models/auth.model';
 import { environment } from 'src/environments/environment';
 import { Observable, tap } from 'rxjs';
 import { InitialSignUpData } from '../models/InitialSignUpData.interface';
+import { TokenService } from './token.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +22,7 @@ export class AuthService {
 
   private userId: number | undefined;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   authToken(code: any) {
     if (this.userId === undefined) {
@@ -51,10 +52,10 @@ export class AuthService {
 
   login(formData: { email: string; password: string }) {
     const body = JSON.stringify(formData);
-
     return this.http.post<ResponseLogin>(`${this.apiUrl}/login`, body).pipe(
       tap((response) => {
-        console.log('holi');
+        this.tokenService.saveToken(response.access_token);
+        this.tokenService.saveRefreshToken(response.refresh_token);
       })
     );
   }

@@ -12,6 +12,7 @@
       [name]="'email'"
       [type]="'email'"
       [placeholder]="'Enter your email'"
+      #emailInput
     ></app-input>
   </div>
   <div>
@@ -21,6 +22,11 @@
       [type]="'password'"
       [placeholder]="'••••••••'"
     ></app-input>
+    <div *ngIf="invalidCredentials">
+      <p class="text-red-700">
+        Invalid email or password. Please check your credentials and try again.
+      </p>
+    </div>
   </div>
   <div class="flex items-center justify-between">
     <div class="flex items-start cursor-pointer">

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -21,6 +21,8 @@ export class LoginFormComponent {
   showPassword = false;
   status: RequestStatus = 'init';
   faLock = faLock;
+
+  invalidCredentials: boolean = false;
 
   loginForm = this.formBuilder.group({
     email: [
@@ -60,8 +62,12 @@ export class LoginFormComponent {
             this.status = 'success';
             this.router.navigate(['/home']);
           },
-          error: () => {
+          error: (error) => {
             this.status = 'failed';
+            if (error.status === 401) {
+              this.invalidCredentials = true;
+              this.loginForm.reset();
+            }
           },
         });
       } else {
