@@ -36,7 +36,7 @@ export class AccountAuthFormComponent {
     this.authService.authToken(this.authenticationForm.value.token).subscribe({
       next: (response) => {
         console.log(response);
-        this.router.navigate(['/anotherPage']);
+        this.router.navigate(['/home']);
       },
       error: (error) => {
         if (error instanceof HttpErrorResponse && error.status === 400) {

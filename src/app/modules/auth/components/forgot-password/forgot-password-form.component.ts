@@ -19,6 +19,25 @@ export class ForgotPasswordFormComponent {
   ) {}
 
   sendLink() {
-    //
+    if (this.form.valid) {
+      this.status = 'loading';
+      const { email } = this.form.getRawValue();
+
+      if (email) {
+        this.authService.recovery(email).subscribe({
+          next: () => {
+            this.status = 'success';
+            this.emailSent = true;
+          },
+          error: () => {
+            this.status = 'failed';
+          },
+        });
+      } else {
+        console.error('Email is null');
+      }
+    } else {
+      this.form.markAllAsTouched();
+    }
   }
 }

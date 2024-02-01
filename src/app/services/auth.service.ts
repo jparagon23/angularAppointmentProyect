@@ -28,7 +28,7 @@ export class AuthService {
       this.userId = -1;
     }
 
-    const url = `${this.apiUrl}/user/authAccount?userId=${this.userId}&code=${code}`;
+    const url = `${this.apiUrl}/auth/authAccount?userId=${this.userId}&code=${code}`;
     return this.http.post(url, {}); // Se pasa un objeto vacío como cuerpo, ajusta según tus necesidades
   }
 
@@ -37,12 +37,12 @@ export class AuthService {
   }
 
   checkEmailAvailability(email: string): Observable<HttpResponse<boolean>> {
-    const url = `${this.apiUrl}/user/checkEmailAvailability?email=${email}`;
+    const url = `${this.apiUrl}/auth/checkEmailAvailability?email=${email}`;
     return this.http.get<boolean>(url, { observe: 'response' });
   }
 
   createUser(formData: any) {
-    return this.http.post(`${this.apiUrl}/user/signup`, formData).pipe(
+    return this.http.post(`${this.apiUrl}/auth/register`, formData).pipe(
       tap((response: any) => {
         this.userId = response.id;
       })
@@ -50,13 +50,13 @@ export class AuthService {
   }
 
   login(formData: { email: string; password: string }) {
-    return this.http
-      .post<ResponseLogin>(`${this.apiUrl}/api/v1/auth/login`, formData)
-      .pipe(
-        tap((response) => {
-          console.log('holi');
-        })
-      );
+    const body = JSON.stringify(formData);
+
+    return this.http.post<ResponseLogin>(`${this.apiUrl}/login`, body).pipe(
+      tap((response) => {
+        console.log('holi');
+      })
+    );
   }
 
   getInitialSignUpData(): Observable<InitialSignUpData> {
@@ -74,7 +74,7 @@ export class AuthService {
     console.log('Making HTTP request');
 
     return this.http
-      .get<InitialSignUpData>(`${this.apiUrl}/user/initialSignUpData`)
+      .get<InitialSignUpData>(`${this.apiUrl}/auth/initialSignUpData`)
       .pipe(
         tap((data) => {
           console.log('Data loaded successfully');
@@ -83,5 +83,18 @@ export class AuthService {
           console.log(this.initialSignUpDataLoaded);
         })
       );
+  }
+
+  recovery(email: string) {
+    return this.http.post(`${this.apiUrl}/auth/recover-password`, {
+      email,
+    });
+  }
+
+  changePassword(token: string, newPassword: string) {
+    return this.http.post(`${this.apiUrl}/auth/change-password`, {
+      token,
+      newPassword,
+    });
   }
 }

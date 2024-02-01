@@ -35,32 +35,38 @@ export class RecoveryFormComponent {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    // this.route.queryParamMap.subscribe((params) => {
-    //   const token = params.get('token');
-    //   if (token) {
-    //     this.token = token;
-    //   } else {
-    //     this.router.navigate(['/login']);
-    //   }
-    // });
+    this.route.queryParamMap.subscribe((params) => {
+      const token = params.get('token');
+      if (token) {
+        this.token = token;
+      } else {
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   recovery() {
-    //   if (this.form.valid) {
-    //     this.status = 'loading';
-    //     const { newPassword } = this.form.getRawValue();
-    //     this.authService.changePassword(this.token, newPassword).subscribe({
-    //       next: () => {
-    //         this.status = 'success';
-    //         this.router.navigate(['/login']);
-    //       },
-    //       error: () => {
-    //         this.status = 'failed';
-    //       },
-    //     });
-    //   } else {
-    //     this.form.markAllAsTouched();
-    //   }
-    // }
+    if (this.form.valid) {
+      this.status = 'loading';
+      const { newPassword } = this.form.getRawValue();
+
+      // Verifica que newPassword no sea null antes de llamar al servicio
+      if (newPassword) {
+        this.authService.changePassword(this.token, newPassword).subscribe({
+          next: () => {
+            this.status = 'success';
+            this.router.navigate(['/login']);
+          },
+          error: () => {
+            this.status = 'failed';
+          },
+        });
+      } else {
+        // Handle the case where newPassword is null (optional)
+        console.error('New password is null');
+      }
+    } else {
+      this.form.markAllAsTouched();
+    }
   }
 }
