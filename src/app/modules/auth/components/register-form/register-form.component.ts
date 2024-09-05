@@ -61,6 +61,7 @@ export class RegisterFormComponent implements OnInit {
       [Validators.required, Validators.email],
       [CustomValidators.checkIfEmailIsAvailable(this.authService)],
     ],
+    categoryId: ['', [Validators.required]],
     roleId: 2,
     password: ['', [Validators.required]],
     confirmationPassword: [
@@ -152,11 +153,13 @@ export class RegisterFormComponent implements OnInit {
     const documentTypeIdControl = this.registerForm.get('documentTypeId');
     const phoneTypeIdControl = this.registerForm.get('phoneTypeId');
     const phoneControl = this.registerForm.get('phone');
+    const categoryControl = this.registerForm.get('categoryId');
 
     if (
       documentTypeIdControl?.value != null &&
       phoneTypeIdControl?.value != null &&
-      phoneControl?.value != null
+      phoneControl?.value != null &&
+      categoryControl?.value != null
     ) {
       const formData = {
         ...this.registerForm.value,
@@ -170,6 +173,7 @@ export class RegisterFormComponent implements OnInit {
             number: phoneControl.value,
           },
         ],
+        categoryId: this.registerForm.get('categoryId')!.value,
       };
 
       delete formData.confirmationPassword;

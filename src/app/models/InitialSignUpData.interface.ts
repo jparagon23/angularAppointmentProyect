@@ -2,11 +2,20 @@ export interface InitialSignUpData {
   documentTypes: DocumentType[];
   genders: Gender[];
   phoneTypes: PhoneType[];
+  categories: Category[];
 }
 
 export interface CommonType {
   id: number;
   description: string;
+}
+
+export interface Category {
+  id: number;
+  description: string;
+  lowerRating: number;
+  upperRating: number;
+  briefDescription: string;
 }
 
 export interface DocumentType extends CommonType {}

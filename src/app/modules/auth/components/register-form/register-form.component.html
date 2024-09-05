@@ -26,7 +26,6 @@
 </div>
 
 <div *ngIf="showRegisterForm">
-  <!-- Your component template (e.g., login.component.html) -->
   <form
     [formGroup]="registerForm"
     novalidate
@@ -34,8 +33,10 @@
     action="#"
     (ngSubmit)="register()"
   >
-    <div class="flex space-x-5 w-full">
-      <div class="w-1/2">
+    <div
+      class="flex flex-col md:flex-row space-y-5 md:space-y-0 md:space-x-5 w-full"
+    >
+      <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['name']"
           [name]="'name'"
@@ -43,7 +44,7 @@
           [placeholder]="'Enter your name'"
         ></app-input>
       </div>
-      <div class="w-1/2">
+      <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['lastname']"
           [name]="'lastname'"
@@ -53,8 +54,10 @@
       </div>
     </div>
 
-    <div class="flex space-x-5 w-full">
-      <div class="w-1/2">
+    <div
+      class="flex flex-col md:flex-row space-y-5 md:space-y-0 md:space-x-5 w-full"
+    >
+      <div class="w-full md:w-1/2">
         <app-select
           [control]="registerForm.controls['gender']"
           [name]="'gender'"
@@ -63,7 +66,7 @@
           "
         ></app-select>
       </div>
-      <div class="w-1/2">
+      <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['birthdate']"
           [name]="'birthdate'"
@@ -72,8 +75,11 @@
         ></app-input>
       </div>
     </div>
-    <div class="flex space-x-5 w-full">
-      <div class="w-1/2">
+
+    <div
+      class="flex flex-col md:flex-row space-y-5 md:space-y-0 md:space-x-5 w-full"
+    >
+      <div class="w-full md:w-1/2">
         <app-select
           [control]="registerForm.controls['documentTypeId']"
           [name]="'documentType'"
@@ -84,7 +90,7 @@
           "
         ></app-select>
       </div>
-      <div class="w-1/2">
+      <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['document']"
           [name]="'document'"
@@ -93,8 +99,11 @@
         ></app-input>
       </div>
     </div>
-    <div class="flex space-x-5 w-full">
-      <div class="w-1/2">
+
+    <div
+      class="flex flex-col md:flex-row space-y-5 md:space-y-0 md:space-x-5 w-full"
+    >
+      <div class="w-full md:w-1/2">
         <app-select
           [control]="registerForm.controls['phoneTypeId']"
           [name]="'phoneType'"
@@ -103,7 +112,7 @@
           "
         ></app-select>
       </div>
-      <div class="w-1/2">
+      <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['phone']"
           [name]="'phone'"
@@ -112,6 +121,7 @@
         ></app-input>
       </div>
     </div>
+
     <div class="w-full">
       <div>
         <app-input
@@ -122,8 +132,21 @@
         ></app-input>
       </div>
     </div>
-    <div class="flex space-x-5 w-full">
-      <div class="w-1/2">
+
+    <div class="w-full">
+      <div>
+        <app-select
+          [control]="registerForm.controls['categoryId']"
+          [name]="'category'"
+          [options]="initialData.categories ? initialData.categories : []"
+        ></app-select>
+      </div>
+    </div>
+
+    <div
+      class="flex flex-col md:flex-row space-y-5 md:space-y-0 md:space-x-5 w-full"
+    >
+      <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['password']"
           [name]="'password'"
@@ -131,7 +154,7 @@
           [placeholder]="'••••••••'"
         ></app-input>
       </div>
-      <div class="w-1/2">
+      <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['confirmationPassword']"
           [name]="'confirmationPassword'"
@@ -140,23 +163,24 @@
         ></app-input>
       </div>
     </div>
-    <div class="flex w-full text-center justify-center">
-      <div class="flex items-start cursor-pointer justify-center text-center">
+
+    <!-- Checkboxes centered -->
+    <div class="flex w-full text-center justify-center space-y-5">
+      <div class="flex items-start cursor-pointer justify-center">
         <app-checkbox
           [control]="registerForm.controls.allowNotification"
           [name]="'allowNotification'"
         ></app-checkbox>
       </div>
-    </div>
-    <div class="flex w-full text-center justify-center">
       <div class="flex items-start cursor-pointer">
         <app-checkbox
           [control]="registerForm.controls.agreeTerms"
           [name]="'agreeTerms'"
-        >
-        </app-checkbox>
+        ></app-checkbox>
       </div>
     </div>
+
+    <!-- Submit button -->
     <div class="w-full">
       <app-button
         typeBtn="submit"

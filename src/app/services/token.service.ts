@@ -72,10 +72,18 @@ export class TokenService {
       const decodedToken = jwtDecode<JwtPayload>(token);
 
       if (decodedToken && decodedToken.exp) {
+        console.log('decode token' + decodedToken);
+        console.log('decde token date' + decodedToken.exp);
+
         const tokenDate = new Date(0);
         tokenDate.setUTCSeconds(decodedToken.exp);
 
         const today = new Date();
+
+        console.log('ending is validRefreshToken');
+
+        console.log(tokenDate.getTime() > today.getTime());
+
         return tokenDate.getTime() > today.getTime();
       }
     } catch (error) {
