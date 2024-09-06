@@ -15,7 +15,7 @@
       'bg-white': (control.valid && control.dirty) || control.value !== ''
     }"
   >
-    <option value>{{ capitalizeFirstLetter(name) }}</option>
+    <option value>{{ functions.splitAndcapitalizeFirstLetter(name) }}</option>
     <option *ngFor="let option of options" [value]="option?.id || option">
       {{ option?.description || option }}
     </option>
