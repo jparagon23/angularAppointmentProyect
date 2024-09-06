@@ -4,6 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RequestStatus } from 'src/app/models/request-status.model';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
+import Swal from 'sweetalert2';
+
 import { AuthService } from 'src/app/services/auth.service';
 import { CustomValidators } from 'src/app/utils/validators';
 
@@ -50,19 +52,33 @@ export class RecoveryFormComponent {
       this.status = 'loading';
       const { newPassword } = this.form.getRawValue();
 
-      // Verifica que newPassword no sea null antes de llamar al servicio
       if (newPassword) {
         this.authService.changePassword(this.token, newPassword).subscribe({
           next: () => {
             this.status = 'success';
+
+            Swal.fire({
+              title: 'Actualizada!',
+              text: 'La contraseña ha sido actualizada',
+              icon: 'success',
+              confirmButtonText: 'Aceptar',
+            });
+
             this.router.navigate(['/login']);
           },
           error: () => {
             this.status = 'failed';
+
+            Swal.fire({
+              title: 'Error',
+              text: 'Ha ocurrido un error al actualizar la contraseña',
+              icon: 'error',
+              confirmButtonText: 'Aceptar',
+            });
+            this.router.navigate(['/login']);
           },
         });
       } else {
-        // Handle the case where newPassword is null (optional)
         console.error('New password is null');
       }
     } else {

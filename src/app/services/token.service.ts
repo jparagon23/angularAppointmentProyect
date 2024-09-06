@@ -19,6 +19,7 @@ export class TokenService {
 
   removeToken() {
     removeCookie('token-appnet');
+    removeCookie('refresh-token-appnet');
   }
 
   isValidToken(): boolean {

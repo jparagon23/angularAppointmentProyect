@@ -7,6 +7,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+
+import swal from 'sweetalert2';
+
 import {
   Gender,
   InitialSignUpData,
@@ -182,10 +185,15 @@ export class RegisterFormComponent implements OnInit {
       console.log('this is the data');
       console.log(formData);
 
-      this.authService.createUser(formData).subscribe((response) => {
-        console.log(response);
-        this.router.navigate(['authAccount'], { relativeTo: this.route });
-      });
+      this.authService.createUser(formData).subscribe(
+        (response) => {
+          console.log(response);
+          this.router.navigate(['authAccount'], { relativeTo: this.route });
+        },
+        (error) => {
+          swal.fire('Error', error.error.message[0], 'error');
+        }
+      );
     } else {
       console.error('documentType is null or undefined.');
     }

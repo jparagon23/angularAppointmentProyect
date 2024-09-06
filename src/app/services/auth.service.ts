@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ResponseLogin } from '../models/auth.model';
 import { environment } from 'src/environments/environment';
@@ -29,13 +29,13 @@ export class AuthService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
-  authToken(code: any) {
-    if (this.userId === undefined) {
-      this.userId = -1;
-    }
-
-    const url = `${this.apiUrl}/auth/auth-account?userId=${this.userId}&code=${code}`;
-    return this.http.post(url, {});
+  authToken(code: string) {
+    const userId = this.userId ?? -1;
+    const url = `${this.apiUrl}/auth/auth-account`;
+    const params = new HttpParams()
+      .set('userId', userId.toString())
+      .set('code', code);
+    return this.http.post(url, {}, { params });
   }
 
   getUserId() {
@@ -43,8 +43,9 @@ export class AuthService {
   }
 
   checkEmailAvailability(email: string): Observable<HttpResponse<boolean>> {
-    const url = `${this.apiUrl}/auth/check-email-availability?email=${email}`;
-    return this.http.get<boolean>(url, { observe: 'response' });
+    const url = `${this.apiUrl}/auth/check-email-availability`;
+    const params = new HttpParams().set('email', email);
+    return this.http.get<boolean>(url, { observe: 'response', params });
   }
 
   createUser(formData: any) {
@@ -92,9 +93,9 @@ export class AuthService {
   }
 
   recovery(email: string) {
-    return this.http.post(`${this.apiUrl}/auth/recover-password`, {
-      email,
-    });
+    const url = `${this.apiUrl}/auth/recover-password`;
+    const params = new HttpParams().set('email', email);
+    return this.http.post(url, {}, { params });
   }
 
   logout() {
@@ -102,10 +103,10 @@ export class AuthService {
   }
 
   changePassword(token: string, newPassword: string) {
-    return this.http.post(`${this.apiUrl}/auth/change-password`, {
-      token,
-      newPassword,
-    });
+    const url = `${this.apiUrl}/auth/change-password`;
+    const body = { newPassword };
+    const params = new HttpParams().set('token', token);
+    return this.http.post(url, body, { params });
   }
 
   getProfile() {

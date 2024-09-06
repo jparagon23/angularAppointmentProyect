@@ -27,6 +27,7 @@
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.44",
     "rxjs": "~7.8.0",
+    "sweetalert2": "^11.13.2",
     "tslib": "^2.3.0",
     "typescript-cookie": "^1.0.6",
     "zone.js": "~0.13.0"
