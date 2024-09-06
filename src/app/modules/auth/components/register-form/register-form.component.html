@@ -8,9 +8,9 @@
     <div class="relative">
       <app-input
         [control]="formUser.controls.email"
-        [name]="'email'"
+        [name]="'correo'"
         [type]="'email'"
-        [placeholder]="'Enter your email'"
+        [placeholder]="'Ingresa tu correo'"
         [displayLabel]="false"
       ></app-input>
     </div>
@@ -39,17 +39,17 @@
       <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['name']"
-          [name]="'name'"
+          [name]="'nombre'"
           [type]="'text'"
-          [placeholder]="'Enter your name'"
+          [placeholder]="'Ingresa tu nombre'"
         ></app-input>
       </div>
       <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['lastname']"
-          [name]="'lastname'"
+          [name]="'apellido'"
           [type]="'text'"
-          [placeholder]="'Enter your lastname'"
+          [placeholder]="'Ingresa tus apellidos'"
         ></app-input>
       </div>
     </div>
@@ -60,7 +60,7 @@
       <div class="w-full md:w-1/2">
         <app-select
           [control]="registerForm.controls['gender']"
-          [name]="'gender'"
+          [name]="'genero'"
           [options]="
             initialData && initialData.genders ? initialData.genders : []
           "
@@ -69,9 +69,9 @@
       <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['birthdate']"
-          [name]="'birthdate'"
+          [name]="'cumpleaños'"
           [type]="'date'"
-          [placeholder]="'Select your birthdate'"
+          [placeholder]="'Selecciona tu fecha de nacimiento'"
         ></app-input>
       </div>
     </div>
@@ -82,7 +82,7 @@
       <div class="w-full md:w-1/2">
         <app-select
           [control]="registerForm.controls['documentTypeId']"
-          [name]="'documentType'"
+          [name]="'tipoDeDocumento'"
           [options]="
             initialData && initialData.documentTypes
               ? initialData.documentTypes
@@ -93,9 +93,9 @@
       <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['document']"
-          [name]="'document'"
+          [name]="'documento'"
           [type]="'text'"
-          [placeholder]="'Enter your document'"
+          [placeholder]="'Ingresa tu documento'"
         ></app-input>
       </div>
     </div>
@@ -106,7 +106,7 @@
       <div class="w-full md:w-1/2">
         <app-select
           [control]="registerForm.controls['phoneTypeId']"
-          [name]="'phoneType'"
+          [name]="'tipoDeTelefono'"
           [options]="
             initialData && initialData.phoneTypes ? initialData.phoneTypes : []
           "
@@ -115,9 +115,9 @@
       <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['phone']"
-          [name]="'phone'"
+          [name]="'telefono'"
           [type]="'text'"
-          [placeholder]="'Enter your phone number'"
+          [placeholder]="'Ingresa tu numero telefonico'"
         ></app-input>
       </div>
     </div>
@@ -126,9 +126,9 @@
       <div>
         <app-input
           [control]="registerForm.controls['email']"
-          [name]="'email'"
+          [name]="'Correo'"
           [type]="'email'"
-          [placeholder]="'Enter your email'"
+          [placeholder]="'Ingresa tu correo'"
         ></app-input>
       </div>
     </div>
@@ -137,7 +137,7 @@
       <div>
         <app-select
           [control]="registerForm.controls['categoryId']"
-          [name]="'category'"
+          [name]="'categoria'"
           [options]="initialData.categories ? initialData.categories : []"
         ></app-select>
       </div>
@@ -149,7 +149,7 @@
       <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['password']"
-          [name]="'password'"
+          [name]="'contreaseña'"
           [type]="'password'"
           [placeholder]="'••••••••'"
         ></app-input>
@@ -157,7 +157,7 @@
       <div class="w-full md:w-1/2">
         <app-input
           [control]="registerForm.controls['confirmationPassword']"
-          [name]="'confirmationPassword'"
+          [name]="'confirmarContraseña'"
           [type]="'password'"
           [placeholder]="'••••••••'"
         ></app-input>
@@ -169,13 +169,13 @@
       <div class="flex items-start cursor-pointer justify-center">
         <app-checkbox
           [control]="registerForm.controls.allowNotification"
-          [name]="'allowNotification'"
+          [name]="'permitirNotificaciones'"
         ></app-checkbox>
       </div>
       <div class="flex items-start cursor-pointer">
         <app-checkbox
           [control]="registerForm.controls.agreeTerms"
-          [name]="'agreeTerms'"
+          [name]="'aceptarTerminos'"
         ></app-checkbox>
       </div>
     </div>
@@ -188,7 +188,7 @@
         [loading]="status === 'loading'"
         [disabled]="registerForm.invalid"
       >
-        Sign in
+        Registrarse
       </app-button>
     </div>
   </form>
