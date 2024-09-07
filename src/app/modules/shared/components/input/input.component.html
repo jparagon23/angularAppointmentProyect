@@ -11,21 +11,35 @@
       {{ functions.splitAndcapitalizeFirstLetter(name) }}
     </label>
   </div>
-  <input
-    [type]="type"
-    [name]="name"
-    [id]="name"
-    [ngClass]="{
-      'border-red-500': shouldApplyRedBorder(),
-      'bg-gray-200': !shouldApplyRedBorder(),
-      'border border-gray-300': true,
-      'text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500': true,
-      'bg-white': (control.valid && control.dirty) || control.value !== ''
-    }"
-    [placeholder]="placeholder"
-    [formControl]="control"
-    (blur)="markAsBlurred()"
-  />
+
+  <div class="relative">
+    <input
+      [type]="inputType"
+      [name]="name"
+      [id]="name"
+      [ngClass]="{
+        'border-red-500': shouldApplyRedBorder(),
+        'bg-gray-200': !shouldApplyRedBorder(),
+        'border border-gray-300': true,
+        'text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500': true,
+        'bg-white': (control.valid && control.dirty) || control.value !== ''
+      }"
+      [placeholder]="placeholder"
+      [formControl]="control"
+      (blur)="markAsBlurred()"
+    />
+
+    <!-- Mostrar el botón solo si el tipo es 'password' -->
+    <button
+      *ngIf="type === 'password'"
+      type="button"
+      (click)="togglePasswordVisibility()"
+      class="absolute inset-y-0 right-0 pr-3 flex items-center"
+    >
+      <fa-icon [icon]="isPasswordVisible ? faEyeSlash : faEye"></fa-icon>
+    </button>
+  </div>
+
   <div *ngIf="blurred && displayErrorMessage">
     <app-error-message [control]="control"></app-error-message>
   </div>

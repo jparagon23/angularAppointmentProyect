@@ -4,6 +4,8 @@ import { AbstractControl, FormControl } from '@angular/forms';
 import { errorMessages } from '../../constants/Constants.constants';
 import { Functions } from 'src/app/utils/funcitons';
 
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
 @Component({
   selector: 'app-input',
   templateUrl: './input.component.html',
@@ -20,6 +22,11 @@ export class InputComponent {
 
   blurred: boolean = false;
   functions = Functions;
+
+  isPasswordVisible: boolean = false;
+
+  faEye = faEye;
+  faEyeSlash = faEyeSlash;
 
   shouldApplyRedBorder(): boolean {
     return (
@@ -39,5 +46,15 @@ export class InputComponent {
 
   markAsBlurred() {
     this.blurred = true;
+  }
+
+  togglePasswordVisibility() {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+  get inputType(): string {
+    return this.type === 'password' && !this.isPasswordVisible
+      ? 'password'
+      : 'text';
   }
 }

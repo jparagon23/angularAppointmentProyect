@@ -4,7 +4,7 @@ import { MakeAppointmentPageComponent } from './pages/make-appointment-page/make
 
 const routes: Routes = [
   {
-    path: 'make-appointment',
+    path: '',
     component: MakeAppointmentPageComponent,
   },
 ];

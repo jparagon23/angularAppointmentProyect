@@ -6,7 +6,7 @@
           <img
             loading="lazy"
             class="w-20 mr-8"
-            src="/assets/images/logo/logo-gradient-white-trello.png"
+            src="/assets/images/logo/logo-tenis.jpg"
             alt="logo"
           />
         </a>
@@ -56,7 +56,7 @@
             <img
               class="w-8 h-8 rounded-full"
               alt="user photo"
-              src="https://api.lorem.space/image/face?w=480&h=480&r=7854"
+              src="/assets/images/logo/icon-gradient-neutral-trello.png"
             />
           </button>
         </div>
@@ -83,14 +83,9 @@
         </button>
       </div>
       <div class="py-3 px-4 flex items-center space-x-4">
-        <img
-          class="w-10 h-10 rounded-full"
-          alt=""
-          src="https://api.lorem.space/image/face?w=480&h=480&r=7854"
-        />
         <div class="space-y-1">
-          <div>{{ user.data[0].name }}</div>
-          <div class="text-sm text-gray-500">{{ user.data[0].email }}</div>
+          <div>{{ user?.data?.[0]?.name }}</div>
+          <div class="text-sm text-gray-500">{{ user?.data?.[0]?.name }}</div>
         </div>
       </div>
       <ul class="py-1">
@@ -98,7 +93,7 @@
           <a
             routerLink="/app/profile"
             class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
-            >\Profile</a
+            >Profile</a
           >
         </li>
         <li>
