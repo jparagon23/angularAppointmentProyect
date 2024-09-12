@@ -53,6 +53,10 @@ export class InputComponent {
   }
 
   get inputType(): string {
+    if (this.type !== 'password' && this.type !== 'text') {
+      return this.type;
+    }
+
     return this.type === 'password' && !this.isPasswordVisible
       ? 'password'
       : 'text';
