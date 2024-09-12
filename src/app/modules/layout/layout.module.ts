@@ -9,6 +9,10 @@ import { SharedModule } from '../shared/shared.module';
 
 import { OverlayModule } from '@angular/cdk/overlay';
 
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { AppointmentModule } from '../appointment/appointment.module';
+
 @NgModule({
   declarations: [LayoutComponent, NavbarComponent],
   imports: [
@@ -17,6 +21,9 @@ import { OverlayModule } from '@angular/cdk/overlay';
     OverlayModule,
     FontAwesomeModule,
     SharedModule,
+    MatDialogModule,
+    MatButtonModule,
+    AppointmentModule,
   ],
 })
 export class LayoutModule {}

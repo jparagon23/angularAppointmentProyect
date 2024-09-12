@@ -7,6 +7,8 @@ import { LoginComponent } from './modules/auth/pages/login/login.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,6 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
