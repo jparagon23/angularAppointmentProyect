@@ -1,0 +1,65 @@
+<!-- <div mat-dialog-content>My PopUp</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onClickNO()">NO</button>
+  <button mat-button [mat-dialog-close]="true">Yes</button>
+</div> -->
+
+<div mat-dialog-content>
+  <div>
+    <h2 class="text-center mb-0">Crear reserva</h2>
+  </div>
+  <div class="flex flex-wrap space-x-4 justify-center">
+    <div *ngFor="let selectedSlot of selectedSlots">
+      <button
+        type="button"
+        class="m-2 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200"
+      >
+        {{ selectedSlot }}
+      </button>
+    </div>
+  </div>
+  <div class="inline-flex items-center space-x-2">
+    <div>
+      <label for="appointmentDate">Día de la reserva</label>
+    </div>
+    <div>
+      <input
+        name="appointmentDate"
+        type="date"
+        placeholder="Selecciona el día"
+        [(ngModel)]="selectedDate"
+        (change)="onDateChange($event)"
+      />
+    </div>
+  </div>
+  <div class="flex flex-wrap space-x-4">
+    <div *ngFor="let slot of availableTimeSlots">
+      <button
+        type="button"
+        class="m-2 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200"
+        (dblclick)="onSlotSelect(slot)"
+      >
+        {{ slot }}
+      </button>
+    </div>
+  </div>
+  <div mat-dialog-actions class="inline-flex space-x-3 justify-center">
+    <div>
+      <app-button
+        [typeBtn]="'submit'"
+        [color]="'danger'"
+        [mat-dialog-close]="true"
+        >Cancelar</app-button
+      >
+    </div>
+
+    <div>
+      <app-button
+        [typeBtn]="'reset'"
+        [color]="'primary'"
+        (click)="onClickContinue()"
+        >Continuar</app-button
+      >
+    </div>
+  </div>
+</div>

@@ -1,0 +1,12 @@
+<div
+  class="w-full bg-white p-5 border-gray-500 rounded-lg shadow-xl max-w-sm transition-transform transform hover:scale-105 hover:shadow-2xl text-right"
+>
+  <div class="text-3xl font-bold text-black">{{ reservation.date }}</div>
+  <div class="text-xl text-gray-700">
+    {{ reservation.initialHour + "-" + reservation.endHour }}
+  </div>
+  <div class="text-lg text-gray-800">
+    {{ "Cancha " + reservation.groupCourtId }}
+  </div>
+  <div class="text-lg text-gray-600">{{ reservation.club }}</div>
+</div>

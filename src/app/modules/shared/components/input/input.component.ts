@@ -1,5 +1,5 @@
 // input.component.ts
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormControl } from '@angular/forms';
 import { errorMessages } from '../../constants/Constants.constants';
 import { Functions } from 'src/app/utils/funcitons';
@@ -14,11 +14,11 @@ export class InputComponent {
   @Input() control!: FormControl;
   @Input() name!: string;
   @Input() type!: string;
-  @Input() label!: string;
   @Input() placeholder!: string;
-  @Input() formControlName!: string;
   @Input() displayLabel: boolean = true;
   @Input() displayErrorMessage: boolean = true;
+
+  @Output() valueChange = new EventEmitter<string>();
 
   blurred: boolean = false;
   functions = Functions;
@@ -60,5 +60,10 @@ export class InputComponent {
     return this.type === 'password' && !this.isPasswordVisible
       ? 'password'
       : 'text';
+  }
+
+  onValueChange(event: Event): void {
+    const inputValue = (event.target as HTMLInputElement).value;
+    this.valueChange.emit(inputValue);
   }
 }

@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/services/auth.service';
 
 import { MatDialog } from '@angular/material/dialog';
 
-import { MakeReservationModalComponent } from 'src/app/modules/appointment/components/make-reservation-modal/make-reservation-modal.component';
+import { MakeReservationModalComponent } from 'src/app/modules/appointment/modals/make-reservation-modal/make-reservation-modal.component';
 
 @Component({
   selector: 'app-navbar',
@@ -41,7 +41,10 @@ export class NavbarComponent {
   }
 
   OpenDialog(): void {
-    const dialogRef = this.dialog.open(MakeReservationModalComponent, {});
+    const dialogRef = this.dialog.open(MakeReservationModalComponent, {
+      maxWidth: '50vw', // Establece el ancho máximo al 80% del viewport
+      maxHeight: '50vh', // Establece la altura máxima al 80% del viewport
+    });
 
     dialogRef.afterClosed().subscribe((result) => {
       console.log(result);

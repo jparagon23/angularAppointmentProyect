@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { InitialSignUpData } from '../models/InitialSignUpData.interface';
 import { TokenService } from './token.service';
 import { checkToken } from '../interceptors/token.interceptor';
-import { UserData } from '../models/user.model';
+import { User, UserData } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,14 +23,14 @@ export class AuthService {
 
   private initialSignUpDataLoaded = false;
 
-  private userId: number | undefined;
+  private user: User | undefined;
 
   user$ = new BehaviorSubject<UserData | null>(null);
 
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
   authToken(code: string) {
-    const userId = this.userId ?? -1;
+    const userId = this.user?.id ?? -1;
     const url = `${this.apiUrl}/auth/auth-account`;
     const params = new HttpParams()
       .set('userId', userId.toString())
@@ -39,7 +39,7 @@ export class AuthService {
   }
 
   getUserId() {
-    return this.userId;
+    return this.user?.id;
   }
 
   checkEmailAvailability(email: string): Observable<HttpResponse<boolean>> {
@@ -49,11 +49,9 @@ export class AuthService {
   }
 
   createUser(formData: any) {
-    return this.http.post(`${this.apiUrl}/auth/register`, formData).pipe(
-      tap((response: any) => {
-        this.userId = response.id;
-      })
-    );
+    return this.http
+      .post(`${this.apiUrl}/auth/register`, formData)
+      .pipe(tap((response: any) => {}));
   }
 
   login(formData: { email: string; password: string }) {
@@ -120,6 +118,9 @@ export class AuthService {
       .pipe(
         tap((user) => {
           this.user$.next(user);
+          this.user = user.data[0];
+
+          console.log('User id: ', this.user.id);
         })
       );
   }

@@ -17,6 +17,11 @@ export class TokenService {
     return token;
   }
 
+  getUserId(): number | null {
+    const userIdCookie = getCookie('user-id-appnet');
+    return userIdCookie ? parseInt(userIdCookie, 10) : null;
+  }
+
   removeToken() {
     removeCookie('token-appnet');
     removeCookie('refresh-token-appnet');

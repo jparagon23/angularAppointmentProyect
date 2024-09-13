@@ -9,8 +9,13 @@ export class ButtonComponent {
   @Input() disabled = false;
   @Input() loading = false;
   @Input() typeBtn: 'reset' | 'submit' | 'button' = 'button';
-  @Input() color: 'success' | 'primary' | 'danger' | 'light' | 'sky' =
-    'primary';
+  @Input() color:
+    | 'success'
+    | 'primary'
+    | 'danger'
+    | 'light'
+    | 'sky'
+    | 'navbar' = 'primary';
   faSpinner = faSpinner;
 
   mapColors = {
@@ -43,6 +48,12 @@ export class ButtonComponent {
       'hover:bg-sky-800': true,
       'focus:ring-sky-300': true,
       'text-white': true,
+    },
+    navbar: {
+      'bg-green-700': true,
+      'text-white': true,
+      'hover:bg-green-900': true,
+      'focus:ring-primary-300': true,
     },
   };
 

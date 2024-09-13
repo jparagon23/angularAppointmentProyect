@@ -1,0 +1,14 @@
+<ng-container *ngIf="reservations$ | async as reservations">
+  <div>
+    <div class="text-6xl border-b-4 border-gray-300 mb-5">
+      Reservas pendientes
+    </div>
+    <div class="flex flex-wrap space-x-3 space-y-3">
+      <div *ngFor="let reservation of reservations.reservationsDetails">
+        <app-reservation-card
+          [reservation]="reservation"
+        ></app-reservation-card>
+      </div>
+    </div>
+  </div>
+</ng-container>

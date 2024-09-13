@@ -1,12 +1,12 @@
 <ng-container *ngIf="user$ | async as user">
-  <nav class="bg-sky-700 border-gray-200 px-20 shadow-md">
+  <nav class="bg-green-700 border-gray-200 px-20 shadow-md">
     <div class="flex flex-wrap justify-between items-center">
       <div class="flex items-center">
         <a routerLink="/app">
           <img
             loading="lazy"
             class="w-20 mr-8"
-            src="/assets/images/logo/logo-tenis.jpg"
+            src="/assets/images/logo/logonew.png"
             alt="logo"
           />
         </a>
@@ -14,7 +14,7 @@
           <ul class="flex items-center space-x-2 text-sm font-medium">
             <li>
               <app-button
-                color="sky"
+                color="navbar"
                 (click)="isOpenOverlayBoards = !isOpenOverlayBoards"
                 cdkOverlayOrigin
                 #boardsOverlay="cdkOverlayOrigin"
@@ -26,26 +26,28 @@
               </app-button>
             </li>
             <li>
-              <a routerLink="/app/users" class="block py-3 px-4 text-white"
-                >Users</a
-              >
+              <app-button color="navbar">
+                <a routerLink="/app/users" class="block py-3 px-4 text-white"
+                  >Users</a
+                >
+              </app-button>
             </li>
             <li>
-              <app-button typeBtn="button" color="sky">Create</app-button>
+              <app-button typeBtn="button" color="navbar">Create</app-button>
             </li>
           </ul>
         </div>
       </div>
       <div class="flex items-center space-x-6">
         <div class="flex space-x-2">
-          <app-button typeBtn="button" color="sky" (click)="OpenDialog()"
+          <app-button typeBtn="button" color="navbar" (click)="OpenDialog()"
             >Crear Reserva</app-button
           >
         </div>
         <div class="flex space-x-2">
           <app-button
             typeBtn="button"
-            color="sky"
+            color="navbar"
             aria-expanded="false"
             type="button"
             (click)="isOpenOverlayAvatar = !isOpenOverlayAvatar"
