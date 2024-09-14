@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Store } from '@ngrx/store';
 
 import { toZonedTime, format } from 'date-fns-tz';
 import { AvailableSlotsResponse } from 'src/app/models/reservation.model';
 import { ReservationService } from 'src/app/services/reservation.service';
+import { loadReservations } from 'src/app/state/actions/reservations.actions';
 
 @Component({
   selector: 'app-make-reservation-modal',
@@ -19,6 +21,7 @@ export class MakeReservationModalComponent {
   constructor(
     public dialogRef: MatDialogRef<MakeReservationModalComponent>,
     private reservationService: ReservationService,
+    private store: Store<any>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     const today = new Date();
@@ -32,24 +35,31 @@ export class MakeReservationModalComponent {
 
   onClickContinue(): void {
     console.log('Selected slots:', this.selectedSlots);
+
+    this.reservationService.createReservation(this.selectedSlots).subscribe({
+      next: () => {
+        console.log('Reservation created successfully');
+        this.store.dispatch(loadReservations());
+        this.dialogRef.close();
+      },
+      error: (err) => {
+        console.error('Error creating reservation:', err);
+      },
+    });
   }
 
   onDateChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     this.selectedDate = inputElement.value;
     console.log('Selected date:', this.selectedDate);
-    // Aquí puedes manejar la lógica cuando se seleccione la fecha
 
     this.reservationService
       .getAvailableSlotsPerDay(this.selectedDate)
       .subscribe({
         next: (response: AvailableSlotsResponse) => {
           this.availableTimeSlots = response.availableSlots.map((slot) => {
-            const dateTime = new Date(slot.date.dateTime);
-            return dateTime.toLocaleTimeString([], {
-              hour: '2-digit',
-              minute: '2-digit',
-            });
+            const dateTime = slot.date.dateTime;
+            return dateTime.slice(0, -3);
           });
           console.log('Available hours:', this.availableTimeSlots);
         },
