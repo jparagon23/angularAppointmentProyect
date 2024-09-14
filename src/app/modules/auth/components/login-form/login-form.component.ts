@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -7,19 +7,23 @@ import {
   faEyeSlash,
   faLock,
 } from '@fortawesome/free-solid-svg-icons';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { RequestStatus } from 'src/app/models/request-status.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { login } from 'src/app/state/actions/auth.actions';
+import { AppState } from 'src/app/state/app.state';
 
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
 })
-export class LoginFormComponent {
+export class LoginFormComponent implements OnInit {
   faPen = faPen;
   faEye = faEye;
   faEyeSlash = faEyeSlash;
   showPassword = false;
-  status: RequestStatus = 'init';
+  status$: Observable<RequestStatus>;
   faLock = faLock;
 
   invalidCredentials: boolean = false;
@@ -36,40 +40,36 @@ export class LoginFormComponent {
     private formBuilder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private authService: AuthService
+    private store: Store<AppState>
   ) {
+    this.status$ = this.store.select((state) =>
+      state.auth.loading ? 'loading' : state.auth.error ? 'failed' : 'init'
+    );
+  }
+
+  ngOnInit() {
     this.route.queryParamMap.subscribe((params) => {
       const emailParam = params.get('email');
       if (emailParam !== null) {
         this.loginForm.controls.email.setValue(emailParam);
       }
     });
+
+    this.store
+      .select((state) => state.auth.error)
+      .subscribe((error) => {
+        if (error) {
+          this.invalidCredentials = true;
+        }
+      });
   }
 
   doLogin() {
     if (this.loginForm.valid) {
-      this.status = 'loading';
       const { email, password } = this.loginForm.value;
 
-      if (
-        email !== null &&
-        email !== undefined &&
-        password !== null &&
-        password !== undefined
-      ) {
-        this.authService.login({ email, password }).subscribe({
-          next: () => {
-            this.status = 'success';
-            this.router.navigate(['/home']);
-          },
-          error: (error) => {
-            this.status = 'failed';
-            if (error.status === 401) {
-              this.invalidCredentials = true;
-              this.loginForm.reset();
-            }
-          },
-        });
+      if (email && password) {
+        this.store.dispatch(login({ email, password }));
       } else {
         console.error('Email o contraseña no válidos');
       }

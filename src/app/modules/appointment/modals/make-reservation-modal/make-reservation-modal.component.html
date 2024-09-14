@@ -9,12 +9,15 @@
     <h2 class="text-center mb-0">Crear reserva</h2>
   </div>
   <div class="flex flex-wrap space-x-4 justify-center">
+    <div *ngIf="selectedSlots.length > 0" class="justify-start">
+      Reservas seleccionadas
+    </div>
     <div *ngFor="let selectedSlot of selectedSlots">
       <button
         type="button"
         class="m-2 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200"
       >
-        {{ selectedSlot }}
+        {{ selectedSlot.split(" ")[1].substring(0, 5) }}
       </button>
     </div>
   </div>
@@ -39,7 +42,7 @@
         class="m-2 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200"
         (dblclick)="onSlotSelect(slot)"
       >
-        {{ slot }}
+        {{ slot.split(" ")[1].substring(0, 5) }}
       </button>
     </div>
   </div>
