@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-
 import { toZonedTime, format } from 'date-fns-tz';
 import { AvailableSlotsResponse } from 'src/app/models/reservation.model';
 import { ReservationService } from 'src/app/services/reservation.service';
@@ -11,11 +10,9 @@ import { loadReservations } from 'src/app/state/actions/reservations.actions';
   selector: 'app-make-reservation-modal',
   templateUrl: './make-reservation-modal.component.html',
 })
-export class MakeReservationModalComponent {
+export class MakeReservationModalComponent implements OnInit {
   selectedDate: string = '';
-
   selectedSlots: string[] = [];
-
   availableTimeSlots: string[] = [];
 
   constructor(
@@ -24,12 +21,37 @@ export class MakeReservationModalComponent {
     private store: Store<any>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    this.initializeSelectedDate();
+  }
+
+  ngOnInit(): void {
+    this.fetchAvailableSlots(this.selectedDate);
+  }
+
+  initializeSelectedDate(): void {
     const today = new Date();
     const bogotaTimeZone = 'America/Bogota';
     const zonedDate = toZonedTime(today, bogotaTimeZone);
-
     this.selectedDate = format(zonedDate, 'yyyy-MM-dd', {
       timeZone: bogotaTimeZone,
+    });
+  }
+
+  fetchAvailableSlots(date: string): void {
+    this.reservationService.getAvailableSlotsPerDay(date).subscribe({
+      next: (response: AvailableSlotsResponse) => {
+        this.availableTimeSlots = response.availableSlots.map((slot) => {
+          const dateTime = slot.date.dateTime;
+          return dateTime.slice(0, -3);
+        });
+        console.log('Available hours:', this.availableTimeSlots);
+      },
+      error: (err) => {
+        console.error('Error fetching available slots:', err);
+      },
+      complete: () => {
+        console.log('Fetching available slots completed');
+      },
     });
   }
 
@@ -53,23 +75,10 @@ export class MakeReservationModalComponent {
     this.selectedDate = inputElement.value;
     console.log('Selected date:', this.selectedDate);
 
-    this.reservationService
-      .getAvailableSlotsPerDay(this.selectedDate)
-      .subscribe({
-        next: (response: AvailableSlotsResponse) => {
-          this.availableTimeSlots = response.availableSlots.map((slot) => {
-            const dateTime = slot.date.dateTime;
-            return dateTime.slice(0, -3);
-          });
-          console.log('Available hours:', this.availableTimeSlots);
-        },
-        error: (err) => {
-          console.error('Error fetching available slots:', err);
-        },
-        complete: () => {
-          console.log('Fetching available slots completed');
-        },
-      });
+    // Clear selectedSlots
+    this.selectedSlots = [];
+
+    this.fetchAvailableSlots(this.selectedDate);
   }
 
   onSlotSelect(slot: string): void {
