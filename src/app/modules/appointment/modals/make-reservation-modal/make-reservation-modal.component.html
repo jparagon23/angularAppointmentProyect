@@ -35,17 +35,21 @@
       />
     </div>
   </div>
-  <div class="flex flex-wrap space-x-4">
+  <div *ngIf="availableTimeSlots.length === 0">
+    <p>No hay espacios disponibles</p>
+  </div>
+  
+  <div *ngIf="availableTimeSlots.length > 0" class="flex flex-wrap space-x-4">
     <div *ngFor="let slot of availableTimeSlots">
       <button
         type="button"
         class="m-2 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200"
         (dblclick)="onSlotSelect(slot)"
       >
-        {{ slot.split(" ")[1].substring(0, 5) }}
+        {{ slot.split(' ')[1].substring(0, 5) }}
       </button>
     </div>
-  </div>
+  </div>  
   <div mat-dialog-actions class="inline-flex space-x-3 justify-center">
     <div>
       <app-button

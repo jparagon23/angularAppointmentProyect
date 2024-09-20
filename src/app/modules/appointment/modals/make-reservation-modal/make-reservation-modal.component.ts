@@ -47,6 +47,7 @@ export class MakeReservationModalComponent implements OnInit {
         console.log('Available hours:', this.availableTimeSlots);
       },
       error: (err) => {
+        this.availableTimeSlots = [];
         console.error('Error fetching available slots:', err);
       },
       complete: () => {
