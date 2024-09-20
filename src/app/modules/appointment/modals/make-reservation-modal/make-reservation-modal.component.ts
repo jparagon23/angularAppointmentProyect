@@ -2,9 +2,11 @@ import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { toZonedTime, format } from 'date-fns-tz';
+import { Observable } from 'rxjs';
 import { AvailableSlotsResponse } from 'src/app/models/reservation.model';
 import { ReservationService } from 'src/app/services/reservation.service';
-import { loadReservations } from 'src/app/state/actions/reservations.actions';
+import { createReservation, loadAvailableSlots, loadReservations } from 'src/app/state/actions/reservations.actions';
+import { selectAvailableSlots } from 'src/app/state/selectors/reservetions.selectors';
 
 @Component({
   selector: 'app-make-reservation-modal',
@@ -14,19 +16,18 @@ export class MakeReservationModalComponent implements OnInit {
 
 
   selectedDate: string = '';
+  availableTimeSlots$: Observable<string[]> = new Observable();
   selectedSlots: string[] = [];
-  availableTimeSlots: string[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<MakeReservationModalComponent>,
-    private reservationService: ReservationService,
     private store: Store<any>,
-    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.initializeSelectedDate();
   }
 
   ngOnInit(): void {
+    this.availableTimeSlots$ = this.store.select(selectAvailableSlots);
     this.fetchAvailableSlots(this.selectedDate);
   }
 
@@ -40,37 +41,12 @@ export class MakeReservationModalComponent implements OnInit {
   }
 
   fetchAvailableSlots(date: string): void {
-    this.reservationService.getAvailableSlotsPerDay(date).subscribe({
-      next: (response: AvailableSlotsResponse) => {
-        this.availableTimeSlots = response.availableSlots.map((slot) => {
-          const dateTime = slot.date.dateTime;
-          return dateTime.slice(0, -3);
-        });
-        console.log('Available hours:', this.availableTimeSlots);
-      },
-      error: (err) => {
-        this.availableTimeSlots = [];
-        console.error('Error fetching available slots:', err);
-      },
-      complete: () => {
-        console.log('Fetching available slots completed');
-      },
-    });
+    this.store.dispatch(loadAvailableSlots({ date }));
   }
 
   onClickContinue(): void {
-    console.log('Selected slots:', this.selectedSlots);
-
-    this.reservationService.createReservation(this.selectedSlots).subscribe({
-      next: () => {
-        console.log('Reservation created successfully');
-        this.store.dispatch(loadReservations());
-        this.dialogRef.close();
-      },
-      error: (err) => {
-        console.error('Error creating reservation:', err);
-      },
-    });
+      this.store.dispatch(createReservation({ selectedSlots:this.selectedSlots }));
+      this.dialogRef.close();
   }
 
   onDateChange(event: Event): void {

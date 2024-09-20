@@ -21,4 +21,40 @@ export const selectReservation = createAction(
 export const cancelReservation = createAction(
   '[Reservations] Cancel Reservation',
   props<{ reservation: ReservationDetail }>()
+);  
+
+
+// Acción para cargar espacios disponibles
+export const loadAvailableSlots = createAction(
+  '[Reservation] Load Available Slots',
+  props<{ date: string }>()
+);
+
+// Acción para espacios disponibles cargados correctamente
+export const loadAvailableSlotsSuccess = createAction(
+  '[Reservation] Load Available Slots Success',
+  props<{ availableSlots: string[] }>()
+);
+
+// Acción para error al cargar espacios
+export const loadAvailableSlotsFailure = createAction(
+  '[Reservation] Load Available Slots Failure',
+  props<{ error: any }>()
+);
+
+// Acción para crear una reserva
+export const createReservation = createAction(
+  '[Reservation] Create Reservation',
+  props<{ selectedSlots: string[] }>()
+);
+
+// Acción cuando la reserva se ha creado exitosamente
+export const createReservationSuccess = createAction(
+  '[Reservation] Create Reservation Success'
+);
+
+// Acción para manejar errores al crear reserva
+export const createReservationFailure = createAction(
+  '[Reservation] Create Reservation Failure',
+  props<{ error: any }>()
 );
