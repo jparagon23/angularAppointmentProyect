@@ -5,7 +5,10 @@ import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
 import { AvailableSlotsResponse } from '../models/reservation.model';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { UserReservationResponse } from '../models/UserReservations.model';
+import {
+  ReservationDetail,
+  UserReservationResponse,
+} from '../models/UserReservations.model';
 import { ReservationConfirmation } from '../models/ReservationConfirmation.model';
 import { Store } from '@ngrx/store';
 import { selectUser } from '../state/selectors/users.selectors';
@@ -70,6 +73,13 @@ export class ReservationService {
     const body = { appointmentTime: selectedSlots, clubId: 1 };
 
     return this.http.post<ReservationConfirmation>(url, body, {
+      headers: this.headers,
+    });
+  }
+
+  cancelReservation(reservation: ReservationDetail) {
+    const url = `${environment.API_URL}/reservation/${reservation.groupId}`;
+    return this.http.delete<ReservationConfirmation>(url, {
       headers: this.headers,
     });
   }

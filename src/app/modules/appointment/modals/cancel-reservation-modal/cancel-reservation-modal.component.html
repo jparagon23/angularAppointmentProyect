@@ -1,0 +1,25 @@
+<div
+  mat-dialog-content
+  class="bg-white rounded-lg shadow-md w-full flex justify-between items-center"
+>
+  <div class="flex w-full justify-between items-center space-x-3">
+    <!-- Contenido de la reserva -->
+    <div class="flex-grow">
+      <div class="text-3xl font-bold">Domingo 15/09/2024</div>
+      <div class="text-gray-600">12:00:00 - 13:00:00</div>
+      <div class="text-gray-600">Cancha 1</div>
+      <div class="text-gray-600">Campo Verde</div>
+    </div>
+
+    <!-- Botón para cancelar reserva -->
+    <div mat-dialog-actions class="flex-shrink-0">
+      <button
+        mat-button
+        (click)="cancelReservation()"
+        class="bg-red-600 text-white font-bold py-2 px-4 rounded hover:bg-red-700 transition duration-300"
+      >
+        Cancelar Reserva
+      </button>
+    </div>
+  </div>
+</div>

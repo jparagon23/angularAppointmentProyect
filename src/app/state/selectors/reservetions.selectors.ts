@@ -13,3 +13,8 @@ export const selectReservationLoading = createSelector(
   selectReservationsFeature,
   (state: ReservationState) => state.loading
 );
+
+export const selectReservationSelected = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.reservationSelected
+);
