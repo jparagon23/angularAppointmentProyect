@@ -13,6 +13,7 @@ import { RequestStatus } from 'src/app/models/request-status.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { login } from 'src/app/state/actions/auth.actions';
 import { AppState } from 'src/app/state/app.state';
+import { selectAuthLoading } from 'src/app/state/selectors/auth.selectors';
 
 @Component({
   selector: 'app-login-form',
@@ -27,6 +28,8 @@ export class LoginFormComponent implements OnInit {
   faLock = faLock;
 
   invalidCredentials: boolean = false;
+
+  loadingLogin$: Observable<boolean> = new Observable();
 
   loginForm = this.formBuilder.group({
     email: [
@@ -62,6 +65,8 @@ export class LoginFormComponent implements OnInit {
           this.invalidCredentials = true;
         }
       });
+
+    this.loadingLogin$ = this.store.select(selectAuthLoading);
   }
 
   doLogin() {
