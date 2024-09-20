@@ -11,6 +11,8 @@ import { loadReservations } from 'src/app/state/actions/reservations.actions';
   templateUrl: './make-reservation-modal.component.html',
 })
 export class MakeReservationModalComponent implements OnInit {
+
+
   selectedDate: string = '';
   selectedSlots: string[] = [];
   availableTimeSlots: string[] = [];
@@ -86,4 +88,13 @@ export class MakeReservationModalComponent implements OnInit {
     console.log('Selected slot:', slot);
     this.selectedSlots.push(slot);
   }
+
+  deleteSelectedHour(slot: string): void {
+    const index = this.selectedSlots.indexOf(slot);
+    if (index !== -1) {
+      this.selectedSlots.splice(index, 1);
+    }
+  }
+
+
 }
