@@ -30,7 +30,9 @@ export const initialState: ReservationState = {
   reservationCanceled: false,
   availableSlots: [],
   loadingAvailableSlots: false,
-  error: undefined
+  error: undefined,
+  createReservationSuccess: false,
+  createReservationFailure: false
 };
 
 export const reservationsReducer = createReducer(
@@ -67,36 +69,42 @@ export const reservationsReducer = createReducer(
   on(loadAvailableSlotsSuccess, (state, { availableSlots }) => ({
     ...state,
     availableSlots,
-    loading: false,
+    loadingAvailableSlots: false,
   })),
 
   // Error al cargar espacios
   on(loadAvailableSlotsFailure, (state, { error }) => ({
     ...state,
-    loading: false,
+    loadingAvailableSlots: false,
     error,
   })),
 
   // Crear reserva
+  // Crear reserva: iniciar la creación de la reserva
   on(createReservation, (state, { selectedSlots }) => ({
     ...state,
     selectedSlots,
     loading: true,
+    createReservationSuccess: false,
+    createReservationFailure: false, 
     error: null,
   })),
 
-  // Reserva creada exitosamente
   on(createReservationSuccess, (state) => ({
     ...state,
     loading: false,
-    selectedSlots: []
+    selectedSlots: [],
+    createReservationSuccess: true, 
+    createReservationFailure: false, 
   })),
 
   // Error al crear reserva
   on(createReservationFailure, (state, { error }) => ({
     ...state,
     loading: false,
-    error
+    createReservationSuccess: false,
+    createReservationFailure: true, 
+    error,
   }))
 
 );

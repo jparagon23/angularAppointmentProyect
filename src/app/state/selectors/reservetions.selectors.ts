@@ -31,3 +31,8 @@ export const selectAvailableSlotsLoading = createSelector(
   selectReservationsFeature,
   (state: ReservationState) => state.loading
 );
+
+export const selectReservationSuccess = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.createReservationSuccess
+);

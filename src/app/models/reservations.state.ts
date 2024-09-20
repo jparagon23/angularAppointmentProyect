@@ -8,4 +8,6 @@ export interface ReservationState {
   availableSlots:string[];
   loadingAvailableSlots:boolean;
   error:any;
+  createReservationSuccess: boolean;
+  createReservationFailure: boolean; 
 }
