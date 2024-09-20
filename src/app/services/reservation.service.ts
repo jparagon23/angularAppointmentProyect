@@ -17,7 +17,6 @@ import { selectUser } from '../state/selectors/users.selectors';
   providedIn: 'root',
 })
 export class ReservationService {
-  private token = this.tokenService.getToken();
   private userId: number | undefined;
   private headers: HttpHeaders;
 
@@ -50,7 +49,6 @@ export class ReservationService {
 
   getUserReservations(): Observable<UserReservationResponse> {
     this.setHeaders();
-    console.log('Token:', this.token);
     console.log('User ID:', this.userId);
 
     const url = `${environment.API_URL}/reservation/user/${this.userId}`;
@@ -88,6 +86,8 @@ export class ReservationService {
   }
 
   private setHeaders(): HttpHeaders {
+    console.log('Setting headers with token' + this.tokenService.getToken());
+
     return new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
     });
