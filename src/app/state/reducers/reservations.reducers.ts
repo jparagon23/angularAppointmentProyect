@@ -2,6 +2,12 @@ import { createReducer, on } from '@ngrx/store';
 import { ReservationDetail } from 'src/app/models/UserReservations.model';
 import {
   cancelReservation,
+  createReservation,
+  createReservationFailure,
+  createReservationSuccess,
+  loadAvailableSlots,
+  loadAvailableSlotsFailure,
+  loadAvailableSlotsSuccess,
   loadReservations,
   loadReservationsFailure,
   loadReservationsSuccess,
@@ -22,6 +28,11 @@ export const initialState: ReservationState = {
     club: '',
   },
   reservationCanceled: false,
+  availableSlots: [],
+  loadingAvailableSlots: false,
+  error: undefined,
+  createReservationSuccess: false,
+  createReservationFailure: false,
 };
 
 export const reservationsReducer = createReducer(
@@ -46,5 +57,53 @@ export const reservationsReducer = createReducer(
   on(cancelReservation, (state, { reservation }) => ({
     ...state,
     reservationCanceled: true,
+  })),
+  // Cargando los espacios disponibles
+  on(loadAvailableSlots, (state) => ({
+    ...state,
+    loadingAvailableSlots: true,
+    error: null,
+  })),
+
+  // Cargar espacios exitosamente
+  on(loadAvailableSlotsSuccess, (state, { availableSlots }) => ({
+    ...state,
+    availableSlots,
+    loadingAvailableSlots: false,
+  })),
+
+  // Error al cargar espacios
+  on(loadAvailableSlotsFailure, (state, { error }) => ({
+    ...state,
+    loadingAvailableSlots: false,
+    error,
+  })),
+
+  // Crear reserva
+  // Crear reserva: iniciar la creación de la reserva
+  on(createReservation, (state, { selectedSlots }) => ({
+    ...state,
+    selectedSlots,
+    loading: true,
+    createReservationSuccess: false,
+    createReservationFailure: false,
+    error: null,
+  })),
+
+  on(createReservationSuccess, (state) => ({
+    ...state,
+    loading: false,
+    selectedSlots: [],
+    createReservationSuccess: true,
+    createReservationFailure: false,
+  })),
+
+  // Error al crear reserva
+  on(createReservationFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    createReservationSuccess: false,
+    createReservationFailure: true,
+    error,
   }))
 );

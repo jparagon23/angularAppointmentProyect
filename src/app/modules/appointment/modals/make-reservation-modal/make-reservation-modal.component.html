@@ -1,47 +1,44 @@
-<!-- <div mat-dialog-content>My PopUp</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onClickNO()">NO</button>
-  <button mat-button [mat-dialog-close]="true">Yes</button>
-</div> -->
-
 <div mat-dialog-content>
   <div>
     <h2 class="text-center mb-0">Crear reserva</h2>
   </div>
+
+  <!-- Mostrar las reservas seleccionadas -->
   <div class="flex flex-wrap space-x-4 justify-center">
     <div *ngIf="selectedSlots.length > 0" class="justify-start">
-      Reservas seleccionadas
+      <h3>Reservas seleccionadas:</h3>
     </div>
     <div *ngFor="let selectedSlot of selectedSlots">
       <button
         type="button"
         class="m-2 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200"
-        (click)="deleteSelectedHour(selectedSlot)"
+        (click)="deleteSelectedSlot(selectedSlot)"
       >
         {{ selectedSlot.split(" ")[1].substring(0, 5) }}
       </button>
     </div>
   </div>
-  <div class="inline-flex items-center space-x-2">
+
+  <!-- Selector de fecha -->
+  <div class="inline-flex items-center space-x-2 my-4">
     <div>
-      <label for="appointmentDate">Día de la reserva</label>
+      <label for="appointmentDate">Día de la reserva:</label>
     </div>
     <div>
       <input
         name="appointmentDate"
         type="date"
-        placeholder="Selecciona el día"
         [(ngModel)]="selectedDate"
         (change)="onDateChange($event)"
+        class="p-2 border rounded"
       />
     </div>
   </div>
-  <div *ngIf="availableTimeSlots.length === 0">
-    <p>No hay espacios disponibles</p>
-  </div>
-  
-  <div *ngIf="availableTimeSlots.length > 0" class="flex flex-wrap space-x-4">
-    <div *ngFor="let slot of availableTimeSlots">
+
+<!-- Mostrar los espacios disponibles -->
+<div *ngIf="(availableTimeSlots$ | async) as slots">
+  <div *ngIf="slots && slots.length > 0" class="flex flex-wrap justify-center mt-4">
+    <div *ngFor="let slot of slots">
       <button
         type="button"
         class="m-2 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200"
@@ -50,8 +47,18 @@
         {{ slot.split(' ')[1].substring(0, 5) }}
       </button>
     </div>
-  </div>  
-  <div mat-dialog-actions class="inline-flex space-x-3 justify-center">
+  </div>
+
+  <!-- Mostrar mensaje si no hay espacios disponibles -->
+  <div *ngIf="slots && slots.length === 0" class="mt-4">
+    <p>No hay espacios disponibles para la fecha seleccionada.</p>
+  </div>
+</div>
+
+
+
+  <!-- Acciones del diálogo -->
+  <div mat-dialog-actions class="inline-flex space-x-3 justify-center mt-6">
     <div>
       <app-button
         [typeBtn]="'submit'"

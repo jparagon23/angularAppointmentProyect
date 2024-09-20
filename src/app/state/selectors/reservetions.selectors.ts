@@ -18,3 +18,25 @@ export const selectReservationSelected = createSelector(
   selectReservationsFeature,
   (state: ReservationState) => state.reservationSelected
 );
+
+// Selector para obtener espacios disponibles
+export const selectAvailableSlots = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.availableSlots
+);
+
+// Selector para verificar si está cargando
+export const selectAvailableSlotsLoading = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.loading
+);
+
+export const selectCreateReservationSuccess = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.createReservationSuccess
+);
+
+export const selectCreateReservationFailure = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.createReservationFailure
+);

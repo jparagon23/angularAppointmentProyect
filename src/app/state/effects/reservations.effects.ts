@@ -5,6 +5,12 @@ import { catchError, concatMap, map, mergeMap, of, switchMap } from 'rxjs';
 import { ReservationService } from 'src/app/services/reservation.service';
 import {
   cancelReservation,
+  createReservation,
+  createReservationFailure,
+  createReservationSuccess,
+  loadAvailableSlots,
+  loadAvailableSlotsFailure,
+  loadAvailableSlotsSuccess,
   loadReservations,
   loadReservationsFailure,
   loadReservationsSuccess,
@@ -29,13 +35,13 @@ export class ReservationEffects {
     )
   );
 
-  loadReservationsAfterUser$ = createEffect(() =>
+  loadReservations$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(loadUserSuccess), // Espera hasta que loadUserSuccess sea despachado
-      concatMap((action) => [loadReservations()]) // Luego despacha loadReservations
+      ofType(createReservationSuccess, loadUserSuccess), // Escucha tanto createReservationSuccess como loadUserSuccess
+      concatMap(() => [loadReservations()]) // Luego despacha loadReservations
     )
   );
-
+  
   cancelReservation$ = createEffect(() =>
     this.actions$.pipe(
       ofType(cancelReservation),
@@ -45,6 +51,35 @@ export class ReservationEffects {
           map(() => loadReservations()),
           // Maneja el error si ocurre algún problema
           catchError((error) => of(loadReservationsFailure({ error })))
+        )
+      )
+    )
+  );
+
+  loadAvailableSlots$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadAvailableSlots),
+      mergeMap((action) =>
+        this.reservationService.getAvailableSlotsPerDay(action.date).pipe(
+          map((response) =>
+            loadAvailableSlotsSuccess({
+              availableSlots: response.availableSlots.map(slot => slot.date.dateTime.slice(0, -3))
+            })
+          ),
+          catchError((error) => of(loadAvailableSlotsFailure({ error })))
+        )
+      )
+    )
+  );
+
+  // Crear reserva
+  createReservation$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createReservation),
+      mergeMap((action) =>
+        this.reservationService.createReservation(action.selectedSlots).pipe(
+          map(() => createReservationSuccess()),
+          catchError((error) => of(createReservationFailure({ error })))
         )
       )
     )

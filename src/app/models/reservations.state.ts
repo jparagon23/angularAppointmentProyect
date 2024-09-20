@@ -5,4 +5,9 @@ export interface ReservationState {
   reservations: ReservationDetail[];
   reservationSelected: ReservationDetail;
   reservationCanceled: boolean;
+  availableSlots:string[];
+  loadingAvailableSlots:boolean;
+  error:any;
+  createReservationSuccess: boolean;
+  createReservationFailure: boolean; 
 }
