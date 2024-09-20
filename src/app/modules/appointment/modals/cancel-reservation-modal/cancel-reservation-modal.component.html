@@ -5,10 +5,15 @@
   <div class="flex w-full justify-between items-center space-x-3">
     <!-- Contenido de la reserva -->
     <div class="flex-grow">
-      <div class="text-3xl font-bold">Domingo 15/09/2024</div>
-      <div class="text-gray-600">12:00:00 - 13:00:00</div>
-      <div class="text-gray-600">Cancha 1</div>
-      <div class="text-gray-600">Campo Verde</div>
+      <div *ngIf="selectedReservation$ | async as reservation">
+        <div class="text-3xl font-bold">{{ reservation.date | date: 'fullDate' }}</div>
+        <div class="text-gray-600">{{ reservation.initialHour }} - {{ reservation.endHour }}</div>
+        <div class="text-gray-600">Cancha {{ reservation.groupCourtId }}</div>
+        <div class="text-gray-600">{{ reservation.club }}</div>
+      </div>
+      <div *ngIf="!(selectedReservation$ | async)">
+        <p>No hay información de la reserva seleccionada.</p>
+      </div>
     </div>
 
     <!-- Botón para cancelar reserva -->

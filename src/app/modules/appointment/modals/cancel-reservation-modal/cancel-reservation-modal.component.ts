@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -7,12 +7,18 @@ import {
 import { Store } from '@ngrx/store';
 import { ReservationService } from 'src/app/services/reservation.service';
 import { ConfirmationCancelReservationComponent } from '../confirmation-cancel-reservation/confirmation-cancel-reservation.component';
+import { Observable } from 'rxjs';
+import { selectReservationSelected } from 'src/app/state/selectors/reservetions.selectors';
+import { ReservationDetail } from 'src/app/models/UserReservations.model';
 
 @Component({
   selector: 'app-cancel-reservation-modal',
   templateUrl: './cancel-reservation-modal.component.html',
 })
-export class CancelReservationModalComponent {
+export class CancelReservationModalComponent implements OnInit {
+
+  selectedReservation$: Observable<ReservationDetail> = new Observable();
+
   constructor(
     public dialogRef: MatDialogRef<CancelReservationModalComponent>,
     private reservationService: ReservationService,
@@ -32,5 +38,9 @@ export class CancelReservationModalComponent {
         this.dialogRef.close(true);
       }
     });
+  }
+
+  ngOnInit(): void {
+    this.selectedReservation$ = this.store.select(selectReservationSelected);
   }
 }
