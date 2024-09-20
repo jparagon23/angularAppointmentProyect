@@ -88,8 +88,10 @@ export class ReservationService {
   private setHeaders(): HttpHeaders {
     console.log('Setting headers with token' + this.tokenService.getToken());
 
-    return new HttpHeaders({
+    this.headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
     });
+
+    return this.headers;
   }
 }
