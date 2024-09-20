@@ -1,0 +1,21 @@
+<div class="bg-white p-6 rounded-lg shadow-lg">
+  <p class="text-lg font-semibold mb-4">
+    ¿Estás seguro de que deseas cancelar la reserva?
+  </p>
+  <div class="flex justify-end space-x-4">
+    <app-button
+      [typeBtn]="'button'"
+      [color]="'danger'"
+      (click)="cancelConfirmed()"
+    >
+      Confirmar
+    </app-button>
+    <app-button
+      [typeBtn]="'button'"
+      [color]="'light'"
+      (click)="cancelProcess()"
+    >
+      Cancelar
+    </app-button>
+  </div>
+</div>

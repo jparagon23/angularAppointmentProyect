@@ -12,3 +12,13 @@ export const loadReservationsFailure = createAction(
   '[Reservations] Load Reservations Failure',
   props<{ error: any }>()
 );
+
+export const selectReservation = createAction(
+  '[Reservations] Select Reservation',
+  props<{ reservation: ReservationDetail }>()
+);
+
+export const cancelReservation = createAction(
+  '[Reservations] Cancel Reservation',
+  props<{ reservation: ReservationDetail }>()
+);

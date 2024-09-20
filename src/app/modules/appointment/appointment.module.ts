@@ -10,12 +10,16 @@ import { SharedModule } from '../shared/shared.module';
 import { ReservationCardComponent } from './components/reservation-card/reservation-card.component';
 import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
 import { FormsModule } from '@angular/forms';
+import { CancelReservationModalComponent } from './modals/cancel-reservation-modal/cancel-reservation-modal.component';
+import { ConfirmationCancelReservationComponent } from './modals/confirmation-cancel-reservation/confirmation-cancel-reservation.component';
 
 @NgModule({
   declarations: [
     MakeReservationModalComponent,
     ReservationCardComponent,
     DashboardPageComponent,
+    CancelReservationModalComponent,
+    ConfirmationCancelReservationComponent,
   ],
   imports: [
     CommonModule,
