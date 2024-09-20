@@ -85,7 +85,7 @@ export class MakeReservationModalComponent implements OnInit {
   }
   
 
-  deleteSelectedHour(slot: string): void {
+  deleteSelectedSlot(slot: string): void {
     const index = this.selectedSlots.indexOf(slot);
     if (index !== -1) {
       this.selectedSlots.splice(index, 1);
