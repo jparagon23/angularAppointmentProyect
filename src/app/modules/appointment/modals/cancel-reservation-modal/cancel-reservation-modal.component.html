@@ -6,8 +6,10 @@
     <!-- Contenido de la reserva -->
     <div class="flex-grow">
       <div *ngIf="selectedReservation$ | async as reservation">
-        <div class="text-3xl font-bold">{{ reservation.date}}</div>
-        <div class="text-gray-600">{{ reservation.initialHour }} - {{ reservation.endHour }}</div>
+        <div class="text-3xl font-bold">{{ reservation.date }}</div>
+        <div class="text-gray-600">
+          {{ reservation.initialHour }} - {{ reservation.endHour }}
+        </div>
         <div class="text-gray-600">Cancha {{ reservation.groupCourtId }}</div>
         <div class="text-gray-600">{{ reservation.club }}</div>
       </div>
@@ -18,13 +20,21 @@
 
     <!-- Botón para cancelar reserva -->
     <div mat-dialog-actions class="flex-shrink-0">
-      <button
+      <!-- <button
         mat-button
         (click)="cancelReservation()"
         class="bg-red-600 text-white font-bold py-2 px-4 rounded hover:bg-red-700 transition duration-300"
       >
         Cancelar Reserva
-      </button>
+      </button> -->
+
+      <app-button
+        [typeBtn]="'submit'"
+        [color]="'danger'"
+        [mat-dialog-close]="true"
+        (click)="cancelReservation()"
+        >Cancelar reserva</app-button
+      >
     </div>
   </div>
 </div>
