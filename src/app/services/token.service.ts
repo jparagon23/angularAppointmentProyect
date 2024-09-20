@@ -10,11 +10,13 @@ export class TokenService {
 
   saveToken(token: string) {
     setCookie('token-appnet', token, { expires: 365, path: '/' });
-    console.log('Token saved');
+    console.log('Token saved ' + token);
   }
 
   getToken() {
     const token = getCookie('token-appnet');
+    console.log('Token get ' + token);
+
     return token;
   }
 
