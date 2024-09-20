@@ -1,43 +1,50 @@
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { toZonedTime, format } from 'date-fns-tz';
-import { first, Observable } from 'rxjs';
-import { AvailableSlotsResponse } from 'src/app/models/reservation.model';
-import { ReservationService } from 'src/app/services/reservation.service';
-import { createReservation, loadAvailableSlots, loadReservations } from 'src/app/state/actions/reservations.actions';
-import { selectAvailableSlots, selectReservationsFeature, selectReservationSuccess } from 'src/app/state/selectors/reservetions.selectors';
+import { distinctUntilChanged, first, Observable, Subscription } from 'rxjs';
+import {
+  createReservation,
+  loadAvailableSlots,
+} from 'src/app/state/actions/reservations.actions';
+import { AppState } from 'src/app/state/app.state';
+import {
+  selectAvailableSlots,
+  selectCreateReservationFailure,
+  selectCreateReservationSuccess,
+} from 'src/app/state/selectors/reservetions.selectors';
+import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-make-reservation-modal',
   templateUrl: './make-reservation-modal.component.html',
 })
-export class MakeReservationModalComponent implements OnInit {
-
-
-  selectedDate: string = '';
-  availableTimeSlots$: Observable<string[]> = new Observable();
+export class MakeReservationModalComponent implements OnInit, OnDestroy {
+  selectedDate: string = this.initializeSelectedDate();
+  availableTimeSlots$: Observable<string[]> =
+    this.store.select(selectAvailableSlots);
   selectedSlots: string[] = [];
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     public dialogRef: MatDialogRef<MakeReservationModalComponent>,
-    private store: Store<any>,
-  ) {
-    this.initializeSelectedDate();
-  }
+    private store: Store<AppState>,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    this.availableTimeSlots$ = this.store.select(selectAvailableSlots);
     this.fetchAvailableSlots(this.selectedDate);
   }
 
-  initializeSelectedDate(): void {
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
+  }
+
+  initializeSelectedDate(): string {
     const today = new Date();
     const bogotaTimeZone = 'America/Bogota';
     const zonedDate = toZonedTime(today, bogotaTimeZone);
-    this.selectedDate = format(zonedDate, 'yyyy-MM-dd', {
-      timeZone: bogotaTimeZone,
-    });
+    return format(zonedDate, 'yyyy-MM-dd', { timeZone: bogotaTimeZone });
   }
 
   fetchAvailableSlots(date: string): void {
@@ -45,52 +52,49 @@ export class MakeReservationModalComponent implements OnInit {
   }
 
   onClickContinue(): void {
-    if (this.selectedSlots.length > 0) {
-      // Despacha la acción para crear la reserva
-      this.store.dispatch(createReservation({ selectedSlots: this.selectedSlots }));
-  
-      // Escucha el éxito o fallo de la creación de la reserva
-      this.store.select(selectReservationsFeature).pipe(
-        first()  // Solo toma la primera emisión y luego completa la suscripción
-      ).subscribe((state) => {
-        if (state.createReservationSuccess) {
-          // Si la reserva se creó exitosamente, cierra el diálogo
-          this.dialogRef.close();
-        } else if (state.createReservationFailure) {
-          // Maneja el error si ocurre
-          console.error('Error al crear la reserva', state.error);
+    const dialogRef = this.dialog.open(ConfirmationModalComponent, {
+      maxWidth: '50vw',
+      maxHeight: '50vh',
+      data: { text: '¿Estas seguro quieres realizar esta reserva?' },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === true) {
+        if (this.selectedSlots.length > 0) {
+          this.store.dispatch(
+            createReservation({ selectedSlots: this.selectedSlots })
+          );
+
+          if (this.store.select(selectCreateReservationSuccess).pipe(first())) {
+            this.dialogRef.close();
+          }
+        } else {
+          console.warn('No hay slots seleccionados');
         }
-      });
-    } else {
-      console.warn('No hay slots seleccionados');
-    }
-  }  
-  
+      }
+      if (result === false) {
+      }
+    });
+  }
 
   onDateChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     this.selectedDate = inputElement.value;
-    console.log('Selected date:', this.selectedDate);
-
     this.selectedSlots = [];
-
     this.fetchAvailableSlots(this.selectedDate);
   }
 
   onSlotSelect(slot: string): void {
     if (!this.selectedSlots.includes(slot)) {
-      this.selectedSlots.push(slot);
+      this.selectedSlots = [...this.selectedSlots, slot];
     }
-    console.log('Selected slot:', slot);
   }
-  
 
   deleteSelectedSlot(slot: string): void {
-    const index = this.selectedSlots.indexOf(slot);
-    if (index !== -1) {
-      this.selectedSlots.splice(index, 1);
-    }
+    this.selectedSlots = this.selectedSlots.filter((s) => s !== slot);
   }
 
-
+  showErrorMessage(message: string): void {
+    console.error(message);
+  }
 }

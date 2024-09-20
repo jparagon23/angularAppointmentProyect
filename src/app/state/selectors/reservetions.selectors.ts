@@ -19,7 +19,6 @@ export const selectReservationSelected = createSelector(
   (state: ReservationState) => state.reservationSelected
 );
 
-
 // Selector para obtener espacios disponibles
 export const selectAvailableSlots = createSelector(
   selectReservationsFeature,
@@ -32,7 +31,12 @@ export const selectAvailableSlotsLoading = createSelector(
   (state: ReservationState) => state.loading
 );
 
-export const selectReservationSuccess = createSelector(
+export const selectCreateReservationSuccess = createSelector(
   selectReservationsFeature,
   (state: ReservationState) => state.createReservationSuccess
+);
+
+export const selectCreateReservationFailure = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.createReservationFailure
 );
