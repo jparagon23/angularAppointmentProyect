@@ -32,13 +32,11 @@ export class ReservationService {
     this.store.select(selectUser).subscribe((userId) => {
       this.userId = userId?.id;
     });
-    this.headers = new HttpHeaders({
-      Authorization: `Bearer ${this.token}`,
-    });
-    console.log('Token:', this.token);
+    this.headers = this.setHeaders();
   }
 
   getAvailableSlotsPerDay(date: string) {
+    this.setHeaders();
     const url = `${environment.API_URL}/reservation/club/1/available-date-times?date=${date}`;
 
     return this.http
@@ -51,6 +49,7 @@ export class ReservationService {
   }
 
   getUserReservations(): Observable<UserReservationResponse> {
+    this.setHeaders();
     console.log('Token:', this.token);
     console.log('User ID:', this.userId);
 
@@ -70,6 +69,7 @@ export class ReservationService {
   }
 
   createReservation(selectedSlots: string[]) {
+    this.setHeaders();
     const url = `${environment.API_URL}/reservation/${this.userId}`;
 
     const body = { appointmentTime: selectedSlots, clubId: 1 };
@@ -80,9 +80,16 @@ export class ReservationService {
   }
 
   cancelReservation(reservation: ReservationDetail) {
+    this.setHeaders();
     const url = `${environment.API_URL}/reservation/${reservation.groupId}`;
     return this.http.delete<ReservationConfirmation>(url, {
       headers: this.headers,
+    });
+  }
+
+  private setHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
     });
   }
 }
