@@ -19,9 +19,7 @@ import { selectUser } from '../state/selectors/users.selectors';
 export class ReservationService {
   private token = this.tokenService.getToken();
   private userId: number | undefined;
-  private headers = new HttpHeaders({
-    Authorization: `Bearer ${this.token}`,
-  });
+  private headers: HttpHeaders;
 
   reservations$ = new BehaviorSubject<UserReservationResponse | null>(null);
 
@@ -34,6 +32,10 @@ export class ReservationService {
     this.store.select(selectUser).subscribe((userId) => {
       this.userId = userId?.id;
     });
+    this.headers = new HttpHeaders({
+      Authorization: `Bearer ${this.token}`,
+    });
+    console.log('Token:', this.token);
   }
 
   getAvailableSlotsPerDay(date: string) {
