@@ -18,7 +18,7 @@ import { selectUser } from '../state/selectors/users.selectors';
 })
 export class ReservationService {
   private userId: number | undefined;
-  private headers: HttpHeaders;
+  private headers: HttpHeaders | undefined;
 
   reservations$ = new BehaviorSubject<UserReservationResponse | null>(null);
 
@@ -28,70 +28,55 @@ export class ReservationService {
     private authService: AuthService,
     private store: Store<any>
   ) {
-    this.store.select(selectUser).subscribe((userId) => {
-      this.userId = userId?.id;
+    // Subscribe to userId once, avoid multiple subscriptions
+    this.store.select(selectUser).subscribe((user) => {
+      this.userId = user?.id;
     });
-    this.headers = this.setHeaders();
   }
 
-  getAvailableSlotsPerDay(date: string) {
-    this.setHeaders();
-    const url = `${environment.API_URL}/reservation/club/1/available-date-times?date=${date}`;
+  private setHeaders(): HttpHeaders {
+    if (!this.headers) {
+      this.headers = new HttpHeaders({
+        Authorization: `Bearer ${this.tokenService.getToken()}`,
+      });
+    }
+    return this.headers;
+  }
 
+  getAvailableSlotsPerDay(date: string): Observable<AvailableSlotsResponse> {
+    const url = `${environment.API_URL}/reservation/club/1/available-date-times?date=${date}`;
     return this.http
-      .get<AvailableSlotsResponse>(url, { headers: this.headers })
-      .pipe(
-        tap((response) => {
-          console.log('Response:', response);
-        })
-      );
+      .get<AvailableSlotsResponse>(url, { headers: this.setHeaders() })
+      .pipe(tap((response) => console.log('Response:', response)));
   }
 
   getUserReservations(): Observable<UserReservationResponse> {
-    this.setHeaders();
-    console.log('User ID:', this.userId);
-
     const url = `${environment.API_URL}/reservation/user/${this.userId}`;
-
-    console.log('URL:', url);
-    console.log('Headers:', this.headers);
+    console.log('Fetching reservations for User ID:', this.userId);
 
     return this.http
-      .get<UserReservationResponse>(url, { headers: this.headers })
+      .get<UserReservationResponse>(url, { headers: this.setHeaders() })
       .pipe(
         tap((response) => {
-          console.log('Response:', response);
+          console.log('User Reservations Response:', response);
           this.reservations$.next(response);
         })
       );
   }
 
-  createReservation(selectedSlots: string[]) {
-    this.setHeaders();
+  createReservation(selectedSlots: string[]): Observable<ReservationConfirmation> {
     const url = `${environment.API_URL}/reservation/${this.userId}`;
-
     const body = { appointmentTime: selectedSlots, clubId: 1 };
-
+    
     return this.http.post<ReservationConfirmation>(url, body, {
-      headers: this.headers,
+      headers: this.setHeaders(),
     });
   }
 
-  cancelReservation(reservation: ReservationDetail) {
-    this.setHeaders();
+  cancelReservation(reservation: ReservationDetail): Observable<ReservationConfirmation> {
     const url = `${environment.API_URL}/reservation/${reservation.groupId}`;
     return this.http.delete<ReservationConfirmation>(url, {
-      headers: this.headers,
+      headers: this.setHeaders(),
     });
-  }
-
-  private setHeaders(): HttpHeaders {
-    console.log('Setting headers with token' + this.tokenService.getToken());
-
-    this.headers = new HttpHeaders({
-      Authorization: `Bearer ${this.tokenService.getToken()}`,
-    });
-
-    return this.headers;
   }
 }
