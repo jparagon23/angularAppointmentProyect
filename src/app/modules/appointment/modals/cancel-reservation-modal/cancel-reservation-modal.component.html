@@ -6,7 +6,7 @@
     <!-- Contenido de la reserva -->
     <div class="flex-grow">
       <div *ngIf="selectedReservation$ | async as reservation">
-        <div class="text-3xl font-bold">{{ reservation.date | date: 'fullDate' }}</div>
+        <div class="text-3xl font-bold">{{ reservation.date}}</div>
         <div class="text-gray-600">{{ reservation.initialHour }} - {{ reservation.endHour }}</div>
         <div class="text-gray-600">Cancha {{ reservation.groupCourtId }}</div>
         <div class="text-gray-600">{{ reservation.club }}</div>
