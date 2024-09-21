@@ -35,11 +35,12 @@ export class ReservationService {
   }
 
   private setHeaders(): HttpHeaders {
-    if (!this.headers) {
-      this.headers = new HttpHeaders({
-        Authorization: `Bearer ${this.tokenService.getToken()}`,
-      });
-    }
+    console.log('setting headers');
+
+    this.headers = new HttpHeaders({
+      Authorization: `Bearer ${this.tokenService.getToken()}`,
+    });
+
     return this.headers;
   }
 
@@ -64,16 +65,20 @@ export class ReservationService {
       );
   }
 
-  createReservation(selectedSlots: string[]): Observable<ReservationConfirmation> {
+  createReservation(
+    selectedSlots: string[]
+  ): Observable<ReservationConfirmation> {
     const url = `${environment.API_URL}/reservation/${this.userId}`;
     const body = { appointmentTime: selectedSlots, clubId: 1 };
-    
+
     return this.http.post<ReservationConfirmation>(url, body, {
       headers: this.setHeaders(),
     });
   }
 
-  cancelReservation(reservation: ReservationDetail): Observable<ReservationConfirmation> {
+  cancelReservation(
+    reservation: ReservationDetail
+  ): Observable<ReservationConfirmation> {
     const url = `${environment.API_URL}/reservation/${reservation.groupId}`;
     return this.http.delete<ReservationConfirmation>(url, {
       headers: this.setHeaders(),

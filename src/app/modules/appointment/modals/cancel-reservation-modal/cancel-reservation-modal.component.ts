@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
   MatDialog,
@@ -11,25 +11,30 @@ import { Observable } from 'rxjs';
 import { selectReservationSelected } from 'src/app/state/selectors/reservetions.selectors';
 import { ReservationDetail } from 'src/app/models/UserReservations.model';
 import { cancelReservation } from 'src/app/state/actions/reservations.actions';
+import { ModalService } from 'src/app/services/modal.service';
 
 @Component({
   selector: 'app-cancel-reservation-modal',
   templateUrl: './cancel-reservation-modal.component.html',
 })
-export class CancelReservationModalComponent implements OnInit {
+export class CancelReservationModalComponent implements OnInit, OnDestroy {
   selectedReservation$: Observable<ReservationDetail> = new Observable();
   selectedReservation: ReservationDetail | null = null; // Hold the reservation data
 
   constructor(
     public dialogRef: MatDialogRef<CancelReservationModalComponent>,
     private store: Store<any>,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private modalservice: ModalService
   ) {}
+  ngOnDestroy(): void {
+    this.modalservice.remove(this.dialogRef);
+  }
 
   ngOnInit(): void {
     // Subscribe to get the selected reservation once when the component initializes
     this.selectedReservation$ = this.store.select(selectReservationSelected);
-
+    this.modalservice.add(this.dialogRef);
     // Store the selected reservation for use when cancel is confirmed
     this.selectedReservation$.subscribe((reservation) => {
       this.selectedReservation = reservation;

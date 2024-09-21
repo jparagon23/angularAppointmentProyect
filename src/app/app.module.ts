@@ -18,6 +18,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { ReservationEffects } from './state/effects/reservations.effects';
 import { ProfileEffects } from './state/effects/users.effects';
 import { AuthEffects } from './state/effects/auth.effects';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,7 +32,13 @@ import { AuthEffects } from './state/effects/auth.effects';
     StoreDevtoolsModule.instrument({ name: 'TEST' }),
     EffectsModule.forRoot([ReservationEffects, ProfileEffects, AuthEffects]),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

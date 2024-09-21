@@ -1,3 +1,4 @@
+import { ModalService } from './../../../../services/modal.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
@@ -29,14 +30,18 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   constructor(
     public dialogRef: MatDialogRef<MakeReservationModalComponent>,
     private store: Store<AppState>,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
+    this.modalService.add(this.dialogRef);
     this.fetchAvailableSlots(this.selectedDate);
   }
 
   ngOnDestroy(): void {
+    this.modalService.remove(this.dialogRef);
+
     this.subscriptions.unsubscribe();
   }
 
