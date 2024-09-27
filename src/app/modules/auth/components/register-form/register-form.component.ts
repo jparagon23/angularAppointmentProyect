@@ -1,3 +1,7 @@
+import {
+  CommonType,
+  Gender,
+} from './../../../../models/InitialSignUpData.interface';
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -10,10 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import swal from 'sweetalert2';
 
-import {
-  Gender,
-  InitialSignUpData,
-} from 'src/app/models/InitialSignUpData.interface';
+import { InitialSignUpData } from 'src/app/models/InitialSignUpData.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import * as moment from 'moment-timezone';
 import { RequestStatus } from 'src/app/models/request-status.model';
@@ -25,6 +26,11 @@ import { CustomValidators } from 'src/app/utils/validators';
 export class RegisterFormComponent implements OnInit {
   public formSubmitted = false;
   public initialData!: InitialSignUpData;
+  public genders: CommonType[] = [
+    { id: 'MALE', description: 'Masculino' },
+    { id: 'FEMALE', description: 'Femenino' },
+    { id: 'OTHER', description: 'Otro' },
+  ];
   public blurredFields: Set<string> = new Set<string>();
   showRegisterForm = false;
   status: RequestStatus = 'init';

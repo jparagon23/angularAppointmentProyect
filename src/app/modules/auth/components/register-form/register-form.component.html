@@ -62,9 +62,7 @@
           [control]="registerForm.controls['gender']"
           [name]="'genero'"
           [description]="'Género'"
-          [options]="
-            initialData && initialData.genders ? initialData.genders : []
-          "
+          [options]="initialData && genders ? genders : []"
         ></app-select>
       </div>
       <div class="w-full md:w-1/2">

@@ -6,7 +6,7 @@ export interface InitialSignUpData {
 }
 
 export interface CommonType {
-  id: number;
+  id: number | string;
   description: string;
 }
 
