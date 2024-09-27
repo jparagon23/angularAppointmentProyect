@@ -37,7 +37,7 @@ export class AuthInterceptor implements HttpInterceptor {
       console.log('Unauthorized error, redirecting to login.');
       this.tokenService.removeToken();
       this.modalService.closeAllModals();
-      this.router.navigate(['/login']); // Redirigir al login con returnUrl
+      this.router.navigate(['/login']);
     }
     return throwError(() => error);
   }
