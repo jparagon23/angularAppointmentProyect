@@ -35,6 +35,9 @@ export class AuthService {
     const params = new HttpParams()
       .set('userId', userId.toString())
       .set('code', code);
+
+    console.log('userId: ', userId);
+
     return this.http.post(url, {}, { params });
   }
 
@@ -50,8 +53,14 @@ export class AuthService {
 
   createUser(formData: any) {
     return this.http
-      .post(`${this.apiUrl}/auth/register`, formData)
-      .pipe(tap((response: any) => {}));
+      .post<{ id: number }>(`${this.apiUrl}/auth/register`, formData)
+      .pipe(
+        tap((response: { id: number }) => {
+          console.log('the id set is ' + response.id);
+
+          this.user = { id: response.id } as User;
+        })
+      );
   }
 
   login(formData: { email: string; password: string }) {
