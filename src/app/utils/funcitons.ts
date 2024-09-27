@@ -1,16 +1,13 @@
 export class Functions {
-  static splitAndcapitalizeFirstLetter(str: string): string {
-    // Split the input string based on camelCase pattern
-    const words = str.replace(/([a-z])([A-Z])/g, '$1 $2').split(' ');
-
-    // Capitalize the first letter of each word
-    const capitalizedWords = words.map(
-      (word) => word.charAt(0).toUpperCase() + word.slice(1)
-    );
-
-    // Join the capitalized words to form the final string
-    const result = capitalizedWords.join(' ');
-
-    return result;
+  static splitAndCapitalizeFirstLetter(str: string): string {
+    return str
+      .replace(/([a-z])([A-Z])/g, '$1 $2') // Split based on camelCase pattern
+      .split(' ') // Split into words
+      .map((word, index) =>
+        index === 0
+          ? word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+          : word.toLowerCase()
+      ) // Capitalize first letter of the first word, lowercase others
+      .join(' '); // Join words to form the final string
   }
 }

@@ -2,7 +2,7 @@
   <label
     for="email"
     class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-    >{{ functions.splitAndcapitalizeFirstLetter(name) }}</label
+    >{{ description || functions.splitAndCapitalizeFirstLetter(name) }}</label
   >
   <select
     [formControl]="control"
@@ -15,9 +15,14 @@
       'bg-white': (control.valid && control.dirty) || control.value !== ''
     }"
   >
-    <option value>{{ functions.splitAndcapitalizeFirstLetter(name) }}</option>
+    <option value>
+      {{ description || functions.splitAndCapitalizeFirstLetter(name) }}
+    </option>
     <option *ngFor="let option of options" [value]="option?.id || option">
-      {{ option?.description || option }}
+      {{
+        functions.splitAndCapitalizeFirstLetter(option?.description || "") ||
+          functions.splitAndCapitalizeFirstLetter(option?.toString() || "")
+      }}
     </option>
   </select>
   <div *ngIf="blurred">

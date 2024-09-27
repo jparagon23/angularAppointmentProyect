@@ -9,6 +9,7 @@ import { Functions } from 'src/app/utils/funcitons';
 export class CheckboxComponent {
   functions = Functions;
   @Input() control!: FormControl;
+  @Input() description!: string;
   @Input() name: string = '';
 
   shouldApplyRedBorder(): boolean {

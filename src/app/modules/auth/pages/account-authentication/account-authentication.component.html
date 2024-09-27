@@ -1,30 +1,45 @@
-<div class="w-full h-screen bg-authBackGround bg-cover">
+<div
+  class="w-full h-screen bg-authBackGround bg-cover flex items-center justify-center px-6 py-8 mx-auto"
+>
   <div
-    class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+    class="w-full bg-white rounded-lg shadow dark:border sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
   >
-    <div
-      class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+    <!-- Sección de autenticación (si no está autenticado) -->
+    <section
+      class="p-6 space-y-4 md:space-y-6 sm:p-8"
+      *ngIf="!(isAuthenticated$ | async)"
     >
-      <div class="p-6 space-y-1 md:space-y-3 sm:p-8">
-        <div>
-          <h1
-            class="mb-2 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center"
-          >
-            Authenticate your account
-            <fa-icon [icon]="faLock" class="ml-3"></fa-icon>
-          </h1>
-          <h3 class="text-sm text-center">
-            A code has been sent to your email. Please enter it below
-          </h3>
-        </div>
-        <div>
-          <app-account-auth-form></app-account-auth-form>
-        </div>
-        <h3 class="text-sm text-center">
-          If you haven't received the code, <a href="#">click here</a> to resend
-          it
-        </h3>
-      </div>
-    </div>
+      <h1
+        class="mb-2 text-center text-2xl font-bold text-gray-900 dark:text-white leading-tight tracking-tight"
+      >
+        Autentica tu cuenta
+        <fa-icon [icon]="faLock" class="ml-3"></fa-icon>
+      </h1>
+      <p class="text-center text-sm text-gray-700 dark:text-gray-300">
+        Un código ha sido enviado a tu correo electrónico. Por favor ingrésalo a
+        continuación.
+      </p>
+      <app-account-auth-form></app-account-auth-form>
+      <p class="text-center text-sm text-gray-600 dark:text-gray-400">
+        Si no has recibido el código,
+        <a href="#" class="text-blue-600 hover:underline dark:text-blue-400"
+          >haz clic aquí</a
+        >
+        para reenviarlo.
+      </p>
+    </section>
+
+    <!-- Sección de éxito (si está autenticado) -->
+    <section
+      class="p-6 bg-gray-50 dark:bg-gray-700 text-center"
+      *ngIf="isAuthenticated$ | async"
+    >
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+        ¡Tu cuenta ha sido autenticada!
+      </h2>
+      <app-button typeBtn="submit" color="success" (click)="navigateToLogin()">
+        Ir al inicio de sesión
+      </app-button>
+    </section>
   </div>
 </div>

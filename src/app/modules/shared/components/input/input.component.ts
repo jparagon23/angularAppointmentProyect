@@ -13,6 +13,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 export class InputComponent {
   @Input() control!: FormControl;
   @Input() name!: string;
+  @Input() description!: string;
   @Input() type!: string;
   @Input() placeholder!: string;
   @Input() displayLabel: boolean = true;

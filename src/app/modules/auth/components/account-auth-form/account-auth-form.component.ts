@@ -7,8 +7,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { RequestStatus } from 'src/app/models/request-status.model';
 import { AuthService } from 'src/app/services/auth.service';
+import { validateToken } from 'src/app/state/actions/auth.actions';
+import {
+  selectAuthError,
+  selectAuthLoading,
+  selectIsAuthenticated,
+} from 'src/app/state/selectors/auth.selectors';
 
 @Component({
   selector: 'app-account-auth-form',
@@ -22,34 +30,52 @@ export class AccountAuthFormComponent {
   tokenControl = this.authenticationForm.get('token') as FormControl;
   status: RequestStatus = 'init';
 
+  isAuthenticated$: Observable<boolean>;
+  authError$: Observable<string | null>;
+  loading$: Observable<boolean>;
+
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private store: Store,
     private router: Router
-  ) {}
+  ) {
+    // Seleccionar estados desde el store
+    this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
+    this.authError$ = this.store.select(selectAuthError);
+    this.loading$ = this.store.select(selectAuthLoading);
+
+    // // Navegar al login si la autenticación es exitosa
+    // this.isAuthenticated$.subscribe((isAuthenticated) => {
+    //   console.log('Is Authenticated:', isAuthenticated);
+    //   if (isAuthenticated) {
+    //     this.navigateToLogin();
+    //   }
+    // });
+
+    // Manejo de errores de autenticación
+    this.authError$.subscribe((error) => {
+      if (error) {
+        // Aquí puedes establecer un error en el formulario
+        this.authenticationForm
+          .get('token')
+          ?.setErrors({ tokenNotValid: true });
+      }
+    });
+  }
 
   validateToken() {
     if (this.authenticationForm.invalid) {
       return;
     }
 
-    this.authService.authToken(this.authenticationForm.value.token).subscribe({
-      next: (response) => {
-        this.router.navigate(['/login']);
-      },
-      error: (error) => {
-        if (error instanceof HttpErrorResponse && error.status === 400) {
-          const validationError = error.error;
-          console.log(validationError);
+    const token = this.authenticationForm.value.token;
 
-          if (validationError.errorCode === 'ValidationError') {
-            // Set an error for the 'token' form control
-            this.authenticationForm
-              .get('token')
-              ?.setErrors({ tokenNotValid: true });
-          }
-        }
-      },
-    });
+    // Despachar la acción para validar el token
+    this.store.dispatch(validateToken({ token }));
+  }
+
+  navigateToLogin() {
+    console.log('Navegando al login');
+    this.router.navigate(['/login']);
   }
 }

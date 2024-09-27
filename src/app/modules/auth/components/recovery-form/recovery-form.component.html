@@ -1,23 +1,16 @@
-<h1 class="text-center font-bold py-2 text-gray-700">Set your new password</h1>
+<h1 class="text-center font-bold py-2 text-gray-700">
+  Ingresa tu nueva contraseña
+</h1>
 <form [formGroup]="form" novalidate class="space-y-4" (ngSubmit)="recovery()">
   <div>
     <div class="relative">
       <div class="mb-2">
         <app-input
           [control]="form.controls.newPassword"
-          [placeholder]="'Enter new password'"
+          [placeholder]="'Ingresa la nueva contraseña'"
           [type]="showPassword ? 'text' : 'password'"
           [displayLabel]="false"
         ></app-input>
-      </div>
-      <div class="absolute top-1/2 right-0 transform -translate-y-1/2">
-        <button
-          type="button"
-          class="p-2"
-          (click)="showPassword = !showPassword"
-        >
-          <fa-icon [icon]="showPassword ? faEye : faEyeSlash"></fa-icon>
-        </button>
       </div>
     </div>
   </div>
@@ -25,7 +18,7 @@
     <div class="relative">
       <app-input
         [control]="form.controls.confirmPassword"
-        [placeholder]="'Confirm new password'"
+        [placeholder]="'Confirma la nueva contraseña'"
         [type]="'password'"
         [displayLabel]="false"
       ></app-input>
@@ -44,7 +37,7 @@
       typeBtn="submit"
       color="success"
       [loading]="status === 'loading'"
-      >Recovery</app-button
+      >Recuperar contraseña</app-button
     >
   </div>
 </form>

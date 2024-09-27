@@ -4,6 +4,10 @@ import {
   loginFailure,
   loginSuccess,
   logout,
+  setAuthenticationStatus,
+  validateToken,
+  validateTokenFailure,
+  validateTokenSuccess,
 } from '../actions/auth.actions';
 
 export interface AuthState {
@@ -11,6 +15,8 @@ export interface AuthState {
   refreshToken: string | null;
   error: any;
   loading: boolean;
+  tokenLoading: boolean;
+  accountIsAuthenticated: boolean;
 }
 
 export const initialState: AuthState = {
@@ -18,6 +24,8 @@ export const initialState: AuthState = {
   refreshToken: null,
   error: null,
   loading: false,
+  accountIsAuthenticated: false,
+  tokenLoading: false,
 };
 
 export const authReducer = createReducer(
@@ -44,5 +52,26 @@ export const authReducer = createReducer(
     refreshToken: null,
     error: null,
     loading: false,
+  })),
+  on(validateToken, (state) => ({
+    ...state,
+    tokenLoading: true,
+    error: null,
+  })),
+  on(validateTokenSuccess, (state) => ({
+    ...state,
+    tokenLoading: false,
+    accountIsAuthenticated: true,
+    error: null,
+  })),
+  on(validateTokenFailure, (state, { error }) => ({
+    ...state,
+    tokenLoading: false,
+    accountIsAuthenticated: false,
+    error,
+  })),
+  on(setAuthenticationStatus, (state, { isAuthenticated }) => ({
+    ...state,
+    accountIsAuthenticated: isAuthenticated,
   }))
 );

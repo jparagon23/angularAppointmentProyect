@@ -10,7 +10,7 @@ import { Functions } from 'src/app/utils/funcitons';
 export class SelectComponent {
   @Input() control!: FormControl;
   @Input() name!: string;
-
+  @Input() description!: string;
   @Input() options!: CommonType[];
   blurred: boolean = false;
   functions = Functions;

@@ -7,6 +7,9 @@ import {
   loginFailure,
   loginSuccess,
   logout,
+  validateToken,
+  validateTokenFailure,
+  validateTokenSuccess,
 } from '../actions/auth.actions';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
@@ -48,6 +51,18 @@ export class AuthEffects {
         // Aquí puedes agregar lógica adicional para el logout si es necesario
         return { type: '[Auth] Logout Success' };
       })
+    )
+  );
+
+  authenticateAccount$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(validateToken),
+      mergeMap((action) =>
+        this.authService.authToken(action.token).pipe(
+          map(() => validateTokenSuccess()),
+          catchError((error) => of(validateTokenFailure({ error })))
+        )
+      )
     )
   );
 

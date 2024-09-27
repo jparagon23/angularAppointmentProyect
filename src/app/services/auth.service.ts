@@ -12,6 +12,9 @@ import { User, UserData } from '../models/user.model';
   providedIn: 'root',
 })
 export class AuthService {
+  validateToken(arg0: { token: any }): any {
+    throw new Error('Method not implemented.');
+  }
   private initialSignUpData: InitialSignUpData = {
     documentTypes: [],
     genders: [],

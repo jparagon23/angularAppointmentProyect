@@ -61,6 +61,7 @@
         <app-select
           [control]="registerForm.controls['gender']"
           [name]="'genero'"
+          [description]="'Género'"
           [options]="
             initialData && initialData.genders ? initialData.genders : []
           "
@@ -107,6 +108,7 @@
         <app-select
           [control]="registerForm.controls['phoneTypeId']"
           [name]="'tipoDeTelefono'"
+          [description]="'Tipo de teléfono'"
           [options]="
             initialData && initialData.phoneTypes ? initialData.phoneTypes : []
           "
@@ -116,6 +118,7 @@
         <app-input
           [control]="registerForm.controls['phone']"
           [name]="'telefono'"
+          [description]="'Teléfono'"
           [type]="'text'"
           [placeholder]="'Ingresa tu numero telefonico'"
         ></app-input>
@@ -138,6 +141,7 @@
         <app-select
           [control]="registerForm.controls['categoryId']"
           [name]="'categoria'"
+          [description]="'Categoría'"
           [options]="initialData.categories ? initialData.categories : []"
         ></app-select>
       </div>

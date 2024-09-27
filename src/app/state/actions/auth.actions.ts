@@ -15,4 +15,23 @@ export const loginFailure = createAction(
   props<{ error: any }>()
 );
 
+export const validateToken = createAction(
+  '[Auth] Validate Token',
+  props<{ token: string }>()
+);
+
+export const validateTokenSuccess = createAction(
+  '[Auth] Validate Token Success'
+);
+
+export const validateTokenFailure = createAction(
+  '[Auth] Validate Token Failure',
+  props<{ error: string }>()
+);
+
+export const setAuthenticationStatus = createAction(
+  '[Auth] Set Authentication Status',
+  props<{ isAuthenticated: boolean }>()
+);
+
 export const logout = createAction('[Auth] Logout');

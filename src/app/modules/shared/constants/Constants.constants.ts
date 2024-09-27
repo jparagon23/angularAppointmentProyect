@@ -18,7 +18,7 @@ export const errorMessages: CustomError[] = [
   },
   {
     type: 'tokenNotValid',
-    description: 'The code entered is not valid, please try again.',
+    description: 'El código ingresado no es valido. Intenta de nuevo',
   },
   // Add more error types as needed
 ];

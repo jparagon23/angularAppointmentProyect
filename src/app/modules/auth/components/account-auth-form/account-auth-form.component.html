@@ -18,7 +18,7 @@
       <app-button
         typeBtn="submit"
         color="success"
-        [loading]="status === 'loading'"
+        [loading]="(loading$ | async)!"
         >Validate Code</app-button
       >
     </div>
