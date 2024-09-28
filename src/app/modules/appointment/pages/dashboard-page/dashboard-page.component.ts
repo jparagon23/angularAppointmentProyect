@@ -12,6 +12,7 @@ import {
   selectListReservations,
   selectReservationLoading,
 } from 'src/app/state/selectors/reservetions.selectors';
+import { loadReservations } from 'src/app/state/actions/reservations.actions';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -32,5 +33,6 @@ export class DashboardPageComponent implements OnInit {
   ngOnInit(): void {
     this.loadingReservations$ = this.store.select(selectReservationLoading);
     this.userReservations$ = this.store.select(selectListReservations);
+    this.store.dispatch(loadReservations());
   }
 }

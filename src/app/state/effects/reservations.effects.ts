@@ -37,11 +37,11 @@ export class ReservationEffects {
 
   loadReservations$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(createReservationSuccess, loadUserSuccess), // Escucha tanto createReservationSuccess como loadUserSuccess
+      ofType(createReservationSuccess), // Escucha tanto createReservationSuccess como loadUserSuccess
       concatMap(() => [loadReservations()]) // Luego despacha loadReservations
     )
   );
-  
+
   cancelReservation$ = createEffect(() =>
     this.actions$.pipe(
       ofType(cancelReservation),
@@ -63,7 +63,9 @@ export class ReservationEffects {
         this.reservationService.getAvailableSlotsPerDay(action.date).pipe(
           map((response) =>
             loadAvailableSlotsSuccess({
-              availableSlots: response.availableSlots.map(slot => slot.date.dateTime.slice(0, -3))
+              availableSlots: response.availableSlots.map((slot) =>
+                slot.date.dateTime.slice(0, -3)
+              ),
             })
           ),
           catchError((error) => of(loadAvailableSlotsFailure({ error })))

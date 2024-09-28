@@ -44,6 +44,15 @@ export class AuthEffects {
     { dispatch: false }
   );
 
+  loadUserAfterLogin$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loginSuccess),
+      map(() => {
+        return { type: '[User] Load User' };
+      })
+    )
+  );
+
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(logout),

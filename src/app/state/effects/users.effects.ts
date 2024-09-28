@@ -7,7 +7,6 @@ import {
   loadUserFailure,
   loadUserSuccess,
 } from '../actions/users.actions';
-import { loadReservations } from '../actions/reservations.actions';
 
 @Injectable()
 export class ProfileEffects {

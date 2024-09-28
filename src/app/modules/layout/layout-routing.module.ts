@@ -10,15 +10,20 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'make-appointment',
+        redirectTo: 'dashboard',
         pathMatch: 'full',
       },
       {
-        path: 'make-appointment',
+        path: 'dashboard',
         loadChildren: () =>
           import('../appointment/appointment.module').then(
             (m) => m.AppointmentModule
           ),
+      },
+      {
+        path: 'admin/dashboard',
+        loadChildren: () =>
+          import('../admin/admin.module').then((m) => m.AdminModule),
       },
       // {
       //   path: 'boards',

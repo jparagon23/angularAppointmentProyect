@@ -1,20 +1,22 @@
 <div>
   <!-- Título fijo -->
   <div class="text-4xl font-bold border-b-4 border-gray-300 mb-5">
-    Reservas pendientes
+    Tus reservas
   </div>
 
   <!-- Si está cargando, muestra el loader, si no, muestra las reservas -->
   <ng-container *ngIf="loadingReservations$ | async; else reservationsContent">
     <!-- Loader personalizado con Tailwind -->
     <div class="flex justify-center items-center h-64">
-      <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"></div>
+      <div
+        class="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"
+      ></div>
     </div>
   </ng-container>
 
   <!-- Contenido de las reservas -->
   <ng-template #reservationsContent>
-    <ng-container *ngIf="(userReservations$ | async) as reservations">
+    <ng-container *ngIf="userReservations$ | async as reservations">
       <!-- Verifica si la lista de reservas está vacía -->
       <ng-container *ngIf="reservations.length > 0; else noReservationsMessage">
         <div class="flex flex-wrap space-x-3 space-y-3">
