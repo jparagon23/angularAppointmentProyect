@@ -1,0 +1,43 @@
+<div class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content p-4 shadow-lg" style="border-radius: 12px">
+      <div class="modal-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="modal-title" style="font-weight: 700; font-size: 1.5rem">
+              Información de la Reserva
+            </h5>
+          </div>
+          <div>
+            <p class="mb-2" style="font-weight: 600; font-size: 1.2rem">
+              Fecha:
+              <span style="font-weight: 400">{{
+                data.reservationInfo.date
+              }}</span>
+            </p>
+            <p class="mb-2" style="font-weight: 600; font-size: 1.2rem">
+              Hora:
+              <span style="font-weight: 400">{{
+                data.reservationInfo.hour
+              }}</span>
+            </p>
+            <p class="mb-2" style="font-weight: 600; font-size: 1.2rem">
+              Nombre:
+              <span style="font-weight: 400">{{
+                data.reservationInfo.user
+              }}</span>
+            </p>
+          </div>
+          <button
+            type="button"
+            class="btn btn-danger"
+            style="font-weight: 600; padding: 0.5rem 1rem; border-radius: 8px"
+            (click)="cancelReservation()"
+          >
+            Cancelar Reserva
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
