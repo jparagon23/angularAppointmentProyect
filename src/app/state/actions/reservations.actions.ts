@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+import { ClubReservations } from 'src/app/models/ClubReservations.model';
 import { ReservationDetail } from 'src/app/models/UserReservations.model';
 
 export const loadReservations = createAction(
@@ -20,9 +21,13 @@ export const selectReservation = createAction(
 
 export const cancelReservation = createAction(
   '[Reservations] Cancel Reservation',
-  props<{ reservation: ReservationDetail }>()
-);  
+  props<{ reservationId: String }>()
+);
 
+export const cancelReservationAdmin = createAction(
+  '[Reservations] Cancel Reservation',
+  props<{ reservationId: String }>()
+);
 
 // Acción para cargar espacios disponibles
 export const loadAvailableSlots = createAction(
@@ -56,5 +61,20 @@ export const createReservationSuccess = createAction(
 // Acción para manejar errores al crear reserva
 export const createReservationFailure = createAction(
   '[Reservation] Create Reservation Failure',
+  props<{ error: any }>()
+);
+
+export const loadReservationsAdmin = createAction(
+  '[Admin Dashboard] Load Reservations Admin',
+  props<{ date: string; club: number }>()
+);
+
+export const loadReservationsAdminSuccess = createAction(
+  '[Admin Dashboard] Load Reservations Admin Success',
+  props<{ clubReservations: ClubReservations }>()
+);
+
+export const loadReservationsAdminFailure = createAction(
+  '[Admin Dashboard] Load Reservations Admin Failure',
   props<{ error: any }>()
 );

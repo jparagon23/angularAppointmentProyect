@@ -11,7 +11,7 @@
   </div>
 </div>
 
-<div>
+<div *ngIf="reservations$ | async as reservations">
   <table class="table-auto border-collapse border border-gray-300 w-full">
     <thead>
       <tr>
@@ -39,7 +39,10 @@
               reservation.description !== 'No disponible'
           }"
           (click)="
-            onReservationClick(reservation, row.reservations[0].description)
+            onReservationClick(
+              reservation,
+              row.reservations[0].description || ''
+            )
           "
         >
           {{ reservation.description }}
@@ -47,4 +50,9 @@
       </tr>
     </tbody>
   </table>
+</div>
+
+<!-- Mostramos un mensaje en caso de que no haya datos disponibles aún -->
+<div *ngIf="!(reservations$ | async)">
+  <p class="text-center text-gray-500">Cargando reservas...</p>
 </div>

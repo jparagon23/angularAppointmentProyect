@@ -12,6 +12,7 @@ import {
 import { ReservationConfirmation } from '../models/ReservationConfirmation.model';
 import { Store } from '@ngrx/store';
 import { selectUser } from '../state/selectors/users.selectors';
+import { ClubReservations } from '../models/ClubReservations.model';
 
 @Injectable({
   providedIn: 'root',
@@ -65,6 +66,14 @@ export class ReservationService {
       );
   }
 
+  getClubReservations(
+    date: string,
+    club: number
+  ): Observable<ClubReservations> {
+    const url = `${environment.API_URL}/reservation/club/${club}/reservations?date=${date}`;
+    return this.http.get<ClubReservations>(url, { headers: this.setHeaders() });
+  }
+
   createReservation(
     selectedSlots: string[]
   ): Observable<ReservationConfirmation> {
@@ -77,9 +86,9 @@ export class ReservationService {
   }
 
   cancelReservation(
-    reservation: ReservationDetail
+    reservationId: String
   ): Observable<ReservationConfirmation> {
-    const url = `${environment.API_URL}/reservation/${reservation.groupId}`;
+    const url = `${environment.API_URL}/reservation/${reservationId}`;
     return this.http.delete<ReservationConfirmation>(url, {
       headers: this.setHeaders(),
     });

@@ -54,7 +54,7 @@ export class CancelReservationModalComponent implements OnInit, OnDestroy {
       if (result === true && this.selectedReservation) {
         // Dispatch the cancelReservation action only after confirmation
         this.store.dispatch(
-          cancelReservation({ reservation: this.selectedReservation })
+          cancelReservation({ reservationId: this.selectedReservation.groupId })
         );
         this.dialogRef.close(true);
       } else {

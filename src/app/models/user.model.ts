@@ -18,6 +18,7 @@ export interface User {
   creationDate: string;
   allowNotification: string;
   role: number;
+  userAdminClub: number;
 }
 
 export interface UserData {

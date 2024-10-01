@@ -5,6 +5,7 @@ import { catchError, concatMap, map, mergeMap, of, switchMap } from 'rxjs';
 import { ReservationService } from 'src/app/services/reservation.service';
 import {
   cancelReservation,
+  cancelReservationAdmin,
   createReservation,
   createReservationFailure,
   createReservationSuccess,
@@ -12,6 +13,9 @@ import {
   loadAvailableSlotsFailure,
   loadAvailableSlotsSuccess,
   loadReservations,
+  loadReservationsAdmin,
+  loadReservationsAdminFailure,
+  loadReservationsAdminSuccess,
   loadReservationsFailure,
   loadReservationsSuccess,
 } from '../actions/reservations.actions';
@@ -45,8 +49,22 @@ export class ReservationEffects {
   cancelReservation$ = createEffect(() =>
     this.actions$.pipe(
       ofType(cancelReservation),
-      switchMap(({ reservation }) =>
-        this.reservationService.cancelReservation(reservation).pipe(
+      switchMap(({ reservationId }) =>
+        this.reservationService.cancelReservation(reservationId).pipe(
+          // Si es exitoso, carga nuevamente las reservas
+          map(() => loadReservations()),
+          // Maneja el error si ocurre algún problema
+          catchError((error) => of(loadReservationsFailure({ error })))
+        )
+      )
+    )
+  );
+
+  cancelReservationAdmin$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(cancelReservationAdmin),
+      switchMap(({ reservationId }) =>
+        this.reservationService.cancelReservation(reservationId).pipe(
           // Si es exitoso, carga nuevamente las reservas
           map(() => loadReservations()),
           // Maneja el error si ocurre algún problema
@@ -83,6 +101,24 @@ export class ReservationEffects {
           map(() => createReservationSuccess()),
           catchError((error) => of(createReservationFailure({ error })))
         )
+      )
+    )
+  );
+
+  loadClubReservations$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadReservationsAdmin),
+      mergeMap((action) =>
+        this.reservationService
+          .getClubReservations(action.date, action.club)
+          .pipe(
+            map((reservations) =>
+              loadReservationsAdminSuccess({
+                clubReservations: reservations,
+              })
+            ),
+            catchError((error) => of(loadReservationsAdminFailure({ error })))
+          )
       )
     )
   );

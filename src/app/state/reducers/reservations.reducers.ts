@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import { ReservationDetail } from 'src/app/models/UserReservations.model';
 import {
   cancelReservation,
+  cancelReservationAdmin,
   createReservation,
   createReservationFailure,
   createReservationSuccess,
@@ -9,6 +10,9 @@ import {
   loadAvailableSlotsFailure,
   loadAvailableSlotsSuccess,
   loadReservations,
+  loadReservationsAdmin,
+  loadReservationsAdminFailure,
+  loadReservationsAdminSuccess,
   loadReservationsFailure,
   loadReservationsSuccess,
   selectReservation,
@@ -30,9 +34,13 @@ export const initialState: ReservationState = {
   reservationCanceled: false,
   availableSlots: [],
   loadingAvailableSlots: false,
-  error: undefined,
+  error: null,
   createReservationSuccess: false,
   createReservationFailure: false,
+  clubReservations: null,
+  clubReservationsLoading: false,
+  clubReservationsError: false,
+  clubReservationsSuccess: false,
 };
 
 export const reservationsReducer = createReducer(
@@ -54,7 +62,11 @@ export const reservationsReducer = createReducer(
     ...state,
     reservationSelected: reservation,
   })),
-  on(cancelReservation, (state, { reservation }) => ({
+  on(cancelReservation, (state) => ({
+    ...state,
+    reservationCanceled: true,
+  })),
+  on(cancelReservationAdmin, (state) => ({
     ...state,
     reservationCanceled: true,
   })),
@@ -104,6 +116,30 @@ export const reservationsReducer = createReducer(
     loading: false,
     createReservationSuccess: false,
     createReservationFailure: true,
+    error,
+  })),
+
+  on(loadReservationsAdmin, (state) => ({
+    ...state,
+    clubReservationsLoading: true,
+    clubReservationsError: false,
+    clubReservationsSuccess: false,
+  })),
+
+  on(loadReservationsAdminSuccess, (state, { clubReservations }) => ({
+    ...state,
+    clubReservations: clubReservations,
+    clubReservationsLoading: false,
+    clubReservationsError: false,
+    clubReservationsSuccess: true,
+  })),
+
+  on(loadReservationsAdminFailure, (state, { error }) => ({
+    ...state,
+    clubReservations: null,
+    clubReservationsLoading: false,
+    clubReservationsError: true,
+    clubReservationsSuccess: false,
     error,
   }))
 );

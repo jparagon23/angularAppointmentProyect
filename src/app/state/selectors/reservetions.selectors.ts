@@ -40,3 +40,8 @@ export const selectCreateReservationFailure = createSelector(
   selectReservationsFeature,
   (state: ReservationState) => state.createReservationFailure
 );
+
+export const selectClubReservations = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.clubReservations
+);
