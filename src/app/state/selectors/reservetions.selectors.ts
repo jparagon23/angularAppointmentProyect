@@ -45,3 +45,13 @@ export const selectClubReservations = createSelector(
   selectReservationsFeature,
   (state: ReservationState) => state.clubReservations
 );
+
+export const selectDatePicked = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.datePicked
+);
+
+export const selectGroupReservationInfo = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.groupReservationInfo
+);

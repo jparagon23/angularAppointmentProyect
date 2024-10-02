@@ -4,9 +4,17 @@ import { AdminDashboardPageComponent } from './pages/admin-dashboard-page/admin-
 import { AdminRoutingModule } from './admin-routing.module';
 import { FormsModule } from '@angular/forms';
 import { ReservationInfoModalComponent } from './modals/reservation-info-modal/reservation-info-modal.component';
+import { GroupReservationInfoModalComponent } from './modals/group-reservation-info-modal/group-reservation-info-modal.component';
+import { CreateReservationFromTableModalComponent } from './modals/create-reservation-from-table-modal/create-reservation-from-table-modal.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
-  declarations: [AdminDashboardPageComponent, ReservationInfoModalComponent],
-  imports: [CommonModule, AdminRoutingModule, FormsModule],
+  declarations: [
+    AdminDashboardPageComponent,
+    ReservationInfoModalComponent,
+    GroupReservationInfoModalComponent,
+    CreateReservationFromTableModalComponent,
+  ],
+  imports: [CommonModule, AdminRoutingModule, FormsModule, SharedModule],
 })
 export class AdminModule {}

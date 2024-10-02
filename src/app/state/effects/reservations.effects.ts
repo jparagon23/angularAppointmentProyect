@@ -1,7 +1,15 @@
 import { ReservationDetail } from './../../models/UserReservations.model';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, concatMap, map, mergeMap, of, switchMap } from 'rxjs';
+import {
+  catchError,
+  concatMap,
+  map,
+  mergeMap,
+  of,
+  switchMap,
+  withLatestFrom,
+} from 'rxjs';
 import { ReservationService } from 'src/app/services/reservation.service';
 import {
   cancelReservation,
@@ -9,6 +17,8 @@ import {
   createReservation,
   createReservationFailure,
   createReservationSuccess,
+  getReservationsByGroupId,
+  getReservationsByGroupIdSuccess,
   loadAvailableSlots,
   loadAvailableSlotsFailure,
   loadAvailableSlotsSuccess,
@@ -20,6 +30,9 @@ import {
   loadReservationsSuccess,
 } from '../actions/reservations.actions';
 import { loadUserSuccess } from '../actions/users.actions';
+import { Store } from '@ngrx/store';
+import { selectDatePicked } from '../selectors/reservetions.selectors';
+import { selectUser } from '../selectors/users.selectors';
 
 @Injectable()
 export class ReservationEffects {
@@ -65,8 +78,15 @@ export class ReservationEffects {
       ofType(cancelReservationAdmin),
       switchMap(({ reservationId }) =>
         this.reservationService.cancelReservation(reservationId).pipe(
+          // Combina la acción con el estado actual para obtener `date` y `club`
+          withLatestFrom(
+            this.store.select(selectDatePicked),
+            this.store.select(selectUser)
+          ),
           // Si es exitoso, carga nuevamente las reservas
-          map(() => loadReservations()),
+          map(([action, date, club]) =>
+            loadReservationsAdmin({ date, club: club!.userAdminClub })
+          ),
           // Maneja el error si ocurre algún problema
           catchError((error) => of(loadReservationsFailure({ error })))
         )
@@ -123,8 +143,25 @@ export class ReservationEffects {
     )
   );
 
+  getReservationsByGroupId$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getReservationsByGroupId),
+      mergeMap((action) =>
+        this.reservationService.getReservationsByGroupId(action.groupId).pipe(
+          map((reservations) =>
+            getReservationsByGroupIdSuccess({
+              reservations: reservations,
+            })
+          ),
+          catchError((error) => of(loadReservationsAdminFailure({ error })))
+        )
+      )
+    )
+  );
+
   constructor(
     private actions$: Actions,
-    private reservationService: ReservationService
+    private reservationService: ReservationService,
+    private store: Store<any>
   ) {}
 }

@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { ClubReservations } from 'src/app/models/ClubReservations.model';
+import { GroupReservationInfo } from 'src/app/models/GroupReservationInfo.model';
 import { ReservationDetail } from 'src/app/models/UserReservations.model';
 
 export const loadReservations = createAction(
@@ -25,7 +26,7 @@ export const cancelReservation = createAction(
 );
 
 export const cancelReservationAdmin = createAction(
-  '[Reservations] Cancel Reservation',
+  '[Admin Dashboard] Cancel Reservation from admin',
   props<{ reservationId: String }>()
 );
 
@@ -76,5 +77,20 @@ export const loadReservationsAdminSuccess = createAction(
 
 export const loadReservationsAdminFailure = createAction(
   '[Admin Dashboard] Load Reservations Admin Failure',
+  props<{ error: any }>()
+);
+
+export const getReservationsByGroupId = createAction(
+  '[Admin Dashboard] Get Reservations By Group Id',
+  props<{ groupId: string }>()
+);
+
+export const getReservationsByGroupIdSuccess = createAction(
+  '[Admin Dashboard] Get Reservations By Group Id Success',
+  props<{ reservations: GroupReservationInfo }>()
+);
+
+export const getReservationsByGroupIdFailure = createAction(
+  '[Admin Dashboard] Get Reservations By Group Id Failure',
   props<{ error: any }>()
 );

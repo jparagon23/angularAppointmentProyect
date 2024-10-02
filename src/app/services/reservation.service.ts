@@ -13,6 +13,7 @@ import { ReservationConfirmation } from '../models/ReservationConfirmation.model
 import { Store } from '@ngrx/store';
 import { selectUser } from '../state/selectors/users.selectors';
 import { ClubReservations } from '../models/ClubReservations.model';
+import { GroupReservationInfo } from '../models/GroupReservationInfo.model';
 
 @Injectable({
   providedIn: 'root',
@@ -64,6 +65,13 @@ export class ReservationService {
           this.reservations$.next(response);
         })
       );
+  }
+
+  getReservationsByGroupId(groupId: string): Observable<GroupReservationInfo> {
+    const url = `${environment.API_URL}/reservation/group-reservation/${groupId}`;
+    return this.http.get<GroupReservationInfo>(url, {
+      headers: this.setHeaders(),
+    });
   }
 
   getClubReservations(

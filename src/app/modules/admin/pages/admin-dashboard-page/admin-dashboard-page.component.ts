@@ -9,6 +9,8 @@ import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { filter, Observable } from 'rxjs';
 import { User } from 'src/app/models/user.model';
 import { selectClubReservations } from 'src/app/state/selectors/reservetions.selectors';
+import { GroupReservationInfoModalComponent } from '../../modals/group-reservation-info-modal/group-reservation-info-modal.component';
+import { CreateReservationFromTableModalComponent } from '../../modals/create-reservation-from-table-modal/create-reservation-from-table-modal.component';
 
 @Component({
   selector: 'app-admin-dashboard-page',
@@ -93,7 +95,12 @@ export class AdminDashboardPageComponent implements OnInit {
 
     // Lógica para determinar el tipo de reserva según el ID
     if (reservation.id === '-1') {
-      console.log('Reservar');
+      console.log('Reserva Grupal');
+      this.dialog.open(CreateReservationFromTableModalComponent, {
+        maxWidth: '50vw',
+        maxHeight: '50vh',
+        data: { reservationInfo },
+      });
       return;
     }
 
@@ -103,7 +110,7 @@ export class AdminDashboardPageComponent implements OnInit {
     }
 
     if (reservation.id !== null && reservation.id.startsWith('I')) {
-      console.log('Reservado');
+      console.log('Reserva individual');
       this.dialog.open(ReservationInfoModalComponent, {
         maxWidth: '50vw',
         maxHeight: '50vh',
@@ -113,6 +120,11 @@ export class AdminDashboardPageComponent implements OnInit {
       return;
     } else {
       console.log('Reserva Grupal');
+      this.dialog.open(GroupReservationInfoModalComponent, {
+        maxWidth: '50vw',
+        maxHeight: '50vh',
+        data: { reservationInfo },
+      });
     }
   }
 }

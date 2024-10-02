@@ -1,0 +1,40 @@
+<div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold">Reserva grupal</h2>
+  </div>
+  <p class="text-gray-600 mb-4">
+    La reserva seleccionada pertenece a un grupo de reservas.
+  </p>
+
+  <div
+    class="flex justify-center space-x-2 mb-6"
+    *ngIf="groupReservationInfo$ | async as groupReservationInfo"
+  >
+    <button
+      class="border border-gray-400 bg-gray-100 text-gray-600 font-semibold py-2 px-4 rounded-md hover:bg-gray-200"
+      [ngClass]="{
+        'bg-blue-500 text-white':
+          data.reservationInfo.hour ===
+          (individualReservation.dateTime | timeFormat)
+      }"
+      *ngFor="
+        let individualReservation of groupReservationInfo.individualReservationsId
+      "
+    >
+      {{ individualReservation.dateTime | timeFormat }}
+    </button>
+  </div>
+
+  <div class="flex justify-between">
+    <button
+      class="border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-md hover:bg-gray-200"
+    >
+      Cancel grupo de reserva
+    </button>
+    <button
+      class="bg-black text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-800"
+    >
+      Cancelar reservas seleccionadas
+    </button>
+  </div>
+</div>

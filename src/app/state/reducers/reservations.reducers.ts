@@ -6,6 +6,9 @@ import {
   createReservation,
   createReservationFailure,
   createReservationSuccess,
+  getReservationsByGroupId,
+  getReservationsByGroupIdFailure,
+  getReservationsByGroupIdSuccess,
   loadAvailableSlots,
   loadAvailableSlotsFailure,
   loadAvailableSlotsSuccess,
@@ -41,6 +44,9 @@ export const initialState: ReservationState = {
   clubReservationsLoading: false,
   clubReservationsError: false,
   clubReservationsSuccess: false,
+  datePicked: '',
+  groupReservationInfo: null,
+  groupReservationLoading: false,
 };
 
 export const reservationsReducer = createReducer(
@@ -119,8 +125,9 @@ export const reservationsReducer = createReducer(
     error,
   })),
 
-  on(loadReservationsAdmin, (state) => ({
+  on(loadReservationsAdmin, (state, { date }) => ({
     ...state,
+    datePicked: date,
     clubReservationsLoading: true,
     clubReservationsError: false,
     clubReservationsSuccess: false,
@@ -140,6 +147,23 @@ export const reservationsReducer = createReducer(
     clubReservationsLoading: false,
     clubReservationsError: true,
     clubReservationsSuccess: false,
+    error,
+  })),
+
+  on(getReservationsByGroupId, (state) => ({
+    ...state,
+    groupReservationLoading: true,
+  })),
+
+  on(getReservationsByGroupIdSuccess, (state, { reservations }) => ({
+    ...state,
+    groupReservationInfo: reservations,
+    groupReservationLoading: false,
+  })),
+  on(getReservationsByGroupIdFailure, (state, { error }) => ({
+    ...state,
+    groupReservationInfo: null,
+    groupReservationLoading: false,
     error,
   }))
 );

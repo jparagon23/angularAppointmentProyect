@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SelectComponent } from './components/select/select.component';
 import { ErrorMessageComponent } from './components/error-message/error-message.component';
 import { CheckboxComponent } from './components/chechbox/chechbox.component';
+import { TimeFormatPipe } from './pipes/time-format.pipe';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { CheckboxComponent } from './components/chechbox/chechbox.component';
     SelectComponent,
     ErrorMessageComponent,
     CheckboxComponent,
+    TimeFormatPipe,
   ],
   imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule],
   exports: [
@@ -23,6 +25,7 @@ import { CheckboxComponent } from './components/chechbox/chechbox.component';
     InputComponent,
     SelectComponent,
     CheckboxComponent,
+    TimeFormatPipe,
   ],
 })
 export class SharedModule {}
