@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { ClubReservations } from 'src/app/models/ClubReservations.model';
+import { ClubUser } from 'src/app/models/clubUsers.model';
 import { GroupReservationInfo } from 'src/app/models/GroupReservationInfo.model';
 import { ReservationDetail } from 'src/app/models/UserReservations.model';
 

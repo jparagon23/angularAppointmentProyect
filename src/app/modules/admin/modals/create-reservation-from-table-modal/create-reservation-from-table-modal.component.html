@@ -5,12 +5,14 @@
     <label class="block text-gray-700 font-semibold mb-1"
       >Día de la reserva:</label
     >
-    <p class="text-gray-600">miércoles 2 octubre 2024</p>
+    <p class="text-gray-600">
+      {{ data.reservationInfo.date | date : "EEEE d 'de' MMMM 'de' y" : "es" }}
+    </p>
   </div>
 
   <div class="mb-4">
     <label class="block text-gray-700 font-semibold mb-1">Hora:</label>
-    <p class="text-gray-600">8:00</p>
+    <p class="text-gray-600">{{ data.reservationInfo.hour }}</p>
   </div>
 
   <div class="mb-6">
@@ -23,18 +25,31 @@
         type="text"
         placeholder="Start typing"
         class="outline-none flex-grow text-gray-700"
+        [formControl]="userControl"
+        [matAutocomplete]="auto"
       />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="onUserSelected($event.option.value)"
+        [displayWith]="displayUserName"
+      >
+        <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+          {{ user.completeName }}
+        </mat-option>
+      </mat-autocomplete>
     </div>
   </div>
 
   <div class="flex justify-end space-x-4">
     <button
       class="border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-md hover:bg-gray-200"
+      (click)="closeModal()"
     >
       Cancel
     </button>
     <button
       class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700"
+      (click)="createReservation()"
     >
       Continue
     </button>

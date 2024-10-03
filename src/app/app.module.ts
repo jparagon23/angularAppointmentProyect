@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -19,6 +19,13 @@ import { ReservationEffects } from './state/effects/reservations.effects';
 import { ProfileEffects } from './state/effects/users.effects';
 import { AuthEffects } from './state/effects/auth.effects';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { ClubEffects } from './state/effects/club.effects';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+
+registerLocaleData(localeEs, 'es');
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,10 +34,17 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatInputModule,
     StoreModule.forRoot(ROOT_REDUCERS),
     BrowserAnimationsModule,
     StoreDevtoolsModule.instrument({ name: 'TEST' }),
-    EffectsModule.forRoot([ReservationEffects, ProfileEffects, AuthEffects]),
+    EffectsModule.forRoot([
+      ReservationEffects,
+      ProfileEffects,
+      AuthEffects,
+      ClubEffects,
+    ]),
   ],
   providers: [
     {
@@ -38,6 +52,7 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
       useClass: AuthInterceptor,
       multi: true,
     },
+    { provide: LOCALE_ID, useValue: 'es' },
   ],
   bootstrap: [AppComponent],
 })
