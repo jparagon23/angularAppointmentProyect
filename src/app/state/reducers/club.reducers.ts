@@ -3,11 +3,16 @@ import {
   getClubUserByNameOrId,
   getClubUserByNameOrIdSuccess,
   getClubUserByNameOrIdFailure,
+  createReservationAdmin,
+  createReservationAdminSuccess,
+  createReservationAdminFailure,
 } from '../actions/club.actions';
 import { createReducer, on } from '@ngrx/store';
 export interface clubState {
   clubUsers: ClubUser[];
   loadingClubUsers: boolean;
+  reservationCreated: boolean;
+  loadingCreateReservation: boolean;
   error: any;
 }
 
@@ -15,6 +20,8 @@ export const initialState: clubState = {
   clubUsers: [],
   loadingClubUsers: false,
   error: null,
+  reservationCreated: false,
+  loadingCreateReservation: false,
 };
 
 export const clubReducer = createReducer(
@@ -31,6 +38,22 @@ export const clubReducer = createReducer(
   on(getClubUserByNameOrIdFailure, (state: clubState, { error }) => ({
     ...state,
     loadingClubUsers: false,
+    error,
+  })),
+  on(createReservationAdmin, (state: clubState) => ({
+    ...state,
+    reservationCreated: false,
+    loadingCreateReservation: true,
+  })),
+  on(createReservationAdminSuccess, (state: clubState) => ({
+    ...state,
+    reservationCreated: true,
+    loadingCreateReservation: false,
+  })),
+  on(createReservationAdminFailure, (state: clubState, { error }) => ({
+    ...state,
+    reservationCreated: false,
+    loadingCreateReservation: false,
     error,
   }))
 );

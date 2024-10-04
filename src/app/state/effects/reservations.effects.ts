@@ -83,10 +83,7 @@ export class ReservationEffects {
             this.store.select(selectDatePicked),
             this.store.select(selectUser)
           ),
-          // Si es exitoso, carga nuevamente las reservas
-          map(([action, date, club]) =>
-            loadReservationsAdmin({ date, club: club!.userAdminClub })
-          ),
+          map(([action, date, club]) => loadReservationsAdmin({ date })),
           // Maneja el error si ocurre algún problema
           catchError((error) => of(loadReservationsFailure({ error })))
         )
@@ -129,16 +126,14 @@ export class ReservationEffects {
     this.actions$.pipe(
       ofType(loadReservationsAdmin),
       mergeMap((action) =>
-        this.reservationService
-          .getClubReservations(action.date, action.club)
-          .pipe(
-            map((reservations) =>
-              loadReservationsAdminSuccess({
-                clubReservations: reservations,
-              })
-            ),
-            catchError((error) => of(loadReservationsAdminFailure({ error })))
-          )
+        this.reservationService.getClubReservations(action.date).pipe(
+          map((reservations) =>
+            loadReservationsAdminSuccess({
+              clubReservations: reservations,
+            })
+          ),
+          catchError((error) => of(loadReservationsAdminFailure({ error })))
+        )
       )
     )
   );

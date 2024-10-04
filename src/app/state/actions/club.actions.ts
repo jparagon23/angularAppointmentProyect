@@ -18,7 +18,7 @@ export const getClubUserByNameOrIdFailure = createAction(
 
 export const createReservationAdmin = createAction(
   '[Admin Dashboard] Create Reservation',
-  props<{ selecteDates: string[] }>()
+  props<{ selecteDates: string[]; userId: string }>()
 );
 
 export const createReservationAdminSuccess = createAction(

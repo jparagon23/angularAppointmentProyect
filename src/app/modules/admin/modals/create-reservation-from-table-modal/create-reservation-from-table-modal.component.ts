@@ -13,6 +13,7 @@ import {
 import { User } from 'src/app/models/user.model';
 import { ConfirmationModalComponent } from 'src/app/modules/appointment/modals/confirmation-modal/confirmation-modal.component';
 import { Store } from '@ngrx/store';
+import { createReservationAdmin } from 'src/app/state/actions/club.actions';
 
 @Component({
   selector: 'app-create-reservation-from-table-modal',
@@ -76,7 +77,20 @@ export class CreateReservationFromTableModalComponent implements OnInit {
   }
 
   createReservation() {
-    //this.store.dispatch();
+    console.log('the date is ' + this.data.reservationInfo.date);
+    console.log('the date is' + this.data.reservationInfo.hour);
+
+    const formattedDate = this.data.reservationInfo.date.replace(/-/g, '/');
+    const dateTime = `${formattedDate} ${this.data.reservationInfo.hour}`;
+    this.store.dispatch(
+      createReservationAdmin({
+        selecteDates: [dateTime],
+        userId: this.selectedUser?.userId?.toString() || '',
+      })
+    );
+
+    // Close the modal after creating the reservation
+    this.createReservationModal.close();
   }
 
   closeModal() {

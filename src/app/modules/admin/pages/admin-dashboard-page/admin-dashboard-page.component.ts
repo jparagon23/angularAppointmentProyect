@@ -70,7 +70,6 @@ export class AdminDashboardPageComponent implements OnInit {
       this.store.dispatch(
         loadReservationsAdmin({
           date: this.selectedDate,
-          club: this.user.userAdminClub,
         })
       );
     }

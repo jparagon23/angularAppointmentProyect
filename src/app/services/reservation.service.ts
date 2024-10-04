@@ -14,6 +14,7 @@ import { Store } from '@ngrx/store';
 import { selectUser } from '../state/selectors/users.selectors';
 import { ClubReservations } from '../models/ClubReservations.model';
 import { GroupReservationInfo } from '../models/GroupReservationInfo.model';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,7 @@ import { GroupReservationInfo } from '../models/GroupReservationInfo.model';
 export class ReservationService {
   private userId: number | undefined;
   private headers: HttpHeaders | undefined;
+  private user!: User;
 
   reservations$ = new BehaviorSubject<UserReservationResponse | null>(null);
 
@@ -33,6 +35,12 @@ export class ReservationService {
     // Subscribe to userId once, avoid multiple subscriptions
     this.store.select(selectUser).subscribe((user) => {
       this.userId = user?.id;
+    });
+
+    this.store.select(selectUser).subscribe((user) => {
+      if (user) {
+        this.user = user;
+      }
     });
   }
 
@@ -74,11 +82,8 @@ export class ReservationService {
     });
   }
 
-  getClubReservations(
-    date: string,
-    club: number
-  ): Observable<ClubReservations> {
-    const url = `${environment.API_URL}/reservation/club/${club}/reservations?date=${date}`;
+  getClubReservations(date: string): Observable<ClubReservations> {
+    const url = `${environment.API_URL}/reservation/club/${this.user.userAdminClub}/reservations?date=${date}`;
     return this.http.get<ClubReservations>(url, { headers: this.setHeaders() });
   }
 
@@ -86,6 +91,18 @@ export class ReservationService {
     selectedSlots: string[]
   ): Observable<ReservationConfirmation> {
     const url = `${environment.API_URL}/reservation/${this.userId}`;
+    const body = { appointmentTime: selectedSlots, clubId: 1 };
+
+    return this.http.post<ReservationConfirmation>(url, body, {
+      headers: this.setHeaders(),
+    });
+  }
+
+  createReservationAdmin(
+    selectedSlots: string[],
+    userId: string
+  ): Observable<ReservationConfirmation> {
+    const url = `${environment.API_URL}/reservation/${userId}`;
     const body = { appointmentTime: selectedSlots, clubId: 1 };
 
     return this.http.post<ReservationConfirmation>(url, body, {

@@ -68,7 +68,7 @@ export const createReservationFailure = createAction(
 
 export const loadReservationsAdmin = createAction(
   '[Admin Dashboard] Load Reservations Admin',
-  props<{ date: string; club: number }>()
+  props<{ date: string }>()
 );
 
 export const loadReservationsAdminSuccess = createAction(
