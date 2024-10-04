@@ -1,19 +1,20 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
-import {
-  map,
-  startWith,
-  switchMap,
-  debounceTime,
-  catchError,
-} from 'rxjs/operators';
-import { UserService } from 'src/app/services/user.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { debounceTime, startWith, tap } from 'rxjs/operators';
 import { ClubUser } from 'src/app/models/clubUsers.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Store } from '@ngrx/store';
-import { createReservationAdmin } from 'src/app/state/actions/club.actions';
-import { of } from 'rxjs';
+import {
+  selectClubUsers,
+  selectLoadingClubUsers,
+  selectReservationCreated,
+} from 'src/app/state/selectors/club.selectors';
+import {
+  createReservationAdmin,
+  getClubUserByNameOrId,
+} from 'src/app/state/actions/club.actions';
+import { AppState } from 'src/app/state/app.state';
 
 @Component({
   selector: 'app-create-reservation-from-table-modal',
@@ -23,10 +24,10 @@ export class CreateReservationFromTableModalComponent
   implements OnInit, OnDestroy
 {
   userControl = new FormControl();
-  users: ClubUser[] = [];
-  filteredUsers$: Observable<ClubUser[]> | undefined;
+  filteredUsers$?: Observable<ClubUser[]>;
+  loadingUsers$?: Observable<boolean>;
+  reservationCreated$?: Observable<boolean>;
   selectedUser: ClubUser | undefined;
-  private subscriptions: Subscription = new Subscription();
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -38,50 +39,45 @@ export class CreateReservationFromTableModalComponent
         hour: string;
       };
     },
-    private userService: UserService,
-    private dialogRef: MatDialogRef<CreateReservationFromTableModalComponent>,
-    private store: Store<any>
+    private store: Store<AppState>,
+    private dialogRef: MatDialogRef<CreateReservationFromTableModalComponent>
   ) {}
 
   ngOnInit() {
-    this.filteredUsers$ = this.userControl.valueChanges.pipe(
-      debounceTime(200),
-      startWith(''),
-      switchMap((value) => this._filterUsers(value))
-    );
+    // Selectors to get users, loading state, and reservation creation state from store
+    this.filteredUsers$ = this.store.select(selectClubUsers);
+    this.loadingUsers$ = this.store.select(selectLoadingClubUsers);
+    this.reservationCreated$ = this.store.select(selectReservationCreated);
 
-    // Fetch all users on init
-    this.subscriptions.add(
-      this.userService.getClubUserByNameOrId('').subscribe((users) => {
-        this.users = users;
-      })
-    );
+    // Handle user input changes to trigger user search
+    this.userControl.valueChanges
+      .pipe(
+        debounceTime(200),
+        startWith(''),
+        tap((searchTerm) => {
+          // Dispatch action to fetch users based on input
+          this.store.dispatch(getClubUserByNameOrId({ nameOrId: searchTerm }));
+        })
+      )
+      .subscribe();
   }
 
-  private _filterUsers(value: string): Observable<ClubUser[]> {
-    const filterValue = value ? value.toLowerCase() : '';
-    return this.userService.getClubUserByNameOrId(filterValue).pipe(
-      map((users) =>
-        users.filter((user) =>
-          user.completeName.toLowerCase().includes(filterValue)
-        )
-      ),
-      catchError(() => of([])) // Handle any errors gracefully by returning an empty array
-    );
-  }
-
+  // Handle user selection
   onUserSelected(user: ClubUser) {
     this.selectedUser = user;
   }
 
+  // Display selected user's name
   displayUserName(user?: ClubUser): string {
     return user ? user.completeName : '';
   }
 
+  // Create reservation for the selected user
   createReservation() {
     const formattedDate = this.data.reservationInfo.date.replace(/-/g, '/');
     const dateTime = `${formattedDate} ${this.data.reservationInfo.hour}`;
 
+    // Dispatch action to create reservation
     this.store.dispatch(
       createReservationAdmin({
         selecteDates: [dateTime],
@@ -89,14 +85,20 @@ export class CreateReservationFromTableModalComponent
       })
     );
 
-    this.dialogRef.close();
+    // Close the modal once the reservation is created successfully
+    this.reservationCreated$?.subscribe((created) => {
+      if (created) {
+        this.dialogRef.close();
+      }
+    });
   }
 
+  // Close modal without creating a reservation
   closeModal() {
     this.dialogRef.close();
   }
 
   ngOnDestroy() {
-    this.subscriptions.unsubscribe(); // Clean up subscriptions
+    // No need to manually unsubscribe from store since the observables are managed by the store
   }
 }
