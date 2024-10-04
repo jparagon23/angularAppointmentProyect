@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
   createReservationAdmin,
+  createReservationAdminFailure,
   createReservationAdminSuccess,
   getClubUserByNameOrId,
   getClubUserByNameOrIdFailure,
@@ -42,10 +43,21 @@ export class ClubEffects {
               loadReservationsAdmin({ date: selectDatePicked }),
               closeModal({ modalId: 'createReservationModal' }),
             ]),
-            catchError((error) => of(getClubUserByNameOrIdFailure({ error })))
+            catchError((error) => of(createReservationAdminFailure({ error })))
           )
       )
     )
+  );
+
+  onFailure$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(createReservationAdminFailure),
+        map(() => {
+          console.log('Failed to create reservation');
+        })
+      ),
+    { dispatch: false }
   );
 
   constructor(

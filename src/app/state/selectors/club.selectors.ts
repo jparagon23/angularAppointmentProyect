@@ -18,7 +18,17 @@ export const selectReservationCreated = createSelector(
   (state: clubState) => state.reservationCreated
 );
 
+export const selectClubError = createSelector(
+  selectClubState,
+  (state: clubState) => state.error
+);
+
 export const loadingCreateReservation = createSelector(
   selectClubState,
   (state: clubState) => state.loadingCreateReservation
+);
+
+export const reservationCreatedFailure = createSelector(
+  selectClubState,
+  (state: clubState) => state.reservationCreatedFailure
 );

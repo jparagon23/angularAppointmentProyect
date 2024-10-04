@@ -10,6 +10,7 @@ import { SharedModule } from '../shared/shared.module';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ErrorModalComponent } from './modals/error-modal/error-modal.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ReservationInfoModalComponent,
     GroupReservationInfoModalComponent,
     CreateReservationFromTableModalComponent,
+    ErrorModalComponent,
   ],
   imports: [
     CommonModule,

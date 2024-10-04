@@ -4,9 +4,15 @@ import { select, Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { debounceTime, startWith, tap } from 'rxjs/operators';
 import { ClubUser } from 'src/app/models/clubUsers.model';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import {
   loadingCreateReservation,
+  reservationCreatedFailure,
+  selectClubError,
   selectClubUsers,
   selectLoadingClubUsers,
   selectReservationCreated,
@@ -18,6 +24,7 @@ import {
 import { AppState } from 'src/app/state/app.state';
 import { isModalOpen } from 'src/app/state/selectors/modals.selectors';
 import { closeModal, openModal } from 'src/app/state/actions/modals.actions';
+import { ErrorModalComponent } from '../error-modal/error-modal.component';
 
 @Component({
   selector: 'app-create-reservation-from-table-modal',
@@ -31,6 +38,7 @@ export class CreateReservationFromTableModalComponent
   loadingUsers$?: Observable<boolean>;
   reservationCreated$?: Observable<boolean>;
   reservationCreatedLoader$?: Observable<boolean>;
+  reservationCreatedFailure$?: Observable<boolean>; // Observable para el error
   selectedUser?: ClubUser;
   private subscription = new Subscription();
 
@@ -45,7 +53,8 @@ export class CreateReservationFromTableModalComponent
       };
     },
     private store: Store<AppState>,
-    private dialogRef: MatDialogRef<CreateReservationFromTableModalComponent>
+    private dialogRef: MatDialogRef<CreateReservationFromTableModalComponent>,
+    private dialog: MatDialog // Inyectar MatDialog para abrir el modal de error
   ) {}
 
   ngOnInit() {
@@ -53,6 +62,7 @@ export class CreateReservationFromTableModalComponent
     this.initializeSelectors();
     this.setupUserControl();
     this.subscribeToModalState();
+    this.subscribeToErrorState(); // Suscribirse al estado de error
   }
 
   private openModal() {
@@ -67,6 +77,9 @@ export class CreateReservationFromTableModalComponent
     this.reservationCreated$ = this.store.select(selectReservationCreated);
     this.reservationCreatedLoader$ = this.store.select(
       loadingCreateReservation
+    );
+    this.reservationCreatedFailure$ = this.store.select(
+      reservationCreatedFailure
     );
   }
 
@@ -102,6 +115,24 @@ export class CreateReservationFromTableModalComponent
         }
       })
     );
+  }
+
+  private subscribeToErrorState() {
+    this.subscription.add(
+      this.reservationCreatedFailure$?.subscribe((error) => {
+        if (error) {
+          this.openErrorDialog(
+            'Por el momento no se puede realizar la reserva'
+          );
+        }
+      })
+    );
+  }
+
+  private openErrorDialog(error: string) {
+    this.dialog.open(ErrorModalComponent, {
+      data: { message: error },
+    });
   }
 
   onUserSelected(user: ClubUser) {

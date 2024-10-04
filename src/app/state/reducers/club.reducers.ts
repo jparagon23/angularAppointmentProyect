@@ -12,6 +12,7 @@ export interface clubState {
   clubUsers: ClubUser[];
   loadingClubUsers: boolean;
   reservationCreated: boolean;
+  reservationCreatedFailure: boolean;
   loadingCreateReservation: boolean;
   error: any;
 }
@@ -22,6 +23,7 @@ export const initialState: clubState = {
   error: null,
   reservationCreated: false,
   loadingCreateReservation: false,
+  reservationCreatedFailure: false,
 };
 
 export const clubReducer = createReducer(
@@ -54,6 +56,7 @@ export const clubReducer = createReducer(
     ...state,
     reservationCreated: false,
     loadingCreateReservation: false,
+    reservationCreatedFailure: true,
     error,
   }))
 );
