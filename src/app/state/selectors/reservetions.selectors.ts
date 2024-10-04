@@ -55,3 +55,8 @@ export const selectGroupReservationInfo = createSelector(
   selectReservationsFeature,
   (state: ReservationState) => state.groupReservationInfo
 );
+
+export const selectClubReservationsLoading = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.clubReservationsLoading
+);

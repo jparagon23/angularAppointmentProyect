@@ -1,29 +1,32 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import {
+  map,
+  startWith,
+  switchMap,
+  debounceTime,
+  catchError,
+} from 'rxjs/operators';
 import { UserService } from 'src/app/services/user.service';
 import { ClubUser } from 'src/app/models/clubUsers.model';
-import { debounceTime } from 'rxjs/operators';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogRef,
-} from '@angular/material/dialog';
-import { User } from 'src/app/models/user.model';
-import { ConfirmationModalComponent } from 'src/app/modules/appointment/modals/confirmation-modal/confirmation-modal.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { createReservationAdmin } from 'src/app/state/actions/club.actions';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-create-reservation-from-table-modal',
   templateUrl: './create-reservation-from-table-modal.component.html',
 })
-export class CreateReservationFromTableModalComponent implements OnInit {
+export class CreateReservationFromTableModalComponent
+  implements OnInit, OnDestroy
+{
   userControl = new FormControl();
   users: ClubUser[] = [];
-  filteredUsers: Observable<ClubUser[]> | undefined;
+  filteredUsers$: Observable<ClubUser[]> | undefined;
   selectedUser: ClubUser | undefined;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -36,36 +39,35 @@ export class CreateReservationFromTableModalComponent implements OnInit {
       };
     },
     private userService: UserService,
-    private createReservationModal: MatDialogRef<CreateReservationFromTableModalComponent>,
-    public dialog: MatDialog,
+    private dialogRef: MatDialogRef<CreateReservationFromTableModalComponent>,
     private store: Store<any>
   ) {}
 
   ngOnInit() {
-    this.userService.getClubUserByNameOrId('').subscribe((users) => {
-      this.users = users;
-    });
-
-    this.filteredUsers = this.userControl.valueChanges.pipe(
-      debounceTime(200), // Wait for the user to stop typing for 300ms
+    this.filteredUsers$ = this.userControl.valueChanges.pipe(
+      debounceTime(200),
       startWith(''),
-      switchMap((value) => this._filter(value))
+      switchMap((value) => this._filterUsers(value))
     );
 
-    console.log(this.data);
+    // Fetch all users on init
+    this.subscriptions.add(
+      this.userService.getClubUserByNameOrId('').subscribe((users) => {
+        this.users = users;
+      })
+    );
   }
 
-  private _filter(value: any): Observable<ClubUser[]> {
-    const filterValue = typeof value === 'string' ? value.toLowerCase() : '';
-    return this.userService
-      .getClubUserByNameOrId(filterValue)
-      .pipe(
-        map((users) =>
-          users.filter((user) =>
-            user.completeName.toLowerCase().includes(filterValue)
-          )
+  private _filterUsers(value: string): Observable<ClubUser[]> {
+    const filterValue = value ? value.toLowerCase() : '';
+    return this.userService.getClubUserByNameOrId(filterValue).pipe(
+      map((users) =>
+        users.filter((user) =>
+          user.completeName.toLowerCase().includes(filterValue)
         )
-      );
+      ),
+      catchError(() => of([])) // Handle any errors gracefully by returning an empty array
+    );
   }
 
   onUserSelected(user: ClubUser) {
@@ -77,11 +79,9 @@ export class CreateReservationFromTableModalComponent implements OnInit {
   }
 
   createReservation() {
-    console.log('the date is ' + this.data.reservationInfo.date);
-    console.log('the date is' + this.data.reservationInfo.hour);
-
     const formattedDate = this.data.reservationInfo.date.replace(/-/g, '/');
     const dateTime = `${formattedDate} ${this.data.reservationInfo.hour}`;
+
     this.store.dispatch(
       createReservationAdmin({
         selecteDates: [dateTime],
@@ -89,11 +89,14 @@ export class CreateReservationFromTableModalComponent implements OnInit {
       })
     );
 
-    // Close the modal after creating the reservation
-    this.createReservationModal.close();
+    this.dialogRef.close();
   }
 
   closeModal() {
-    this.createReservationModal.close();
+    this.dialogRef.close();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe(); // Clean up subscriptions
   }
 }

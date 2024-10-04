@@ -33,7 +33,7 @@
         (optionSelected)="onUserSelected($event.option.value)"
         [displayWith]="displayUserName"
       >
-        <mat-option *ngFor="let user of filteredUsers | async" [value]="user">
+        <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user">
           {{ user.completeName }}
         </mat-option>
       </mat-autocomplete>
@@ -50,6 +50,7 @@
     <button
       class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-700"
       (click)="createReservation()"
+      [disabled]="!selectedUser"
     >
       Continue
     </button>

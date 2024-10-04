@@ -8,7 +8,10 @@ import { loadReservationsAdmin } from 'src/app/state/actions/reservations.action
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { filter, Observable, catchError, of } from 'rxjs';
 import { User } from 'src/app/models/user.model';
-import { selectClubReservations } from 'src/app/state/selectors/reservetions.selectors';
+import {
+  selectClubReservations,
+  selectClubReservationsLoading,
+} from 'src/app/state/selectors/reservetions.selectors';
 import { GroupReservationInfoModalComponent } from '../../modals/group-reservation-info-modal/group-reservation-info-modal.component';
 import { CreateReservationFromTableModalComponent } from '../../modals/create-reservation-from-table-modal/create-reservation-from-table-modal.component';
 
@@ -19,6 +22,7 @@ import { CreateReservationFromTableModalComponent } from '../../modals/create-re
 export class AdminDashboardPageComponent implements OnInit {
   selectedDate: string = this.initializeSelectedDate();
   reservations$: Observable<ClubReservations | null> = new Observable();
+  clubReservationLoading$: Observable<boolean> = new Observable();
   user: User | undefined;
   error: boolean = false;
 
@@ -32,6 +36,10 @@ export class AdminDashboardPageComponent implements OnInit {
         this.error = true;
         return of(null);
       })
+    );
+
+    this.clubReservationLoading$ = this.store.select(
+      selectClubReservationsLoading
     );
 
     this.store.select(selectUser).subscribe({
