@@ -40,7 +40,11 @@
       </div>
       <div class="flex items-center space-x-6">
         <div class="flex space-x-2">
-          <app-button typeBtn="button" color="navbar" (click)="OpenDialog()"
+          <app-button
+            typeBtn="button"
+            color="navbar"
+            (click)="OpenDialog()"
+            *ngIf="user?.role === 1"
             >Crear Reserva</app-button
           >
         </div>

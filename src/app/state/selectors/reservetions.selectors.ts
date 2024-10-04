@@ -1,6 +1,7 @@
 import { ReservationState } from 'src/app/models/reservations.state';
 import { AppState } from '../app.state';
 import { createSelector } from '@ngrx/store';
+import { GroupReservationInfo } from 'src/app/models/GroupReservationInfo.model';
 
 export const selectReservationsFeature = (state: AppState) =>
   state.reservations;
@@ -60,3 +61,23 @@ export const selectClubReservationsLoading = createSelector(
   selectReservationsFeature,
   (state: ReservationState) => state.clubReservationsLoading
 );
+
+export const selectMatchingReservationId = (hour: string) =>
+  createSelector(
+    selectGroupReservationInfo,
+    (groupReservationInfo: GroupReservationInfo | null) => {
+      if (
+        groupReservationInfo &&
+        Array.isArray(groupReservationInfo.individualReservationsId)
+      ) {
+        const matchingReservation =
+          groupReservationInfo.individualReservationsId.find(
+            (res) => new Date(res.dateTime).getHours() === parseInt(hour, 10)
+          );
+        return matchingReservation
+          ? matchingReservation.reservationId.toString()
+          : null;
+      }
+      return null;
+    }
+  );

@@ -17,3 +17,8 @@ export const selectReservationCreated = createSelector(
   selectClubState,
   (state: clubState) => state.reservationCreated
 );
+
+export const loadingCreateReservation = createSelector(
+  selectClubState,
+  (state: clubState) => state.loadingCreateReservation
+);

@@ -13,6 +13,7 @@ import { ReservationService } from 'src/app/services/reservation.service';
 import { loadReservationsAdmin } from '../actions/reservations.actions';
 import { selectDatePicked } from '../selectors/reservetions.selectors';
 import { Store } from '@ngrx/store';
+import { closeModal } from '../actions/modals.actions';
 
 @Injectable()
 export class ClubEffects {
@@ -38,8 +39,8 @@ export class ClubEffects {
           .pipe(
             map(() => createReservationAdminSuccess()),
             switchMap(() => [
-              createReservationAdminSuccess(),
               loadReservationsAdmin({ date: selectDatePicked }),
+              closeModal({ modalId: 'createReservationModal' }),
             ]),
             catchError((error) => of(getClubUserByNameOrIdFailure({ error })))
           )

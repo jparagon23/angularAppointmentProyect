@@ -35,27 +35,28 @@
     </div>
   </div>
 
-<!-- Mostrar los espacios disponibles -->
-<div *ngIf="(availableTimeSlots$ | async) as slots">
-  <div *ngIf="slots && slots.length > 0" class="flex flex-wrap justify-center mt-4">
-    <div *ngFor="let slot of slots">
-      <button
-        type="button"
-        class="m-2 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200"
-        (click)="onSlotSelect(slot)"
-      >
-        {{ slot.split(' ')[1].substring(0, 5) }}
-      </button>
+  <!-- Mostrar los espacios disponibles -->
+  <div *ngIf="availableTimeSlots$ | async as slots">
+    <div
+      *ngIf="slots && slots.length > 0"
+      class="flex flex-wrap justify-center mt-4"
+    >
+      <div *ngFor="let slot of slots">
+        <button
+          type="button"
+          class="m-2 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200"
+          (click)="onSlotSelect(slot)"
+        >
+          {{ slot.split(" ")[1].substring(0, 5) }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Mostrar mensaje si no hay espacios disponibles -->
+    <div *ngIf="slots && slots.length === 0" class="mt-4">
+      <p>No hay espacios disponibles para la fecha seleccionada.</p>
     </div>
   </div>
-
-  <!-- Mostrar mensaje si no hay espacios disponibles -->
-  <div *ngIf="slots && slots.length === 0" class="mt-4">
-    <p>No hay espacios disponibles para la fecha seleccionada.</p>
-  </div>
-</div>
-
-
 
   <!-- Acciones del diálogo -->
   <div mat-dialog-actions class="inline-flex space-x-3 justify-center mt-6">

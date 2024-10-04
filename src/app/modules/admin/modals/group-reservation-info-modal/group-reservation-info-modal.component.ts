@@ -1,9 +1,10 @@
-import { Component, Inject, OnInit } from '@angular/core';
 import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogRef,
-} from '@angular/material/dialog';
+  Component,
+  Inject,
+  OnInit,
+  ChangeDetectionStrategy,
+} from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable, take } from 'rxjs';
 import { GroupReservationInfo } from 'src/app/models/GroupReservationInfo.model';
@@ -12,15 +13,20 @@ import {
   cancelReservationAdmin,
   getReservationsByGroupId,
 } from 'src/app/state/actions/reservations.actions';
-import { selectGroupReservationInfo } from 'src/app/state/selectors/reservetions.selectors';
+import { AppState } from 'src/app/state/app.state';
+import {
+  selectGroupReservationInfo,
+  selectMatchingReservationId,
+} from 'src/app/state/selectors/reservetions.selectors';
 
 @Component({
   selector: 'app-group-reservation-info-modal',
   templateUrl: './group-reservation-info-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GroupReservationInfoModalComponent implements OnInit {
   groupReservationInfo$: Observable<GroupReservationInfo | null>;
-  selectedReservationId: string | null = null;
+  selectedReservationId$: Observable<string | null>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -32,19 +38,19 @@ export class GroupReservationInfoModalComponent implements OnInit {
         hour: string;
       };
     },
-    public dialog: MatDialog,
     private modalService: ModalService,
     private reservationInfoModal: MatDialogRef<GroupReservationInfoModalComponent>,
-    private store: Store<any>
+    private store: Store<AppState>
   ) {
     this.groupReservationInfo$ = this.store.select(selectGroupReservationInfo);
+    this.selectedReservationId$ = this.store.select(
+      selectMatchingReservationId(this.data.reservationInfo.hour)
+    );
   }
 
   ngOnInit() {
-    console.log(this.data);
     this.modalService.add(this.reservationInfoModal);
     this.loadReservationInfo();
-    this.checkMatchingReservation();
   }
 
   private loadReservationInfo() {
@@ -52,72 +58,36 @@ export class GroupReservationInfoModalComponent implements OnInit {
     if (reservationId) {
       this.store.dispatch(getReservationsByGroupId({ groupId: reservationId }));
     } else {
-      console.error('Reservation ID is null');
+      this.logError('Reservation ID is null');
     }
   }
 
-  cancelGroupReservation() {
-    console.log('Cancel group reservation');
-    // Tomamos la información de la reserva una sola vez
+  private logError(message: string): void {
+    console.error(message); // Centralized error logging
+  }
+
+  cancelGroupReservation(): void {
     this.groupReservationInfo$.pipe(take(1)).subscribe((info) => {
-      if (info && info.groupId) {
-        this.store.dispatch(
-          cancelReservationAdmin({ reservationId: info.groupId })
-        );
-        console.log(`Reservation with groupId ${info.groupId} canceled.`);
-        this.reservationInfoModal.close(); // Cerrar el modal tras cancelar
+      if (info?.groupId) {
+        this.dispatchCancelAction(info.groupId);
       } else {
-        console.log('No group reservation info available');
+        this.logError('No group reservation info available');
       }
     });
   }
 
-  private checkMatchingReservation() {
-    // Subscribe to the groupReservationInfo$ to check if any reservation matches the condition
-    this.groupReservationInfo$.subscribe((groupReservationInfo) => {
-      if (groupReservationInfo) {
-        groupReservationInfo.individualReservationsId.forEach(
-          (individualReservation) => {
-            // Compare the hour with the formatted dateTime
-            if (
-              this.data.reservationInfo.hour ===
-              this.formatTime(individualReservation.dateTime)
-            ) {
-              // Save the reservationId if the condition is met
-              this.selectedReservationId =
-                individualReservation.reservationId.toString();
-            }
-          }
-        );
+  cancelSelectedReservation(): void {
+    this.selectedReservationId$.pipe(take(1)).subscribe((selectedId) => {
+      if (selectedId) {
+        this.dispatchCancelAction(`I-${selectedId}`);
+      } else {
+        this.logError('No selected reservation ID found');
       }
     });
   }
 
-  private formatTime(value: string | Date): string {
-    const date = new Date(value);
-    const hours = date.getHours().toString();
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-
-    return `${hours}:${minutes}`;
-  }
-
-  cancelSelectedReservations() {
-    console.log('Cancel selected reservations');
-    console.log(this.selectedReservationId);
-    // Lógica para cancelar las reservas seleccionadas
-
-    if (this.selectedReservationId) {
-      this.store.dispatch(
-        cancelReservationAdmin({
-          reservationId: `I-${this.selectedReservationId}`,
-        })
-      );
-      console.log(
-        `Reservation with ID I-${this.selectedReservationId} canceled.`
-      );
-      this.reservationInfoModal.close(); // Cerrar el modal tras cancelar
-    } else {
-      console.error('Selected reservation ID is null');
-    }
+  private dispatchCancelAction(reservationId: string): void {
+    this.store.dispatch(cancelReservationAdmin({ reservationId }));
+    this.reservationInfoModal.close(); // Close modal after successful cancellation
   }
 }
