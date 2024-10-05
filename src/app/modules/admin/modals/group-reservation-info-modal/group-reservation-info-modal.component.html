@@ -11,10 +11,13 @@
     *ngIf="groupReservationInfo$ | async as groupReservationInfo"
   >
     <button
-      class="border border-gray-400 bg-gray-100 text-gray-600 font-semibold py-2 px-4 rounded-md hover:bg-gray-200"
+      class="border border-gray-400 text-gray-600 font-semibold py-2 px-4 rounded-md"
       [ngClass]="{
-        'bg-blue-500 text-white':
+        'bg-blue-500 text-white hover:bg-blue-700':
           data.reservationInfo.hour ===
+          (individualReservation.dateTime | timeFormat),
+        'bg-gray-100 hover:bg-gray-200':
+          data.reservationInfo.hour !==
           (individualReservation.dateTime | timeFormat)
       }"
       *ngFor="
@@ -25,18 +28,19 @@
     </button>
   </div>
 
-  <div class="flex justify-between">
-    <button
-      class="border border-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-md hover:bg-gray-200"
+  <div class="flex justify-between space-x-3">
+    <app-button
+      [typeBtn]="'submit'"
+      [color]="'light'"
       (click)="cancelGroupReservation()"
+      >Cancel grupo de reservas</app-button
     >
-      Cancel grupo de reserva
-    </button>
-    <button
-      class="bg-black text-white font-semibold py-2 px-4 rounded-md hover:bg-gray-800"
+
+    <app-button
+      [typeBtn]="'submit'"
+      [color]="'danger'"
       (click)="cancelSelectedReservation()"
+      >Cancelar reserva seleccionada</app-button
     >
-      Cancelar reservas seleccionadas
-    </button>
   </div>
 </div>

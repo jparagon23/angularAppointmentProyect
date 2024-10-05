@@ -51,7 +51,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let row of reservations.reservationsData">
+        <tr
+          *ngFor="let row of reservations.reservationsData"
+          class="hover:bg-gray-100"
+        >
           <td class="border px-4 py-2 text-center">
             {{ row.reservations[0].description }}
           </td>
