@@ -15,6 +15,7 @@ import {
 export class LayoutComponent implements OnInit {
   userLoading$ = this.store.select(selectUsersLoading);
   userError$ = this.store.select(selectUsersError);
+  user$ = this.store.select(selectUser);
 
   constructor(private store: Store<any>, private router: Router) {}
 
