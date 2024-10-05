@@ -38,7 +38,13 @@ registerLocaleData(localeEs, 'es');
     MatInputModule,
     StoreModule.forRoot(ROOT_REDUCERS),
     BrowserAnimationsModule,
-    StoreDevtoolsModule.instrument({ name: 'TEST' }),
+    StoreDevtoolsModule.instrument({
+      name: 'TEST',
+      maxAge: 25, // Retiene los últimos 25 estados
+      logOnly: environment.production, // Restringe el uso de DevTools en producción
+      trace: true, // Habilita el rastreo de llamadas a acciones
+      traceLimit: 25, // Opcional: limita el número de llamadas rastreadas
+    }),
     EffectsModule.forRoot([
       ReservationEffects,
       ProfileEffects,

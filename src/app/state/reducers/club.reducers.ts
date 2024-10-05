@@ -1,3 +1,4 @@
+import { ClubReservations } from './../../models/ClubReservations.model';
 import { ClubUser } from 'src/app/models/clubUsers.model';
 import {
   getClubUserByNameOrId,
@@ -6,6 +7,7 @@ import {
   createReservationAdmin,
   createReservationAdminSuccess,
   createReservationAdminFailure,
+  resetReservationCreated,
 } from '../actions/club.actions';
 import { createReducer, on } from '@ngrx/store';
 export interface clubState {
@@ -58,5 +60,9 @@ export const clubReducer = createReducer(
     loadingCreateReservation: false,
     reservationCreatedFailure: true,
     error,
+  })),
+  on(resetReservationCreated, (state: clubState) => ({
+    ...state,
+    reservationCreated: false, // Restablecer reservationCreated a false
   }))
 );

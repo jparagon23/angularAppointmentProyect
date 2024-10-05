@@ -8,6 +8,7 @@ import {
   MAT_DIALOG_DATA,
   MatDialog,
   MatDialogRef,
+  MatDialogState,
 } from '@angular/material/dialog';
 import {
   loadingCreateReservation,
@@ -20,6 +21,7 @@ import {
 import {
   createReservationAdmin,
   getClubUserByNameOrId,
+  resetReservationCreated,
 } from 'src/app/state/actions/club.actions';
 import { AppState } from 'src/app/state/app.state';
 import { isModalOpen } from 'src/app/state/selectors/modals.selectors';
@@ -88,10 +90,22 @@ export class CreateReservationFromTableModalComponent
       this.userControl.valueChanges
         .pipe(
           debounceTime(300),
-          startWith(''),
-          tap((searchTerm) =>
-            this.store.dispatch(getClubUserByNameOrId({ nameOrId: searchTerm }))
-          )
+          tap((searchTerm) => {
+            console.log('searchTerm', searchTerm);
+            console.log('this.selectedUser', this.selectedUser);
+            console.log(
+              'this.selectedUser.completeName',
+              this.selectedUser?.completeName
+            );
+
+            if (!this.selectedUser) {
+              console.log('lanzando dispach');
+
+              this.store.dispatch(
+                getClubUserByNameOrId({ nameOrId: searchTerm })
+              );
+            }
+          })
         )
         .subscribe()
     );
@@ -102,7 +116,7 @@ export class CreateReservationFromTableModalComponent
       this.store
         .pipe(select(isModalOpen('createReservationFromTableModal')))
         .subscribe((isOpen) => {
-          if (!isOpen) {
+          if (!isOpen && this.dialogRef.getState() !== MatDialogState.CLOSED) {
             this.dialogRef.close();
           }
         })
@@ -160,10 +174,8 @@ export class CreateReservationFromTableModalComponent
   }
 
   closeModal() {
+    this.store.dispatch(resetReservationCreated());
     this.dialogRef.close();
-    this.store.dispatch(
-      closeModal({ modalId: 'createReservationFromTableModal' })
-    );
   }
 
   ngOnDestroy() {

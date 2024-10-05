@@ -29,3 +29,7 @@ export const createReservationAdminFailure = createAction(
   '[Admin Dashboard] Create Reservation Failure',
   props<{ error: any }>()
 );
+
+export const resetReservationCreated = createAction(
+  '[Club] Reset Reservation Created'
+);

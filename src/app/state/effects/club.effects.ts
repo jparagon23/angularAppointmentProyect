@@ -33,19 +33,26 @@ export class ClubEffects {
   createReservationAdmin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createReservationAdmin),
-      withLatestFrom(this.store.select(selectDatePicked)),
-      switchMap(([action, selectDatePicked]) =>
+      switchMap((action) =>
         this.reservationService
           .createReservationAdmin(action.selecteDates, action.userId)
           .pipe(
+            // Si la creación de la reserva es exitosa, solo lanzamos `createReservationAdminSuccess`
             map(() => createReservationAdminSuccess()),
-            switchMap(() => [
-              loadReservationsAdmin({ date: selectDatePicked }),
-              closeModal({ modalId: 'createReservationModal' }),
-            ]),
             catchError((error) => of(createReservationAdminFailure({ error })))
           )
       )
+    )
+  );
+
+  loadReservationsAndCloseModal$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createReservationAdminSuccess), // Escuchar cuando la reserva se creó correctamente
+      withLatestFrom(this.store.select(selectDatePicked)), // Obtenemos la fecha seleccionada
+      switchMap(([_, selectDatePicked]) => [
+        loadReservationsAdmin({ date: selectDatePicked }), // Cargamos las reservas
+        closeModal({ modalId: 'createReservationFromTableModal' }), // Cerramos el modal
+      ])
     )
   );
 
