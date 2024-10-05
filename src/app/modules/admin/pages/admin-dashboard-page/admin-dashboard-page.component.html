@@ -12,29 +12,7 @@
 </div>
 
 <div *ngIf="clubReservationLoading$ | async; else content">
-  <div class="flex justify-center items-center">
-    <p class="text-center text-gray-500">Cargando reservas...</p>
-    <svg
-      class="animate-spin h-5 w-5 text-gray-500 ml-2"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        class="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        stroke-width="4"
-      ></circle>
-      <path
-        class="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-      ></path>
-    </svg>
-  </div>
+  <app-loader [message]="'Cargando reservas'"></app-loader>
 </div>
 
 <ng-template #content>
@@ -83,29 +61,7 @@
   </div>
 
   <ng-template #loading>
-    <div class="flex justify-center items-center">
-      <p class="text-center text-gray-500">Cargando reservas...</p>
-      <svg
-        class="animate-spin h-5 w-5 text-gray-500 ml-2"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4"
-        ></circle>
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-        ></path>
-      </svg>
-    </div>
+    <app-loader [message]="'Cargando reservas'"></app-loader>
   </ng-template>
   <div *ngIf="error" class="text-center text-red-500">
     Error al cargar las reservas. Por favor, inténtelo de nuevo más tarde.

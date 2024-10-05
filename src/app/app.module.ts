@@ -24,6 +24,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ClubEffects } from './state/effects/club.effects';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { SharedModule } from './modules/shared/shared.module';
 
 registerLocaleData(localeEs, 'es');
 
@@ -51,6 +52,7 @@ registerLocaleData(localeEs, 'es');
       AuthEffects,
       ClubEffects,
     ]),
+    SharedModule,
   ],
   providers: [
     {

@@ -63,8 +63,5 @@
 </div>
 
 <ng-template #loading>
-  <div class="flex justify-center items-center h-full">
-    <mat-spinner></mat-spinner>
-    <p class="ml-4 text-gray-600">Cargando reserva...</p>
-  </div>
+  <app-loader [message]="'Creando la reserva'"></app-loader>
 </ng-template>

@@ -25,11 +25,7 @@ export class DashboardPageComponent implements OnInit {
 
   loadingReservations$: Observable<boolean> = new Observable();
 
-  constructor(
-    private userService: UserService,
-    private authService: AuthService,
-    private store: Store<any>
-  ) {}
+  constructor(private store: Store<any>) {}
   ngOnInit(): void {
     this.loadingReservations$ = this.store.select(selectReservationLoading);
     this.userReservations$ = this.store.select(selectListReservations);

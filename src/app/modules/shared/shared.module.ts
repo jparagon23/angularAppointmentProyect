@@ -9,6 +9,8 @@ import { SelectComponent } from './components/select/select.component';
 import { ErrorMessageComponent } from './components/error-message/error-message.component';
 import { CheckboxComponent } from './components/chechbox/chechbox.component';
 import { TimeFormatPipe } from './pipes/time-format.pipe';
+import { LoaderComponent } from './components/loader/loader.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -18,14 +20,22 @@ import { TimeFormatPipe } from './pipes/time-format.pipe';
     ErrorMessageComponent,
     CheckboxComponent,
     TimeFormatPipe,
+    LoaderComponent,
   ],
-  imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule],
+
+  imports: [
+    CommonModule,
+    FontAwesomeModule,
+    ReactiveFormsModule,
+    MatProgressSpinnerModule,
+  ],
   exports: [
     ButtonComponent,
     InputComponent,
     SelectComponent,
     CheckboxComponent,
     TimeFormatPipe,
+    LoaderComponent,
   ],
 })
 export class SharedModule {}

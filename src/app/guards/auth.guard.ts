@@ -1,9 +1,12 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { TokenService } from '../services/token.service';
+import { Store } from '@ngrx/store';
+import { catchError, filter, map, of, tap } from 'rxjs';
+import { selectUser } from '../state/selectors/users.selectors';
 
-export const authGuard: CanActivateFn = () => {
-  console.log('Guard');
+export const AuthGuard: CanActivateFn = () => {
+  console.log('Guard Auth');
 
   const isValidToken: boolean = inject(TokenService).isValidToken();
 

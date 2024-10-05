@@ -7,10 +7,15 @@ export const selectUsersFeature = (state: AppState) => state.user;
 
 export const selectUser = createSelector(
   selectUsersFeature,
-  (state: UserState) => state.user
+  (state) => state.user
 );
 
 export const selectUsersLoading = createSelector(
   selectUsersFeature,
-  (state: UserState) => state.loading
+  (state) => state.loading
+);
+
+export const selectUsersError = createSelector(
+  selectUsersFeature,
+  (state) => state.error
 );
