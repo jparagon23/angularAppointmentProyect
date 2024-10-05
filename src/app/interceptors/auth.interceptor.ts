@@ -15,7 +15,7 @@ import { TokenService } from '../services/token.service';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private readonly maxRetries = 3;
-  private readonly retryDelayMs = 5000;
+  private readonly retryDelayMs = 6000;
 
   constructor(
     private router: Router,
