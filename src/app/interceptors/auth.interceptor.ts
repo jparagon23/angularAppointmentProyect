@@ -7,7 +7,7 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError, retryWhen, delay, scan } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ModalService } from '../services/modal.service';
 import { TokenService } from '../services/token.service';
@@ -29,17 +29,21 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     console.log('Intercepting request:', req);
     return next.handle(this.addAuthToken(req)).pipe(
-      retry({
-        count: this.maxRetries,
-        delay: (error, retryCount) => {
-          return new Observable((observer) => {
-            setTimeout(() => {
-              observer.next();
-              observer.complete();
-            }, this.retryDelayMs);
-          });
-        },
-      }),
+      retryWhen((errors) =>
+        errors.pipe(
+          scan((retryCount, error) => {
+            if (
+              retryCount >= this.maxRetries ||
+              !(error instanceof HttpErrorResponse) ||
+              error.status !== 0
+            ) {
+              throw error;
+            }
+            return retryCount + 1;
+          }, 0),
+          delay(this.retryDelayMs)
+        )
+      ),
       catchError((error: HttpErrorResponse) => this.handleAuthError(error))
     );
   }

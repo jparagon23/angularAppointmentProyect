@@ -71,7 +71,7 @@ export class RegisterFormComponent implements OnInit {
       [CustomValidators.checkIfEmailIsAvailable(this.authService)],
     ],
     categoryId: ['', [Validators.required]],
-    roleId: 2,
+    roleId: 1,
     password: ['', [Validators.required]],
     confirmationPassword: [
       '',

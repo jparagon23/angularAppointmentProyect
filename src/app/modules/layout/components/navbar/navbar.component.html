@@ -1,17 +1,17 @@
 <ng-container *ngIf="user$ | async as user">
-  <nav class="bg-green-700 border-gray-200 px-20 shadow-md">
+  <nav class="bg-green-700 border-gray-200 px-20 py-5 shadow-md">
     <div class="flex flex-wrap justify-between items-center">
       <div class="flex items-center">
         <a routerLink="/app">
           <img
             loading="lazy"
-            class="w-20 mr-8"
+            class="w-32 mr-8"
             src="/assets/svg/FOREHAPP.svg"
             alt="logo"
           />
         </a>
         <div class="flex items-center">
-          <ul class="flex items-center space-x-2 text-sm font-medium">
+          <!-- <ul class="flex items-center space-x-2 text-sm font-medium">
             <li>
               <app-button
                 color="navbar"
@@ -35,7 +35,7 @@
             <li>
               <app-button typeBtn="button" color="navbar">Create</app-button>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </div>
       <div class="flex items-center space-x-6">
@@ -75,7 +75,6 @@
       class="z-50 my-4 w-60 text-base list-none bg-white rounded divide-y divide-gray-100 shadow"
     >
       <div class="py-2 px-4 text-center relative">
-        <span class="block text-normal text-gray-900">Account</span>
         <button
           (click)="isOpenOverlayAvatar = !isOpenOverlayAvatar"
           class="block text-sm text-gray-900 absolute right-3 top-3"
@@ -85,7 +84,9 @@
       </div>
       <div class="py-3 px-4 flex items-center space-x-4">
         <div class="space-y-1">
-          <div>{{ user?.name }}</div>
+          <div class="text-lg font-semibold text-gray-900">
+            {{ user?.name }} {{ user?.lastname }}
+          </div>
           <div class="text-sm text-gray-500">{{ user?.email }}</div>
         </div>
       </div>
@@ -94,25 +95,14 @@
           <a
             routerLink="/app/profile"
             class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
-            >Profile</a
+            >Perfil</a
           >
         </li>
+
         <li>
           <a
             class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
-            >Activity</a
-          >
-        </li>
-        <li>
-          <a
-            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
-            >Cards</a
-          >
-        </li>
-        <li>
-          <a
-            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
-            >Settings</a
+            >Configuraciones</a
           >
         </li>
       </ul>
@@ -122,14 +112,14 @@
             class="block py-2 px-4 text-sm text-gray-700"
             (click)="logout()"
           >
-            Log out
+            Cerrar sesión
           </button>
         </li>
       </ul>
     </div>
   </ng-template>
 
-  <ng-template
+  <!-- <ng-template
     cdkConnectedOverlay
     [cdkConnectedOverlayOrigin]="boardsOverlay"
     [cdkConnectedOverlayOpen]="isOpenOverlayBoards"
@@ -149,5 +139,5 @@
       </div>
       <div class="py-3 px-4 flex justify-between">Content</div>
     </div>
-  </ng-template>
+  </ng-template> -->
 </ng-container>
