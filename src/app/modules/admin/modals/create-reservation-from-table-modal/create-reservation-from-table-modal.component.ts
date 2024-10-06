@@ -91,16 +91,7 @@ export class CreateReservationFromTableModalComponent
         .pipe(
           debounceTime(300),
           tap((searchTerm) => {
-            console.log('searchTerm', searchTerm);
-            console.log('this.selectedUser', this.selectedUser);
-            console.log(
-              'this.selectedUser.completeName',
-              this.selectedUser?.completeName
-            );
-
             if (!this.selectedUser) {
-              console.log('lanzando dispach');
-
               this.store.dispatch(
                 getClubUserByNameOrId({ nameOrId: searchTerm })
               );

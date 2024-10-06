@@ -35,10 +35,8 @@ export class LayoutComponent implements OnInit {
           // Manejar el error, por ejemplo, mostrar un mensaje de error
         } else if (user) {
           if (user.role == 2) {
-            console.log('User is admin, redirecting to admin dashboard');
             this.router.navigate(['home/admin/dashboard']);
           } else {
-            console.log('User is not admin, redirecting to user dashboard');
             this.router.navigate(['home/dashboard']);
           }
         }

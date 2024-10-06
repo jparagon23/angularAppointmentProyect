@@ -51,7 +51,6 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
         next: (user) => {
           if (user) {
             this.user = user;
-            console.log('User data in admin:', user);
             this.loadReservations();
           } else {
             console.error('User is null');
@@ -79,13 +78,10 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
   onDateChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     this.selectedDate = inputElement.value;
-    console.log(this.selectedDate);
     this.loadReservations();
   }
 
   loadReservations(): void {
-    console.log('Desde el admin-dashboard lanzando el loadReservations');
-
     if (this.user) {
       this.store.dispatch(
         loadReservationsAdmin({
@@ -107,7 +103,6 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
     };
 
     if (reservation.id === '-1') {
-      console.log('Reserva Grupal');
       this.dialog.open(CreateReservationFromTableModalComponent, {
         maxWidth: '50vw',
         maxHeight: '50vh',
@@ -117,12 +112,10 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
     }
 
     if (reservation.id === '-99') {
-      console.log('No disponible');
       return;
     }
 
     if (reservation.id !== null && reservation.id.startsWith('I')) {
-      console.log('Reserva individual');
       this.dialog.open(ReservationInfoModalComponent, {
         maxWidth: '50vw',
         maxHeight: '50vh',
@@ -130,7 +123,6 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
       });
       return;
     } else {
-      console.log('Reserva Grupal');
       this.dialog.open(GroupReservationInfoModalComponent, {
         maxWidth: '50vw',
         maxHeight: '50vh',

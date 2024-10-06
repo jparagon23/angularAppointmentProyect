@@ -44,14 +44,6 @@ export class AccountAuthFormComponent {
     this.authError$ = this.store.select(selectAuthError);
     this.loading$ = this.store.select(selectAuthLoading);
 
-    // // Navegar al login si la autenticación es exitosa
-    // this.isAuthenticated$.subscribe((isAuthenticated) => {
-    //   console.log('Is Authenticated:', isAuthenticated);
-    //   if (isAuthenticated) {
-    //     this.navigateToLogin();
-    //   }
-    // });
-
     // Manejo de errores de autenticación
     this.authError$.subscribe((error) => {
       if (error) {
@@ -75,7 +67,6 @@ export class AccountAuthFormComponent {
   }
 
   navigateToLogin() {
-    console.log('Navegando al login');
     this.router.navigate(['/login']);
   }
 }

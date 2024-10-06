@@ -46,8 +46,6 @@ export class ReservationInfoModalComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === true) {
-        console.log('eliminandola por confirmada');
-
         if (this.data.reservationInfo.id) {
           this.store.dispatch(
             cancelReservationAdmin({

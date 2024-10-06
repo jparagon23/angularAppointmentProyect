@@ -39,8 +39,6 @@ export class AuthService {
       .set('userId', userId.toString())
       .set('code', code);
 
-    console.log('userId: ', userId);
-
     return this.http.post(url, {}, { params });
   }
 
@@ -59,8 +57,6 @@ export class AuthService {
       .post<{ id: number }>(`${this.apiUrl}/auth/register`, formData)
       .pipe(
         tap((response: { id: number }) => {
-          console.log('the id set is ' + response.id);
-
           this.user = { id: response.id } as User;
         })
       );
@@ -77,27 +73,19 @@ export class AuthService {
   }
 
   getInitialSignUpData(): Observable<InitialSignUpData> {
-    console.log('Entering getInitialSignUpData');
-    console.log('Data Loaded:', this.initialSignUpDataLoaded);
-
     if (this.initialSignUpDataLoaded) {
-      console.log('Returning cached data');
       return new Observable((observer) => {
         observer.next(this.initialSignUpData);
         observer.complete();
       });
     }
 
-    console.log('Making HTTP request');
-
     return this.http
       .get<InitialSignUpData>(`${this.apiUrl}/auth/initial-sign-up-data`)
       .pipe(
         tap((data) => {
-          console.log('Data loaded successfully');
           this.initialSignUpData = data;
           this.initialSignUpDataLoaded = true;
-          console.log(this.initialSignUpDataLoaded);
         })
       );
   }
@@ -131,8 +119,6 @@ export class AuthService {
         tap((user) => {
           this.user$.next(user);
           this.user = user.data[0];
-
-          console.log('User id: ', this.user.id);
         })
       );
   }

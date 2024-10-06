@@ -188,12 +188,8 @@ export class RegisterFormComponent implements OnInit {
       delete formData.confirmationPassword;
       delete formData.phoneTypeId;
 
-      console.log('this is the data');
-      console.log(formData);
-
       this.authService.createUser(formData).subscribe(
         (response) => {
-          console.log(response);
           this.router.navigate(['authAccount'], { relativeTo: this.route });
         },
         (error) => {

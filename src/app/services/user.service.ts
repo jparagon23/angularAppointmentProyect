@@ -31,8 +31,6 @@ export class UserService {
   }
 
   private setHeaders(): HttpHeaders {
-    console.log('setting headers');
-
     this.headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
     });
@@ -42,8 +40,6 @@ export class UserService {
 
   getClubUserByNameOrId(name: string): Observable<ClubUser[]> {
     const url = `${environment.API_URL}/reservation/club/${this.user.userAdminClub}/members?nameOrId=${name}`;
-    return this.http
-      .get<ClubUser[]>(url, { headers: this.setHeaders() })
-      .pipe(tap((response) => console.log('Response:', response)));
+    return this.http.get<ClubUser[]>(url, { headers: this.setHeaders() });
   }
 }

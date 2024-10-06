@@ -51,21 +51,13 @@ export class NavbarComponent implements OnInit {
       maxWidth: '50vw', // Establece el ancho máximo al 80% del viewport
       maxHeight: '50vh', // Establece la altura máxima al 80% del viewport
     });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
-    });
   }
 
   ngOnInit(): void {
-    console.log('Navbar component initialized');
-
     this.user$ = this.store.select(selectUser).pipe(
       filter((user): user is User => user !== null),
       distinctUntilChanged()
     );
-    this.user$.subscribe((user) => {
-      console.log('User data:', user);
-    });
+    this.user$.subscribe((user) => {});
   }
 }

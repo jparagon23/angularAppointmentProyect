@@ -31,8 +31,6 @@ export class TokenInterceptor implements HttpInterceptor {
     if (request.context.get(CHECK_TOKEN)) {
       const isValidToken = this.tokenService.isValidToken();
 
-      console.log('the token is valid? ' + isValidToken);
-
       if (isValidToken) {
         return this.addToken(request, next);
       } else {
@@ -43,8 +41,6 @@ export class TokenInterceptor implements HttpInterceptor {
   }
 
   private addToken(request: HttpRequest<unknown>, next: HttpHandler) {
-    console.log('starting the add token');
-
     const accessToken = this.tokenService.getToken();
     if (accessToken) {
       const authRequest = request.clone({

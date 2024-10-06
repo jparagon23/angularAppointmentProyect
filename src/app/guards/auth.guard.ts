@@ -6,8 +6,6 @@ import { catchError, filter, map, of, tap } from 'rxjs';
 import { selectUser } from '../state/selectors/users.selectors';
 
 export const AuthGuard: CanActivateFn = () => {
-  console.log('Guard Auth');
-
   const isValidToken: boolean = inject(TokenService).isValidToken();
 
   if (!isValidToken) {

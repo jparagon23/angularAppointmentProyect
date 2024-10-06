@@ -26,7 +26,6 @@ export class AccountAuthenticationComponent {
   }
 
   navigateToLogin() {
-    console.log('Navegando al login');
     this.router.navigate(['/login']);
   }
 }

@@ -8,7 +8,6 @@ export class TimeFormatPipe implements PipeTransform {
     const date = new Date(value);
     const hours = date.getHours().toString();
     const minutes = date.getMinutes().toString().padStart(2, '0');
-    console.log(`${hours}:${minutes}`);
 
     return `${hours}:${minutes}`;
   }

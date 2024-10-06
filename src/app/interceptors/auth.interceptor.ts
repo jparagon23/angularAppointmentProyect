@@ -27,7 +27,6 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    console.log('Intercepting request:', req);
     return next.handle(this.addAuthToken(req)).pipe(
       retryWhen((errors) =>
         errors.pipe(
@@ -79,7 +78,6 @@ export class AuthInterceptor implements HttpInterceptor {
    * and redirecting to the login page
    */
   private handleUnauthorizedError(): void {
-    console.log('Unauthorized error, redirecting to login.');
     this.tokenService.removeToken();
     this.modalService.closeAllModals();
     this.router.navigate(['/login']);

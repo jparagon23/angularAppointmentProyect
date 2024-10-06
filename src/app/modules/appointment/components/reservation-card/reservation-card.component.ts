@@ -20,11 +20,6 @@ export class ReservationCardComponent {
       maxHeight: '50vh',
     });
 
-    // Luego maneja el resultado del modal
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
-    });
-
     // Finalmente, despacha la selección de la reserva
     this.store.dispatch(selectReservation({ reservation: this.reservation }));
   }

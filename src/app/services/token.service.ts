@@ -10,12 +10,10 @@ export class TokenService {
 
   saveToken(token: string) {
     setCookie('token-appnet', token, { expires: 365, path: '/' });
-    console.log('Token saved ' + token);
   }
 
   getToken() {
     const token = getCookie('token-appnet');
-    console.log('Token get ' + token);
 
     return token;
   }
@@ -38,8 +36,6 @@ export class TokenService {
     }
 
     try {
-      console.log('Trying');
-
       const decodedToken = jwtDecode<JwtPayload>(token);
 
       if (decodedToken && decodedToken.exp) {
@@ -76,22 +72,13 @@ export class TokenService {
     }
 
     try {
-      console.log('Trying');
-
       const decodedToken = jwtDecode<JwtPayload>(token);
 
       if (decodedToken && decodedToken.exp) {
-        console.log('decode token' + decodedToken);
-        console.log('decde token date' + decodedToken.exp);
-
         const tokenDate = new Date(0);
         tokenDate.setUTCSeconds(decodedToken.exp);
 
         const today = new Date();
-
-        console.log('ending is validRefreshToken');
-
-        console.log(tokenDate.getTime() > today.getTime());
 
         return tokenDate.getTime() > today.getTime();
       }

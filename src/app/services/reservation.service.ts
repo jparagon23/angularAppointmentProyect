@@ -45,8 +45,6 @@ export class ReservationService {
   }
 
   private setHeaders(): HttpHeaders {
-    console.log('setting headers');
-
     this.headers = new HttpHeaders({
       Authorization: `Bearer ${this.tokenService.getToken()}`,
     });
@@ -56,20 +54,18 @@ export class ReservationService {
 
   getAvailableSlotsPerDay(date: string): Observable<AvailableSlotsResponse> {
     const url = `${environment.API_URL}/reservation/club/1/available-date-times?date=${date}`;
-    return this.http
-      .get<AvailableSlotsResponse>(url, { headers: this.setHeaders() })
-      .pipe(tap((response) => console.log('Response:', response)));
+    return this.http.get<AvailableSlotsResponse>(url, {
+      headers: this.setHeaders(),
+    });
   }
 
   getUserReservations(): Observable<UserReservationResponse> {
     const url = `${environment.API_URL}/reservation/user/${this.userId}`;
-    console.log('Fetching reservations for User ID:', this.userId);
 
     return this.http
       .get<UserReservationResponse>(url, { headers: this.setHeaders() })
       .pipe(
         tap((response) => {
-          console.log('User Reservations Response:', response);
           this.reservations$.next(response);
         })
       );
