@@ -57,7 +57,8 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(logout),
       map(() => {
-        // Aquí puedes agregar lógica adicional para el logout si es necesario
+        this.authService.logout();
+        this.router.navigate(['/login']);
         return { type: '[Auth] Logout Success' };
       })
     )

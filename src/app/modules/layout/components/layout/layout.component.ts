@@ -7,6 +7,8 @@ import {
   selectUsersError,
   selectUsersLoading,
 } from 'src/app/state/selectors/users.selectors';
+import { combineLatest } from 'rxjs';
+import { filter, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
   selector: 'app-layout',
@@ -22,25 +24,24 @@ export class LayoutComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch(loadUser());
 
-    this.userLoading$.subscribe((isLoading) => {
-      if (!isLoading) {
-        this.userError$.subscribe((error) => {
-          if (error) {
-            console.error('Error loading user:', error);
-            // Manejar el error, por ejemplo, mostrar un mensaje de error
+    combineLatest([this.userLoading$, this.userError$, this.user$])
+      .pipe(
+        filter(([isLoading, error, user]) => !isLoading),
+        distinctUntilChanged()
+      )
+      .subscribe(([isLoading, error, user]) => {
+        if (error) {
+          console.error('Error loading user:', error);
+          // Manejar el error, por ejemplo, mostrar un mensaje de error
+        } else if (user) {
+          if (user.role == 2) {
+            console.log('User is admin, redirecting to admin dashboard');
+            this.router.navigate(['home/admin/dashboard']);
           } else {
-            this.store.select(selectUser).subscribe((user) => {
-              if (user?.role == 2) {
-                console.log('User is admin, redirecting to admin dashboard');
-                this.router.navigate(['home/admin/dashboard']);
-              } else {
-                console.log('User is not admin, redirecting to user dashboard');
-                this.router.navigate(['home/dashboard']);
-              }
-            });
+            console.log('User is not admin, redirecting to user dashboard');
+            this.router.navigate(['home/dashboard']);
           }
-        });
-      }
-    });
+        }
+      });
   }
 }

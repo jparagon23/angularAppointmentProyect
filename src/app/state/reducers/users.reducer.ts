@@ -5,6 +5,7 @@ import {
   loadUserFailure,
   loadUserSuccess,
 } from '../actions/users.actions';
+import { logout } from '../actions/auth.actions';
 
 export const initialState: UserState = {
   user: null,
@@ -24,5 +25,6 @@ export const profileReducer = createReducer(
     ...state,
     loading: false,
     error,
-  }))
+  })),
+  on(logout, (state) => initialState)
 );

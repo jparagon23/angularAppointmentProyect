@@ -16,6 +16,8 @@ import { filter, Observable } from 'rxjs';
 import { User } from 'src/app/models/user.model';
 import { Store } from '@ngrx/store';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
+import { distinctUntilChanged } from 'rxjs/operators';
+import { logout } from 'src/app/state/actions/auth.actions';
 
 @Component({
   selector: 'app-navbar',
@@ -41,8 +43,7 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
+    this.store.dispatch(logout());
   }
 
   OpenDialog(): void {
@@ -59,9 +60,10 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     console.log('Navbar component initialized');
 
-    this.user$ = this.store
-      .select(selectUser)
-      .pipe(filter((user): user is User => user !== null));
+    this.user$ = this.store.select(selectUser).pipe(
+      filter((user): user is User => user !== null),
+      distinctUntilChanged()
+    );
     this.user$.subscribe((user) => {
       console.log('User data:', user);
     });

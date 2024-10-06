@@ -21,6 +21,7 @@ import {
   selectReservation,
 } from '../actions/reservations.actions';
 import { ReservationState } from 'src/app/models/reservations.state';
+import { logout } from '../actions/auth.actions';
 
 export const initialState: ReservationState = {
   loading: false,
@@ -165,5 +166,6 @@ export const reservationsReducer = createReducer(
     groupReservationInfo: null,
     groupReservationLoading: false,
     error,
-  }))
+  })),
+  on(logout, (state) => initialState)
 );

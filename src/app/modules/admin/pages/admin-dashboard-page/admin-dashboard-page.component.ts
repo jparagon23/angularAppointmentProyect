@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { format, toZonedTime } from 'date-fns-tz';
 import { ReservationInfoModalComponent } from '../../modals/reservation-info-modal/reservation-info-modal.component';
@@ -6,7 +6,7 @@ import { ClubReservations } from 'src/app/models/ClubReservations.model';
 import { Store } from '@ngrx/store';
 import { loadReservationsAdmin } from 'src/app/state/actions/reservations.actions';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
-import { filter, Observable, catchError, of } from 'rxjs';
+import { filter, Observable, catchError, of, Subject, takeUntil } from 'rxjs';
 import { User } from 'src/app/models/user.model';
 import {
   selectClubReservations,
@@ -19,12 +19,13 @@ import { CreateReservationFromTableModalComponent } from '../../modals/create-re
   selector: 'app-admin-dashboard-page',
   templateUrl: './admin-dashboard-page.component.html',
 })
-export class AdminDashboardPageComponent implements OnInit {
+export class AdminDashboardPageComponent implements OnInit, OnDestroy {
   selectedDate: string = this.initializeSelectedDate();
   reservations$: Observable<ClubReservations | null> = new Observable();
   clubReservationLoading$: Observable<boolean> = new Observable();
   user: User | undefined;
   error: boolean = false;
+  private destroy$ = new Subject<void>();
 
   constructor(public dialog: MatDialog, private store: Store<any>) {}
 
@@ -35,28 +36,37 @@ export class AdminDashboardPageComponent implements OnInit {
         console.error('Error fetching reservations:', err);
         this.error = true;
         return of(null);
-      })
+      }),
+      takeUntil(this.destroy$)
     );
 
-    this.clubReservationLoading$ = this.store.select(
-      selectClubReservationsLoading
-    );
+    this.clubReservationLoading$ = this.store
+      .select(selectClubReservationsLoading)
+      .pipe(takeUntil(this.destroy$));
 
-    this.store.select(selectUser).subscribe({
-      next: (user) => {
-        if (user) {
-          this.user = user;
-          console.log('User data in admin:', user);
-          this.loadReservations();
-        } else {
-          console.error('User is null');
-        }
-      },
-      error: (err) => {
-        console.error('Error fetching user:', err);
-        this.error = true;
-      },
-    });
+    this.store
+      .select(selectUser)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (user) => {
+          if (user) {
+            this.user = user;
+            console.log('User data in admin:', user);
+            this.loadReservations();
+          } else {
+            console.error('User is null');
+          }
+        },
+        error: (err) => {
+          console.error('Error fetching user:', err);
+          this.error = true;
+        },
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   initializeSelectedDate(): string {
@@ -74,6 +84,8 @@ export class AdminDashboardPageComponent implements OnInit {
   }
 
   loadReservations(): void {
+    console.log('Desde el admin-dashboard lanzando el loadReservations');
+
     if (this.user) {
       this.store.dispatch(
         loadReservationsAdmin({
