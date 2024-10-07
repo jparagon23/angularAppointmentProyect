@@ -6,6 +6,7 @@ import {
   faClose,
   faAngleDown,
   faUser,
+  faBars, // New icon for hamburger menu
 } from '@fortawesome/free-solid-svg-icons';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -29,9 +30,11 @@ export class NavbarComponent implements OnInit {
   faClose = faClose;
   faAngleDown = faAngleDown;
   faUser = faUser;
+  faBars = faBars; // New icon for hamburger menu
 
   isOpenOverlayAvatar = false;
   isOpenOverlayBoards = false;
+  isOpenMobileMenu = false; // New property for mobile menu state
 
   user$: Observable<User> = new Observable<User>();
 
@@ -48,9 +51,13 @@ export class NavbarComponent implements OnInit {
 
   OpenDialog(): void {
     const dialogRef = this.dialog.open(MakeReservationModalComponent, {
-      maxWidth: '50vw', // Establece el ancho máximo al 80% del viewport
-      maxHeight: '50vh', // Establece la altura máxima al 80% del viewport
+      maxWidth: '50vw',
+      maxHeight: '50vh',
     });
+  }
+
+  toggleMobileMenu() {
+    this.isOpenMobileMenu = !this.isOpenMobileMenu; // Function to toggle mobile menu
   }
 
   ngOnInit(): void {
@@ -58,6 +65,5 @@ export class NavbarComponent implements OnInit {
       filter((user): user is User => user !== null),
       distinctUntilChanged()
     );
-    this.user$.subscribe((user) => {});
   }
 }

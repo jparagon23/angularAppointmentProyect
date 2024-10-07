@@ -1,44 +1,26 @@
 <ng-container *ngIf="user$ | async as user">
-  <nav class="bg-green-700 border-gray-200 px-20 py-5 shadow-md">
-    <div class="flex flex-wrap justify-between items-center">
-      <div class="flex items-center">
+  <nav class="bg-green-700 border-gray-200 px-4 py-3 shadow-md">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+      <div class="flex items-center justify-between">
         <a routerLink="/app">
           <img
             loading="lazy"
-            class="w-32 mr-8"
+            class="w-24 mr-4"
             src="/assets/svg/FOREHAPP.svg"
             alt="logo"
           />
-        </a>
-        <div class="flex items-center">
-          <!-- <ul class="flex items-center space-x-2 text-sm font-medium">
-            <li>
-              <app-button
-                color="navbar"
-                (click)="isOpenOverlayBoards = !isOpenOverlayBoards"
-                cdkOverlayOrigin
-                #boardsOverlay="cdkOverlayOrigin"
-              >
-                <span class="flex space-x-2 text-left">
-                  <span>Boards</span>
-                  <fa-icon [icon]="faAngleDown"></fa-icon>
-                </span>
-              </app-button>
-            </li>
-            <li>
-              <app-button color="navbar">
-                <a routerLink="/app/users" class="block py-3 px-4 text-white"
-                  >Users</a
-                >
-              </app-button>
-            </li>
-            <li>
-              <app-button typeBtn="button" color="navbar">Create</app-button>
-            </li>
-          </ul> -->
+        </a>git 
+        <div class="sm:hidden">
+          <button
+            type="button"
+            class="text-white"
+            (click)="isOpenMobileMenu = !isOpenMobileMenu"
+          >
+            <fa-icon [icon]="faBars"></fa-icon>
+          </button>
         </div>
       </div>
-      <div class="flex items-center space-x-6">
+      <div class="hidden sm:flex sm:items-center sm:space-x-6">
         <div class="flex space-x-2">
           <app-button
             typeBtn="button"
@@ -53,7 +35,6 @@
             typeBtn="button"
             color="navbar"
             aria-expanded="false"
-            type="button"
             (click)="isOpenOverlayAvatar = !isOpenOverlayAvatar"
             cdkOverlayOrigin
             #menuOverlay="cdkOverlayOrigin"
@@ -63,8 +44,29 @@
         </div>
       </div>
     </div>
+
+    <!-- Mobile menu -->
+    <div *ngIf="isOpenMobileMenu" class="flex flex-col sm:hidden space-y-2 mt-3">
+      <app-button
+        typeBtn="button"
+        color="navbar"
+        (click)="OpenDialog()"
+        *ngIf="user?.role === 1"
+        >Crear Reserva</app-button
+      >
+      <app-button
+        typeBtn="button"
+        color="navbar"
+        (click)="isOpenOverlayAvatar = !isOpenOverlayAvatar"
+        cdkOverlayOrigin
+        #menuOverlay="cdkOverlayOrigin"
+      >
+        <fa-icon [icon]="faUser"></fa-icon>
+      </app-button>
+    </div>
   </nav>
 
+  <!-- Avatar dropdown -->
   <ng-template
     cdkConnectedOverlay
     [cdkConnectedOverlayOrigin]="menuOverlay"
@@ -72,7 +74,7 @@
     (overlayOutsideClick)="isOpenOverlayAvatar = !isOpenOverlayAvatar"
   >
     <div
-      class="z-50 my-4 w-60 text-base list-none bg-white rounded divide-y divide-gray-100 shadow"
+      class="z-50 my-4 w-full sm:w-60 text-base list-none bg-white rounded divide-y divide-gray-100 shadow"
     >
       <div class="py-2 px-4 text-center relative">
         <button
@@ -94,14 +96,13 @@
         <li>
           <a
             routerLink="/app/profile"
-            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
+            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
             >Perfil</a
           >
         </li>
-
         <li>
           <a
-            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
+            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
             >Configuraciones</a
           >
         </li>
@@ -118,26 +119,4 @@
       </ul>
     </div>
   </ng-template>
-
-  <!-- <ng-template
-    cdkConnectedOverlay
-    [cdkConnectedOverlayOrigin]="boardsOverlay"
-    [cdkConnectedOverlayOpen]="isOpenOverlayBoards"
-    (overlayOutsideClick)="isOpenOverlayBoards = !isOpenOverlayBoards"
-  >
-    <div
-      class="z-50 my-4 w-60 text-base list-none bg-white rounded divide-y divide-gray-100 shadow"
-    >
-      <div class="py-2 px-4 text-center relative">
-        <span class="block text-normal text-gray-900">Boards</span>
-        <button
-          (click)="isOpenOverlayBoards = !isOpenOverlayBoards"
-          class="block text-sm text-gray-900 absolute right-3 top-3"
-        >
-          <fa-icon [icon]="faClose"></fa-icon>
-        </button>
-      </div>
-      <div class="py-3 px-4 flex justify-between">Content</div>
-    </div>
-  </ng-template> -->
 </ng-container>
