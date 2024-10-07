@@ -1,17 +1,21 @@
-<div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
-  <div class="flex justify-between items-center mb-4">
-    <h2 class="text-lg font-semibold">Reserva grupal</h2>
+<div class="bg-white rounded-lg shadow-lg p-4 w-full max-w-full sm:p-6 sm:max-w-md">
+  <!-- Contenedor del título y botones -->
+  <div class="flex justify-between items-center mb-3 sm:mb-4">
+    <h2 class="text-base font-semibold sm:text-lg">Reserva grupal</h2>
   </div>
-  <p class="text-gray-600 mb-4">
+
+  <!-- Descripción -->
+  <p class="text-gray-600 mb-3 sm:mb-4">
     La reserva seleccionada pertenece a un grupo de reservas.
   </p>
 
+  <!-- Botones de reserva individual -->
   <div
-    class="flex justify-center space-x-2 mb-6"
+    class="flex justify-center space-x-2 mb-4 sm:mb-6"
     *ngIf="groupReservationInfo$ | async as groupReservationInfo"
   >
     <button
-      class="border border-gray-400 text-gray-600 font-semibold py-2 px-4 rounded-md"
+      class="border border-gray-400 text-gray-600 font-semibold py-2 px-3 rounded-md text-sm sm:text-base"
       [ngClass]="{
         'bg-blue-500 text-white hover:bg-blue-700':
           data.reservationInfo.hour ===
@@ -28,19 +32,26 @@
     </button>
   </div>
 
-  <div class="flex justify-between space-x-3">
+  <!-- Botones de acciones -->
+  <div class="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:space-x-3 sm:space-y-0">
+    <!-- Botón cancelar grupo -->
     <app-button
       [typeBtn]="'submit'"
       [color]="'light'"
       (click)="cancelGroupReservation()"
-      >Cancel grupo de reservas</app-button
+      class="py-2 px-4 text-sm sm:text-base"
     >
+      Cancel grupo de reservas
+    </app-button>
 
+    <!-- Botón cancelar reserva seleccionada -->
     <app-button
       [typeBtn]="'submit'"
       [color]="'danger'"
       (click)="cancelSelectedReservation()"
-      >Cancelar reserva seleccionada</app-button
+      class="py-2 px-4 text-sm sm:text-base"
     >
+      Cancelar reserva seleccionada
+    </app-button>
   </div>
 </div>
