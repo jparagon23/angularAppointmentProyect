@@ -1,19 +1,23 @@
-<div class="bg-white p-6 rounded-lg shadow-lg">
-  <p class="text-lg font-semibold mb-4">
+<div class="bg-white p-4 md:p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
+  <p class="text-base md:text-lg font-semibold mb-4 text-center md:text-left">
     {{ data.text }}
   </p>
-  <div class="flex justify-end space-x-4">
+
+  <div class="flex flex-col space-y-2 md:flex-row md:justify-end md:space-x-4 md:space-y-0 w-full">
     <app-button
       [typeBtn]="'button'"
       [color]="'danger'"
       (click)="cancelConfirmed()"
+      class="w-full md:w-auto"
     >
       Confirmar
     </app-button>
+
     <app-button
       [typeBtn]="'button'"
       [color]="'light'"
       (click)="cancelProcess()"
+      class="w-full md:w-auto"
     >
       Cancelar
     </app-button>
