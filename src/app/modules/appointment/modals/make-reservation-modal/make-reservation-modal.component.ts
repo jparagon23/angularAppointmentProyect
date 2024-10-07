@@ -60,7 +60,7 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(ConfirmationModalComponent, {
       maxWidth: '50vw',
       maxHeight: '50vh',
-      data: { text: '¿Estas seguro quieres realizar esta reserva?' },
+      data: { text: '¿Estas seguro que quieres realizar esta reserva?' },
     });
 
     dialogRef.afterClosed().subscribe((result) => {

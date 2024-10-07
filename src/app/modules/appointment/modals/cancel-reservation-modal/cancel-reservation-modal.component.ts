@@ -46,7 +46,7 @@ export class CancelReservationModalComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(ConfirmationModalComponent, {
       maxWidth: '50vw',
       maxHeight: '50vh',
-      data: { text: '¿Estás seguro de que deseas cancelar la reserva?' },
+      data: { text: '¿Estás seguro que quieres cancelar la reserva?' },
     });
 
     // Wait for the dialog to close and get the confirmation result
