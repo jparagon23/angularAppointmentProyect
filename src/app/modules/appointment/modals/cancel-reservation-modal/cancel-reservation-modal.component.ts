@@ -1,11 +1,6 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { ReservationService } from 'src/app/services/reservation.service';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import { Observable } from 'rxjs';
 import { selectReservationSelected } from 'src/app/state/selectors/reservetions.selectors';
@@ -23,9 +18,9 @@ export class CancelReservationModalComponent implements OnInit, OnDestroy {
 
   constructor(
     public dialogRef: MatDialogRef<CancelReservationModalComponent>,
-    private store: Store<any>,
-    private dialog: MatDialog,
-    private modalservice: ModalService
+    private readonly store: Store<any>,
+    private readonly dialog: MatDialog,
+    private readonly modalservice: ModalService
   ) {}
   ngOnDestroy(): void {
     this.modalservice.remove(this.dialogRef);

@@ -1,14 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { UserReservationResponse } from '../models/UserReservations.model';
 import { TokenService } from './token.service';
-import { AuthService } from './auth.service';
 import { selectUser } from '../state/selectors/users.selectors';
 import { User } from '../models/user.model';
 import { ClubUser } from '../models/clubUsers.model';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -18,10 +16,9 @@ export class UserService {
   private headers: HttpHeaders | undefined;
 
   constructor(
-    private http: HttpClient,
-    private tokenService: TokenService,
-    private authService: AuthService,
-    private store: Store<any>
+    private readonly http: HttpClient,
+    private readonly tokenService: TokenService,
+    private readonly store: Store<any>
   ) {
     this.store.select(selectUser).subscribe((user) => {
       if (user) {

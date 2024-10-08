@@ -1,5 +1,4 @@
 import { createReducer, on } from '@ngrx/store';
-import { ReservationDetail } from 'src/app/models/UserReservations.model';
 import {
   cancelReservation,
   cancelReservationAdmin,

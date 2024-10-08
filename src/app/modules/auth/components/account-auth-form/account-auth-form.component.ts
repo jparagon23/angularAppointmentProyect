@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import {
   FormBuilder,
@@ -10,7 +9,6 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { RequestStatus } from 'src/app/models/request-status.model';
-import { AuthService } from 'src/app/services/auth.service';
 import { validateToken } from 'src/app/state/actions/auth.actions';
 import {
   selectAuthError,
@@ -35,9 +33,9 @@ export class AccountAuthFormComponent {
   loading$: Observable<boolean>;
 
   constructor(
-    private fb: FormBuilder,
-    private store: Store,
-    private router: Router
+    private readonly fb: FormBuilder,
+    private readonly store: Store,
+    private readonly router: Router
   ) {
     this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
     this.authError$ = this.store.select(selectAuthError as any);

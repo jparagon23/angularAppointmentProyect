@@ -15,5 +15,8 @@ export class RedirectEffects {
     { dispatch: false }
   );
 
-  constructor(private actions$: Actions, private router: Router) {}
+  constructor(
+    private readonly actions$: Actions,
+    private readonly router: Router
+  ) {}
 }

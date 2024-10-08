@@ -1,4 +1,3 @@
-import { ClubReservations } from './../../models/ClubReservations.model';
 import { ClubUser } from 'src/app/models/clubUsers.model';
 import {
   getClubUserByNameOrId,
@@ -11,7 +10,7 @@ import {
 } from '../actions/club.actions';
 import { createReducer, on } from '@ngrx/store';
 import { logout } from '../actions/auth.actions';
-export interface clubState {
+export interface ClubState {
   clubUsers: ClubUser[];
   loadingClubUsers: boolean;
   reservationCreated: boolean;
@@ -20,7 +19,7 @@ export interface clubState {
   error: any;
 }
 
-export const initialState: clubState = {
+export const initialState: ClubState = {
   clubUsers: [],
   loadingClubUsers: false,
   error: null,
@@ -31,40 +30,40 @@ export const initialState: clubState = {
 
 export const clubReducer = createReducer(
   initialState,
-  on(getClubUserByNameOrId, (state: clubState) => ({
+  on(getClubUserByNameOrId, (state: ClubState) => ({
     ...state,
     loadingClubUsers: true,
   })),
-  on(getClubUserByNameOrIdSuccess, (state: clubState, { users }) => ({
+  on(getClubUserByNameOrIdSuccess, (state: ClubState, { users }) => ({
     ...state,
     clubUsers: users,
     loadingClubUsers: false,
   })),
-  on(getClubUserByNameOrIdFailure, (state: clubState, { error }) => ({
+  on(getClubUserByNameOrIdFailure, (state: ClubState, { error }) => ({
     ...state,
     loadingClubUsers: false,
     error,
   })),
-  on(createReservationAdmin, (state: clubState) => ({
+  on(createReservationAdmin, (state: ClubState) => ({
     ...state,
     reservationCreated: false,
     loadingCreateReservation: true,
   })),
-  on(createReservationAdminSuccess, (state: clubState) => ({
+  on(createReservationAdminSuccess, (state: ClubState) => ({
     ...state,
     reservationCreated: true,
     loadingCreateReservation: false,
   })),
-  on(createReservationAdminFailure, (state: clubState, { error }) => ({
+  on(createReservationAdminFailure, (state: ClubState, { error }) => ({
     ...state,
     reservationCreated: false,
     loadingCreateReservation: false,
     reservationCreatedFailure: true,
     error,
   })),
-  on(resetReservationCreated, (state: clubState) => ({
+  on(resetReservationCreated, (state: ClubState) => ({
     ...state,
     reservationCreated: false, // Restablecer reservationCreated a false
   })),
-  on(logout, (state: clubState) => initialState)
+  on(logout, (state: ClubState) => initialState)
 );

@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { toZonedTime, format } from 'date-fns-tz';
-import { distinctUntilChanged, first, Observable, Subscription } from 'rxjs';
+import { first, Observable, Subscription } from 'rxjs';
 import {
   createReservation,
   loadAvailableSlots,
@@ -11,7 +11,6 @@ import {
 import { AppState } from 'src/app/state/app.state';
 import {
   selectAvailableSlots,
-  selectCreateReservationFailure,
   selectCreateReservationSuccess,
 } from 'src/app/state/selectors/reservetions.selectors';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
@@ -25,13 +24,13 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   availableTimeSlots$: Observable<string[]> =
     this.store.select(selectAvailableSlots);
   selectedSlots: string[] = [];
-  private subscriptions: Subscription = new Subscription();
+  private readonly subscriptions: Subscription = new Subscription();
 
   constructor(
     public dialogRef: MatDialogRef<MakeReservationModalComponent>,
-    private store: Store<AppState>,
-    private dialog: MatDialog,
-    private modalService: ModalService
+    private readonly store: Store<AppState>,
+    private readonly dialog: MatDialog,
+    private readonly modalService: ModalService
   ) {}
 
   ngOnInit(): void {
@@ -78,6 +77,7 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
         }
       }
       if (result === false) {
+        /* empty */
       }
     });
   }

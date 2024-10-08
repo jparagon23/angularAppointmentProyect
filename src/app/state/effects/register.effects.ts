@@ -11,9 +11,9 @@ import { HttpResponse } from '@angular/common/http';
 @Injectable()
 export class RegisterEffects {
   constructor(
-    private actions$: Actions,
-    private authService: AuthService,
-    private router: Router
+    private readonly actions$: Actions,
+    private readonly authService: AuthService,
+    private readonly router: Router
   ) {}
 
   loadInitialSignUpData$ = createEffect(() =>

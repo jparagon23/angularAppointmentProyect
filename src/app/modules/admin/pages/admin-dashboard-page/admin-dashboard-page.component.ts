@@ -25,9 +25,9 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
   clubReservationLoading$: Observable<boolean> = new Observable();
   user: User | undefined;
   error: boolean = false;
-  private destroy$ = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
 
-  constructor(public dialog: MatDialog, private store: Store<any>) {}
+  constructor(public dialog: MatDialog, private readonly store: Store<any>) {}
 
   ngOnInit(): void {
     this.reservations$ = this.store.select(selectClubReservations).pipe(
@@ -115,13 +115,12 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (reservation.id !== null && reservation.id.startsWith('I')) {
+    if (reservation.id?.startsWith('I')) {
       this.dialog.open(ReservationInfoModalComponent, {
         maxWidth: '50vw',
         maxHeight: '50vh',
         data: { reservationInfo },
       });
-      return;
     } else {
       this.dialog.open(GroupReservationInfoModalComponent, {
         maxWidth: '50vw',

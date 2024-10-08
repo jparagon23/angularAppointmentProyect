@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
@@ -11,12 +11,12 @@ import { isModalOpen } from 'src/app/state/selectors/modals.selectors';
   templateUrl: './error-modal.component.html',
 })
 export class ErrorModalComponent {
-  private subscription = new Subscription();
+  private readonly subscription = new Subscription();
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { message: string },
-    private dialogRef: MatDialogRef<ErrorModalComponent>,
-    private store: Store<AppState>
+    private readonly dialogRef: MatDialogRef<ErrorModalComponent>,
+    private readonly store: Store<AppState>
   ) {}
 
   ngOnInit(): void {

@@ -38,9 +38,9 @@ export class GroupReservationInfoModalComponent implements OnInit {
         hour: string;
       };
     },
-    private modalService: ModalService,
-    private reservationInfoModal: MatDialogRef<GroupReservationInfoModalComponent>,
-    private store: Store<AppState>
+    private readonly modalService: ModalService,
+    private readonly reservationInfoModal: MatDialogRef<GroupReservationInfoModalComponent>,
+    private readonly store: Store<AppState>
   ) {
     this.groupReservationInfo$ = this.store.select(selectGroupReservationInfo);
     this.selectedReservationId$ = this.store.select(

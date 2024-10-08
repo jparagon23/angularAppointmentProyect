@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import {
   faBell,
   faInfoCircle,
@@ -8,7 +7,6 @@ import {
   faUser,
   faBars, // New icon for hamburger menu
 } from '@fortawesome/free-solid-svg-icons';
-import { AuthService } from 'src/app/services/auth.service';
 
 import { MatDialog } from '@angular/material/dialog';
 
@@ -38,19 +36,14 @@ export class NavbarComponent implements OnInit {
 
   user$: Observable<User> = new Observable<User>();
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    public dialog: MatDialog,
-    private store: Store<any>
-  ) {}
+  constructor(public dialog: MatDialog, private readonly store: Store<any>) {}
 
   logout() {
     this.store.dispatch(logout());
   }
 
   OpenDialog(): void {
-    const dialogRef = this.dialog.open(MakeReservationModalComponent, {
+    this.dialog.open(MakeReservationModalComponent, {
       maxWidth: '50vw',
       maxHeight: '50vh',
     });

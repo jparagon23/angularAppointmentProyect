@@ -2,7 +2,7 @@ import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
-import { debounceTime, startWith, tap } from 'rxjs/operators';
+import { debounceTime, tap } from 'rxjs/operators';
 import { ClubUser } from 'src/app/models/clubUsers.model';
 import {
   MAT_DIALOG_DATA,
@@ -13,7 +13,6 @@ import {
 import {
   loadingCreateReservation,
   reservationCreatedFailure,
-  selectClubError,
   selectClubUsers,
   selectLoadingClubUsers,
   selectReservationCreated,
@@ -25,7 +24,7 @@ import {
 } from 'src/app/state/actions/club.actions';
 import { AppState } from 'src/app/state/app.state';
 import { isModalOpen } from 'src/app/state/selectors/modals.selectors';
-import { closeModal, openModal } from 'src/app/state/actions/modals.actions';
+import { openModal } from 'src/app/state/actions/modals.actions';
 import { ErrorModalComponent } from '../error-modal/error-modal.component';
 
 @Component({
@@ -42,7 +41,7 @@ export class CreateReservationFromTableModalComponent
   reservationCreatedLoader$?: Observable<boolean>;
   reservationCreatedFailure$?: Observable<boolean>; // Observable para el error
   selectedUser?: ClubUser;
-  private subscription = new Subscription();
+  private readonly subscription = new Subscription();
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -54,9 +53,9 @@ export class CreateReservationFromTableModalComponent
         hour: string;
       };
     },
-    private store: Store<AppState>,
-    private dialogRef: MatDialogRef<CreateReservationFromTableModalComponent>,
-    private dialog: MatDialog // Inyectar MatDialog para abrir el modal de error
+    private readonly store: Store<AppState>,
+    private readonly dialogRef: MatDialogRef<CreateReservationFromTableModalComponent>,
+    private readonly dialog: MatDialog // Inyectar MatDialog para abrir el modal de error
   ) {}
 
   ngOnInit() {
@@ -145,7 +144,7 @@ export class CreateReservationFromTableModalComponent
   }
 
   displayUserName(user?: ClubUser): string {
-    return user?.completeName || ''; // Using optional chaining for better readability
+    return user?.completeName ?? ''; // Using optional chaining for better readability
   }
 
   createReservation() {
@@ -155,7 +154,7 @@ export class CreateReservationFromTableModalComponent
     this.store.dispatch(
       createReservationAdmin({
         selecteDates: [dateTime],
-        userId: this.selectedUser?.userId?.toString() || '',
+        userId: this.selectedUser?.userId?.toString() ?? '',
       })
     );
   }

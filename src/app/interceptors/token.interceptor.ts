@@ -11,7 +11,7 @@ import { Observable, switchMap } from 'rxjs';
 import { TokenService } from '../services/token.service';
 import { AuthService } from '../services/auth.service';
 
-const CHECK_TOKEN = new HttpContextToken<Boolean>(() => false);
+const CHECK_TOKEN = new HttpContextToken<boolean>(() => false);
 
 export function checkToken() {
   return new HttpContext().set(CHECK_TOKEN, true);
@@ -20,8 +20,8 @@ export function checkToken() {
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
   constructor(
-    private tokenService: TokenService,
-    private authService: AuthService
+    private readonly tokenService: TokenService,
+    private readonly authService: AuthService
   ) {}
 
   intercept(

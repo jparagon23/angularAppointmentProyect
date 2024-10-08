@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import {
   login,
@@ -68,8 +68,8 @@ export class AuthEffects {
   );
 
   constructor(
-    private actions$: Actions,
-    private authService: AuthService,
-    private router: Router
+    private readonly actions$: Actions,
+    private readonly authService: AuthService,
+    private readonly router: Router
   ) {}
 }

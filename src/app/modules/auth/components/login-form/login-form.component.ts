@@ -32,16 +32,16 @@ export class LoginFormComponent implements OnInit {
 
   loginForm = this.formBuilder.group({
     email: [
-      localStorage.getItem('email') || '',
+      localStorage.getItem('email') ?? '',
       [Validators.required, Validators.email],
     ],
     password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
   constructor(
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private store: Store<AppState>
+    private readonly formBuilder: FormBuilder,
+    private readonly route: ActivatedRoute,
+    private readonly store: Store<AppState>
   ) {
     // Use selector for loading state
     this.loadingLogin$ = this.store.select(selectAuthLoading);

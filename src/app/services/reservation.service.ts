@@ -1,14 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TokenService } from './token.service';
-import { AuthService } from './auth.service';
 import { environment } from 'src/environments/environment';
 import { AvailableSlotsResponse } from '../models/reservation.model';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
-import {
-  ReservationDetail,
-  UserReservationResponse,
-} from '../models/UserReservations.model';
+import { UserReservationResponse } from '../models/UserReservations.model';
 import { ReservationConfirmation } from '../models/ReservationConfirmation.model';
 import { Store } from '@ngrx/store';
 import { selectUser } from '../state/selectors/users.selectors';
@@ -27,10 +23,9 @@ export class ReservationService {
   reservations$ = new BehaviorSubject<UserReservationResponse | null>(null);
 
   constructor(
-    private http: HttpClient,
-    private tokenService: TokenService,
-    private authService: AuthService,
-    private store: Store<any>
+    private readonly http: HttpClient,
+    private readonly tokenService: TokenService,
+    private readonly store: Store<any>
   ) {
     // Subscribe to userId once, avoid multiple subscriptions
     this.store.select(selectUser).subscribe((user) => {
@@ -107,7 +102,7 @@ export class ReservationService {
   }
 
   cancelReservation(
-    reservationId: String
+    reservationId: string
   ): Observable<ReservationConfirmation> {
     const url = `${environment.API_URL}/reservation/${reservationId}`;
     return this.http.delete<ReservationConfirmation>(url, {

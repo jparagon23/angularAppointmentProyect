@@ -1,6 +1,5 @@
 import { createAction, props } from '@ngrx/store';
 import { ClubReservations } from 'src/app/models/ClubReservations.model';
-import { ClubUser } from 'src/app/models/clubUsers.model';
 import { GroupReservationInfo } from 'src/app/models/GroupReservationInfo.model';
 import { ReservationDetail } from 'src/app/models/UserReservations.model';
 
@@ -23,12 +22,12 @@ export const selectReservation = createAction(
 
 export const cancelReservation = createAction(
   '[Reservations] Cancel Reservation',
-  props<{ reservationId: String }>()
+  props<{ reservationId: string }>()
 );
 
 export const cancelReservationAdmin = createAction(
   '[Admin Dashboard] Cancel Reservation from admin',
-  props<{ reservationId: String }>()
+  props<{ reservationId: string }>()
 );
 
 // Acción para cargar espacios disponibles

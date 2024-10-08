@@ -19,7 +19,10 @@ export class LayoutComponent implements OnInit {
   userError$ = this.store.select(selectUsersError);
   user$ = this.store.select(selectUser);
 
-  constructor(private store: Store<any>, private router: Router) {}
+  constructor(
+    private readonly store: Store<any>,
+    private readonly router: Router
+  ) {}
 
   ngOnInit(): void {
     this.store.dispatch(loadUser());

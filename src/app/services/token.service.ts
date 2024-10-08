@@ -38,7 +38,7 @@ export class TokenService {
     try {
       const decodedToken = jwtDecode<JwtPayload>(token);
 
-      if (decodedToken && decodedToken.exp) {
+      if (decodedToken?.exp) {
         const tokenDate = new Date(0);
         tokenDate.setUTCSeconds(decodedToken.exp);
 
@@ -74,7 +74,7 @@ export class TokenService {
     try {
       const decodedToken = jwtDecode<JwtPayload>(token);
 
-      if (decodedToken && decodedToken.exp) {
+      if (decodedToken?.exp) {
         const tokenDate = new Date(0);
         tokenDate.setUTCSeconds(decodedToken.exp);
 

@@ -68,9 +68,9 @@ export class ClubEffects {
   );
 
   constructor(
-    private actions$: Actions,
-    private userService: UserService,
-    private reservationService: ReservationService,
-    private store: Store<any>
+    private readonly actions$: Actions,
+    private readonly userService: UserService,
+    private readonly reservationService: ReservationService,
+    private readonly store: Store<any>
   ) {}
 }

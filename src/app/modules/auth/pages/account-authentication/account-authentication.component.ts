@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { Store } from '@ngrx/store';
@@ -16,11 +16,7 @@ export class AccountAuthenticationComponent {
 
   isAuthenticated$: Observable<boolean>;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private store: Store
-  ) {
+  constructor(private readonly router: Router, private readonly store: Store) {
     this.store.dispatch(setAuthenticationStatus({ isAuthenticated: false }));
     this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
   }

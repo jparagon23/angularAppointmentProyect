@@ -5,7 +5,6 @@ import { environment } from 'src/environments/environment';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { InitialSignUpData } from '../models/InitialSignUpData.interface';
 import { TokenService } from './token.service';
-import { checkToken } from '../interceptors/token.interceptor';
 import { User, UserData } from '../models/user.model';
 
 @Injectable({
@@ -30,7 +29,10 @@ export class AuthService {
 
   user$ = new BehaviorSubject<UserData | null>(null);
 
-  constructor(private http: HttpClient, private tokenService: TokenService) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly tokenService: TokenService
+  ) {}
 
   authToken(code: string) {
     const userId = this.user?.id ?? -1;

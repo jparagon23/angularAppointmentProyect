@@ -1,12 +1,6 @@
 import { Observable } from 'rxjs';
-import { UserService } from './../../../../services/user.service';
 import { Component, OnInit } from '@angular/core';
-import {
-  ReservationDetail,
-  UserReservationResponse,
-} from 'src/app/models/UserReservations.model';
-import { AuthService } from 'src/app/services/auth.service';
-import { TokenService } from 'src/app/services/token.service';
+import { ReservationDetail } from 'src/app/models/UserReservations.model';
 import { Store } from '@ngrx/store';
 import {
   selectListReservations,
@@ -25,7 +19,7 @@ export class DashboardPageComponent implements OnInit {
 
   loadingReservations$: Observable<boolean> = new Observable();
 
-  constructor(private store: Store<any>) {}
+  constructor(private readonly store: Store<any>) {}
   ngOnInit(): void {
     this.loadingReservations$ = this.store.select(selectReservationLoading);
     this.userReservations$ = this.store.select(selectListReservations);

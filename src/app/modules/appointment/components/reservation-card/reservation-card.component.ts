@@ -10,12 +10,12 @@ import { selectReservation } from 'src/app/state/actions/reservations.actions';
   templateUrl: './reservation-card.component.html',
 })
 export class ReservationCardComponent {
-  constructor(public dialog: MatDialog, private store: Store<any>) {}
+  constructor(public dialog: MatDialog, private readonly store: Store<any>) {}
   @Input() reservation!: ReservationDetail;
 
   openCancelReservationModal() {
     // Primero abre el modal
-    const dialogRef = this.dialog.open(CancelReservationModalComponent, {
+    this.dialog.open(CancelReservationModalComponent, {
       maxWidth: '50vw',
       maxHeight: '50vh',
     });

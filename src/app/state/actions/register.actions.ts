@@ -1,6 +1,5 @@
 import { createAction, props } from '@ngrx/store';
 import { InitialSignUpData } from 'src/app/models/InitialSignUpData.interface';
-import { HttpResponse } from '@angular/common/http';
 
 export const loadInitialSignUpData = createAction(
   '[register component] Load Initial SignUp Data'

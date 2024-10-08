@@ -1,7 +1,4 @@
-import {
-  CommonType,
-  Gender,
-} from './../../../../models/InitialSignUpData.interface';
+import { CommonType } from './../../../../models/InitialSignUpData.interface';
 import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -82,10 +79,10 @@ export class RegisterFormComponent implements OnInit {
   });
 
   constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -188,14 +185,14 @@ export class RegisterFormComponent implements OnInit {
       delete formData.confirmationPassword;
       delete formData.phoneTypeId;
 
-      this.authService.createUser(formData).subscribe(
-        (response) => {
+      this.authService.createUser(formData).subscribe({
+        next: (response) => {
           this.router.navigate(['authAccount'], { relativeTo: this.route });
         },
-        (error) => {
+        error: (error) => {
           swal.fire('Error', error.error.message[0], 'error');
-        }
-      );
+        },
+      });
     } else {
       console.error('documentType is null or undefined.');
     }

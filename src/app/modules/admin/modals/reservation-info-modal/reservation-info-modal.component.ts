@@ -7,10 +7,7 @@ import {
 import { Store } from '@ngrx/store';
 import { ConfirmationModalComponent } from 'src/app/modules/appointment/modals/confirmation-modal/confirmation-modal.component';
 import { ModalService } from 'src/app/services/modal.service';
-import {
-  cancelReservation,
-  cancelReservationAdmin,
-} from 'src/app/state/actions/reservations.actions';
+import { cancelReservationAdmin } from 'src/app/state/actions/reservations.actions';
 
 @Component({
   selector: 'app-reservation-info-modal',
@@ -28,9 +25,9 @@ export class ReservationInfoModalComponent {
       };
     },
     public dialog: MatDialog,
-    private modalService: ModalService,
-    private reservationInfoModal: MatDialogRef<ReservationInfoModalComponent>,
-    private store: Store<any>
+    private readonly modalService: ModalService,
+    private readonly reservationInfoModal: MatDialogRef<ReservationInfoModalComponent>,
+    private readonly store: Store<any>
   ) {}
 
   ngOnInit() {
@@ -57,6 +54,7 @@ export class ReservationInfoModalComponent {
         this.reservationInfoModal.close(true);
       }
       if (result === false) {
+        /* empty */
       }
     });
   }

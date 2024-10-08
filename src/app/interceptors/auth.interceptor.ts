@@ -18,9 +18,9 @@ export class AuthInterceptor implements HttpInterceptor {
   private readonly retryDelayMs = 8000;
 
   constructor(
-    private router: Router,
-    private modalService: ModalService,
-    private tokenService: TokenService
+    private readonly router: Router,
+    private readonly modalService: ModalService,
+    private readonly tokenService: TokenService
   ) {}
 
   intercept(

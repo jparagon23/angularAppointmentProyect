@@ -1,4 +1,3 @@
-import { ReservationDetail } from './../../models/UserReservations.model';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
@@ -29,7 +28,6 @@ import {
   loadReservationsFailure,
   loadReservationsSuccess,
 } from '../actions/reservations.actions';
-import { loadUserSuccess } from '../actions/users.actions';
 import { Store } from '@ngrx/store';
 import { selectDatePicked } from '../selectors/reservetions.selectors';
 import { selectUser } from '../selectors/users.selectors';
@@ -155,8 +153,8 @@ export class ReservationEffects {
   );
 
   constructor(
-    private actions$: Actions,
-    private reservationService: ReservationService,
-    private store: Store<any>
+    private readonly actions$: Actions,
+    private readonly reservationService: ReservationService,
+    private readonly store: Store<any>
   ) {}
 }
