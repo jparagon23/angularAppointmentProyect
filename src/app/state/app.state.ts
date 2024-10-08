@@ -6,6 +6,7 @@ import { profileReducer } from './reducers/users.reducer';
 import { authReducer, AuthState } from './reducers/auth.reducers';
 import { clubReducer, clubState } from './reducers/club.reducers';
 import { modalReducer, ModalState } from './reducers/modals.reducers';
+import { RegisterState, registerReducer } from './reducers/register.reducers';
 
 export interface AppState {
   user: UserState;
@@ -13,6 +14,7 @@ export interface AppState {
   auth: AuthState;
   club: clubState;
   modals: ModalState;
+  register: RegisterState;
 }
 
 export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
@@ -21,4 +23,5 @@ export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
   auth: authReducer,
   club: clubReducer,
   modals: modalReducer,
+  register: registerReducer,
 };

@@ -1,6 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {
   faPen,
   faEye,
@@ -9,11 +9,12 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { RequestStatus } from 'src/app/models/request-status.model';
-import { AuthService } from 'src/app/services/auth.service';
 import { login } from 'src/app/state/actions/auth.actions';
 import { AppState } from 'src/app/state/app.state';
-import { selectAuthLoading } from 'src/app/state/selectors/auth.selectors';
+import {
+  selectAuthLoading,
+  selectAuthError,
+} from 'src/app/state/selectors/auth.selectors';
 
 @Component({
   selector: 'app-login-form',
@@ -23,13 +24,11 @@ export class LoginFormComponent implements OnInit {
   faPen = faPen;
   faEye = faEye;
   faEyeSlash = faEyeSlash;
-  showPassword = false;
-  status$: Observable<RequestStatus>;
   faLock = faLock;
 
-  invalidCredentials: boolean = false;
-
-  loadingLogin$: Observable<boolean> = new Observable();
+  showPassword = false;
+  loadingLogin$: Observable<boolean>;
+  invalidCredentials$: Observable<boolean>;
 
   loginForm = this.formBuilder.group({
     email: [
@@ -41,43 +40,30 @@ export class LoginFormComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router,
     private route: ActivatedRoute,
     private store: Store<AppState>
   ) {
-    this.status$ = this.store.select((state) =>
-      state.auth.loading ? 'loading' : state.auth.error ? 'failed' : 'init'
-    );
+    // Use selector for loading state
+    this.loadingLogin$ = this.store.select(selectAuthLoading);
+    // Use selector for error state and map it to check if the error is due to invalid credentials
+    this.invalidCredentials$ = this.store.select(selectAuthError);
   }
 
   ngOnInit() {
+    // Check for email in query parameters and pre-fill the form
     this.route.queryParamMap.subscribe((params) => {
       const emailParam = params.get('email');
       if (emailParam !== null) {
         this.loginForm.controls.email.setValue(emailParam);
       }
     });
-
-    this.store
-      .select((state) => state.auth.error)
-      .subscribe((error) => {
-        if (error) {
-          this.invalidCredentials = true;
-        }
-      });
-
-    this.loadingLogin$ = this.store.select(selectAuthLoading);
   }
 
+  // Dispatch the login action if the form is valid
   doLogin() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-
-      if (email && password) {
-        this.store.dispatch(login({ email, password }));
-      } else {
-        console.error('Email o contraseña no válidos');
-      }
+      this.store.dispatch(login({ email: email!, password: password! }));
     }
   }
 }

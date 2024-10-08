@@ -35,15 +35,6 @@ export class AuthEffects {
     )
   );
 
-  navigateAfterLogin$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(loginSuccess),
-        tap(() => this.router.navigate(['/home']))
-      ),
-    { dispatch: false }
-  );
-
   loadUserAfterLogin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loginSuccess),

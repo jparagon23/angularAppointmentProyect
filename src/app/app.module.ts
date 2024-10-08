@@ -25,6 +25,8 @@ import { ClubEffects } from './state/effects/club.effects';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { SharedModule } from './modules/shared/shared.module';
+import { RedirectEffects } from './state/effects/redirect.effects';
+import { RegisterEffects } from './state/effects/register.effects';
 
 registerLocaleData(localeEs, 'es');
 
@@ -51,6 +53,8 @@ registerLocaleData(localeEs, 'es');
       ProfileEffects,
       AuthEffects,
       ClubEffects,
+      RedirectEffects,
+      RegisterEffects,
     ]),
     SharedModule,
   ],

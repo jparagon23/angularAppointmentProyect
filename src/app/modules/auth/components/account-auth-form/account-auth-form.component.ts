@@ -39,15 +39,12 @@ export class AccountAuthFormComponent {
     private store: Store,
     private router: Router
   ) {
-    // Seleccionar estados desde el store
     this.isAuthenticated$ = this.store.select(selectIsAuthenticated);
-    this.authError$ = this.store.select(selectAuthError);
+    this.authError$ = this.store.select(selectAuthError as any);
     this.loading$ = this.store.select(selectAuthLoading);
 
-    // Manejo de errores de autenticación
     this.authError$.subscribe((error) => {
       if (error) {
-        // Aquí puedes establecer un error en el formulario
         this.authenticationForm
           .get('token')
           ?.setErrors({ tokenNotValid: true });
@@ -62,7 +59,6 @@ export class AccountAuthFormComponent {
 
     const token = this.authenticationForm.value.token;
 
-    // Despachar la acción para validar el token
     this.store.dispatch(validateToken({ token }));
   }
 
