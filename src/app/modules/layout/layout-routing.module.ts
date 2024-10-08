@@ -7,40 +7,23 @@ const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-
     children: [
-      {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full',
-      },
+      // Ruta para usuarios no admin
       {
         path: 'dashboard',
+        canActivate: [AuthGuard],
         loadChildren: () =>
           import('../appointment/appointment.module').then(
             (m) => m.AppointmentModule
           ),
       },
+      // Ruta para usuarios admin
       {
         path: 'admin/dashboard',
+        canActivate: [AuthGuard],
         loadChildren: () =>
           import('../admin/admin.module').then((m) => m.AdminModule),
       },
-      // {
-      //   path: 'boards',
-      //   loadChildren: () =>
-      //     import('../boards/boards.module').then((m) => m.BoardsModule),
-      // },
-      // {
-      //   path: 'profile',
-      //   loadChildren: () =>
-      //     import('../profile/profile.module').then((m) => m.ProfileModule),
-      // },
-      // {
-      //   path: 'users',
-      //   loadChildren: () =>
-      //     import('../users/users.module').then((m) => m.UsersModule),
-      // },
     ],
   },
 ];

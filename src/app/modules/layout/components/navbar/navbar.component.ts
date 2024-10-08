@@ -60,6 +60,10 @@ export class NavbarComponent implements OnInit {
     this.isOpenMobileMenu = !this.isOpenMobileMenu; // Function to toggle mobile menu
   }
 
+  redirectToFieldComponent(){
+    this.router.navigate(['/courts'])
+  }
+
   ngOnInit(): void {
     this.user$ = this.store.select(selectUser).pipe(
       filter((user): user is User => user !== null),
