@@ -9,11 +9,6 @@ const routes: Routes = [
 
     children: [
       {
-        path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full',
-      },
-      {
         path: 'dashboard',
         loadChildren: () =>
           import('../appointment/appointment.module').then(
@@ -21,7 +16,7 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'admin/dashboard',
+        path: 'admin',
         loadChildren: () =>
           import('../admin/admin.module').then((m) => m.AdminModule),
       },

@@ -39,10 +39,11 @@ export class AuthEffects {
     this.actions$.pipe(
       ofType(loginSuccess),
       map(() => {
-        return { type: '[User] Load User' };
+        return { type: '[Profile] Load Profile' };
       })
     )
   );
+
 
   logout$ = createEffect(() =>
     this.actions$.pipe(

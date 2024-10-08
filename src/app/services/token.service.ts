@@ -2,6 +2,11 @@ import { Injectable } from '@angular/core';
 import { getCookie, setCookie, removeCookie } from 'typescript-cookie';
 import { jwtDecode, JwtPayload } from 'jwt-decode';
 
+interface DecodedToken extends JwtPayload {
+  roles: string; // O ajusta el tipo según sea necesario (puede ser un array si es necesario)
+  userId: string; // Incluye cualquier otra propiedad que necesites
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -88,4 +93,31 @@ export class TokenService {
 
     return false;
   }
+
+
+  getUserFromToken() {
+    const token = this.getToken(); // O donde guardes el token
+    if (token) {
+      try {
+        // Decodificar el token usando jwtDecode
+        const decodedToken = jwtDecode<DecodedToken>(token);
+  
+        console.log("Token decoded:", decodedToken);
+
+        console.log(decodedToken);
+        
+
+        console.log("el rol es " + decodedToken.roles);
+        
+        
+        // Retornar el rol del usuario
+        return decodedToken?.roles || null; // Retorna el rol como cadena
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+      }
+    }
+    return null;
+  }
+
 }

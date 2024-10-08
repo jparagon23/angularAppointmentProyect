@@ -59,4 +59,8 @@ export class NavbarComponent implements OnInit {
       distinctUntilChanged()
     );
   }
+
+  redirectToFieldComponent(){
+    
+  }
 }
