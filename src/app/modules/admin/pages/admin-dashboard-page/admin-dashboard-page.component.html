@@ -1,5 +1,9 @@
-<div class="flex flex-col items-start border-b-4 border-gray-300 mb-5 md:flex-row md:items-center">
-  <div class="text-xl font-bold mb-3 md:text-4xl md:mr-5">Reservas del club</div>
+<div
+  class="flex flex-col items-start border-b-4 border-gray-300 mb-5 md:flex-row md:items-center"
+>
+  <div class="text-xl font-bold mb-3 md:text-4xl md:mr-5">
+    Reservas del club
+  </div>
   <div>
     <input
       name="appointmentDate"
@@ -17,44 +21,58 @@
 
 <ng-template #content>
   <div *ngIf="reservations$ | async as reservations; else loading">
-    <div class="overflow-x-auto">
-      <table class="table-auto border-collapse border border-gray-300 w-full">
-        <thead>
-          <tr>
-            <th
-              *ngFor="let header of reservations.reservationHeaders"
-              class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base"
+    <div *ngIf="reservations.reservationsData.length > 0; else noReservations">
+      <div class="overflow-x-auto">
+        <table class="table-auto border-collapse border border-gray-300 w-full">
+          <thead>
+            <tr>
+              <th
+                *ngFor="let header of reservations.reservationHeaders"
+                class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base"
+              >
+                {{ header }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let row of reservations.reservationsData"
+              class="hover:bg-gray-100"
             >
-              {{ header }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="let row of reservations.reservationsData"
-            class="hover:bg-gray-100"
-          >
-            <td class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base">
-              {{ row.reservations[0].description }}
-            </td>
-            <td
-              *ngFor="let reservation of row.reservations.slice(1)"
-              class="border px-2 py-1 text-center text-sm cursor-pointer md:px-4 md:py-2 md:text-base"
-              [ngClass]="{
-                'text-green-700': reservation.description === 'Disponible',
-                'text-red-600': reservation.description === 'No disponible',
-                'text-yellow-500':
-                  reservation.description !== 'Disponible' &&
-                  reservation.description !== 'No disponible'
-              }"
-              (click)="onReservationClick(reservation, row.reservations[0].description || '')"
-            >
-              {{ reservation.description }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              <td
+                class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base"
+              >
+                {{ row.reservations[0].description }}
+              </td>
+              <td
+                *ngFor="let reservation of row.reservations.slice(1)"
+                class="border px-2 py-1 text-center text-sm cursor-pointer md:px-4 md:py-2 md:text-base"
+                [ngClass]="{
+                  'text-green-700': reservation.description === 'Disponible',
+                  'text-red-600': reservation.description === 'No disponible',
+                  'text-yellow-500':
+                    reservation.description !== 'Disponible' &&
+                    reservation.description !== 'No disponible'
+                }"
+                (click)="
+                  onReservationClick(
+                    reservation,
+                    row.reservations[0].description || ''
+                  )
+                "
+              >
+                {{ reservation.description }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+    <ng-template #noReservations>
+      <div class="text-center text-gray-500">
+        No hay reservas pendientes por el día de hoy.
+      </div>
+    </ng-template>
   </div>
 
   <ng-template #loading>
