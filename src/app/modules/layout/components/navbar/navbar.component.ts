@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import {
   faBell,
@@ -36,7 +37,11 @@ export class NavbarComponent implements OnInit {
 
   user$: Observable<User> = new Observable<User>();
 
-  constructor(public dialog: MatDialog, private readonly store: Store<any>) {}
+  constructor(
+    public dialog: MatDialog,
+    private readonly store: Store<any>,
+    private readonly router: Router
+  ) {}
 
   logout() {
     this.store.dispatch(logout());
@@ -58,5 +63,13 @@ export class NavbarComponent implements OnInit {
       filter((user): user is User => user !== null),
       distinctUntilChanged()
     );
+  }
+
+  redirectToFieldComponent() {
+    this.router.navigate(['home/admin/courts']);
+  }
+
+  redirectToDashboard() {
+    this.router.navigate(['home/admin']);
   }
 }

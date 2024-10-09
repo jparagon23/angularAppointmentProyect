@@ -11,6 +11,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ErrorModalComponent } from './modals/error-modal/error-modal.component';
+import { CourtsPageComponent } from './pages/courts-page/courts-page.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ErrorModalComponent } from './modals/error-modal/error-modal.component'
     GroupReservationInfoModalComponent,
     CreateReservationFromTableModalComponent,
     ErrorModalComponent,
+    CourtsPageComponent,
   ],
   imports: [
     CommonModule,

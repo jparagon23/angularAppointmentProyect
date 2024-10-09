@@ -2,6 +2,7 @@
   <nav class="bg-green-700 border-gray-200 px-4 py-3 shadow-md">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
       <div class="flex items-center justify-between w-full sm:w-auto">
+        <!-- Logo -->
         <a routerLink="/app">
           <img
             loading="lazy"
@@ -10,6 +11,26 @@
             alt="logo"
           />
         </a>
+
+        <div class="ml-4"></div>
+        <app-button
+          typeBtn="button"
+          color="navbar"
+          (click)="redirectToDashboard()"
+          *ngIf="user?.role === 2"
+          >Inicio</app-button
+        >
+        <!-- Menú de Canchas al lado del logo -->
+        <div class="ml-4">
+          <app-button
+            typeBtn="button"
+            color="navbar"
+            (click)="redirectToFieldComponent()"
+            *ngIf="user?.role === 2"
+            >Canchas</app-button
+          >
+        </div>
+
         <div class="flex sm:hidden">
           <!-- Botón Crear Reserva para móviles, siempre visible -->
           <app-button
@@ -30,7 +51,9 @@
       </div>
 
       <!-- Botón Crear Reserva y opciones de usuario siempre visible en desktop -->
-      <div class="hidden sm:flex sm:items-center sm:space-x-6 w-full sm:w-auto justify-end">
+      <div
+        class="hidden sm:flex sm:items-center sm:space-x-6 w-full sm:w-auto justify-end"
+      >
         <!-- Botón Crear Reserva para escritorio -->
         <div class="flex space-x-2">
           <app-button
@@ -58,7 +81,10 @@
     </div>
 
     <!-- Menú móvil (sin el botón Crear Reserva) -->
-    <div *ngIf="isOpenMobileMenu" class="flex flex-col sm:hidden space-y-2 mt-3">
+    <div
+      *ngIf="isOpenMobileMenu"
+      class="flex flex-col sm:hidden space-y-2 mt-3"
+    >
       <app-button
         typeBtn="button"
         color="navbar"
@@ -106,8 +132,7 @@
           >
         </li>
         <li>
-          <a
-            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
+          <a class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
             >Configuraciones</a
           >
         </li>
