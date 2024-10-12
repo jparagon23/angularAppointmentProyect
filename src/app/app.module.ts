@@ -23,6 +23,7 @@ import localeEs from '@angular/common/locales/es';
 import { SharedModule } from './modules/shared/shared.module';
 import { RedirectEffects } from './state/effects/redirect.effects';
 import { RegisterEffects } from './state/effects/register.effects';
+import { ClubConfigurationEffects } from './state/effects/clubConfiguration.effects';
 
 registerLocaleData(localeEs, 'es');
 
@@ -51,6 +52,7 @@ registerLocaleData(localeEs, 'es');
       ClubEffects,
       RedirectEffects,
       RegisterEffects,
+      ClubConfigurationEffects,
     ]),
     SharedModule,
   ],

@@ -1,0 +1,156 @@
+<div
+  class="relative flex flex-col w-full bg-gray-100 p-4 sm:p-6 border-gray-300 rounded-xl shadow-lg transition-transform transform hover:scale-105 hover:shadow-2xl text-left"
+>
+  <!-- Título de la cancha -->
+  <div class="text-xl sm:text-2xl font-bold text-gray-800 mb-3">
+    <!-- Si está en modo de edición, mostrar input, sino el texto -->
+    <span *ngIf="!isEditing">{{ court.name }}</span>
+    <input
+      *ngIf="isEditing"
+      [(ngModel)]="courtName"
+      type="text"
+      class="border border-gray-300 rounded p-1 text-sm sm:text-base w-full"
+    />
+  </div>
+
+  <!-- Hora de inicio -->
+  <div class="text-base sm:text-lg text-gray-600 flex items-center mb-2">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-4 w-4 sm:h-6 sm:w-6 mr-2"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 8v4l3 3m6-1a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+    <span *ngIf="!isEditing">Hora de inicio: {{ court.initialHour }}</span>
+    <input
+      *ngIf="isEditing"
+      [(ngModel)]="startTime"
+      type="time"
+      class="border border-gray-300 rounded p-1 text-sm sm:text-base"
+      [value]="court.initialHour"
+    />
+  </div>
+
+  <!-- Hora de fin -->
+  <div class="text-base sm:text-lg text-gray-600 flex items-center mb-4">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-4 w-4 sm:h-6 sm:w-6 mr-2"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 12h6m2 0a9 9 0 11-18 0 9 9 0 0118 0z"
+      />
+    </svg>
+    <span *ngIf="!isEditing">Última hora: {{ court.lastHour }}</span>
+    <input
+      *ngIf="isEditing"
+      [(ngModel)]="endTime"
+      type="time"
+      class="border border-gray-300 rounded p-1 text-sm sm:text-base"
+      [value]="court.lastHour"
+    />
+  </div>
+
+  <!-- Botones de modificar y guardar -->
+  <div class="flex space-x-3 justify-end">
+    <button
+      *ngIf="!isEditing"
+      (click)="toggleEdit()"
+      class="bg-blue-400 hover:bg-blue-500 text-white rounded-full p-2 shadow-md focus:outline-none"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M11 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5m-7-9h4m-4 0v4m0-4l7 7"
+        />
+      </svg>
+    </button>
+
+    <button
+      *ngIf="isEditing"
+      (click)="saveChanges()"
+      class="bg-green-400 hover:bg-green-500 text-white rounded-full p-2 shadow-md focus:outline-none"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 13l4 4L19 7"
+        />
+      </svg>
+    </button>
+
+    <!-- Botón de cancelar -->
+    <button
+      *ngIf="isEditing"
+      (click)="cancelEdit()"
+      class="bg-red-400 hover:bg-red-500 text-white rounded-full p-2 shadow-md focus:outline-none"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"
+        />
+      </svg>
+    </button>
+
+    <!-- Botón de eliminar -->
+    <button
+      *ngIf="!isEditing"
+      (click)="deleteCourt()"
+      class="bg-red-400 hover:bg-red-500 text-white rounded-full p-2 shadow-md focus:outline-none"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M3 6h18M8 6v12a2 2 0 002 2h4a2 2 0 002-2V6m-7 0V4a1 1 0 011-1h4a1 1 0 011 1v2"
+        />
+      </svg>
+    </button>
+  </div>
+</div>

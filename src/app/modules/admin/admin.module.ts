@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ErrorModalComponent } from './modals/error-modal/error-modal.component';
 import { CourtsPageComponent } from './pages/courts-page/courts-page.component';
+import { CourtCardComponentComponent } from './components/court-card-component/court-card-component.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { CourtsPageComponent } from './pages/courts-page/courts-page.component';
     CreateReservationFromTableModalComponent,
     ErrorModalComponent,
     CourtsPageComponent,
+    CourtCardComponentComponent,
   ],
   imports: [
     CommonModule,

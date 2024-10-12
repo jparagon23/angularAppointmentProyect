@@ -1,1 +1,96 @@
-<p>courts-page works!</p>
+<!-- Loader mientras se cargan las canchas -->
+<div
+  *ngIf="loadingCourts$ | async; else courtsList"
+  class="flex justify-center items-center w-full h-full"
+>
+  <app-loader></app-loader>
+</div>
+
+<ng-template #courtsList>
+  <div
+    class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+  >
+    <!-- Muestra las canchas disponibles -->
+    <div *ngFor="let court of courts$ | async" class="w-full">
+      <app-court-card-component [court]="court"></app-court-card-component>
+    </div>
+
+    <!-- Botón para crear una nueva cancha -->
+    <div *ngIf="!isCreatingNewCourt" class="w-full">
+      <div
+        class="bg-gray-200 text-gray-600 rounded-xl p-4 flex justify-center items-center cursor-pointer hover:bg-gray-300"
+        (click)="startCreatingCourt()"
+      >
+        + Crear nueva cancha
+      </div>
+    </div>
+
+    <!-- Formulario para crear una nueva cancha -->
+    <div *ngIf="isCreatingNewCourt" class="w-full">
+      <div
+        class="relative flex flex-col w-full bg-gray-100 p-4 sm:p-6 border-gray-300 rounded-xl shadow-lg text-left"
+      >
+        <!-- Muestra un loader si se está creando una cancha -->
+        <ng-container *ngIf="creatingCourtLoading$ | async; else creationForm">
+          <div class="flex justify-center items-center h-full">
+            <app-loader></app-loader>
+          </div>
+        </ng-container>
+
+        <!-- Formulario de creación de cancha -->
+        <ng-template #creationForm>
+          <!-- Input para el nombre de la cancha -->
+          <div class="text-xl sm:text-2xl font-bold text-gray-800 mb-3">
+            <input
+              [(ngModel)]="newCourt.name"
+              type="text"
+              placeholder="Nombre de la cancha"
+              class="border border-gray-300 rounded p-1 text-sm sm:text-base w-full"
+            />
+          </div>
+
+          <!-- Input para la hora inicial disponible -->
+          <div
+            class="text-base sm:text-lg text-gray-600 flex items-center mb-2"
+          >
+            <span>Hora de inicio:</span>
+            <input
+              [(ngModel)]="newCourt.initialAvailableHour"
+              type="time"
+              class="border border-gray-300 rounded p-1 text-sm sm:text-base ml-2"
+            />
+          </div>
+
+          <!-- Input para la última hora disponible -->
+          <div
+            class="text-base sm:text-lg text-gray-600 flex items-center mb-4"
+          >
+            <span>Última hora:</span>
+            <input
+              [(ngModel)]="newCourt.lastAvailableHour"
+              type="time"
+              class="border border-gray-300 rounded p-1 text-sm sm:text-base ml-2"
+            />
+          </div>
+
+          <!-- Botones para guardar o cancelar -->
+          <div class="flex space-x-3 justify-end">
+            <button
+              (click)="saveNewCourt()"
+              class="bg-green-400 hover:bg-green-500 text-white rounded-full p-2 shadow-md focus:outline-none"
+            >
+              Guardar
+            </button>
+
+            <button
+              (click)="cancelNewCourt()"
+              class="bg-red-400 hover:bg-red-500 text-white rounded-full p-2 shadow-md focus:outline-none"
+            >
+              Cancelar
+            </button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</ng-template>
