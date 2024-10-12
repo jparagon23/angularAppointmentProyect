@@ -17,7 +17,7 @@ import { HttpErrorResponse } from 'src/app/models/httpErrorResponse.model';
 export class ClubConfigurationEffects {
   loadCourts$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(loadCourts, createCourtSuccess),
+      ofType(loadCourts),
       mergeMap(() =>
         this.clubConfigurationService.getClubCourts().pipe(
           map((courts) => loadCourtsSuccess({ courts })),
@@ -41,11 +41,15 @@ export class ClubConfigurationEffects {
     )
   );
 
+  reloadCourtsAfterCreate$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createCourtSuccess),
+      map(() => loadCourts())
+    )
+  );
+
   constructor(
     private readonly actions$: Actions,
     private readonly clubConfigurationService: ClubConfigurationService
   ) {}
-}
-function errorCreatingCourt(arg0: { error: any }): any {
-  throw new Error('Function not implemented.');
 }
