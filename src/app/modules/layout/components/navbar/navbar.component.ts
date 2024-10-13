@@ -49,8 +49,8 @@ export class NavbarComponent implements OnInit {
 
   OpenDialog(): void {
     this.dialog.open(MakeReservationModalComponent, {
-      maxWidth: '100vw',
-      maxHeight: '100vh',
+      maxWidth: '95vw',
+      maxHeight: '95vh',
     });
   }
 
