@@ -16,8 +16,8 @@ export class ReservationCardComponent {
   openCancelReservationModal() {
     // Primero abre el modal
     this.dialog.open(CancelReservationModalComponent, {
-      maxWidth: '50vw',
-      maxHeight: '50vh',
+      maxWidth: '100vw',
+      maxHeight: '100vh',
     });
 
     // Finalmente, despacha la selección de la reserva
