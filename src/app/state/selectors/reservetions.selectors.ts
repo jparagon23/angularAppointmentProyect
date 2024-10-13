@@ -12,7 +12,7 @@ export const selectListReservations = createSelector(
 );
 export const selectReservationLoading = createSelector(
   selectReservationsFeature,
-  (state: ReservationState) => state.loading
+  (state: ReservationState) => state.loadingUserReservations
 );
 
 export const selectReservationSelected = createSelector(
@@ -29,7 +29,12 @@ export const selectAvailableSlots = createSelector(
 // Selector para verificar si está cargando
 export const selectAvailableSlotsLoading = createSelector(
   selectReservationsFeature,
-  (state: ReservationState) => state.loading
+  (state: ReservationState) => state.loadingUserReservations
+);
+
+export const selectCreateReservationLoading = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.createReservationLoading
 );
 
 export const selectCreateReservationSuccess = createSelector(
@@ -61,6 +66,23 @@ export const selectClubReservationsLoading = createSelector(
   selectReservationsFeature,
   (state: ReservationState) => state.clubReservationsLoading
 );
+
+//----------------cancel reservation
+export const selectCancelReservationLoading = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.cancelReservationLoading
+);
+
+export const selectCancelReservationSuccess = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.cancelReservationSuccess
+);
+
+export const selectCancelReservationFailure = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.cancelReservationFailure
+);
+//----------------cancel reservation
 
 export const selectMatchingReservationId = (hour: string) =>
   createSelector(

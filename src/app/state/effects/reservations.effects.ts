@@ -13,6 +13,7 @@ import { ReservationService } from 'src/app/services/reservation.service';
 import {
   cancelReservation,
   cancelReservationAdmin,
+  cancelReservationSuccess,
   createReservation,
   createReservationFailure,
   createReservationSuccess,
@@ -52,8 +53,8 @@ export class ReservationEffects {
 
   loadReservations$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(createReservationSuccess), // Escucha tanto createReservationSuccess como loadUserSuccess
-      concatMap(() => [loadReservations()]) // Luego despacha loadReservations
+      ofType(createReservationSuccess, cancelReservationSuccess),
+      concatMap(() => [loadReservations()])
     )
   );
 
@@ -62,9 +63,7 @@ export class ReservationEffects {
       ofType(cancelReservation),
       switchMap(({ reservationId }) =>
         this.reservationService.cancelReservation(reservationId).pipe(
-          // Si es exitoso, carga nuevamente las reservas
-          map(() => loadReservations()),
-          // Maneja el error si ocurre algún problema
+          map(() => cancelReservationSuccess()),
           catchError((error) => of(loadReservationsFailure({ error })))
         )
       )

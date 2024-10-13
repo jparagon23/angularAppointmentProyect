@@ -20,10 +20,27 @@ export const selectReservation = createAction(
   props<{ reservation: ReservationDetail }>()
 );
 
+//--- Cancel reservation
+
 export const cancelReservation = createAction(
   '[Reservations] Cancel Reservation',
   props<{ reservationId: string }>()
 );
+
+export const cancelReservationSuccess = createAction(
+  '[Reservations] Cancel Reservation Success'
+);
+
+export const cancelReservationFailure = createAction(
+  '[Reservations] Cancel Reservation Failure',
+  props<{ error: any }>()
+);
+
+export const resetCancelReservationState = createAction(
+  '[Reservations] Reset Cancel Reservation'
+);
+
+//--- Cancel reservation
 
 export const cancelReservationAdmin = createAction(
   '[Admin Dashboard] Cancel Reservation from admin',
@@ -63,6 +80,10 @@ export const createReservationSuccess = createAction(
 export const createReservationFailure = createAction(
   '[Reservation] Create Reservation Failure',
   props<{ error: any }>()
+);
+
+export const resetCreateReservation = createAction(
+  '[Reservation] Reset Create Reservation'
 );
 
 export const loadReservationsAdmin = createAction(

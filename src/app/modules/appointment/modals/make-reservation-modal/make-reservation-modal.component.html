@@ -2,101 +2,111 @@
   mat-dialog-content
   class="overflow-x-hidden overflow-y-auto max-h-screen w-full"
 >
-  <div>
-    <h2 class="text-center mb-4 text-lg md:text-xl">Crear reserva</h2>
+  <!-- Show loader if loading is true -->
+  <div
+    *ngIf="createReservationLoader$ | async"
+    class="flex justify-center items-center h-full"
+  >
+    <app-loader></app-loader>
   </div>
 
-  <!-- Mostrar las reservas seleccionadas -->
-  <div class="flex flex-col items-center justify-center w-full">
-    <!-- Mostrar la etiqueta solo si hay reservas seleccionadas -->
-    <div *ngIf="selectedSlots.length > 0" class="text-center w-full">
-      <h3 class="text-base md:text-lg">Reservas seleccionadas:</h3>
+  <div *ngIf="!(createReservationLoader$ | async)">
+    <div>
+      <h2 class="text-center mb-4 text-lg md:text-xl">Crear reserva</h2>
     </div>
-    <div
-      *ngIf="selectedSlots.length > 0"
-      class="flex flex-col md:flex-row md:space-x-4 justify-center w-full"
-    >
+
+    <!-- Mostrar las reservas seleccionadas -->
+    <div class="flex flex-col items-center justify-center w-full">
+      <!-- Mostrar la etiqueta solo si hay reservas seleccionadas -->
+      <div *ngIf="selectedSlots.length > 0" class="text-center w-full">
+        <h3 class="text-base md:text-lg">Reservas seleccionadas:</h3>
+      </div>
       <div
-        *ngFor="let selectedSlot of selectedSlots"
-        class="flex justify-center w-full md:w-auto"
+        *ngIf="selectedSlots.length > 0"
+        class="flex flex-col md:flex-row md:space-x-4 justify-center w-full"
       >
-        <button
-          type="button"
-          class="m-1 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200"
-          (click)="deleteSelectedSlot(selectedSlot)"
+        <div
+          *ngFor="let selectedSlot of selectedSlots"
+          class="flex justify-center w-full md:w-auto"
         >
-          {{ selectedSlot.split(" ")[1].substring(0, 5) }}
-        </button>
+          <button
+            type="button"
+            class="m-1 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200"
+            (click)="deleteSelectedSlot(selectedSlot)"
+          >
+            {{ selectedSlot.split(" ")[1].substring(0, 5) }}
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Selector de fecha -->
-  <div
-    class="flex flex-col items-center space-y-2 my-4 md:flex-row md:space-y-0 md:space-x-2 w-full"
-  >
-    <div class="w-full md:w-auto">
-      <label for="appointmentDate" class="text-center w-full"
-        >Día de la reserva:</label
-      >
-    </div>
-    <div class="w-full md:w-auto">
-      <input
-        name="appointmentDate"
-        type="date"
-        [(ngModel)]="selectedDate"
-        (change)="onDateChange($event)"
-        class="p-2 border rounded w-full md:w-auto"
-      />
-    </div>
-  </div>
-
-  <!-- Mostrar los espacios disponibles -->
-  <div *ngIf="availableTimeSlots$ | async as slots" class="w-full">
+    <!-- Selector de fecha -->
     <div
-      *ngIf="slots && slots.length > 0"
-      class="flex flex-wrap justify-center mt-4 space-y-2 w-full"
+      class="flex flex-col items-center space-y-2 my-4 md:flex-row md:space-y-0 md:space-x-2 w-full"
     >
-      <div *ngFor="let slot of slots" class="w-full md:w-auto">
-        <button
-          type="button"
-          class="m-1 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200 w-full"
-          (click)="onSlotSelect(slot)"
+      <div class="w-full md:w-auto">
+        <label for="appointmentDate" class="text-center w-full"
+          >Día de la reserva:</label
         >
-          {{ slot.split(" ")[1].substring(0, 5) }}
-        </button>
+      </div>
+      <div class="w-full md:w-auto">
+        <input
+          name="appointmentDate"
+          type="date"
+          [(ngModel)]="selectedDate"
+          (change)="onDateChange($event)"
+          class="p-2 border rounded w-full md:w-auto"
+        />
       </div>
     </div>
 
-    <!-- Mostrar mensaje si no hay espacios disponibles -->
-    <div *ngIf="slots && slots.length === 0" class="mt-4 text-center w-full">
-      <p>No hay espacios disponibles para la fecha seleccionada.</p>
-    </div>
-  </div>
-
-  <!-- Acciones del diálogo -->
-  <div
-    mat-dialog-actions
-    class="flex flex-col space-y-3 justify-center mt-6 md:flex-row md:space-y-0 md:space-x-3 w-full"
-  >
-    <div class="w-full md:w-auto">
-      <app-button
-        [typeBtn]="'submit'"
-        [color]="'danger'"
-        [mat-dialog-close]="true"
-        class="w-full md:w-auto"
-        >Cancelar</app-button
+    <!-- Mostrar los espacios disponibles -->
+    <div *ngIf="availableTimeSlots$ | async as slots" class="w-full">
+      <div
+        *ngIf="slots && slots.length > 0"
+        class="flex flex-wrap justify-center mt-4 space-y-2 w-full"
       >
+        <div *ngFor="let slot of slots" class="w-full md:w-auto">
+          <button
+            type="button"
+            class="m-1 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200 w-full"
+            (click)="onSlotSelect(slot)"
+          >
+            {{ slot.split(" ")[1].substring(0, 5) }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Mostrar mensaje si no hay espacios disponibles -->
+      <div *ngIf="slots && slots.length === 0" class="mt-4 text-center w-full">
+        <p>No hay espacios disponibles para la fecha seleccionada.</p>
+      </div>
     </div>
 
-    <div class="w-full md:w-auto">
-      <app-button
-        [typeBtn]="'reset'"
-        [color]="'primary'"
-        (click)="onClickContinue()"
-        class="w-full md:w-auto"
-        >Continuar</app-button
-      >
+    <!-- Acciones del diálogo -->
+    <div
+      mat-dialog-actions
+      class="flex flex-col space-y-3 justify-center mt-6 md:flex-row md:space-y-0 md:space-x-3 w-full"
+    >
+      <div class="w-full md:w-auto">
+        <app-button
+          [typeBtn]="'submit'"
+          [color]="'danger'"
+          [mat-dialog-close]="true"
+          class="w-full md:w-auto"
+          >Cancelar</app-button
+        >
+      </div>
+
+      <div class="w-full md:w-auto">
+        <app-button
+          [typeBtn]="'reset'"
+          [color]="'primary'"
+          (click)="onClickContinue()"
+          class="w-full md:w-auto"
+          >Continuar</app-button
+        >
+      </div>
     </div>
   </div>
 </div>

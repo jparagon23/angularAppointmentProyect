@@ -4,16 +4,19 @@ import { ReservationDetail } from './UserReservations.model';
 
 export interface ReservationState {
   datePicked: string;
-  loading: boolean;
+  loadingUserReservations: boolean;
   reservations: ReservationDetail[];
   reservationSelected: ReservationDetail;
-  reservationCanceled: boolean;
+  cancelReservationLoading: boolean;
+  cancelReservationSuccess: boolean;
+  cancelReservationFailure: boolean;
   availableSlots: string[];
   loadingAvailableSlots: boolean;
   error: any;
   createReservationSuccess: boolean;
   createReservationFailure: boolean;
   clubReservations: ClubReservations | null;
+  createReservationLoading: boolean;
   clubReservationsLoading: boolean;
   clubReservationsError: boolean;
   clubReservationsSuccess: boolean;

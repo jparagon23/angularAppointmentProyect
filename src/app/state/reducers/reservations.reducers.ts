@@ -1,6 +1,11 @@
-import { createReducer, on } from '@ngrx/store';
 import {
   cancelReservation,
+  cancelReservationFailure,
+  cancelReservationSuccess,
+  resetCancelReservationState,
+} from 'src/app/state/actions/reservations.actions';
+import { createReducer, on } from '@ngrx/store';
+import {
   cancelReservationAdmin,
   createReservation,
   createReservationFailure,
@@ -17,13 +22,14 @@ import {
   loadReservationsAdminSuccess,
   loadReservationsFailure,
   loadReservationsSuccess,
+  resetCreateReservation,
   selectReservation,
 } from '../actions/reservations.actions';
 import { ReservationState } from 'src/app/models/reservations.state';
 import { logout } from '../actions/auth.actions';
 
 export const initialState: ReservationState = {
-  loading: false,
+  loadingUserReservations: false,
   reservations: [],
   reservationSelected: {
     groupId: '',
@@ -34,10 +40,13 @@ export const initialState: ReservationState = {
     individualReservationsId: [],
     club: '',
   },
-  reservationCanceled: false,
+  cancelReservationLoading: false,
+  cancelReservationSuccess: false,
+  cancelReservationFailure: false,
   availableSlots: [],
   loadingAvailableSlots: false,
   error: null,
+  createReservationLoading: false,
   createReservationSuccess: false,
   createReservationFailure: false,
   clubReservations: null,
@@ -51,16 +60,18 @@ export const initialState: ReservationState = {
 
 export const reservationsReducer = createReducer(
   initialState,
-  on(loadReservations, (state) => ({ ...state, loading: true })),
+  on(loadReservations, (state) => ({
+    ...state,
+    loadingUserReservations: true,
+  })),
   on(loadReservationsSuccess, (state, { reservations }) => ({
     ...state,
-    loading: false,
+    loadingUserReservations: false,
     reservations,
-    reservationCanceled: false,
   })),
   on(loadReservationsFailure, (state, { error }) => ({
     ...state,
-    loading: false,
+    loadingUserReservations: false,
     error,
   })),
 
@@ -70,8 +81,25 @@ export const reservationsReducer = createReducer(
   })),
   on(cancelReservation, (state) => ({
     ...state,
-    reservationCanceled: true,
+    cancelReservationLoading: true,
   })),
+  on(cancelReservationSuccess, (state) => ({
+    ...state,
+    cancelReservationLoading: false,
+    cancelReservationSuccess: true,
+  })),
+  on(cancelReservationFailure, (state) => ({
+    ...state,
+    cancelReservationLoading: false,
+    cancelReservationFailure: true,
+  })),
+  on(resetCancelReservationState, (state) => ({
+    ...state,
+    cancelReservationLoading: false,
+    cancelReservationSuccess: false,
+    cancelReservationFailure: false,
+  })),
+
   on(cancelReservationAdmin, (state) => ({
     ...state,
     reservationCanceled: true,
@@ -102,7 +130,7 @@ export const reservationsReducer = createReducer(
   on(createReservation, (state, { selectedSlots }) => ({
     ...state,
     selectedSlots,
-    loading: true,
+    createReservationLoading: true,
     createReservationSuccess: false,
     createReservationFailure: false,
     error: null,
@@ -110,7 +138,7 @@ export const reservationsReducer = createReducer(
 
   on(createReservationSuccess, (state) => ({
     ...state,
-    loading: false,
+    createReservationLoading: false,
     selectedSlots: [],
     createReservationSuccess: true,
     createReservationFailure: false,
@@ -119,10 +147,17 @@ export const reservationsReducer = createReducer(
   // Error al crear reserva
   on(createReservationFailure, (state, { error }) => ({
     ...state,
-    loading: false,
+    createReservationLoading: false,
     createReservationSuccess: false,
     createReservationFailure: true,
     error,
+  })),
+
+  on(resetCreateReservation, (state) => ({
+    ...state,
+    createReservationLoading: false,
+    createReservationSuccess: false,
+    createReservationFailure: false,
   })),
 
   on(loadReservationsAdmin, (state, { date }) => ({
