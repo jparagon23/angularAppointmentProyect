@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminDashboardPageComponent } from './pages/admin-dashboard-page/admin-dashboard-page.component';
-import { CourtsPageComponent } from './pages/courts-page/courts-page.component';
+import { CourtsPageComponent } from './components/court-config-component/courts-page.component';
 import { ClubConfigurationPageComponent } from './pages/club-configuration-page/club-configuration-page.component';
 
 const routes: Routes = [

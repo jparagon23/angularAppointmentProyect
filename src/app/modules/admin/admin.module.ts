@@ -11,9 +11,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ErrorModalComponent } from './modals/error-modal/error-modal.component';
-import { CourtsPageComponent } from './pages/courts-page/courts-page.component';
+import { CourtsPageComponent } from './components/court-config-component/courts-page.component';
 import { CourtCardComponentComponent } from './components/court-card-component/court-card-component.component';
 import { ClubConfigurationPageComponent } from './pages/club-configuration-page/club-configuration-page.component';
+import { CourtConfigComponentComponent } from './components/availability-config-component/court-config-component.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { ClubConfigurationPageComponent } from './pages/club-configuration-page/
     CourtsPageComponent,
     CourtCardComponentComponent,
     ClubConfigurationPageComponent,
+    CourtConfigComponentComponent,
   ],
   imports: [
     CommonModule,

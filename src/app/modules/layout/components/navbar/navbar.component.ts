@@ -73,11 +73,6 @@ export class NavbarComponent implements OnInit {
         action: () => this.redirectToDashboard(),
       },
       {
-        label: 'Canchas',
-        role: 2,
-        action: () => this.redirectToFieldComponent(),
-      },
-      {
         label: 'Crear Reserva',
         role: 1,
         action: () => this.OpenDialog(),
@@ -99,10 +94,6 @@ export class NavbarComponent implements OnInit {
       maxWidth: '95vw',
       maxHeight: '95vh',
     });
-  }
-
-  redirectToFieldComponent() {
-    this.router.navigate(['home/admin/courts']);
   }
 
   redirectToDashboard() {
