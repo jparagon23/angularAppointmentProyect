@@ -5,10 +5,15 @@ import { Observable } from 'rxjs';
 import { ClubAvailability } from 'src/app/models/ClubAvalability.model';
 import {
   loadAvailability,
+  resetSaveAvailabilityStatus,
   saveAvailability,
 } from 'src/app/state/actions/clubConfiguration.actions';
 import { AppState } from 'src/app/state/app.state';
-import { selectClubAvailability } from 'src/app/state/selectors/clubConfiguration.selectors';
+import {
+  ClubAvailabilitySelector,
+  selectClubAvailability,
+} from 'src/app/state/selectors/clubConfiguration.selectors';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-club-configuration-page',
@@ -16,7 +21,7 @@ import { selectClubAvailability } from 'src/app/state/selectors/clubConfiguratio
 })
 export class ClubConfigurationPageComponent implements OnInit {
   availabilityForm!: FormGroup;
-  availability$!: Observable<ClubAvailability>;
+  availability$!: Observable<ClubAvailabilitySelector>;
   isSaveButtonDisabled = true;
 
   constructor(private readonly store: Store<AppState>) {}
@@ -34,7 +39,7 @@ export class ClubConfigurationPageComponent implements OnInit {
     this.availabilityForm = new FormGroup({
       alwaysAvailable: new FormControl(false),
       noAvailability: new FormControl(false),
-      byRange: new FormControl(false), // Nuevo checkbox
+      byRange: new FormControl(false),
       initialDate: new FormControl({ value: '', disabled: true }),
       endDate: new FormControl({ value: '', disabled: true }),
     });
@@ -50,6 +55,15 @@ export class ClubConfigurationPageComponent implements OnInit {
       if (availability) {
         this.updateFormValues(availability);
         this.toggleDateFields();
+
+        // Handle save success or failure
+        if (availability.saveAvailabilitySuccess) {
+          this.handleReservationSuccess();
+        }
+
+        if (availability.saveAvailabilityFailure) {
+          this.handleReservationFailure();
+        }
       }
     });
   }
@@ -118,5 +132,30 @@ export class ClubConfigurationPageComponent implements OnInit {
 
     // Dispatch para guardar la disponibilidad
     this.store.dispatch(saveAvailability({ availability: availabilityData }));
+  }
+
+  private handleReservationSuccess(): void {
+    Swal.fire({
+      icon: 'success',
+      title: 'Configuración guardada',
+      text: 'Tu configuración de disponibilidad ha sido guardada exitosamente.',
+      confirmButtonColor: '#3085d6',
+      confirmButtonText: 'OK',
+    }).then(() => {
+      this.store.dispatch(resetSaveAvailabilityStatus());
+    });
+  }
+
+  // Handle failed reservation creation
+  private handleReservationFailure(): void {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'No se pudo guardar la configuración. Inténtalo de nuevo.',
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'OK',
+    }).then(() => {
+      this.store.dispatch(resetSaveAvailabilityStatus());
+    });
   }
 }

@@ -64,3 +64,7 @@ export const saveAvailabilityFailure = createAction(
 export const resetClubConfigurationState = createAction(
   '[Configuration] Reset State'
 );
+
+export const resetSaveAvailabilityStatus = createAction(
+  '[Club Configuration] Reset Save Availability Status'
+);

@@ -1,8 +1,12 @@
-<div>
-  <div>
+<div *ngIf="availability$ | async as availability">
+  <!-- Loader Section -->
+  <div *ngIf="availability.loadingAvailability">
     <app-loader></app-loader>
   </div>
+
+  <!-- Form Section, only displayed when loading is false -->
   <form
+    *ngIf="!availability.loadingAvailability"
     [formGroup]="availabilityForm"
     (ngSubmit)="submitAvailability()"
     class="bg-white p-6 rounded-md shadow-md w-full max-w-md mx-auto"
@@ -88,7 +92,14 @@
       }"
       [disabled]="isSaveButtonDisabled"
     >
-      Guardar Configuración
+      <ng-container
+        *ngIf="!availability.saveAvailabilityLoader; else loadingTemplate"
+      >
+        Guardar Configuración
+      </ng-container>
+      <ng-template #loadingTemplate>
+        <app-loader></app-loader>
+      </ng-template>
     </button>
   </form>
 </div>

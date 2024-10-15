@@ -1,3 +1,7 @@
+import {
+  saveAvailabilitySuccess,
+  saveAvailabilityFailure,
+} from './../actions/clubConfiguration.actions';
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { ClubConfigurationState } from '../reducers/clubConfiguration.reducers';
 
@@ -38,10 +42,31 @@ export const selectCourtCreationError = createSelector(
   (state: ClubConfigurationState) => state.errorCreatingCourt
 );
 
+// Define the interface for ClubAvailability
+export interface ClubAvailabilitySelector {
+  alwaysAvailable?: boolean;
+  errorAvailability?: string;
+  loadingAvailability?: boolean;
+  saveAvailabilitySuccess?: boolean;
+  saveAvailabilityFailure?: boolean;
+  saveAvailabilityLoader?: boolean;
+  loadingSaveAvailability?: boolean;
+  noAvailability?: boolean;
+  byRange?: boolean;
+  initialDate?: string;
+  endDate?: string;
+}
+
 export const selectClubAvailability = createSelector(
   selectConfigurationState,
-  (state: ClubConfigurationState) => ({
+  (state: ClubConfigurationState): ClubAvailabilitySelector => ({
+    saveAvailabilitySuccess: state.saveAvailabilitySuccess ?? undefined,
+    saveAvailabilityFailure: state.saveAvailabilityFailure ?? undefined,
+    saveAvailabilityLoader: state.saveAvailabilityLoader ?? undefined,
     alwaysAvailable: state.alwaysAvailable ?? undefined,
+    errorAvailability: state.errorAvailability ?? undefined,
+    loadingAvailability: state.loadingAvailability ?? undefined,
+    loadingSaveAvailability: state.saveAvailabilityLoader ?? undefined,
     noAvailability: state.noAvailability ?? undefined,
     byRange: state.byRange ?? undefined,
     initialDate: state.initialAvailableDate ?? undefined,

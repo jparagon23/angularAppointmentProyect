@@ -1,8 +1,12 @@
 import {
+  saveAvailabilitySuccess,
+  saveAvailabilityFailure,
+  resetSaveAvailabilityStatus,
+} from './../actions/clubConfiguration.actions';
+import {
   loadAvailability,
   loadAvailabilityFailure,
   saveAvailability,
-  saveAvailabilityFailure,
 } from 'src/app/state/actions/clubConfiguration.actions';
 import { createReducer, on } from '@ngrx/store';
 import { CourtDetail } from 'src/app/models/CourtDetail.model';
@@ -15,7 +19,6 @@ import {
   createCourtFailure,
   resetClubConfigurationState,
   loadAvailabilitySuccess,
-  saveAvailabilitySuccess,
 } from '../actions/clubConfiguration.actions';
 
 export interface ClubConfigurationState {
@@ -26,8 +29,11 @@ export interface ClubConfigurationState {
   courtCreated: boolean;
   errorCreatingCourt: any;
   // availability
+  saveAvailabilityFailure: boolean;
+  saveAvailabilitySuccess: boolean;
+
   loadingAvailability: boolean;
-  loadingSaveAvailability: boolean;
+  saveAvailabilityLoader: boolean;
   errorAvailability: any;
   alwaysAvailable: boolean | null;
   noAvailability: boolean | null;
@@ -45,9 +51,11 @@ export const initialState: ClubConfigurationState = {
   courtCreated: false,
   errorCreatingCourt: null,
   // availability
+  saveAvailabilityFailure: false,
+  saveAvailabilitySuccess: false,
   errorAvailability: null,
   loadingAvailability: false,
-  loadingSaveAvailability: false,
+  saveAvailabilityLoader: false,
   alwaysAvailable: null,
   noAvailability: null,
   initialAvailableDate: null,
@@ -98,6 +106,7 @@ export const configurationReducer = createReducer(
     alwaysAvailable: availability.alwaysAvailable ?? null,
     noAvailability: availability.noAvailability ?? null,
     byRange: availability.byRange ?? null,
+    loadingAvailability: false,
     initialAvailableDate: availability.initialDate ?? null,
     endAvailableDate: availability.endDate ?? null,
   })),
@@ -108,10 +117,12 @@ export const configurationReducer = createReducer(
   })),
   on(saveAvailability, (state) => ({
     ...state,
-    loadingSaveAvailability: true,
+    saveAvailabilityLoader: true,
   })),
   on(saveAvailabilitySuccess, (state, { availability }) => ({
     ...state,
+    saveAvailabilityLoader: false,
+    saveAvailabilitySuccess: true,
     alwaysAvailable: availability.alwaysAvailable ?? null,
     noAvailability: availability.noAvailability ?? null,
     byRange: availability.byRange ?? null,
@@ -120,8 +131,14 @@ export const configurationReducer = createReducer(
   })),
   on(saveAvailabilityFailure, (state, { error }) => ({
     ...state,
-    loadingSaveAvailability: false,
+    saveAvailabilityLoader: false,
+    saveAvailabilityFailure: true,
     errorAvailability: error,
+  })),
+  on(resetSaveAvailabilityStatus, (state) => ({
+    ...state,
+    saveAvailabilitySuccess: false,
+    saveAvailabilityFailure: false,
   })),
 
   on(resetClubConfigurationState, () => initialState)
