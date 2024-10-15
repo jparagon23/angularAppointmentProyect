@@ -46,7 +46,7 @@ export const authReducer = createReducer(
     error,
     loading: false,
   })),
-  on(logout, (state) => initialState),
+  on(logout, () => initialState),
   on(validateToken, (state) => ({
     ...state,
     tokenLoading: true,

@@ -37,3 +37,14 @@ export const selectCourtCreationError = createSelector(
   selectConfigurationState,
   (state: ClubConfigurationState) => state.errorCreatingCourt
 );
+
+export const selectClubAvailability = createSelector(
+  selectConfigurationState,
+  (state: ClubConfigurationState) => ({
+    alwaysAvailable: state.alwaysAvailable ?? undefined,
+    noAvailability: state.noAvailability ?? undefined,
+    byRange: state.byRange ?? undefined,
+    initialDate: state.initialAvailableDate ?? undefined,
+    endDate: state.endAvailableDate ?? undefined,
+  })
+);

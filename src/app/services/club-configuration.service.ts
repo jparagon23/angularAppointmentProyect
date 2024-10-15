@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { CourtDetail } from '../models/CourtDetail.model';
 import { CreateCourt } from '../models/CreateCourt.model';
+import { ClubAvailability } from '../models/ClubAvalability.model';
 
 @Injectable({
   providedIn: 'root',
@@ -50,5 +51,17 @@ export class ClubConfigurationService {
     return this.http.post<CourtDetail>(url, court, {
       headers: this.setHeaders(),
     });
+  }
+
+  saveAvailability(availability: ClubAvailability): Observable<void> {
+    const url = `${environment.API_URL}/configuration/club/${this.user?.userAdminClub}/availability`;
+    return this.http.post<void>(url, availability, {
+      headers: this.setHeaders(),
+    });
+  }
+
+  getAvailability(): Observable<ClubAvailability> {
+    const url = `${environment.API_URL}/configuration/club/${this.user?.userAdminClub}/availability`;
+    return this.http.get<ClubAvailability>(url, { headers: this.setHeaders() });
   }
 }

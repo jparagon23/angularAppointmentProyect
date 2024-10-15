@@ -7,9 +7,15 @@ import {
   createCourt,
   createCourtFailure,
   createCourtSuccess,
+  loadAvailability,
+  loadAvailabilityFailure,
+  loadAvailabilitySuccess,
   loadCourts,
   loadCourtsFailure,
   loadCourtsSuccess,
+  saveAvailability,
+  saveAvailabilityFailure,
+  saveAvailabilitySuccess,
 } from '../actions/clubConfiguration.actions';
 import { HttpErrorResponse } from 'src/app/models/httpErrorResponse.model';
 
@@ -45,6 +51,34 @@ export class ClubConfigurationEffects {
     this.actions$.pipe(
       ofType(createCourtSuccess),
       map(() => loadCourts())
+    )
+  );
+
+  loadAvailability$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadAvailability),
+      mergeMap(() =>
+        this.clubConfigurationService.getAvailability().pipe(
+          map((availability) => loadAvailabilitySuccess({ availability })),
+          catchError((error) => of(loadAvailabilityFailure({ error })))
+        )
+      )
+    )
+  );
+
+  saveAvailability$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(saveAvailability),
+      mergeMap((action) =>
+        this.clubConfigurationService
+          .saveAvailability(action.availability)
+          .pipe(
+            map(() =>
+              saveAvailabilitySuccess({ availability: action.availability })
+            ),
+            catchError((error) => of(saveAvailabilityFailure({ error })))
+          )
+      )
     )
   );
 

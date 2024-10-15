@@ -6,7 +6,7 @@ import {
   faClose,
   faAngleDown,
   faUser,
-  faBars, // New icon for hamburger menu
+  faBars,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { MatDialog } from '@angular/material/dialog';
@@ -19,6 +19,12 @@ import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { logout } from 'src/app/state/actions/auth.actions';
 
+interface ButtonConfig {
+  label: string;
+  role: number; // role number associated with the button
+  action: () => void; // function to be called when the button is clicked
+}
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -29,19 +35,60 @@ export class NavbarComponent implements OnInit {
   faClose = faClose;
   faAngleDown = faAngleDown;
   faUser = faUser;
-  faBars = faBars; // New icon for hamburger menu
+  faBars = faBars;
 
   isOpenOverlayAvatar = false;
-  isOpenOverlayBoards = false;
-  isOpenMobileMenu = false; // New property for mobile menu state
+  isOpenMobileMenu = false;
 
   user$: Observable<User> = new Observable<User>();
+
+  // Define button configurations
+  buttonConfigs: ButtonConfig[] = [];
 
   constructor(
     public dialog: MatDialog,
     private readonly store: Store<any>,
     private readonly router: Router
   ) {}
+
+  ngOnInit(): void {
+    this.user$ = this.store.select(selectUser).pipe(
+      filter((user): user is User => user !== null),
+      distinctUntilChanged()
+    );
+
+    // Initialize button configurations based on user roles
+    this.user$.subscribe((user) => {
+      if (user) {
+        this.initializeButtons(user.role);
+      }
+    });
+  }
+
+  initializeButtons(userRole: number): void {
+    this.buttonConfigs = [
+      {
+        label: 'Inicio',
+        role: 2,
+        action: () => this.redirectToDashboard(),
+      },
+      {
+        label: 'Canchas',
+        role: 2,
+        action: () => this.redirectToFieldComponent(),
+      },
+      {
+        label: 'Crear Reserva',
+        role: 1,
+        action: () => this.OpenDialog(),
+      },
+    ];
+
+    // Filter buttons that match the user's role
+    this.buttonConfigs = this.buttonConfigs.filter(
+      (config) => config.role === userRole
+    );
+  }
 
   logout() {
     this.store.dispatch(logout());
@@ -54,22 +101,15 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  toggleMobileMenu() {
-    this.isOpenMobileMenu = !this.isOpenMobileMenu; // Function to toggle mobile menu
-  }
-
-  ngOnInit(): void {
-    this.user$ = this.store.select(selectUser).pipe(
-      filter((user): user is User => user !== null),
-      distinctUntilChanged()
-    );
-  }
-
   redirectToFieldComponent() {
     this.router.navigate(['home/admin/courts']);
   }
 
   redirectToDashboard() {
     this.router.navigate(['home/admin']);
+  }
+
+  redirectToConfigurationComponent() {
+    this.router.navigate(['home/admin/configuration']);
   }
 }

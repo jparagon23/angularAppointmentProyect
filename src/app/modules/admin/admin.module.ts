@@ -13,6 +13,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ErrorModalComponent } from './modals/error-modal/error-modal.component';
 import { CourtsPageComponent } from './pages/courts-page/courts-page.component';
 import { CourtCardComponentComponent } from './components/court-card-component/court-card-component.component';
+import { ClubConfigurationPageComponent } from './pages/club-configuration-page/club-configuration-page.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { CourtCardComponentComponent } from './components/court-card-component/c
     ErrorModalComponent,
     CourtsPageComponent,
     CourtCardComponentComponent,
+    ClubConfigurationPageComponent,
   ],
   imports: [
     CommonModule,
