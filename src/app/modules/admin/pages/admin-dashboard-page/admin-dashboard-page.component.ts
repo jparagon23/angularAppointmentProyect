@@ -6,7 +6,15 @@ import { ClubReservations } from 'src/app/models/ClubReservations.model';
 import { Store } from '@ngrx/store';
 import { loadReservationsAdmin } from 'src/app/state/actions/reservations.actions';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
-import { filter, Observable, catchError, of, Subject, takeUntil } from 'rxjs';
+import {
+  filter,
+  Observable,
+  catchError,
+  of,
+  Subject,
+  takeUntil,
+  take,
+} from 'rxjs';
 import { User } from 'src/app/models/user.model';
 import {
   selectClubReservations,
@@ -46,7 +54,7 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
 
     this.store
       .select(selectUser)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(take(1))
       .subscribe({
         next: (user) => {
           if (user) {
