@@ -14,6 +14,9 @@ import {
   Subject,
   takeUntil,
   take,
+  interval,
+  startWith,
+  switchMap,
 } from 'rxjs';
 import { User } from 'src/app/models/user.model';
 import {
@@ -54,12 +57,26 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
 
     this.store
       .select(selectUser)
-      .pipe(take(1))
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (user) => {
           if (user) {
             this.user = user;
+            this.selectedDate = this.initializeSelectedDate();
             this.loadReservations();
+
+            // Start the interval to load reservations every 4 minutes
+            interval(3 * 60 * 1000)
+              .pipe(
+                startWith(0), // Trigger immediately on subscription
+                takeUntil(this.destroy$),
+                switchMap(() => this.store.select(selectUser).pipe(take(1)))
+              )
+              .subscribe((user) => {
+                if (user) {
+                  this.loadReservations();
+                }
+              });
           } else {
             console.error('User is null');
           }
