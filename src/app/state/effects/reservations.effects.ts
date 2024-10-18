@@ -22,6 +22,8 @@ import {
   loadAvailableSlots,
   loadAvailableSlotsFailure,
   loadAvailableSlotsSuccess,
+  loadReservationConfiguration,
+  loadReservationConfigurationSuccess,
   loadReservations,
   loadReservationsAdmin,
   loadReservationsAdminFailure,
@@ -51,10 +53,11 @@ export class ReservationEffects {
     )
   );
 
+  // Return action creators
   loadReservations$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createReservationSuccess, cancelReservationSuccess),
-      concatMap(() => [loadReservations()])
+      concatMap(() => of(loadReservations()))
     )
   );
 
@@ -75,13 +78,11 @@ export class ReservationEffects {
       ofType(cancelReservationAdmin),
       switchMap(({ reservationId }) =>
         this.reservationService.cancelReservation(reservationId).pipe(
-          // Combina la acción con el estado actual para obtener `date` y `club`
           withLatestFrom(
             this.store.select(selectDatePicked),
             this.store.select(selectUser)
           ),
-          map(([action, date, club]) => loadReservationsAdmin({ date })),
-          // Maneja el error si ocurre algún problema
+          map(([_, date]) => loadReservationsAdmin({ date })),
           catchError((error) => of(loadReservationsFailure({ error })))
         )
       )
@@ -106,7 +107,6 @@ export class ReservationEffects {
     )
   );
 
-  // Crear reserva
   createReservation$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createReservation),
@@ -146,6 +146,27 @@ export class ReservationEffects {
             })
           ),
           catchError((error) => of(loadReservationsAdminFailure({ error })))
+        )
+      )
+    )
+  );
+
+  loadReservationConfigurationOnUserLoadSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadReservationsSuccess),
+      concatMap(() => of(loadReservationConfiguration()))
+    )
+  );
+
+  loadReservationConfiguration$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadReservationConfiguration),
+      mergeMap(() =>
+        this.reservationService.getReservationConfiguration().pipe(
+          map((configuration) => {
+            return loadReservationConfigurationSuccess({ configuration });
+          }),
+          catchError((error) => of(loadAvailableSlotsFailure({ error })))
         )
       )
     )

@@ -11,6 +11,7 @@ import { selectUser } from '../state/selectors/users.selectors';
 import { ClubReservations } from '../models/ClubReservations.model';
 import { GroupReservationInfo } from '../models/GroupReservationInfo.model';
 import { User } from '../models/user.model';
+import { ClubAvailability } from '../models/ClubAvalability.model';
 
 @Injectable({
   providedIn: 'root',
@@ -108,5 +109,10 @@ export class ReservationService {
     return this.http.delete<ReservationConfirmation>(url, {
       headers: this.setHeaders(),
     });
+  }
+
+  getReservationConfiguration(): Observable<ClubAvailability> {
+    const url = `${environment.API_URL}/configuration/club/${1}/availability`;
+    return this.http.get<ClubAvailability>(url, { headers: this.setHeaders() });
   }
 }

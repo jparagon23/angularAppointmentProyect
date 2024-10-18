@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+import { ClubAvailability } from 'src/app/models/ClubAvalability.model';
 import { ClubReservations } from 'src/app/models/ClubReservations.model';
 import { GroupReservationInfo } from 'src/app/models/GroupReservationInfo.model';
 import { ReservationDetail } from 'src/app/models/UserReservations.model';
@@ -40,7 +41,7 @@ export const resetCancelReservationState = createAction(
   '[Reservations] Reset Cancel Reservation'
 );
 
-//--- Cancel reservation
+//--- Cancel reservation admin
 
 export const cancelReservationAdmin = createAction(
   '[Admin Dashboard] Cancel Reservation from admin',
@@ -52,18 +53,20 @@ export const loadAvailableSlots = createAction(
   '[Reservation] Load Available Slots',
   props<{ date: string }>()
 );
-
-// Acción para espacios disponibles cargados correctamente
 export const loadAvailableSlotsSuccess = createAction(
   '[Reservation] Load Available Slots Success',
   props<{ availableSlots: string[] }>()
 );
 
-// Acción para error al cargar espacios
 export const loadAvailableSlotsFailure = createAction(
   '[Reservation] Load Available Slots Failure',
   props<{ error: any }>()
 );
+
+export const resetAvailableSlots = createAction(
+  '[Reservation] Reset Available Slots'
+);
+//-------------------------------------------
 
 // Acción para crear una reserva
 export const createReservation = createAction(
@@ -71,12 +74,10 @@ export const createReservation = createAction(
   props<{ selectedSlots: string[] }>()
 );
 
-// Acción cuando la reserva se ha creado exitosamente
 export const createReservationSuccess = createAction(
   '[Reservation] Create Reservation Success'
 );
 
-// Acción para manejar errores al crear reserva
 export const createReservationFailure = createAction(
   '[Reservation] Create Reservation Failure',
   props<{ error: any }>()
@@ -86,6 +87,9 @@ export const resetCreateReservation = createAction(
   '[Reservation] Reset Create Reservation'
 );
 
+//-------------------
+
+// Acción para cargar las reservas de un club, desde el admin
 export const loadReservationsAdmin = createAction(
   '[Admin Dashboard] Load Reservations Admin',
   props<{ date: string }>()
@@ -113,5 +117,19 @@ export const getReservationsByGroupIdSuccess = createAction(
 
 export const getReservationsByGroupIdFailure = createAction(
   '[Admin Dashboard] Get Reservations By Group Id Failure',
+  props<{ error: any }>()
+);
+
+//--------------------------------------------------------
+
+export const loadReservationConfiguration = createAction(
+  '[User Dashboard] Load Reservation Configuration'
+);
+export const loadReservationConfigurationSuccess = createAction(
+  '[User Dashboard] Load Reservation Configuration Success',
+  props<{ configuration: ClubAvailability }>()
+);
+export const loadReservationConfigurationFailure = createAction(
+  '[User Dashboard] Load Reservation Configuration Failure',
   props<{ error: any }>()
 );

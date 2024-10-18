@@ -2,109 +2,151 @@
   mat-dialog-content
   class="overflow-x-hidden overflow-y-auto max-h-screen w-full md:w-[40vw]"
 >
-  <!-- Mostrar el loader si está cargando -->
-  <div
-    *ngIf="createReservationLoader$ | async"
-    class="flex justify-center items-center h-full"
-  >
-    <app-loader></app-loader>
+  <!-- Mostrar mensaje si no hay disponibilidad -->
+  <div *ngIf="noAvailability" class="text-center p-4">
+    <h2 class="text-xl mb-4 text-red-600">
+      No hay disponibilidad habilitada para el club
+    </h2>
+    <p>
+      Actualmente no puedes realizar reservas. Por favor, intenta más tarde.
+    </p>
   </div>
 
-  <div *ngIf="!(createReservationLoader$ | async)">
-    <div>
-      <h2 class="text-center mb-4 text-lg md:text-xl">Crear reserva</h2>
-    </div>
-
-    <!-- Selector de fecha -->
+  <div *ngIf="!noAvailability">
+    <!-- Mostrar el loader si está cargando -->
     <div
-      class="flex flex-col items-center space-y-2 my-4 md:flex-row md:space-y-0 md:space-x-2 w-full"
+      *ngIf="createReservationLoader$ | async"
+      class="flex justify-center items-center h-full"
     >
-      <div class="w-full md:w-auto">
-        <label for="appointmentDate" class="text-center w-full"
-          >Día de la reserva:</label
-        >
-      </div>
-      <div class="w-full md:w-auto">
-        <input
-          name="appointmentDate"
-          type="date"
-          [(ngModel)]="selectedDate"
-          (change)="onDateChange($event)"
-          class="p-2 border rounded w-full md:w-auto"
-        />
-      </div>
+      <app-loader></app-loader>
     </div>
 
-    <!-- Mostrar los espacios disponibles -->
-    <div *ngIf="availableTimeSlots$ | async as slots" class="w-full">
+    <div *ngIf="!(createReservationLoader$ | async)">
+      <div>
+        <h2 class="text-center mb-4 text-lg md:text-xl">Crear reserva</h2>
+      </div>
+
+      <!-- Selector de fecha -->
       <div
-        *ngIf="slots && slots.length > 0"
-        class="flex flex-wrap justify-center mt-4 w-full gap-y-2"
+        class="flex flex-col items-center space-y-2 my-4 md:flex-row md:space-y-0 md:space-x-2 w-full"
       >
-        <div *ngFor="let slot of slots; let i = index" class="w-full md:w-auto">
-          <button
-            type="button"
-            class="m-1 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200 w-full"
-            (click)="onSlotSelect(slot)"
+        <div class="w-full md:w-auto">
+          <label for="appointmentDate" class="text-center w-full"
+            >Día de la reserva:</label
           >
-            {{ slot.split(" ")[1].substring(0, 5) }}
-          </button>
+        </div>
+        <div class="w-full md:w-auto">
+          <input
+            name="appointmentDate"
+            type="date"
+            [(ngModel)]="selectedDate"
+            (change)="onDateChange($event)"
+            class="p-2 border rounded w-full md:w-auto"
+            [min]="minDate"
+            [max]="maxDate"
+            (keydown)="$event.preventDefault()"
+          />
         </div>
       </div>
 
-      <!-- Mostrar mensaje si no hay espacios disponibles -->
-      <div *ngIf="slots && slots.length === 0" class="mt-4 text-center w-full">
-        <p>No hay espacios disponibles para la fecha seleccionada.</p>
-      </div>
-    </div>
+      <div>
+        <div *ngIf="!(loadingAvailableSlotsFailure$ | async)">
+          <div
+            *ngIf="loadingAvailableSlots$ | async"
+            class="flex justify-center items-center h-full"
+          >
+            <app-loader></app-loader>
+          </div>
 
-    <div class="flex flex-col items-center justify-center w-full mt-5">
-      <div *ngIf="selectedSlots.length > 0" class="w-full">
-        <h3 class="text-base md:text-lg">Reservas seleccionadas:</h3>
+          <div *ngIf="!(loadingAvailableSlots$ | async)">
+            <!-- Mostrar los espacios disponibles -->
+            <div *ngIf="availableTimeSlots$ | async as slots" class="w-full">
+              <div
+                *ngIf="slots && slots.length > 0"
+                class="flex flex-wrap justify-center mt-4 w-full gap-y-2"
+              >
+                <div
+                  *ngFor="let slot of slots; let i = index"
+                  class="w-full md:w-auto"
+                >
+                  <button
+                    type="button"
+                    class="m-1 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200 w-full"
+                    (click)="onSlotSelect(slot)"
+                  >
+                    {{ slot.split(" ")[1].substring(0, 5) }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Mostrar mensaje si no hay espacios disponibles -->
+              <div
+                *ngIf="slots && slots.length === 0"
+                class="mt-4 text-center w-full"
+              >
+                <p>No hay espacios disponibles para la fecha seleccionada.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            *ngIf="loadingAvailableSlotsFailure$ | async"
+            class="mt-4 text-center w-full"
+          >
+            <p>Error al cargar la disponibilidad para la fecha seleccionada</p>
+          </div>
+        </div>
       </div>
-      <div
-        *ngIf="selectedSlots.length > 0"
-        class="flex flex-wrap space-x-4 justify-center w-full"
-      >
+
+      <div class="flex flex-col items-center justify-center w-full mt-5">
+        <div *ngIf="selectedSlots.length > 0" class="w-full">
+          <h3 class="text-base md:text-lg">Reservas seleccionadas:</h3>
+        </div>
         <div
-          *ngFor="let selectedSlot of selectedSlots"
-          class="flex justify-center w-auto"
+          *ngIf="selectedSlots.length > 0"
+          class="flex flex-wrap space-x-4 justify-center w-full"
         >
-          <button
-            type="button"
-            class="m-1 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200"
-            (click)="deleteSelectedSlot(selectedSlot)"
+          <div
+            *ngFor="let selectedSlot of selectedSlots"
+            class="flex justify-center w-auto"
           >
-            {{ selectedSlot.split(" ")[1].substring(0, 5) }}
-          </button>
+            <button
+              type="button"
+              class="m-1 p-2 bg-white text-black rounded shadow-lg hover:bg-gray-200"
+              (click)="deleteSelectedSlot(selectedSlot)"
+            >
+              {{ selectedSlot.split(" ")[1].substring(0, 5) }}
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Acciones del diálogo -->
-    <div
-      class="flex flex-col space-y-3 justify-center mt-6 md:flex-row md:space-y-0 md:space-x-3 w-full"
-    >
-      <div class="w-full md:w-auto">
-        <app-button
-          [typeBtn]="'submit'"
-          [color]="'danger'"
-          [mat-dialog-close]="true"
-          class="w-full md:w-auto"
-        >
-          Cancelar
-        </app-button>
-      </div>
+      <!-- Acciones del diálogo -->
+      <div
+        class="flex flex-col space-y-3 justify-center mt-6 md:flex-row md:space-y-0 md:space-x-3 w-full"
+      >
+        <div class="w-full md:w-auto">
+          <app-button
+            [typeBtn]="'submit'"
+            [color]="'danger'"
+            [mat-dialog-close]="true"
+            class="w-full md:w-auto"
+          >
+            Cancelar
+          </app-button>
+        </div>
 
-      <div class="w-full md:w-auto">
-        <app-button
-          [typeBtn]="'reset'"
-          [color]="'primary'"
-          (click)="onClickContinue()"
-          class="w-full md:w-auto"
-        >
-          Continuar
-        </app-button>
+        <div class="w-full md:w-auto">
+          <app-button
+            [typeBtn]="'reset'"
+            [color]="'primary'"
+            (click)="onClickContinue()"
+            class="w-full md:w-auto"
+          >
+            Continuar
+          </app-button>
+        </div>
       </div>
     </div>
   </div>

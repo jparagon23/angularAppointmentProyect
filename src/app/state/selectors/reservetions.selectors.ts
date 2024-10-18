@@ -25,7 +25,15 @@ export const selectAvailableSlots = createSelector(
   selectReservationsFeature,
   (state: ReservationState) => state.availableSlots
 );
+export const selectLoadingAvailableSlots = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.loadingAvailableSlots
+);
 
+export const selectGetAvailableSlotsFailure = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.getAvailableSlotsFailure
+);
 // Selector para verificar si está cargando
 export const selectAvailableSlotsLoading = createSelector(
   selectReservationsFeature,
@@ -103,3 +111,8 @@ export const selectMatchingReservationId = (hour: string) =>
       return null;
     }
   );
+
+export const selectReservationConfiguration = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.reservationConfiguration
+);

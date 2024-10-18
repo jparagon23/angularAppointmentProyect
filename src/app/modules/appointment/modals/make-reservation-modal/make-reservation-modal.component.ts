@@ -15,19 +15,26 @@ import {
   selectCreateReservationFailure,
   selectCreateReservationLoading,
   selectCreateReservationSuccess,
+  selectGetAvailableSlotsFailure,
+  selectLoadingAvailableSlots,
+  selectReservationConfiguration,
 } from 'src/app/state/selectors/reservetions.selectors';
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import Swal from 'sweetalert2';
+import { ClubAvailability } from 'src/app/models/ClubAvalability.model';
 
 @Component({
   selector: 'app-make-reservation-modal',
   templateUrl: './make-reservation-modal.component.html',
 })
 export class MakeReservationModalComponent implements OnInit, OnDestroy {
-  selectedDate: string = this.initializeSelectedDate();
+  selectedDate: string = ''; // Inicialmente vacío, se llenará tras recibir la configuración
   availableTimeSlots$: Observable<string[]> =
     this.store.select(selectAvailableSlots);
   selectedSlots: string[] = [];
+  minDate: string = '';
+  maxDate: string = '';
+  noAvailability: boolean = false;
   createReservationLoader$: Observable<boolean> = this.store.select(
     selectCreateReservationLoading
   );
@@ -36,6 +43,12 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   );
   createReservationFailure$: Observable<boolean> = this.store.select(
     selectCreateReservationFailure
+  );
+  loadingAvailableSlots$: Observable<boolean> = this.store.select(
+    selectLoadingAvailableSlots
+  );
+  loadingAvailableSlotsFailure$: Observable<boolean> = this.store.select(
+    selectGetAvailableSlotsFailure
   );
 
   private readonly subscriptions = new Subscription();
@@ -49,7 +62,6 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.modalService.add(this.dialogRef);
-    this.fetchAvailableSlots(this.selectedDate);
     this.initializeSubscriptions();
   }
 
@@ -59,15 +71,110 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     this.store.dispatch(resetCreateReservation());
   }
 
-  initializeSelectedDate(): string {
+  private initializeSubscriptions(): void {
+    this.subscriptions.add(
+      this.store.select(selectReservationConfiguration).subscribe((config) => {
+        if (config) {
+          this.handleReservationConfiguration(config);
+          this.selectedDate = this.initializeSelectedDate();
+          if (this.selectedDate) {
+            this.fetchAvailableSlots(this.selectedDate);
+          }
+        }
+      })
+    );
+
+    this.subscriptions.add(
+      this.createReservationSuccess$.subscribe((success) => {
+        if (success) {
+          this.handleReservationSuccess();
+        }
+      })
+    );
+
+    this.subscriptions.add(
+      this.createReservationFailure$.subscribe((failure) => {
+        if (failure) {
+          this.handleReservationFailure();
+        }
+      })
+    );
+
+    this.subscriptions.add(
+      this.loadingAvailableSlotsFailure$.subscribe((failure) => {
+        if (failure) {
+          this.handleLoadingSlotsFailure();
+        }
+      })
+    );
+  }
+
+  private initializeSelectedDate(): string {
     const today = new Date();
     const bogotaTimeZone = 'America/Bogota';
     const zonedDate = toZonedTime(today, bogotaTimeZone);
-    return format(zonedDate, 'yyyy-MM-dd', { timeZone: bogotaTimeZone });
+    const formattedToday = format(zonedDate, 'yyyy-MM-dd', {
+      timeZone: bogotaTimeZone,
+    });
+
+    // Verificar si la fecha actual está fuera del rango permitido
+    if (formattedToday < this.minDate || formattedToday > this.maxDate) {
+      return ''; // Retornar cadena vacía si está fuera del rango
+    } else {
+      return formattedToday; // Si está dentro del rango, retornar la fecha de hoy
+    }
+  }
+
+  private handleReservationConfiguration(config: ClubAvailability): void {
+    if (config.noAvailability) {
+      this.noAvailability = true; // No hay disponibilidad
+      this.minDate = ''; // Deshabilitar el selector de fecha
+      this.maxDate = '';
+    } else if (config.alwaysAvailable) {
+      this.noAvailability = false;
+      this.minDate = '1900-01-01';
+      this.maxDate = '2100-12-31';
+    } else if (config.byRange && config.initialDate && config.endDate) {
+      this.noAvailability = false;
+      this.minDate = config.initialDate;
+      this.maxDate = config.endDate;
+    }
   }
 
   fetchAvailableSlots(date: string): void {
-    this.store.dispatch(loadAvailableSlots({ date }));
+    if (!this.noAvailability) {
+      this.store.dispatch(loadAvailableSlots({ date }));
+    }
+  }
+
+  onDateChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const date = inputElement.value;
+
+    if (date >= this.minDate && date <= this.maxDate) {
+      this.selectedDate = date;
+      this.selectedSlots = [];
+      this.fetchAvailableSlots(this.selectedDate);
+    } else {
+      this.selectedDate = ''; // Restablecer la fecha seleccionada si no está en el rango permitido
+      Swal.fire({
+        icon: 'warning',
+        title: 'Fecha no válida',
+        text: 'La fecha seleccionada no está dentro del rango permitido.',
+        confirmButtonColor: '#f39c12',
+        confirmButtonText: 'OK',
+      });
+    }
+  }
+
+  onSlotSelect(slot: string): void {
+    if (!this.selectedSlots.includes(slot)) {
+      this.selectedSlots = [...this.selectedSlots, slot];
+    }
+  }
+
+  deleteSelectedSlot(slot: string): void {
+    this.selectedSlots = this.selectedSlots.filter((s) => s !== slot);
   }
 
   onClickContinue(): void {
@@ -97,41 +204,6 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     });
   }
 
-  onDateChange(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    this.selectedDate = inputElement.value;
-    this.selectedSlots = [];
-    this.fetchAvailableSlots(this.selectedDate);
-  }
-
-  onSlotSelect(slot: string): void {
-    if (!this.selectedSlots.includes(slot)) {
-      this.selectedSlots = [...this.selectedSlots, slot];
-    }
-  }
-
-  deleteSelectedSlot(slot: string): void {
-    this.selectedSlots = this.selectedSlots.filter((s) => s !== slot);
-  }
-
-  private initializeSubscriptions(): void {
-    this.subscriptions.add(
-      this.createReservationSuccess$.subscribe((success) => {
-        if (success) {
-          this.handleReservationSuccess();
-        }
-      })
-    );
-
-    this.subscriptions.add(
-      this.createReservationFailure$.subscribe((failure) => {
-        if (failure) {
-          this.handleReservationFailure();
-        }
-      })
-    );
-  }
-
   private handleReservationSuccess(): void {
     this.dialogRef.close();
     Swal.fire({
@@ -140,6 +212,8 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
       text: 'Tu reserva ha sido creada exitosamente.',
       confirmButtonColor: '#3085d6',
       confirmButtonText: 'OK',
+    }).then(() => {
+      this.store.dispatch(resetCreateReservation());
     });
   }
 
@@ -148,6 +222,18 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
       icon: 'error',
       title: 'Error',
       text: 'No se pudo crear la reserva. Inténtalo de nuevo.',
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'OK',
+    }).then(() => {
+      this.store.dispatch(resetCreateReservation());
+    });
+  }
+
+  private handleLoadingSlotsFailure(): void {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error al cargar espacios disponibles',
+      text: 'Ocurrió un problema al cargar los espacios disponibles. Intenta de nuevo.',
       confirmButtonColor: '#d33',
       confirmButtonText: 'OK',
     });

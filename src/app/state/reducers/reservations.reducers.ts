@@ -2,6 +2,10 @@ import {
   cancelReservation,
   cancelReservationFailure,
   cancelReservationSuccess,
+  loadReservationConfiguration,
+  loadReservationConfigurationFailure,
+  loadReservationConfigurationSuccess,
+  resetAvailableSlots,
   resetCancelReservationState,
 } from 'src/app/state/actions/reservations.actions';
 import { createReducer, on } from '@ngrx/store';
@@ -45,6 +49,8 @@ export const initialState: ReservationState = {
   cancelReservationFailure: false,
   availableSlots: [],
   loadingAvailableSlots: false,
+  getAvailableSlotsSuccess: false,
+  getAvailableSlotsFailure: false,
   error: null,
   createReservationLoading: false,
   createReservationSuccess: false,
@@ -56,6 +62,11 @@ export const initialState: ReservationState = {
   datePicked: '',
   groupReservationInfo: null,
   groupReservationLoading: false,
+
+  loadingReservationConfiguration: false,
+  reservationConfigurationSuccess: false,
+  reservationConfigurationFailure: false,
+  reservationConfiguration: null,
 };
 
 export const reservationsReducer = createReducer(
@@ -108,7 +119,8 @@ export const reservationsReducer = createReducer(
   on(loadAvailableSlots, (state) => ({
     ...state,
     loadingAvailableSlots: true,
-    error: null,
+    getAvailableSlotsSuccess: false,
+    getAvailableSlotsFailure: false,
   })),
 
   // Cargar espacios exitosamente
@@ -116,13 +128,21 @@ export const reservationsReducer = createReducer(
     ...state,
     availableSlots,
     loadingAvailableSlots: false,
+    getAvailableSlotsSuccess: true,
   })),
 
   // Error al cargar espacios
   on(loadAvailableSlotsFailure, (state, { error }) => ({
     ...state,
     loadingAvailableSlots: false,
+    getAvailableSlotsFailure: true,
     error,
+  })),
+  on(resetAvailableSlots, (state) => ({
+    ...state,
+    loadingAvailableSlots: false,
+    getAvailableSlotsSuccess: false,
+    getAvailableSlotsFailure: false,
   })),
 
   // Crear reserva
@@ -201,5 +221,26 @@ export const reservationsReducer = createReducer(
     groupReservationLoading: false,
     error,
   })),
+
+  on(loadReservationConfiguration, (state) => ({
+    ...state,
+    loadingReservationConfiguration: true,
+    reservationConfigurationSuccess: false,
+    reservationConfigurationFailure: false,
+  })),
+  on(loadReservationConfigurationSuccess, (state, { configuration }) => ({
+    ...state,
+    reservationConfiguration: configuration,
+    loadingReservationConfiguration: false,
+    reservationConfigurationSuccess: true,
+  })),
+  on(loadReservationConfigurationFailure, (state, { error }) => ({
+    ...state,
+    reservationConfiguration: null,
+    loadingReservationConfiguration: false,
+    reservationConfigurationFailure: true,
+    error,
+  })),
+
   on(logout, (state) => initialState)
 );
