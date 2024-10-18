@@ -169,6 +169,7 @@ export class CreateReservationFromTableModalComponent
   }
 
   ngOnDestroy() {
+    this.store.dispatch(resetReservationCreated());
     this.subscription.unsubscribe();
   }
 }

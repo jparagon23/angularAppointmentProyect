@@ -63,7 +63,8 @@ export const clubReducer = createReducer(
   })),
   on(resetReservationCreated, (state: ClubState) => ({
     ...state,
-    reservationCreated: false, // Restablecer reservationCreated a false
+    reservationCreated: false,
+    reservationCreatedFailure: false, // Restablecer reservationCreated a false
   })),
   on(logout, (state: ClubState) => initialState)
 );
