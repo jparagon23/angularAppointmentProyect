@@ -34,8 +34,8 @@ export class AuthEffects {
                 });
               }
               return loginSuccess({
-                accessToken: response.access_token,
-                refreshToken: response.refresh_token,
+                accessToken: response.access_token ?? '',
+                refreshToken: response.refresh_token ?? '',
               });
             }),
             catchError((error) => of(loginFailure({ error })))
