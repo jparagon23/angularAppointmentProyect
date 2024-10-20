@@ -2,7 +2,9 @@
   class="w-full bg-white p-3 sm:p-5 border-gray-300 rounded-lg shadow-md sm:shadow-xl max-w-full sm:max-w-sm transition-transform transform hover:scale-105 hover:shadow-2xl text-left sm:text-right"
   (click)="openCancelReservationModal()"
 >
-  <div class="text-xl sm:text-3xl font-bold text-black">{{ reservation.date }}</div>
+  <div class="text-xl sm:text-3xl font-bold text-black">
+    {{ reservation.date }}
+  </div>
   <div class="text-lg sm:text-xl text-gray-700">
     {{ reservation.initialHour + "-" + reservation.endHour }}
   </div>

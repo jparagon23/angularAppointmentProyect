@@ -4,7 +4,10 @@ import { Router } from '@angular/router';
 import { faLock } from '@fortawesome/free-solid-svg-icons';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { setAuthenticationStatus } from 'src/app/state/actions/auth.actions';
+import {
+  resendAuthenticationCode,
+  setAuthenticationStatus,
+} from 'src/app/state/actions/auth.actions';
 import { selectIsAuthenticated } from 'src/app/state/selectors/auth.selectors';
 
 @Component({
@@ -23,5 +26,9 @@ export class AccountAuthenticationComponent {
 
   navigateToLogin() {
     this.router.navigate(['/login']);
+  }
+
+  resendCode() {
+    this.store.dispatch(resendAuthenticationCode());
   }
 }

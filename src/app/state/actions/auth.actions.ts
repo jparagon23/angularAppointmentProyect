@@ -12,6 +12,19 @@ export const loginSuccess = createAction(
 
 export const loginFailure = createAction(
   '[Auth] Login Failure',
+  props<{ error: any; userId?: string }>()
+);
+
+export const resendAuthenticationCode = createAction(
+  '[Auth] Resend Authentication Code'
+);
+
+export const resendAuthenticationCodeSuccess = createAction(
+  '[Auth] Resend Authentication Code Success'
+);
+
+export const resendAuthenticationCodeFailure = createAction(
+  '[Auth] Resend Authentication Code Failure',
   props<{ error: any }>()
 );
 

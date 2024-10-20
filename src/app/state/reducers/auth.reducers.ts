@@ -4,6 +4,9 @@ import {
   loginFailure,
   loginSuccess,
   logout,
+  resendAuthenticationCode,
+  resendAuthenticationCodeFailure,
+  resendAuthenticationCodeSuccess,
   setAuthenticationStatus,
   validateToken,
   validateTokenFailure,
@@ -17,6 +20,7 @@ export interface AuthState {
   loading: boolean;
   tokenLoading: boolean;
   accountIsAuthenticated: boolean;
+  resentCode: boolean;
 }
 
 export const initialState: AuthState = {
@@ -26,6 +30,7 @@ export const initialState: AuthState = {
   loading: false,
   accountIsAuthenticated: false,
   tokenLoading: false,
+  resentCode: false,
 };
 
 export const authReducer = createReducer(
@@ -67,5 +72,17 @@ export const authReducer = createReducer(
   on(setAuthenticationStatus, (state, { isAuthenticated }) => ({
     ...state,
     accountIsAuthenticated: isAuthenticated,
+  })),
+  on(resendAuthenticationCode, (state) => ({
+    ...state,
+    resentCode: false,
+  })),
+  on(resendAuthenticationCodeSuccess, (state) => ({
+    ...state,
+    resentCode: true,
+  })),
+  on(resendAuthenticationCodeFailure, (state) => ({
+    ...state,
+    resentCode: false,
   }))
 );

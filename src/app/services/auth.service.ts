@@ -64,12 +64,24 @@ export class AuthService {
       );
   }
 
-  login(formData: { email: string; password: string }) {
+  login(formData: {
+    email: string;
+    password: string;
+  }): Observable<ResponseLogin> {
+    console.log('logging in');
+
     const body = JSON.stringify(formData);
     return this.http.post<ResponseLogin>(`${this.apiUrl}/login`, body).pipe(
       tap((response) => {
-        this.tokenService.saveToken(response.access_token);
-        this.tokenService.saveRefreshToken(response.refresh_token);
+        if (response.access_token && response.refresh_token) {
+          this.tokenService.saveToken(response.access_token);
+          this.tokenService.saveRefreshToken(response.refresh_token);
+        } else if (response.userId) {
+          console.log('setting the userId' + response.userId);
+
+          this.user = { id: response.userId } as unknown as User;
+        }
+        console.log('didnt do anything');
       })
     );
   }
@@ -132,9 +144,22 @@ export class AuthService {
       })
       .pipe(
         tap((response) => {
-          this.tokenService.saveToken(response.access_token);
-          this.tokenService.saveRefreshToken(response.refresh_token);
+          if (response.access_token && response.refresh_token) {
+            this.tokenService.saveToken(response.access_token);
+            this.tokenService.saveRefreshToken(response.refresh_token);
+          }
         })
       );
+  }
+
+  resendAuthenticationCode() {
+    const userId = this.user?.id ?? -1;
+    const url = `${this.apiUrl}/auth/resend-auth-code`;
+    const params = new HttpParams().set('userId', userId.toString());
+    return this.http.post(url, {}, { params });
+  }
+
+  setUserId(userId: string) {
+    this.user = { id: userId } as unknown as User;
   }
 }

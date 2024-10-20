@@ -22,7 +22,10 @@
       <app-account-auth-form></app-account-auth-form>
       <p class="text-center text-sm text-gray-600 dark:text-gray-400">
         Si no has recibido el código,
-        <a href="#" class="text-blue-600 hover:underline dark:text-blue-400"
+        <a
+          href="#"
+          class="text-blue-600 hover:underline dark:text-blue-400"
+          (click)="resendCode()"
           >haz clic aquí</a
         >
         para reenviarlo.
