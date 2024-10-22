@@ -168,7 +168,11 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   }
 
   onSlotSelect(slot: string): void {
-    if (!this.selectedSlots.includes(slot)) {
+    if (this.selectedSlots.includes(slot)) {
+      // Si el slot ya está seleccionado, lo removemos
+      this.selectedSlots = this.selectedSlots.filter((s) => s !== slot);
+    } else {
+      // Si no está seleccionado, lo agregamos
       this.selectedSlots = [...this.selectedSlots, slot];
     }
   }

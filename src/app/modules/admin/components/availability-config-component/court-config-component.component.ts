@@ -23,6 +23,7 @@ export class CourtConfigComponentComponent implements OnInit {
   availabilityForm!: FormGroup;
   availability$!: Observable<ClubAvailabilitySelector>;
   isSaveButtonDisabled = true;
+  isSaving = false;
 
   constructor(private readonly store: Store<AppState>) {}
 
@@ -53,10 +54,13 @@ export class CourtConfigComponentComponent implements OnInit {
     this.availability$ = this.store.select(selectClubAvailability);
     this.availability$.subscribe((availability) => {
       if (availability) {
-        this.updateFormValues(availability);
-        this.toggleDateFields();
+        // Solo actualiza el formulario si no estamos guardando
+        if (!this.isSaving) {
+          this.updateFormValues(availability);
+          this.toggleDateFields();
+        }
 
-        // Handle save success or failure
+        // Maneja el éxito o fallo de guardado
         if (availability.saveAvailabilitySuccess) {
           this.handleReservationSuccess();
         }
@@ -128,9 +132,9 @@ export class CourtConfigComponentComponent implements OnInit {
 
   submitAvailability() {
     const availabilityData = this.availabilityForm.value;
-    console.log(availabilityData);
 
-    // Dispatch para guardar la disponibilidad
+    this.isSaving = true;
+
     this.store.dispatch(saveAvailability({ availability: availabilityData }));
   }
 
@@ -142,11 +146,11 @@ export class CourtConfigComponentComponent implements OnInit {
       confirmButtonColor: '#3085d6',
       confirmButtonText: 'OK',
     }).then(() => {
+      this.isSaving = false; // Guardado finalizado
       this.store.dispatch(resetSaveAvailabilityStatus());
     });
   }
 
-  // Handle failed reservation creation
   private handleReservationFailure(): void {
     Swal.fire({
       icon: 'error',
@@ -155,6 +159,7 @@ export class CourtConfigComponentComponent implements OnInit {
       confirmButtonColor: '#d33',
       confirmButtonText: 'OK',
     }).then(() => {
+      this.isSaving = false; // Guardado fallido, restablece bandera
       this.store.dispatch(resetSaveAvailabilityStatus());
     });
   }
