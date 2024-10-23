@@ -26,6 +26,8 @@ import {
 import { GroupReservationInfoModalComponent } from '../../modals/group-reservation-info-modal/group-reservation-info-modal.component';
 import { CreateReservationFromTableModalComponent } from '../../modals/create-reservation-from-table-modal/create-reservation-from-table-modal.component';
 
+import { parse, isBefore, isAfter } from 'date-fns';
+
 @Component({
   selector: 'app-admin-dashboard-page',
   templateUrl: './admin-dashboard-page.component.html',
@@ -38,9 +40,12 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
   error: boolean = false;
   private readonly destroy$ = new Subject<void>();
 
+  currentTime = new Date();
+
   constructor(public dialog: MatDialog, private readonly store: Store<any>) {}
 
   ngOnInit(): void {
+    this.currentTime = new Date();
     this.reservations$ = this.store.select(selectClubReservations).pipe(
       filter((clubReservations) => !!clubReservations),
       catchError((err) => {
@@ -153,5 +158,35 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
         data: { reservationInfo },
       });
     }
+  }
+
+  // Method to check if the reservation time is in the past
+  isPastTime(reservationTime: string): boolean {
+    const currentHour = format(this.currentTime, 'HH:mm');
+    return isBefore(
+      parse(reservationTime, 'HH:mm', new Date()),
+      parse(currentHour, 'HH:mm', new Date())
+    );
+  }
+
+  // Method to check if the reservation time is the current time slot (current hour)
+  isCurrentTimeSlot(reservationTime: string, index: number): boolean {
+    const currentHour = format(this.currentTime, 'HH:mm');
+    let isCurrentSlot = false;
+    this.reservations$.pipe(take(1)).subscribe((reservations) => {
+      const nextHour =
+        reservations?.reservationsData[index + 1]?.reservations[0]
+          ?.description || '';
+      isCurrentSlot =
+        isAfter(
+          parse(currentHour, 'HH:mm', new Date()),
+          parse(reservationTime, 'HH:mm', new Date())
+        ) &&
+        isBefore(
+          parse(currentHour, 'HH:mm', new Date()),
+          parse(nextHour, 'HH:mm', new Date())
+        );
+    });
+    return isCurrentSlot;
   }
 }

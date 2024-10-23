@@ -36,35 +36,70 @@
           </thead>
           <tbody>
             <tr
-              *ngFor="let row of reservations.reservationsData"
+              *ngFor="let row of reservations.reservationsData; let i = index"
               class="hover:bg-gray-100"
+              [ngClass]="{
+                'bg-gray-100': isPastTime(row.reservations[0].description),
+                'bg-red-100': isCurrentTimeSlot(
+                  row.reservations[0].description,
+                  i
+                ),
+                'text-gray-500':
+                  isPastTime(row.reservations[0].description) ||
+                  isCurrentTimeSlot(row.reservations[0].description, i)
+              }"
             >
               <td
                 class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base"
                 [ngClass]="{
-                  'bg-gray-200 cursor-not-allowed':
-                    row === reservations.reservationsData[0]
+                  'bg-gray-100': isPastTime(row.reservations[0].description),
+                  'bg-red-100': isCurrentTimeSlot(
+                    row.reservations[0].description,
+                    i
+                  ),
+                  'text-gray-500':
+                    isPastTime(row.reservations[0].description) ||
+                    isCurrentTimeSlot(row.reservations[0].description, i),
+                  'hover:bg-none': true
                 }"
               >
                 {{ row.reservations[0].description }}
               </td>
+
               <td
                 *ngFor="let reservation of row.reservations.slice(1)"
                 class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base"
                 [ngClass]="{
-                  'cursor-not-allowed':
-                    row === reservations.reservationsData[0],
-                  'cursor-pointer': row !== reservations.reservationsData[0],
-                  'text-green-700': reservation.description === 'Disponible',
-                  'text-red-600': reservation.description === 'No disponible',
+                  'cursor-not-allowed pointer-events-none':
+                    isPastTime(row.reservations[0].description) ||
+                    isCurrentTimeSlot(row.reservations[0].description, i),
+                  'cursor-pointer':
+                    !isPastTime(row.reservations[0].description) &&
+                    !isCurrentTimeSlot(row.reservations[0].description, i),
+                  'text-green-700':
+                    reservation.description === 'Disponible' &&
+                    !isPastTime(row.reservations[0].description) &&
+                    !isCurrentTimeSlot(row.reservations[0].description, i),
+                  'text-red-600':
+                    reservation.description === 'No disponible' &&
+                    !isPastTime(row.reservations[0].description) &&
+                    !isCurrentTimeSlot(row.reservations[0].description, i),
                   'text-yellow-500':
                     reservation.description !== 'Disponible' &&
                     reservation.description !== 'No disponible',
-                  'bg-gray-200': row === reservations.reservationsData[0],
-                  'text-gray-500': row === reservations.reservationsData[0]
+                  'bg-gray-100': isPastTime(row.reservations[0].description),
+                  'bg-red-100': isCurrentTimeSlot(
+                    row.reservations[0].description,
+                    i
+                  ),
+
+                  'hover:bg-none':
+                    isPastTime(row.reservations[0].description) ||
+                    isCurrentTimeSlot(row.reservations[0].description, i)
                 }"
                 (click)="
-                  row === reservations.reservationsData[0]
+                  isPastTime(row.reservations[0].description) ||
+                  isCurrentTimeSlot(row.reservations[0].description, i)
                     ? null
                     : onReservationClick(
                         reservation,
