@@ -70,7 +70,7 @@
                 *ngFor="let reservation of row.reservations.slice(1)"
                 class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base"
                 [ngClass]="{
-                  'cursor-not-allowed pointer-events-none':
+                  'cursor-not-allowed':
                     isPastTime(row.reservations[0].description) ||
                     isCurrentTimeSlot(row.reservations[0].description, i),
                   'cursor-pointer':
@@ -92,7 +92,6 @@
                     row.reservations[0].description,
                     i
                   ),
-
                   'hover:bg-none':
                     isPastTime(row.reservations[0].description) ||
                     isCurrentTimeSlot(row.reservations[0].description, i)
