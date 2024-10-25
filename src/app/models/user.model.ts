@@ -16,7 +16,7 @@ export interface User {
   gender: string;
   userStatus: number;
   creationDate: string;
-  allowNotification: string;
+  allowNotification: string | boolean;
   role: number;
   userAdminClub: number;
 }

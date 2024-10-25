@@ -6,6 +6,11 @@ const routes: Routes = [
   {
     path: '',
     component: DashboardPageComponent,
+    pathMatch: 'full',
+  },
+  {
+    path: 'user-information',
+    component: DashboardPageComponent,
   },
 ];
 

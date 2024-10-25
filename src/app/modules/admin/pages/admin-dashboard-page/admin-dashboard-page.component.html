@@ -22,13 +22,19 @@
 <ng-template #content>
   <div *ngIf="reservations$ | async as reservations; else loading">
     <div *ngIf="reservations.reservationsData.length > 0; else noReservations">
-      <div class="overflow-x-auto">
+      <div
+        class="overflow-x-auto overflow-y-auto max-h-64 sm:max-h-80 md:max-h-96 lg:max-h-[32rem] xl:max-h-[45rem] 2xl:max-h-[55rem]"
+      >
         <table class="table-auto border-collapse border border-gray-300 w-full">
           <thead>
             <tr>
               <th
-                *ngFor="let header of reservations.reservationHeaders"
-                class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base"
+                *ngFor="
+                  let header of reservations.reservationHeaders;
+                  let i = index
+                "
+                class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base sticky-header"
+                [ngClass]="{ 'sticky-header-column': i === 0 }"
               >
                 {{ header }}
               </th>
@@ -44,23 +50,28 @@
                   row.reservations[0].description,
                   i
                 ),
+                'bg-white':
+                  !isPastTime(row.reservations[0].description) &&
+                  !isCurrentTimeSlot(row.reservations[0].description, i),
                 'text-gray-500':
-                  isPastTime(row.reservations[0].description) ||
-                  isCurrentTimeSlot(row.reservations[0].description, i)
+                  isPastTime(row.reservations[0].description) &&
+                  !isCurrentTimeSlot(row.reservations[0].description, i)
               }"
             >
               <td
-                class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base"
+                class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base sticky-column"
                 [ngClass]="{
                   'bg-gray-100': isPastTime(row.reservations[0].description),
                   'bg-red-100': isCurrentTimeSlot(
                     row.reservations[0].description,
                     i
                   ),
+                  'bg-white':
+                    !isPastTime(row.reservations[0].description) &&
+                    !isCurrentTimeSlot(row.reservations[0].description, i),
                   'text-gray-500':
-                    isPastTime(row.reservations[0].description) ||
-                    isCurrentTimeSlot(row.reservations[0].description, i),
-                  'hover:bg-none': true
+                    isPastTime(row.reservations[0].description) &&
+                    isCurrentTimeSlot(row.reservations[0].description, i)
                 }"
               >
                 {{ row.reservations[0].description }}
@@ -78,12 +89,16 @@
                     !isCurrentTimeSlot(row.reservations[0].description, i),
                   'text-green-700':
                     reservation.description === 'Disponible' &&
-                    !isPastTime(row.reservations[0].description) &&
-                    !isCurrentTimeSlot(row.reservations[0].description, i),
+                    ((!isPastTime(row.reservations[0].description) &&
+                      !isCurrentTimeSlot(row.reservations[0].description, i)) ||
+                      (isPastTime(row.reservations[0].description) &&
+                        isCurrentTimeSlot(row.reservations[0].description, i))),
                   'text-red-600':
                     reservation.description === 'No disponible' &&
-                    !isPastTime(row.reservations[0].description) &&
-                    !isCurrentTimeSlot(row.reservations[0].description, i),
+                    ((!isPastTime(row.reservations[0].description) &&
+                      !isCurrentTimeSlot(row.reservations[0].description, i)) ||
+                      (isPastTime(row.reservations[0].description) &&
+                        isCurrentTimeSlot(row.reservations[0].description, i))),
                   'text-yellow-500':
                     reservation.description !== 'Disponible' &&
                     reservation.description !== 'No disponible',
@@ -128,3 +143,24 @@
     Error al cargar las reservas. Por favor, inténtelo de nuevo más tarde.
   </div>
 </ng-template>
+
+<style>
+  th.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  td.sticky-column {
+    position: sticky;
+    left: 0;
+    z-index: 5;
+  }
+
+  td.sticky-header-column {
+    position: sticky;
+    left: 0;
+    top: 0;
+    z-index: 15; /* Mayor para la intersección de primera fila y columna */
+  }
+</style>

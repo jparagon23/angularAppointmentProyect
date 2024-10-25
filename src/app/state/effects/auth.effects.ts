@@ -94,6 +94,15 @@ export class AuthEffects {
     )
   );
 
+  loadInitialSingUpInfo$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loginSuccess),
+      map(() => {
+        return { type: '[register component] Load Initial SignUp Data' };
+      })
+    )
+  );
+
   logout$ = createEffect(() =>
     this.actions$.pipe(
       ofType(logout),

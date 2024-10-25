@@ -19,5 +19,9 @@ export interface Category {
 }
 
 export interface DocumentType extends CommonType {}
-export interface Gender extends CommonType {}
+export enum Gender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  OTHER = 'OTHER',
+}
 export interface PhoneType extends CommonType {}

@@ -1,0 +1,243 @@
+<div
+  class="w-full lg:container lg:mx-auto lg:p-5 lg:max-w-md"
+  *ngIf="user$ | async as user"
+>
+  <div class="bg-white shadow-lg rounded-lg p-6">
+    <!-- Profile Photo Section -->
+    <div class="flex justify-center mb-4">
+      <img
+        class="w-24 h-24 rounded-full object-cover"
+        src="../../../../../assets/backgrounds/tennis.png"
+        alt="User Photo"
+      />
+    </div>
+
+    <div class="text-center mb-4">
+      <button class="text-blue-500 text-sm hover:underline">
+        Cambiar foto de perfil
+      </button>
+    </div>
+
+    <!-- Si NO está en modo de edición -->
+    <ng-container *ngIf="!isEditing; else editMode">
+      <!-- User Info Display -->
+      <p><strong>Nombre:</strong> {{ user.name | titlecase }}</p>
+      <p><strong>Apellido:</strong> {{ user.lastname | titlecase }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p>
+        <strong>Cumpleaños:</strong> {{ user.birthdate | date : "dd/MM/yyyy" }}
+      </p>
+      <p>
+        <strong>Tipo de identificación:</strong>
+        <span *ngIf="initialData">
+          {{
+            getIdentificationTypeDescription(
+              user?.documentType,
+              initialData.documentTypes
+            ) | titlecase
+          }}
+        </span>
+      </p>
+      <p><strong>Número de identificación:</strong> {{ user.document }}</p>
+      <p>
+        <strong>Teléfono:</strong>
+        {{ user.userPhones[0].phoneNumber }}
+      </p>
+      <p><strong>Género:</strong> {{ user.gender | titlecase }}</p>
+      <p>
+        <strong>Habilitar notificaciones:</strong>
+        {{ user.allowNotification == "T" ? "Sí" : "No" }}
+      </p>
+
+      <!-- Botón Editar -->
+      <div class="text-center mt-4">
+        <button
+          (click)="toggleEdit()"
+          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Editar
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- Modo de edición -->
+    <ng-template #editMode>
+      <form (ngSubmit)="onSubmit()">
+        <!-- Editable Form Fields -->
+        <div class="mb-4">
+          <label for="name" class="block font-semibold">Nombre</label>
+          <input
+            id="name"
+            type="text"
+            [(ngModel)]="userEditable.name"
+            name="name"
+            class="border rounded p-2 w-full"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="lastname" class="block font-semibold">Apellido</label>
+          <input
+            id="lastname"
+            type="text"
+            [(ngModel)]="userEditable.lastname"
+            name="lastname"
+            class="border rounded p-2 w-full"
+          />
+        </div>
+
+        <!-- Campo email en modo lectura -->
+        <div class="mb-4">
+          <label for="email" class="block font-semibold"
+            >Correo Electrónico</label
+          >
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="userEditable.email"
+            name="email"
+            class="border rounded p-2 w-full bg-gray-100"
+            disabled
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="birthday" class="block font-semibold">Cumpleaños</label>
+          <input
+            id="birthday"
+            type="date"
+            [(ngModel)]="userEditable.birthdate"
+            name="birthday"
+            class="border rounded p-2 w-full"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="idType" class="block font-semibold"
+            >Tipo de Identificación</label
+          >
+          <select
+            id="idType"
+            [(ngModel)]="userEditable.documentType"
+            name="idType"
+            class="border rounded p-2 w-full bg-gray-100"
+            disabled
+          >
+            <!-- Muestra los tipos de documento del initialSignUpData -->
+            <option
+              *ngFor="let documentType of initialData.documentTypes"
+              [value]="documentType.id"
+              [selected]="documentType.id === userEditable.documentType"
+            >
+              {{ documentType.description | titlecase }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Campo número de identificación en modo lectura -->
+        <div class="mb-4">
+          <label for="idNumber" class="block font-semibold"
+            >Número de identificación</label
+          >
+          <input
+            id="idNumber"
+            type="text"
+            [(ngModel)]="userEditable.document"
+            name="idNumber"
+            class="border rounded p-2 w-full bg-gray-100"
+            disabled
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="phoneType" class="block font-semibold"
+            >Tipo de teléfono</label
+          >
+          <select
+            id="phoneType"
+            *ngIf="
+              userEditable.userPhones && userEditable.userPhones.length > 0
+            "
+            [(ngModel)]="userEditable.userPhones[0].phoneType"
+            name="phoneType"
+            class="border rounded p-2 w-full"
+          >
+            <!-- Muestra los tipos de teléfono del initialSignUpData -->
+            <option
+              *ngFor="let phoneType of initialData.phoneTypes"
+              [value]="phoneType.id"
+              [selected]="phoneType.id === userEditable.userPhones[0].phoneType"
+            >
+              {{ phoneType.description }}
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-4">
+          <label for="phoneNumber" class="block font-semibold"
+            >Número de Teléfono</label
+          >
+          <input
+            id="phoneNumber"
+            type="text"
+            *ngIf="
+              userEditable.userPhones && userEditable.userPhones.length > 0
+            "
+            [(ngModel)]="userEditable.userPhones[0].phoneNumber"
+            name="phoneNumber"
+            class="border rounded p-2 w-full"
+            maxlength="10"
+          />
+        </div>
+
+        <div class="mb-4">
+          <label for="gender" class="block font-semibold">Género</label>
+          <select
+            id="gender"
+            [(ngModel)]="userEditable.gender"
+            name="gender"
+            class="border rounded p-2 w-full"
+          >
+            <!-- Muestra los géneros del initialSignUpData -->
+            <option
+              *ngFor="let gender of initialData.genders"
+              [value]="gender"
+              [selected]="gender === userEditable.gender"
+            >
+              {{ gender | titlecase }}
+            </option>
+          </select>
+        </div>
+
+        <div class="flex items-center mb-4">
+          <input
+            type="checkbox"
+            id="enable-notifications"
+            [(ngModel)]="userEditable.allowNotification"
+            name="notificationsEnabled"
+            class="mr-2 cursor-pointer"
+          />
+          <label for="enable-notifications" class="cursor-pointer"
+            >Habilitar notificaciones</label
+          >
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-between">
+          <button
+            type="submit"
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mb-2 sm:mb-0"
+          >
+            Guardar cambios
+          </button>
+          <button
+            type="button"
+            (click)="cancel()"
+            class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </ng-template>
+  </div>
+</div>

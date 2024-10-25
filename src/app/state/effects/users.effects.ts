@@ -6,7 +6,11 @@ import {
   loadUser,
   loadUserFailure,
   loadUserSuccess,
+  updateUser,
+  updateUserFailure,
+  updateUserSuccess,
 } from '../actions/users.actions';
+import { UserService } from 'src/app/services/user.service';
 
 @Injectable()
 export class ProfileEffects {
@@ -22,5 +26,21 @@ export class ProfileEffects {
     )
   );
 
-  constructor(private actions$: Actions, private authService: AuthService) {}
+  updateUser$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateUser),
+      switchMap(({ user }) =>
+        this.userService.updateUser(user).pipe(
+          map((user) => updateUserSuccess({ user: user })),
+          catchError((error) => of(updateUserFailure({ error })))
+        )
+      )
+    )
+  );
+
+  constructor(
+    private actions$: Actions,
+    private authService: AuthService,
+    private userService: UserService
+  ) {}
 }

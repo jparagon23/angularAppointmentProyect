@@ -103,4 +103,8 @@ export class NavbarComponent implements OnInit {
   redirectToConfigurationComponent() {
     this.router.navigate(['home/admin/configuration']);
   }
+
+  redirectToUserInformation() {
+    this.router.navigate(['home/admin/user-information']);
+  }
 }

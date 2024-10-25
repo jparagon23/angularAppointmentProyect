@@ -39,4 +39,9 @@ export class UserService {
     const url = `${environment.API_URL}/reservation/club/${this.user.userAdminClub}/members?nameOrId=${name}`;
     return this.http.get<ClubUser[]>(url, { headers: this.setHeaders() });
   }
+
+  updateUser(user: Partial<User>): Observable<User> {
+    const url = `${environment.API_URL}/user/${this.user.id}`;
+    return this.http.put<User>(url, user, { headers: this.setHeaders() });
+  }
 }

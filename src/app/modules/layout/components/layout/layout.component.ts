@@ -8,7 +8,7 @@ import {
   selectUsersLoading,
 } from 'src/app/state/selectors/users.selectors';
 import { combineLatest } from 'rxjs';
-import { filter, distinctUntilChanged } from 'rxjs/operators';
+import { filter, distinctUntilChanged, first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-layout',
@@ -29,8 +29,9 @@ export class LayoutComponent implements OnInit {
 
     combineLatest([this.userLoading$, this.userError$, this.user$])
       .pipe(
-        filter(([isLoading, error, user]) => !isLoading),
-        distinctUntilChanged()
+        filter(([isLoading]) => !isLoading),
+        distinctUntilChanged(),
+        first()
       )
       .subscribe(([isLoading, error, user]) => {
         if (error) {
@@ -39,7 +40,6 @@ export class LayoutComponent implements OnInit {
         } else if (user) {
           if (user.role == 2) {
             console.log('user is admin, redirect home/admin');
-
             this.router.navigate(['home/admin']);
           } else {
             this.router.navigate(['home/user']);

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminDashboardPageComponent } from './pages/admin-dashboard-page/admin-dashboard-page.component';
 import { CourtsPageComponent } from './components/court-config-component/courts-page.component';
 import { ClubConfigurationPageComponent } from './pages/club-configuration-page/club-configuration-page.component';
+import { UserInformationPageComponent } from '../shared/pages/user-information-page/user-information-page.component';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'configuration',
     component: ClubConfigurationPageComponent,
+  },
+  {
+    path: 'user-information',
+    component: UserInformationPageComponent,
   },
 ];
 
