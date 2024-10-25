@@ -68,8 +68,6 @@ export class AuthService {
     email: string;
     password: string;
   }): Observable<ResponseLogin> {
-    console.log('logging in');
-
     const body = JSON.stringify(formData);
     return this.http.post<ResponseLogin>(`${this.apiUrl}/login`, body).pipe(
       tap((response) => {
@@ -77,8 +75,6 @@ export class AuthService {
           this.tokenService.saveToken(response.access_token);
           this.tokenService.saveRefreshToken(response.refresh_token);
         } else if (response.userId) {
-          console.log('setting the userId' + response.userId);
-
           this.user = { id: response.userId } as unknown as User;
         }
       })

@@ -80,10 +80,11 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
               .subscribe((user) => {
                 if (user) {
                   this.loadReservations();
+                } else {
+                  console.error('User is null during interval');
                 }
               });
           } else {
-            console.error('User is null');
           }
         },
         error: (err) => {

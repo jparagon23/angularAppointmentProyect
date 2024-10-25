@@ -28,27 +28,6 @@ export class LayoutComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.store.dispatch(loadUser());
-
-    combineLatest([this.userLoading$, this.userError$, this.user$])
-      .pipe(
-        filter(([isLoading, error, user]) => !isLoading),
-        distinctUntilChanged()
-      )
-      .subscribe(([isLoading, error, user]) => {
-        if (error) {
-          console.error('Error loading user:', error);
-          // Manejar el error, por ejemplo, mostrar un mensaje de error
-        } else if (user && !this.isLoggedIn) {
-          this.isLoggedIn = true;
-          if (user.role == 2) {
-            console.log('user is admin, redirect home/admin');
-
-            this.router.navigate(['home/admin']);
-          } else {
-            this.router.navigate(['home/user']);
-          }
-        }
-      });
+    //this.store.dispatch(loadUser());
   }
 }

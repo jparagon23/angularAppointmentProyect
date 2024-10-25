@@ -11,6 +11,7 @@ import {
   updateUserSuccess,
 } from '../actions/users.actions';
 import { UserService } from 'src/app/services/user.service';
+import { loginSuccess } from '../actions/auth.actions';
 
 @Injectable()
 export class ProfileEffects {
@@ -35,6 +36,13 @@ export class ProfileEffects {
           catchError((error) => of(updateUserFailure({ error })))
         )
       )
+    )
+  );
+
+  loadUserAfterLogin$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loginSuccess),
+      map(() => loadUser())
     )
   );
 

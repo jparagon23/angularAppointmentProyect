@@ -52,7 +52,6 @@ export class UserInformationPageComponent implements OnInit {
         ...user,
         allowNotification: user!.allowNotification === 'T',
       });
-      console.log('userEditable', this.userEditable);
 
       this.originalUser = { ...user }; // Crea una copia del objeto user
     });
@@ -124,13 +123,9 @@ export class UserInformationPageComponent implements OnInit {
 
       // Compara cada campo para identificar cambios
       if (this.originalUser.name !== this.userEditable.name) {
-        console.log('change name');
-
         updatedData.name = this.userEditable.name;
       }
       if (this.originalUser.lastname !== this.userEditable.lastname) {
-        console.log('change lastname');
-
         updatedData.lastname = this.userEditable.lastname;
       }
 

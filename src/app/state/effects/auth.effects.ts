@@ -62,12 +62,8 @@ export class AuthEffects {
         ofType(loginFailure),
         map((action) => {
           if (action.error && action.error.status === 403) {
-            console.log(action.error);
-
             // Call the function to resend the authentication code
             if (action.error.error.userId) {
-              console.log('User ID:', action.error.error.userId);
-
               this.authService.setUserId(action.error.error.userId);
             } else {
               console.error('User ID is undefined');
