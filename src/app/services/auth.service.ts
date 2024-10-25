@@ -81,7 +81,6 @@ export class AuthService {
 
           this.user = { id: response.userId } as unknown as User;
         }
-        console.log('didnt do anything');
       })
     );
   }

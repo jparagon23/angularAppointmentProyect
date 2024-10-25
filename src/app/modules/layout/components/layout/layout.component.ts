@@ -8,7 +8,8 @@ import {
   selectUsersLoading,
 } from 'src/app/state/selectors/users.selectors';
 import { combineLatest } from 'rxjs';
-import { filter, distinctUntilChanged, first } from 'rxjs/operators';
+import { filter, distinctUntilChanged } from 'rxjs/operators';
+import { loadInitialSignUpData } from 'src/app/state/actions/register.actions';
 
 @Component({
   selector: 'app-layout',
@@ -18,6 +19,8 @@ export class LayoutComponent implements OnInit {
   userLoading$ = this.store.select(selectUsersLoading);
   userError$ = this.store.select(selectUsersError);
   user$ = this.store.select(selectUser);
+
+  private isLoggedIn = false;
 
   constructor(
     private readonly store: Store<any>,
@@ -29,17 +32,18 @@ export class LayoutComponent implements OnInit {
 
     combineLatest([this.userLoading$, this.userError$, this.user$])
       .pipe(
-        filter(([isLoading]) => !isLoading),
-        distinctUntilChanged(),
-        first()
+        filter(([isLoading, error, user]) => !isLoading),
+        distinctUntilChanged()
       )
       .subscribe(([isLoading, error, user]) => {
         if (error) {
           console.error('Error loading user:', error);
           // Manejar el error, por ejemplo, mostrar un mensaje de error
-        } else if (user) {
+        } else if (user && !this.isLoggedIn) {
+          this.isLoggedIn = true;
           if (user.role == 2) {
             console.log('user is admin, redirect home/admin');
+
             this.router.navigate(['home/admin']);
           } else {
             this.router.navigate(['home/user']);
