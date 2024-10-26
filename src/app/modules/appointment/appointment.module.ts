@@ -12,6 +12,7 @@ import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.co
 import { FormsModule } from '@angular/forms';
 import { CancelReservationModalComponent } from './modals/cancel-reservation-modal/cancel-reservation-modal.component';
 import { ConfirmationModalComponent } from './modals/confirmation-modal/confirmation-modal.component';
+import { AvailableSlotCardComponent } from './components/available-slot-card/available-slot-card.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { ConfirmationModalComponent } from './modals/confirmation-modal/confirma
     DashboardPageComponent,
     CancelReservationModalComponent,
     ConfirmationModalComponent,
+    AvailableSlotCardComponent,
   ],
   imports: [
     CommonModule,

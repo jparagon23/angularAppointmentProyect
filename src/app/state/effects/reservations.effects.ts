@@ -34,6 +34,7 @@ import {
 import { Store } from '@ngrx/store';
 import { selectDatePicked } from '../selectors/reservetions.selectors';
 import { selectUser } from '../selectors/users.selectors';
+import { AvailableSlotsResponse } from 'src/app/models/AvailableSlotInfo.model';
 
 @Injectable()
 export class ReservationEffects {
@@ -94,12 +95,8 @@ export class ReservationEffects {
       ofType(loadAvailableSlots),
       mergeMap((action) =>
         this.reservationService.getAvailableSlotsPerDay(action.date).pipe(
-          map((response) =>
-            loadAvailableSlotsSuccess({
-              availableSlots: response.availableSlots.map((slot) =>
-                slot.date.dateTime.slice(0, -3)
-              ),
-            })
+          map((response: AvailableSlotsResponse) =>
+            loadAvailableSlotsSuccess({ availableSlots: response })
           ),
           catchError((error) => of(loadAvailableSlotsFailure({ error })))
         )

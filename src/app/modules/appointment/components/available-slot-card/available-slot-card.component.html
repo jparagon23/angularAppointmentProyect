@@ -1,0 +1,76 @@
+<div
+  class="mx-auto max-w-md overflow-hidden rounded-lg bg-white shadow-lg border border-[#2c6d1b] relative"
+>
+  <!-- Etiqueta "Seleccionado" que se muestra solo si el checkbox está seleccionado -->
+  <div
+    *ngIf="isChecked"
+    class="absolute top-0 right-0 m-2 bg-[#418622] text-white px-2 py-1 rounded"
+  >
+    Seleccionado
+  </div>
+
+  <div class="flex">
+    <div class="flex items-center justify-between p-4">
+      <input
+        type="checkbox"
+        id="reservation-checkbox"
+        class="h-6 w-6 checkbox-custom"
+        (change)="onCheckboxChange($event)"
+      />
+      <label for="reservation-checkbox" class="sr-only">Seleccionar</label>
+    </div>
+    <div class="w-full pl-1 pr-4 pb-1 2xl:pb-4 2xl:pr-16">
+      <div class="pt-3 pb-3 text-left text-[#418622]">
+        <span class="text-2xl font-semibold">
+          {{ availableSlotInfo.initialDateTime | timeFormat }} -
+          {{ availableSlotInfo.endDateTime | timeFormat }}
+        </span>
+      </div>
+      <div class="flex justify-between">
+        <div>
+          <div class="block">
+            <span class="font-bold">Lugar:</span>
+          </div>
+          <div>
+            <span class="text-gray-600">{{ availableSlotInfo.club }}</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="block">
+            <span class="font-bold">Tipo de cancha:</span>
+          </div>
+          <div>
+            <span class="text-gray-600">Polvo de ladrillo</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .checkbox-custom {
+    appearance: none; /* Elimina el estilo por defecto del checkbox */
+    border: 2px solid #ccc; /* Borde por defecto */
+    border-radius: 4px; /* Bordes redondeados */
+    width: 24px; /* Ajusta el tamaño */
+    height: 24px; /* Ajusta el tamaño */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el checkbox */
+  }
+
+  .checkbox-custom:checked {
+    background-color: #418622; /* Color verde */
+    border: 2px solid #418622; /* Borde verde */
+  }
+
+  .label-selected {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #418622; /* Color de fondo verde */
+    color: white; /* Color del texto */
+    padding: 4px 8px; /* Espaciado interno */
+    border-radius: 4px; /* Bordes redondeados */
+  }
+</style>

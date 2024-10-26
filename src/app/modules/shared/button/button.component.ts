@@ -15,6 +15,7 @@ export class ButtonComponent {
     | 'danger'
     | 'light'
     | 'sky'
+    | 'continue'
     | 'navbar' = 'primary';
   faSpinner = faSpinner;
 
@@ -54,6 +55,12 @@ export class ButtonComponent {
       'text-white': true,
       'hover:bg-green-900': true,
       'focus:ring-primary-300': true,
+    },
+    continue: {
+      'bg-[#418622]': true,
+      'hover:bg-[#35691a]': true,
+      'focus:ring-primary-300': true,
+      'text-white': true,
     },
   };
 

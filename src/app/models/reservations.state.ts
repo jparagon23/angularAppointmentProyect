@@ -1,3 +1,4 @@
+import { AvailableSlotsResponse } from './AvailableSlotInfo.model';
 import { ClubAvailability } from './ClubAvalability.model';
 import { ClubReservations } from './ClubReservations.model';
 import { GroupReservationInfo } from './GroupReservationInfo.model';
@@ -11,7 +12,7 @@ export interface ReservationState {
   cancelReservationLoading: boolean;
   cancelReservationSuccess: boolean;
   cancelReservationFailure: boolean;
-  availableSlots: string[];
+  availableSlots: AvailableSlotsResponse | null;
   loadingAvailableSlots: boolean;
   getAvailableSlotsSuccess: boolean;
   getAvailableSlotsFailure: boolean;

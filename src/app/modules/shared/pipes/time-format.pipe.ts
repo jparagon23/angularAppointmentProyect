@@ -4,11 +4,14 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'timeFormat',
 })
 export class TimeFormatPipe implements PipeTransform {
-  transform(value: Date | string, format: string = 'H:mm'): string {
-    const date = new Date(value);
-    const hours = date.getHours().toString();
-    const minutes = date.getMinutes().toString().padStart(2, '0');
+  transform(value: string): string {
+    // Verifica que el valor no sea nulo o indefinido
+    if (!value) return '';
 
-    return `${hours}:${minutes}`;
+    // Dividir la cadena en espacio y tomar la segunda parte
+    const parts = value.split(' ');
+
+    // Si hay un espacio, devolver la hora (parte antes de am/pm)
+    return parts.length > 1 ? parts[1] + parts[2] : value;
   }
 }

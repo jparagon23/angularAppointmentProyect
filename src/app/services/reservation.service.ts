@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TokenService } from './token.service';
 import { environment } from 'src/environments/environment';
-import { AvailableSlotsResponse } from '../models/reservation.model';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { UserReservationResponse } from '../models/UserReservations.model';
 import { ReservationConfirmation } from '../models/ReservationConfirmation.model';
@@ -12,6 +11,7 @@ import { ClubReservations } from '../models/ClubReservations.model';
 import { GroupReservationInfo } from '../models/GroupReservationInfo.model';
 import { User } from '../models/user.model';
 import { ClubAvailability } from '../models/ClubAvalability.model';
+import { AvailableSlotsResponse } from '../models/AvailableSlotInfo.model';
 
 @Injectable({
   providedIn: 'root',

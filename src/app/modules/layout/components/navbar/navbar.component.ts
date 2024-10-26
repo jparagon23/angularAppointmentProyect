@@ -93,6 +93,7 @@ export class NavbarComponent implements OnInit {
     this.dialog.open(MakeReservationModalComponent, {
       maxWidth: '95vw',
       maxHeight: '95vh',
+      panelClass: 'custom-dialog-container',
     });
   }
 

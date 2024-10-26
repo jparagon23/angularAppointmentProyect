@@ -47,7 +47,7 @@ export const initialState: ReservationState = {
   cancelReservationLoading: false,
   cancelReservationSuccess: false,
   cancelReservationFailure: false,
-  availableSlots: [],
+  availableSlots: null,
   loadingAvailableSlots: false,
   getAvailableSlotsSuccess: false,
   getAvailableSlotsFailure: false,

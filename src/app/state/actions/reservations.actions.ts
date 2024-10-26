@@ -1,4 +1,5 @@
 import { createAction, props } from '@ngrx/store';
+import { AvailableSlotsResponse } from 'src/app/models/AvailableSlotInfo.model';
 import { ClubAvailability } from 'src/app/models/ClubAvalability.model';
 import { ClubReservations } from 'src/app/models/ClubReservations.model';
 import { GroupReservationInfo } from 'src/app/models/GroupReservationInfo.model';
@@ -55,7 +56,7 @@ export const loadAvailableSlots = createAction(
 );
 export const loadAvailableSlotsSuccess = createAction(
   '[Reservation] Load Available Slots Success',
-  props<{ availableSlots: string[] }>()
+  props<{ availableSlots: AvailableSlotsResponse }>()
 );
 
 export const loadAvailableSlotsFailure = createAction(

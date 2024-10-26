@@ -22,6 +22,7 @@ import {
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import Swal from 'sweetalert2';
 import { ClubAvailability } from 'src/app/models/ClubAvalability.model';
+import { AvailableSlotsResponse } from 'src/app/models/AvailableSlotInfo.model';
 
 @Component({
   selector: 'app-make-reservation-modal',
@@ -29,7 +30,7 @@ import { ClubAvailability } from 'src/app/models/ClubAvalability.model';
 })
 export class MakeReservationModalComponent implements OnInit, OnDestroy {
   selectedDate: string = ''; // Inicialmente vacío, se llenará tras recibir la configuración
-  availableTimeSlots$: Observable<string[]> =
+  availableTimeSlots$: Observable<AvailableSlotsResponse | null> =
     this.store.select(selectAvailableSlots);
   selectedSlots: string[] = [];
   minDate: string = '';
@@ -126,16 +127,24 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   }
 
   private handleReservationConfiguration(config: ClubAvailability): void {
-    if (config.noAvailability) {
-      this.noAvailability = true; // No hay disponibilidad
-      this.minDate = ''; // Deshabilitar el selector de fecha
+    this.noAvailability = config.noAvailability || false;
+    if (this.noAvailability) {
+      this.minDate = '';
       this.maxDate = '';
-    } else if (config.alwaysAvailable) {
-      this.noAvailability = false;
-      this.minDate = '1900-01-01';
+      return;
+    }
+
+    const today = new Date();
+    const bogotaTimeZone = 'America/Bogota';
+    const zonedDate = toZonedTime(today, bogotaTimeZone);
+    const formattedToday = format(zonedDate, 'yyyy-MM-dd', {
+      timeZone: bogotaTimeZone,
+    });
+
+    if (config.alwaysAvailable) {
+      this.minDate = formattedToday;
       this.maxDate = '2100-12-31';
     } else if (config.byRange && config.initialDate && config.endDate) {
-      this.noAvailability = false;
       this.minDate = config.initialDate;
       this.maxDate = config.endDate;
     }
@@ -167,18 +176,43 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSlotSelect(slot: string): void {
-    if (this.selectedSlots.includes(slot)) {
-      // Si el slot ya está seleccionado, lo removemos
-      this.selectedSlots = this.selectedSlots.filter((s) => s !== slot);
+  onSlotSelected(isSelected: boolean, slot: any) {
+    slot = this.convertTo24HourFormat(slot);
+    if (isSelected) {
+      if (this.selectedSlots.includes(slot)) {
+        // Si el slot ya está seleccionado, lo removemos
+        this.selectedSlots = this.selectedSlots.filter((s) => s !== slot);
+      } else {
+        // Si no está seleccionado, lo agregamos
+        this.selectedSlots = [...this.selectedSlots, slot];
+      }
+      // this.store.dispatch(selectSlot({ slot }));
+      console.log('Slot selected:', slot);
+      console.log('Selected slots:', this.selectedSlots);
     } else {
-      // Si no está seleccionado, lo agregamos
-      this.selectedSlots = [...this.selectedSlots, slot];
+      this.selectedSlots = this.selectedSlots.filter((s) => s !== slot);
+      console.log('Slot deselected:', slot);
+      console.log('Selected slots:', this.selectedSlots);
+
+      // this.store.dispatch(deselectSlot({ slot }));
     }
   }
 
-  deleteSelectedSlot(slot: string): void {
-    this.selectedSlots = this.selectedSlots.filter((s) => s !== slot);
+  convertTo24HourFormat(dateTime: string): string {
+    const [date, time, period] = dateTime.split(/[\s]+/);
+
+    let [hours, minutes] = time.split(':').map(Number);
+
+    if (period.toLowerCase() === 'pm' && hours < 12) {
+      hours += 12;
+    } else if (period.toLowerCase() === 'am' && hours === 12) {
+      hours = 0;
+    }
+
+    const formattedHours = hours.toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+
+    return `${date} ${formattedHours}:${formattedMinutes}`;
   }
 
   onClickContinue(): void {
