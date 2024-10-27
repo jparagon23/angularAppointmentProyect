@@ -23,7 +23,12 @@
               "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "moment-timezone",
+              "lodash",
+              "sweetalert2"
+            ]
           },
           "configurations": {
             "production": {
