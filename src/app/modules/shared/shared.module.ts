@@ -11,7 +11,11 @@ import { CheckboxComponent } from './components/chechbox/chechbox.component';
 import { TimeFormatPipe } from './pipes/time-format.pipe';
 import { LoaderComponent } from './components/loader/loader.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 import { UserInformationPageComponent } from './pages/user-information-page/user-information-page.component';
+import { DateSelectorComponent } from './components/date-selector/date-selector.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [
@@ -23,6 +27,7 @@ import { UserInformationPageComponent } from './pages/user-information-page/user
     TimeFormatPipe,
     LoaderComponent,
     UserInformationPageComponent,
+    DateSelectorComponent,
   ],
 
   imports: [
@@ -31,6 +36,9 @@ import { UserInformationPageComponent } from './pages/user-information-page/user
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     FormsModule,
+    MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   exports: [
     ButtonComponent,
@@ -39,6 +47,7 @@ import { UserInformationPageComponent } from './pages/user-information-page/user
     CheckboxComponent,
     TimeFormatPipe,
     LoaderComponent,
+    DateSelectorComponent,
   ],
 })
 export class SharedModule {}

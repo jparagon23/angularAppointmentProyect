@@ -1,0 +1,43 @@
+.date-selector-container {
+  display: block;
+  cursor: pointer;
+  position: relative; /* Asegura que el contenedor sea el referente para el posicionamiento */
+}
+
+.date-display {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #35691a; /* Cambia el color a verde */
+  text-decoration: underline; /* Agrega una línea debajo del texto */
+  cursor: pointer; /* Cambia el cursor a un puntero al pasar sobre el texto */
+}
+
+.date-selector-container button[disabled] {
+  opacity: 0.5; /* Cambia la opacidad para dar un efecto atenuado */
+  cursor: not-allowed; /* Cambia el cursor para indicar que el botón está deshabilitado */
+}
+
+/* Cambia el tamaño de las flechas */
+.chevron-icon {
+  font-size: 2rem; /* Ajusta este valor para aumentar o disminuir el tamaño de las flechas */
+  color: #35691a; /* Color de la flecha */
+}
+
+.date-selector-container button[disabled] .mat-icon {
+  color: rgba(
+    0,
+    0,
+    0,
+    0.38
+  ); /* Cambia el color del ícono del botón deshabilitado */
+}
+
+@media (min-width: 768px) {
+  .date-display {
+    font-size: 1.5rem;
+  }
+  .date-selector-container {
+    display: flex;
+    align-items: center;
+  }
+}

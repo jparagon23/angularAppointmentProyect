@@ -1,0 +1,32 @@
+<div class="date-selector-container">
+  <div class="date-div">
+    <!-- Fecha Actual -->
+    <span class="date-display" (click)="openDatePicker()">
+      {{ formattedDate | titlecase }}
+    </span>
+
+    <!-- Flecha Izquierda -->
+    <button mat-icon-button (click)="changeDay(-1)" [disabled]="isPrevDisabled">
+      <mat-icon class="chevron-icon">chevron_left</mat-icon>
+    </button>
+
+    <!-- Flecha Derecha -->
+    <button mat-icon-button (click)="changeDay(1)" [disabled]="isNextDisabled">
+      <mat-icon class="chevron-icon">chevron_right</mat-icon>
+    </button>
+  </div>
+  <div class="input-div">
+    <!-- Input oculto asociado al Date Picker -->
+    <input
+      matInput
+      [matDatepicker]="datePicker"
+      (dateChange)="onDateChange($event)"
+      [min]="minDateParsed"
+      [max]="maxDateParsed"
+      style="visibility: hidden"
+    />
+
+    <!-- Date Picker -->
+    <mat-datepicker #datePicker></mat-datepicker>
+  </div>
+</div>

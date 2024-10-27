@@ -120,7 +120,7 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
 
     // Verificar si la fecha actual está fuera del rango permitido
     if (formattedToday < this.minDate || formattedToday > this.maxDate) {
-      return ''; // Retornar cadena vacía si está fuera del rango
+      return this.minDate; // Retornar cadena vacía si está fuera del rango
     } else {
       return formattedToday; // Si está dentro del rango, retornar la fecha de hoy
     }
@@ -159,6 +159,27 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   onDateChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     const date = inputElement.value;
+
+    console.log('Date selected:', date);
+
+    if (date >= this.minDate && date <= this.maxDate) {
+      this.selectedDate = date;
+      this.selectedSlots = [];
+      this.fetchAvailableSlots(this.selectedDate);
+    } else {
+      this.selectedDate = ''; // Restablecer la fecha seleccionada si no está en el rango permitido
+      Swal.fire({
+        icon: 'warning',
+        title: 'Fecha no válida',
+        text: 'La fecha seleccionada no está dentro del rango permitido.',
+        confirmButtonColor: '#f39c12',
+        confirmButtonText: 'OK',
+      });
+    }
+  }
+
+  onDateChange1(date: string): void {
+    console.log('Date selected:', date);
 
     if (date >= this.minDate && date <= this.maxDate) {
       this.selectedDate = date;

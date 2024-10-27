@@ -29,31 +29,30 @@
     </div>
 
     <div *ngIf="!(createReservationLoader$ | async)">
-      <div>
-        <h2 class="text-center mb-4 text-lg md:text-xl">Crear reserva</h2>
+      <div
+        class="text-2xl md:text-3xl border-b-2 border-gray-300 mb-2 text-black"
+      >
+        Reservar
       </div>
 
       <!-- Selector de fecha -->
-      <div
-        class="flex flex-col items-center space-y-2 my-4 md:flex-row md:space-y-0 md:space-x-2 w-full"
-      >
-        <div class="w-full md:w-auto">
-          <label for="appointmentDate" class="text-center w-full"
-            >Día de la reserva:</label
-          >
+      <div>
+        <div>
+          <app-date-selector
+            [initialDate]="selectedDate"
+            [minDate]="minDate"
+            [maxDate]="maxDate"
+            (dateSelected)="onDateChange1($event)"
+          ></app-date-selector>
         </div>
-        <div class="w-full md:w-auto">
-          <input
-            name="appointmentDate"
-            type="date"
-            [(ngModel)]="selectedDate"
-            (change)="onDateChange($event)"
-            class="p-2 border rounded w-full md:w-auto transition-all duration-200 ease-in-out hover:border-indigo-500 focus:ring-2 focus:ring-indigo-600"
-            [min]="minDate"
-            [max]="maxDate"
-            (keydown)="$event.preventDefault()"
-          />
-        </div>
+      </div>
+
+      <div class="font-bold text-xl">Disponibilidad</div>
+      <div>
+        <p>
+          Selecciona la franja de reserva que más te convenga, puedes
+          seleccionar mas de una.
+        </p>
       </div>
 
       <!-- Contenedor de tarjetas alineado con el label -->
