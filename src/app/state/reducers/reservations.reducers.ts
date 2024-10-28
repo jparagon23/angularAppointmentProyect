@@ -41,6 +41,7 @@ export const initialState: ReservationState = {
     initialHour: '',
     endHour: '',
     groupCourtId: [],
+    groupCourtName: [],
     individualReservationsId: [],
     club: '',
   },
