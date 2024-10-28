@@ -1,5 +1,5 @@
 <div
-  class="mx-auto max-w-md h-auto w:auto md:w-[27rem] overflow-hidden rounded-lg bg-white shadow-lg border border-[#2c6d1b] relative"
+  class="mx-auto max-w-md overflow-hidden rounded-lg bg-white shadow-lg border border-[#2c6d1b] relative"
 >
   <!-- Etiqueta "Seleccionado" que se muestra solo si el checkbox está seleccionado -->
   <div
@@ -9,8 +9,7 @@
     Seleccionado
   </div>
 
-  <div class="flex h-full">
-    <!-- Asegúrate de que el contenido ocupe toda la altura -->
+  <div class="flex">
     <div class="flex items-center justify-between p-4">
       <input
         type="checkbox"
@@ -49,3 +48,29 @@
     </div>
   </div>
 </div>
+
+<style>
+  .checkbox-custom {
+    appearance: none; /* Elimina el estilo por defecto del checkbox */
+    border: 2px solid #ccc; /* Borde por defecto */
+    border-radius: 4px; /* Bordes redondeados */
+    width: 24px; /* Ajusta el tamaño */
+    height: 24px; /* Ajusta el tamaño */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el checkbox */
+  }
+
+  .checkbox-custom:checked {
+    background-color: #418622; /* Color verde */
+    border: 2px solid #418622; /* Borde verde */
+  }
+
+  .label-selected {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #418622; /* Color de fondo verde */
+    color: white; /* Color del texto */
+    padding: 4px 8px; /* Espaciado interno */
+    border-radius: 4px; /* Bordes redondeados */
+  }
+</style>
