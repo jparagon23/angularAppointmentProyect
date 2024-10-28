@@ -21,8 +21,13 @@
       <ng-container *ngIf="reservations.length > 0; else noReservationsMessage">
         <!-- Ajuste para que las tarjetas se acomoden dinámicamente en pantallas grandes -->
         <div class="flex flex-wrap justify-start gap-4">
-          <div *ngFor="let reservation of reservations" class="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4">
-            <app-reservation-card [reservation]="reservation"></app-reservation-card>
+          <div
+            *ngFor="let reservation of reservations"
+            class="w-full sm:w-auto"
+          >
+            <app-reservation-card
+              [reservation]="reservation"
+            ></app-reservation-card>
           </div>
         </div>
       </ng-container>
