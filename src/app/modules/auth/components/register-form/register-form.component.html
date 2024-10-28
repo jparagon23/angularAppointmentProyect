@@ -31,11 +31,11 @@
   <form
     [formGroup]="registerForm"
     novalidate
-    class="space-y-4 flex flex-col"
+    class="space-y-4"
     (ngSubmit)="register()"
   >
-    <!-- Name and Lastname fields -->
-    <div class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4">
+    <!-- Name and Lastname fields (mobile-first) -->
+    <div class="space-y-4 md:space-y-0 md:flex md:space-x-4">
       <div class="w-full">
         <app-input
           [control]="registerForm.controls['name']"
@@ -56,8 +56,8 @@
       </div>
     </div>
 
-    <!-- Gender and Birthdate fields -->
-    <div class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4">
+    <!-- Gender and Birthdate fields (mobile-first) -->
+    <div class="space-y-4 md:space-y-0 md:flex md:space-x-4">
       <div class="w-full">
         <app-select
           [control]="registerForm.controls['gender']"
@@ -78,8 +78,8 @@
       </div>
     </div>
 
-    <!-- Document Type and Document fields -->
-    <div class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4">
+    <!-- Document Type and Document fields (mobile-first) -->
+    <div class="space-y-4 md:space-y-0 md:flex md:space-x-4">
       <div class="w-full">
         <app-select
           [control]="registerForm.controls['documentTypeId']"
@@ -103,8 +103,8 @@
       </div>
     </div>
 
-    <!-- Phone Type and Phone fields -->
-    <div class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4">
+    <!-- Phone Type and Phone fields (mobile-first) -->
+    <div class="space-y-4 md:space-y-0 md:flex md:space-x-4">
       <div class="w-full">
         <app-select
           [control]="registerForm.controls['phoneTypeId']"
@@ -150,8 +150,8 @@
       ></app-select>
     </div>
 
-    <!-- Password and Confirm Password fields -->
-    <div class="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4">
+    <!-- Password and Confirm Password fields (mobile-first) -->
+    <div class="space-y-4 md:space-y-0 md:flex md:space-x-4">
       <div class="w-full">
         <app-input
           [control]="registerForm.controls['password']"
@@ -173,16 +173,14 @@
     </div>
 
     <!-- Checkboxes -->
-    <div class="flex flex-col space-y-4 items-center">
+    <div class="space-y-2 items-center">
       <app-checkbox
         [control]="registerForm.controls.allowNotification"
         [name]="'permitirNotificaciones'"
-        class="w-full"
       ></app-checkbox>
       <app-checkbox
         [control]="registerForm.controls.agreeTerms"
         [name]="'aceptarTerminos'"
-        class="w-full"
       ></app-checkbox>
     </div>
 

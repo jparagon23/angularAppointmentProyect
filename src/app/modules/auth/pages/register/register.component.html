@@ -1,32 +1,32 @@
 <div class="w-full h-screen bg-authBackGround bg-cover">
   <div
-    class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
+    class="flex flex-col items-center justify-center h-screen px-4 py-6 mx-auto lg:py-0"
   >
     <div
-      class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
+      class="w-full bg-white rounded-lg shadow-md sm:max-w-xs md:max-w-sm lg:max-w-md dark:border dark:bg-gray-800 dark:border-gray-700"
     >
-      <!-- Small screens: Max height with scroll, large screens: full height -->
       <div
-        class="max-h-[450px] overflow-auto sm:max-h-[450px] 2xl:max-h-none p-6 space-y-2 md:space-y-3 sm:p-8 2xl:overflow-visible"
+        class="max-h-[650px] overflow-auto sm:max-h-[450px] 2xl:max-h-none p-4 space-y-3 sm:p-6"
       >
         <div>
           <h1
-            class="text-xl mb-1 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center"
+            class="text-lg mb-1 font-bold leading-tight tracking-tight text-gray-900 text-center dark:text-white"
           >
             Registrarse
           </h1>
-          <h3 class="text-center mb-0">Crea tu cuenta y distruta</h3>
+          <h3 class="text-center text-sm mb-2">Crea tu cuenta y disfruta</h3>
         </div>
         <div>
           <app-register-form></app-register-form>
           <div class="w-full text-center mt-2">
-            <p>
+            <p class="text-xs sm:text-sm">
               ¿Ya tienes una cuenta?
               <a
                 routerLink="/login"
-                class="text-sm font-medium text-green-800 hover:underline dark:text-green-900"
-                >Inicio de sesión</a
+                class="font-medium text-green-700 hover:underline dark:text-green-800"
               >
+                Inicio de sesión
+              </a>
             </p>
           </div>
         </div>
