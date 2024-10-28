@@ -220,7 +220,7 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   }
 
   convertTo24HourFormat(dateTime: string): string {
-    const [date, time, period] = dateTime.split(/[\s]+/);
+    const [date, time, period] = dateTime.split(' ');
 
     let [hours, minutes] = time.split(':').map(Number);
 
