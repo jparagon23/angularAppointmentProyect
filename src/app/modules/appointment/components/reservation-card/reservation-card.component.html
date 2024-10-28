@@ -6,7 +6,11 @@
     {{ reservation.date }}
   </div>
   <div class="text-lg sm:text-xl text-gray-700">
-    {{ reservation.initialHour + "-" + reservation.endHour }}
+    {{
+      (reservation.initialHour | timeFormat) +
+        "-" +
+        (reservation.endHour | timeFormat)
+    }}
   </div>
   <div class="text-base sm:text-lg text-gray-800">
     {{ reservation.groupCourtName }}
