@@ -31,11 +31,9 @@ export class LoginFormComponent implements OnInit {
   invalidCredentials$: Observable<boolean>;
 
   loginForm = this.formBuilder.group({
-    email: [
-      localStorage.getItem('email') ?? '',
-      [Validators.required, Validators.email],
-    ],
+    email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
+    rememberMe: [false],
   });
 
   constructor(
@@ -43,14 +41,19 @@ export class LoginFormComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly store: Store<AppState>
   ) {
-    // Use selector for loading state
     this.loadingLogin$ = this.store.select(selectAuthLoading);
-    // Use selector for error state and map it to check if the error is due to invalid credentials
     this.invalidCredentials$ = this.store.select(selectAuthError);
   }
 
   ngOnInit() {
-    // Check for email in query parameters and pre-fill the form
+    // Pre-fill email if found in localStorage
+    const savedEmail = localStorage.getItem('forehAppEmail');
+    if (savedEmail) {
+      this.loginForm.controls.email.setValue(savedEmail);
+      this.loginForm.controls.rememberMe.setValue(true);
+    }
+
+    // Also check for email in query parameters and override if present
     this.route.queryParamMap.subscribe((params) => {
       const emailParam = params.get('email');
       if (emailParam !== null) {
@@ -59,10 +62,15 @@ export class LoginFormComponent implements OnInit {
     });
   }
 
-  // Dispatch the login action if the form is valid
   doLogin() {
     if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
+      const { email, password, rememberMe } = this.loginForm.value;
+
+      if (rememberMe) {
+        localStorage.setItem('forehAppEmail', email!);
+      } else {
+        localStorage.removeItem('forehAppEmail');
+      }
       this.store.dispatch(login({ email: email!, password: password! }));
     }
   }

@@ -37,9 +37,10 @@
       <div class="flex items-center h-5">
         <input
           id="remember"
-          aria-describedby="remember"
+          aria-describedby="rememberMe"
           type="checkbox"
-          class="cursor-pointer w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+          formControlName="rememberMe"
+          class="cursor-pointer w-4 h-4 border border-gray-300 rounded focus:ring-3 focus:ring-primary-300 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 checkbox-custom"
         />
       </div>
       <div class="ml-3 text-sm">
@@ -88,3 +89,12 @@
     <ng-template #loginText>Iniciar sesión</ng-template>
   </button>
 </form>
+<style>
+  .checkbox-custom:checked {
+    background-color: #418622;
+    border-color: #418622;
+  }
+  .checkbox-custom {
+    background-color: white;
+  }
+</style>
