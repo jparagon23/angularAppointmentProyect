@@ -45,7 +45,7 @@ export class ReservationEffects {
         this.reservationService.getUserReservations().pipe(
           map((reservations) =>
             loadReservationsSuccess({
-              reservations: reservations.reservationsDetails,
+              reservations: reservations.reservations,
             })
           ),
           catchError((error) => of(loadReservationsFailure({ error })))

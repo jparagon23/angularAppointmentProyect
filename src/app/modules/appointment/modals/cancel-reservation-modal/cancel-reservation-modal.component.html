@@ -15,13 +15,16 @@
       <div class="flex-grow">
         <div *ngIf="selectedReservation$ | async as reservation">
           <div class="text-xl md:text-3xl font-bold">
-            {{ reservation.date }}
+            {{ reservation.date | fullDateFormat }}
           </div>
           <div class="text-gray-600">
-            {{ reservation.initialHour }} - {{ reservation.endHour }}
+            {{ reservation.initialHour | hourTimeFormat }} -
+            {{ reservation.endHour | hourTimeFormat }}
           </div>
-          <div class="text-gray-600">Cancha {{ reservation.groupCourtId }}</div>
-          <div class="text-gray-600">{{ reservation.club }}</div>
+          <div class="text-gray-600">
+            Cancha {{ reservation.groupCourtIds }}
+          </div>
+          <div class="text-gray-600">{{ reservation.clubName }}</div>
         </div>
         <div *ngIf="!(selectedReservation$ | async)">
           <p>No hay información de la reserva seleccionada.</p>

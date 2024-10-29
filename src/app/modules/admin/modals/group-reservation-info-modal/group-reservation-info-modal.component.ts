@@ -49,6 +49,8 @@ export class GroupReservationInfoModalComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('reservationInfo ' + JSON.stringify(this.data.reservationInfo));
+
     this.modalService.add(this.reservationInfoModal);
     this.loadReservationInfo();
   }

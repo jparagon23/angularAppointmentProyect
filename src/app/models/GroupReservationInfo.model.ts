@@ -11,7 +11,8 @@ export interface GroupReservationInfo {
   date: string;
   initialHour: string;
   endHour: string;
-  groupCourtId: number[];
-  individualReservationsId: IndividualReservation[];
-  club: string;
+  groupCourtIds: number[];
+  groupCourtNames: string[];
+  individualReservations: IndividualReservation[];
+  clubName: string;
 }

@@ -126,11 +126,14 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
     reservation: { id: string | null; description: string },
     hour: string
   ): void {
+    // Combine selectedDate and hour into a single datetime string
+    const combinedDateTime = `${this.selectedDate}T${hour}:00`;
+
     const reservationInfo = {
       date: this.selectedDate,
       id: reservation.id,
       user: reservation.description,
-      hour: hour,
+      hour: combinedDateTime,
     };
 
     if (reservation.id === '-1') {

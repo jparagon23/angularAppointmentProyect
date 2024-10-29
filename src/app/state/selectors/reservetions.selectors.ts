@@ -98,10 +98,10 @@ export const selectMatchingReservationId = (hour: string) =>
     (groupReservationInfo: GroupReservationInfo | null) => {
       if (
         groupReservationInfo &&
-        Array.isArray(groupReservationInfo.individualReservationsId)
+        Array.isArray(groupReservationInfo.individualReservations)
       ) {
         const matchingReservation =
-          groupReservationInfo.individualReservationsId.find(
+          groupReservationInfo.individualReservations.find(
             (res) => new Date(res.dateTime).getHours() === parseInt(hour, 10)
           );
         return matchingReservation

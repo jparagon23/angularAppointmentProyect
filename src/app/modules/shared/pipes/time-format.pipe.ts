@@ -1,17 +1,30 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'timeFormat',
+  name: 'fullDateFormat',
 })
-export class TimeFormatPipe implements PipeTransform {
+export class FullDateFormatPipe implements PipeTransform {
   transform(value: string): string {
-    // Verifica que el valor no sea nulo o indefinido
     if (!value) return '';
 
-    // Dividir la cadena en espacio y tomar la segunda parte
-    const parts = value.split(' ');
+    // Parse the date string
+    const date = new Date(value);
 
-    // Si hay un espacio, devolver la hora (parte antes de am/pm)
-    return parts.length > 1 ? parts[1] + parts[2] : value;
+    // Check if the date is valid
+    if (isNaN(date.getTime())) return '';
+
+    // Use Intl.DateTimeFormat for the specific format
+    const formatter = new Intl.DateTimeFormat('es-ES', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+
+    // Format the date
+    const formattedDate = formatter.format(date);
+
+    // Capitalize the first letter
+    return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
   }
 }

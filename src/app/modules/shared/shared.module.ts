@@ -8,7 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectComponent } from './components/select/select.component';
 import { ErrorMessageComponent } from './components/error-message/error-message.component';
 import { CheckboxComponent } from './components/chechbox/chechbox.component';
-import { TimeFormatPipe } from './pipes/time-format.pipe';
+import { FullDateFormatPipe } from './pipes/time-format.pipe';
 import { LoaderComponent } from './components/loader/loader.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,6 +16,7 @@ import { UserInformationPageComponent } from './pages/user-information-page/user
 import { DateSelectorComponent } from './components/date-selector/date-selector.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { TimePipe } from './pipes/time.pipe';
 
 @NgModule({
   declarations: [
@@ -24,10 +25,12 @@ import { MatNativeDateModule } from '@angular/material/core';
     SelectComponent,
     ErrorMessageComponent,
     CheckboxComponent,
-    TimeFormatPipe,
+    FullDateFormatPipe,
+    TimePipe,
     LoaderComponent,
     UserInformationPageComponent,
     DateSelectorComponent,
+    TimePipe,
   ],
 
   imports: [
@@ -45,7 +48,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     InputComponent,
     SelectComponent,
     CheckboxComponent,
-    TimeFormatPipe,
+    FullDateFormatPipe,
+    TimePipe,
     LoaderComponent,
     DateSelectorComponent,
   ],

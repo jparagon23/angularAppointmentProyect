@@ -1,4 +1,6 @@
-<div class="bg-white rounded-lg shadow-lg p-4 w-full max-w-full sm:p-6 sm:max-w-md">
+<div
+  class="bg-white rounded-lg shadow-lg p-4 w-full max-w-full sm:p-6 sm:max-w-md"
+>
   <!-- Contenedor del título y botones -->
   <div class="flex justify-between items-center mb-3 sm:mb-4">
     <h2 class="text-base font-semibold sm:text-lg">Reserva grupal</h2>
@@ -18,22 +20,22 @@
       class="border border-gray-400 text-gray-600 font-semibold py-2 px-3 rounded-md text-sm sm:text-base"
       [ngClass]="{
         'bg-blue-500 text-white hover:bg-blue-700':
-          data.reservationInfo.hour ===
-          (individualReservation.dateTime | timeFormat),
+          data.reservationInfo.hour === individualReservation.dateTime,
         'bg-gray-100 hover:bg-gray-200':
-          data.reservationInfo.hour !==
-          (individualReservation.dateTime | timeFormat)
+          data.reservationInfo.hour !== individualReservation.dateTime
       }"
       *ngFor="
-        let individualReservation of groupReservationInfo.individualReservationsId
+        let individualReservation of groupReservationInfo.individualReservations
       "
     >
-      {{ individualReservation.dateTime | timeFormat }}
+      {{ individualReservation.dateTime | hourTimeFormat }}
     </button>
   </div>
 
   <!-- Botones de acciones -->
-  <div class="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:space-x-3 sm:space-y-0">
+  <div
+    class="flex flex-col space-y-2 sm:flex-row sm:justify-between sm:space-x-3 sm:space-y-0"
+  >
     <!-- Botón cancelar grupo -->
     <app-button
       [typeBtn]="'submit'"

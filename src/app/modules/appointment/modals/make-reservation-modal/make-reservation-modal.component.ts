@@ -197,43 +197,26 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSlotSelected(isSelected: boolean, slot: any) {
-    slot = this.convertTo24HourFormat(slot);
-    if (isSelected) {
-      if (this.selectedSlots.includes(slot)) {
-        // Si el slot ya está seleccionado, lo removemos
-        this.selectedSlots = this.selectedSlots.filter((s) => s !== slot);
-      } else {
-        // Si no está seleccionado, lo agregamos
-        this.selectedSlots = [...this.selectedSlots, slot];
-      }
-      // this.store.dispatch(selectSlot({ slot }));
-      console.log('Slot selected:', slot);
-      console.log('Selected slots:', this.selectedSlots);
+  onSlotSelected(slot: any) {
+    if (this.selectedSlots.includes(slot)) {
+      this.deselectSlot(slot);
     } else {
-      this.selectedSlots = this.selectedSlots.filter((s) => s !== slot);
-      console.log('Slot deselected:', slot);
-      console.log('Selected slots:', this.selectedSlots);
-
-      // this.store.dispatch(deselectSlot({ slot }));
+      this.selectSlot(slot);
     }
   }
 
-  convertTo24HourFormat(dateTime: string): string {
-    const [date, time, period] = dateTime.split(' ');
+  private selectSlot(slot: any) {
+    this.selectedSlots = [...this.selectedSlots, slot];
+    console.log('Slot selected:', slot);
+    console.log('Selected slots:', this.selectedSlots);
+    // this.store.dispatch(selectSlot({ slot }));
+  }
 
-    let [hours, minutes] = time.split(':').map(Number);
-
-    if (period.toLowerCase() === 'pm' && hours < 12) {
-      hours += 12;
-    } else if (period.toLowerCase() === 'am' && hours === 12) {
-      hours = 0;
-    }
-
-    const formattedHours = hours.toString().padStart(2, '0');
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-
-    return `${date} ${formattedHours}:${formattedMinutes}`;
+  private deselectSlot(slot: any) {
+    this.selectedSlots = this.selectedSlots.filter((s) => s !== slot);
+    console.log('Slot deselected:', slot);
+    console.log('Selected slots:', this.selectedSlots);
+    // this.store.dispatch(deselectSlot({ slot }));
   }
 
   onClickContinue(): void {

@@ -11,14 +11,14 @@ export interface ReservationDetail {
   date: string;
   initialHour: string;
   endHour: string;
-  groupCourtId: number[];
-  groupCourtName: string[];
-  individualReservationsId: IndividualReservation[];
-  club: string;
+  groupCourtIds: number[];
+  groupCourtNames: string[];
+  individualReservations: IndividualReservation[];
+  clubName: string;
 }
 
 export interface UserReservationResponse {
   status: string;
   message: string;
-  reservationsDetails: ReservationDetail[];
+  reservations: ReservationDetail[];
 }

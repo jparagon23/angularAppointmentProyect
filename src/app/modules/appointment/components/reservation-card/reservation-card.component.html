@@ -3,17 +3,19 @@
   (click)="openCancelReservationModal()"
 >
   <div class="text-xl sm:text-3xl font-bold text-black">
-    {{ reservation.date }}
+    {{ reservation.date | fullDateFormat }}
   </div>
   <div class="text-lg sm:text-xl text-gray-700">
     {{
-      (reservation.initialHour | timeFormat) +
+      (reservation.initialHour | hourTimeFormat) +
         "-" +
-        (reservation.endHour | timeFormat)
+        (reservation.endHour | hourTimeFormat)
     }}
   </div>
   <div class="text-base sm:text-lg text-gray-800">
-    {{ reservation.groupCourtName }}
+    {{ reservation.groupCourtNames }}
   </div>
-  <div class="text-base sm:text-lg text-gray-600">{{ reservation.club }}</div>
+  <div class="text-base sm:text-lg text-gray-600">
+    {{ reservation.clubName }}
+  </div>
 </div>
