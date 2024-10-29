@@ -45,33 +45,19 @@
               *ngFor="let row of reservations.reservationsData; let i = index"
               class="hover:bg-gray-100"
               [ngClass]="{
-                'bg-gray-100': isPastTime(row.reservations[0].description),
-                'bg-red-100': isCurrentTimeSlot(
-                  row.reservations[0].description,
-                  i
-                ),
-                'bg-white':
-                  !isPastTime(row.reservations[0].description) &&
-                  !isCurrentTimeSlot(row.reservations[0].description, i),
-                'text-gray-500':
-                  isPastTime(row.reservations[0].description) &&
-                  !isCurrentTimeSlot(row.reservations[0].description, i)
+                'bg-gray-100': isPastTimes[i],
+                'bg-red-100': isCurrentTimeSlots[i],
+                'bg-white': !isPastTimes[i] && !isCurrentTimeSlots[i],
+                'text-gray-500': isPastTimes[i] && !isCurrentTimeSlots[i]
               }"
             >
               <td
                 class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base sticky-column"
                 [ngClass]="{
-                  'bg-gray-100': isPastTime(row.reservations[0].description),
-                  'bg-red-100': isCurrentTimeSlot(
-                    row.reservations[0].description,
-                    i
-                  ),
-                  'bg-white':
-                    !isPastTime(row.reservations[0].description) &&
-                    !isCurrentTimeSlot(row.reservations[0].description, i),
-                  'text-gray-500':
-                    isPastTime(row.reservations[0].description) &&
-                    isCurrentTimeSlot(row.reservations[0].description, i)
+                  'bg-gray-100': isPastTimes[i],
+                  'bg-red-100': isCurrentTimeSlots[i],
+                  'bg-white': !isPastTimes[i] && !isCurrentTimeSlots[i],
+                  'text-gray-500': isPastTimes[i] && isCurrentTimeSlots[i]
                 }"
               >
                 {{ row.reservations[0].description }}
@@ -81,39 +67,25 @@
                 *ngFor="let reservation of row.reservations.slice(1)"
                 class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base"
                 [ngClass]="{
-                  'cursor-not-allowed':
-                    isPastTime(row.reservations[0].description) ||
-                    isCurrentTimeSlot(row.reservations[0].description, i),
-                  'cursor-pointer':
-                    !isPastTime(row.reservations[0].description) &&
-                    !isCurrentTimeSlot(row.reservations[0].description, i),
+                  'cursor-not-allowed': isPastTimes[i] || isCurrentTimeSlots[i],
+                  'cursor-pointer': !isPastTimes[i] && !isCurrentTimeSlots[i],
                   'text-green-700':
                     reservation.description === 'Disponible' &&
-                    ((!isPastTime(row.reservations[0].description) &&
-                      !isCurrentTimeSlot(row.reservations[0].description, i)) ||
-                      (isPastTime(row.reservations[0].description) &&
-                        isCurrentTimeSlot(row.reservations[0].description, i))),
+                    ((!isPastTimes[i] && !isCurrentTimeSlots[i]) ||
+                      (isPastTimes[i] && isCurrentTimeSlots[i])),
                   'text-red-600':
                     reservation.description === 'No disponible' &&
-                    ((!isPastTime(row.reservations[0].description) &&
-                      !isCurrentTimeSlot(row.reservations[0].description, i)) ||
-                      (isPastTime(row.reservations[0].description) &&
-                        isCurrentTimeSlot(row.reservations[0].description, i))),
+                    ((!isPastTimes[i] && !isCurrentTimeSlots[i]) ||
+                      (isPastTimes[i] && isCurrentTimeSlots[i])),
                   'text-yellow-500':
                     reservation.description !== 'Disponible' &&
                     reservation.description !== 'No disponible',
-                  'bg-gray-100': isPastTime(row.reservations[0].description),
-                  'bg-red-100': isCurrentTimeSlot(
-                    row.reservations[0].description,
-                    i
-                  ),
-                  'hover:bg-none':
-                    isPastTime(row.reservations[0].description) ||
-                    isCurrentTimeSlot(row.reservations[0].description, i)
+                  'bg-gray-100': isPastTimes[i],
+                  'bg-red-100': isCurrentTimeSlots[i],
+                  'hover:bg-none': isPastTimes[i] || isCurrentTimeSlots[i]
                 }"
                 (click)="
-                  isPastTime(row.reservations[0].description) ||
-                  isCurrentTimeSlot(row.reservations[0].description, i)
+                  isPastTimes[i] || isCurrentTimeSlots[i]
                     ? null
                     : onReservationClick(
                         reservation,

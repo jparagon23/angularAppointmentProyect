@@ -45,6 +45,9 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
 
   constructor(public dialog: MatDialog, private readonly store: Store<any>) {}
 
+  isPastTimes: boolean[] = [];
+  isCurrentTimeSlots: boolean[] = [];
+
   ngOnInit(): void {
     this.currentTime = new Date();
     this.reservations$ = this.store.select(selectClubReservations).pipe(
@@ -70,6 +73,24 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
             this.user = user;
             this.selectedDate = this.initializeSelectedDate();
             this.loadReservations();
+
+            // Suscripción a las reservas y asignación de valores a `isPastTimes` y `isCurrentTimeSlots`
+            this.reservations$
+              .pipe(takeUntil(this.destroy$))
+              .subscribe((reservations) => {
+                if (reservations) {
+                  this.isPastTimes = reservations.reservationsData.map((row) =>
+                    this.isPastTime(row.reservations[0].description)
+                  );
+                  this.isCurrentTimeSlots = reservations.reservationsData.map(
+                    (row, index) =>
+                      this.isCurrentTimeSlot(
+                        row.reservations[0].description,
+                        index
+                      )
+                  );
+                }
+              });
 
             if (!this.loadIntervalSet) {
               this.loadIntervalSet = true;
@@ -105,7 +126,9 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
     const today = new Date();
     const bogotaTimeZone = 'America/Bogota';
     const zonedDate = toZonedTime(today, bogotaTimeZone);
-    return format(zonedDate, 'yyyy-MM-dd', { timeZone: bogotaTimeZone });
+    return format(zonedDate, 'yyyy-MM-dd', {
+      timeZone: bogotaTimeZone,
+    });
   }
 
   onDateChange(event: Event): void {
@@ -169,10 +192,21 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
 
   // Method to check if the reservation time is in the past
   isPastTime(reservationTime: string): boolean {
-    const currentDate = format(new Date(), 'yyyy-MM-dd');
-    if (this.selectedDate > currentDate) {
+    const fonmatSelectedDate = this.selectedDate;
+
+    const today = new Date();
+    const bogotaTimeZone = 'America/Bogota';
+    const zonedDate = toZonedTime(today, bogotaTimeZone);
+    const currentDate = format(zonedDate, 'yyyy-MM-dd', {
+      timeZone: bogotaTimeZone,
+    });
+
+    console.log('currentDate', currentDate);
+    console.log('fonmatSelectedDate', fonmatSelectedDate);
+
+    if (fonmatSelectedDate > currentDate) {
       return false;
-    } else if (this.selectedDate < currentDate) {
+    } else if (fonmatSelectedDate < currentDate) {
       return true;
     } else {
       const currentHour = format(this.currentTime, 'HH:mm');
@@ -185,10 +219,16 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
 
   // Method to check if the reservation time is the current time slot (current hour)
   isCurrentTimeSlot(reservationTime: string, index: number): boolean {
-    const currentDate = format(new Date(), 'yyyy-MM-dd');
-    if (this.selectedDate > currentDate) {
+    const today = new Date();
+    const bogotaTimeZone = 'America/Bogota';
+    const zonedDate = toZonedTime(today, bogotaTimeZone);
+    const currentDate = format(zonedDate, 'yyyy-MM-dd', {
+      timeZone: bogotaTimeZone,
+    });
+    const fonmatSelectedDate = this.selectedDate;
+    if (fonmatSelectedDate > currentDate) {
       return false;
-    } else if (this.selectedDate < currentDate) {
+    } else if (fonmatSelectedDate < currentDate) {
       return false;
     } else {
       const currentHour = format(this.currentTime, 'HH:mm');
