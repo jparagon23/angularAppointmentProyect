@@ -39,6 +39,7 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
   user: User | undefined;
   error: boolean = false;
   private readonly destroy$ = new Subject<void>();
+  private loadIntervalSet = false;
 
   currentTime = new Date();
 
@@ -70,21 +71,22 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
             this.selectedDate = this.initializeSelectedDate();
             this.loadReservations();
 
-            // Start the interval to load reservations every 4 minutes
-            interval(3 * 60 * 1000)
-              .pipe(
-                startWith(0), // Trigger immediately on subscription
-                takeUntil(this.destroy$),
-                switchMap(() => this.store.select(selectUser).pipe(take(1)))
-              )
-              .subscribe((user) => {
-                if (user) {
-                  this.loadReservations();
-                } else {
-                  console.error('User is null during interval');
-                }
-              });
-          } else {
+            if (!this.loadIntervalSet) {
+              this.loadIntervalSet = true;
+              interval(3 * 60 * 1000)
+                .pipe(
+                  startWith(0),
+                  takeUntil(this.destroy$),
+                  switchMap(() => this.store.select(selectUser).pipe(take(1)))
+                )
+                .subscribe((user) => {
+                  if (user) {
+                    this.loadReservations();
+                  } else {
+                    console.error('User is null during interval');
+                  }
+                });
+            }
           }
         },
         error: (err) => {
@@ -127,7 +129,8 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
     hour: string
   ): void {
     // Combine selectedDate and hour into a single datetime string
-    const combinedDateTime = `${this.selectedDate}T${hour}:00`;
+    const formattedHour = hour.length < 5 ? `0${hour}` : hour;
+    const combinedDateTime = `${this.selectedDate}T${formattedHour}`;
 
     const reservationInfo = {
       date: this.selectedDate,
@@ -166,31 +169,45 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
 
   // Method to check if the reservation time is in the past
   isPastTime(reservationTime: string): boolean {
-    const currentHour = format(this.currentTime, 'HH:mm');
-    return isBefore(
-      parse(reservationTime, 'HH:mm', new Date()),
-      parse(currentHour, 'HH:mm', new Date())
-    );
+    const currentDate = format(new Date(), 'yyyy-MM-dd');
+    if (this.selectedDate > currentDate) {
+      return false;
+    } else if (this.selectedDate < currentDate) {
+      return true;
+    } else {
+      const currentHour = format(this.currentTime, 'HH:mm');
+      return isBefore(
+        parse(reservationTime, 'HH:mm', new Date()),
+        parse(currentHour, 'HH:mm', new Date())
+      );
+    }
   }
 
   // Method to check if the reservation time is the current time slot (current hour)
   isCurrentTimeSlot(reservationTime: string, index: number): boolean {
-    const currentHour = format(this.currentTime, 'HH:mm');
-    let isCurrentSlot = false;
-    this.reservations$.pipe(take(1)).subscribe((reservations) => {
-      const nextHour =
-        reservations?.reservationsData[index + 1]?.reservations[0]
-          ?.description || '';
-      isCurrentSlot =
-        isAfter(
-          parse(currentHour, 'HH:mm', new Date()),
-          parse(reservationTime, 'HH:mm', new Date())
-        ) &&
-        isBefore(
-          parse(currentHour, 'HH:mm', new Date()),
-          parse(nextHour, 'HH:mm', new Date())
-        );
-    });
-    return isCurrentSlot;
+    const currentDate = format(new Date(), 'yyyy-MM-dd');
+    if (this.selectedDate > currentDate) {
+      return false;
+    } else if (this.selectedDate < currentDate) {
+      return false;
+    } else {
+      const currentHour = format(this.currentTime, 'HH:mm');
+      let isCurrentSlot = false;
+      this.reservations$.pipe(take(1)).subscribe((reservations) => {
+        const nextHour =
+          reservations?.reservationsData[index + 1]?.reservations[0]
+            ?.description ?? '';
+        isCurrentSlot =
+          isAfter(
+            parse(currentHour, 'HH:mm', new Date()),
+            parse(reservationTime, 'HH:mm', new Date())
+          ) &&
+          isBefore(
+            parse(currentHour, 'HH:mm', new Date()),
+            parse(nextHour, 'HH:mm', new Date())
+          );
+      });
+      return isCurrentSlot;
+    }
   }
 }

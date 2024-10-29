@@ -1,36 +1,57 @@
 <div *ngIf="!(reservationCreatedLoader$ | async); else loading">
-  <div class="bg-white rounded-lg shadow-lg p-4 w-full max-w-full sm:p-6 sm:max-w-md">
-    <h2 class="text-base font-semibold text-center mb-3 sm:text-lg sm:mb-4">CREAR RESERVA</h2>
+  <div
+    class="bg-white rounded-lg shadow-lg p-4 w-full max-w-full sm:p-6 sm:max-w-md"
+  >
+    <h2 class="text-base font-semibold text-center mb-3 sm:text-lg sm:mb-4">
+      CREAR RESERVA
+    </h2>
 
     <div class="mb-3 sm:mb-4">
-      <label class="block text-gray-700 font-semibold mb-1 sm:text-sm">Día de la reserva:</label>
+      <label class="block text-gray-700 font-semibold mb-1 sm:text-sm"
+        >Día de la reserva:</label
+      >
       <p class="text-gray-600 text-sm sm:text-base">
-        {{ data.reservationInfo.date | date : "EEEE d 'de' MMMM 'de' y" : "es" }}
+        {{
+          data.reservationInfo.date | date : "EEEE d 'de' MMMM 'de' y" : "es"
+        }}
       </p>
     </div>
 
     <div class="mb-3 sm:mb-4">
-      <label class="block text-gray-700 font-semibold mb-1 sm:text-sm">Hora:</label>
-      <p class="text-gray-600 text-sm sm:text-base">{{ data.reservationInfo.hour }}</p>
+      <label class="block text-gray-700 font-semibold mb-1 sm:text-sm"
+        >Hora:</label
+      >
+      <p class="text-gray-600 text-sm sm:text-base">
+        {{ data.reservationInfo.hour }}
+      </p>
     </div>
 
     <div class="mb-4 sm:mb-6">
-      <label for="user" class="block text-gray-700 font-semibold mb-1 sm:text-sm">Usuario:</label>
+      <label
+        for="user"
+        class="block text-gray-700 font-semibold mb-1 sm:text-sm"
+        >Usuario:</label
+      >
       <div class="flex items-center border border-gray-300 rounded-md p-2">
         <input
           id="user"
           type="text"
+          [disabled]="(loadingUsers$ | async) ?? false"
           placeholder="Start typing"
           class="outline-none flex-grow text-gray-700 text-sm sm:text-base"
           [formControl]="userControl"
           [matAutocomplete]="auto"
         />
+
         <mat-autocomplete
           #auto="matAutocomplete"
           (optionSelected)="onUserSelected($event.option.value)"
           [displayWith]="displayUserName"
         >
-          <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user">
+          <mat-option
+            *ngFor="let user of filteredUsers$ | async; trackBy: trackByUserId"
+            [value]="user"
+          >
             {{ user.completeName }}
           </mat-option>
         </mat-autocomplete>
@@ -38,8 +59,12 @@
     </div>
 
     <!-- Ajustar botones para que estén uno sobre otro en mobile y horizontal en pantallas más grandes -->
-    <div class="flex flex-col space-y-2 sm:flex-row sm:justify-end sm:space-x-4 sm:space-y-0">
-      <app-button [typeBtn]="'submit'" [color]="'danger'" (click)="closeModal()">Cancelar</app-button>
+    <div
+      class="flex flex-col space-y-2 sm:flex-row sm:justify-end sm:space-x-4 sm:space-y-0"
+    >
+      <app-button [typeBtn]="'submit'" [color]="'danger'" (click)="closeModal()"
+        >Cancelar</app-button
+      >
 
       <app-button
         [typeBtn]="'submit'"

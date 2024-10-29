@@ -1,8 +1,14 @@
-import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  OnDestroy,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { select, Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
-import { debounceTime, tap } from 'rxjs/operators';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { debounceTime, takeUntil, tap } from 'rxjs/operators';
 import { ClubUser } from 'src/app/models/clubUsers.model';
 import {
   MAT_DIALOG_DATA,
@@ -30,6 +36,7 @@ import { ErrorModalComponent } from '../error-modal/error-modal.component';
 @Component({
   selector: 'app-create-reservation-from-table-modal',
   templateUrl: './create-reservation-from-table-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateReservationFromTableModalComponent
   implements OnInit, OnDestroy
@@ -39,9 +46,9 @@ export class CreateReservationFromTableModalComponent
   loadingUsers$?: Observable<boolean>;
   reservationCreated$?: Observable<boolean>;
   reservationCreatedLoader$?: Observable<boolean>;
-  reservationCreatedFailure$?: Observable<boolean>; // Observable para el error
+  reservationCreatedFailure$?: Observable<boolean>;
   selectedUser?: ClubUser;
-  private readonly subscription = new Subscription();
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -55,7 +62,7 @@ export class CreateReservationFromTableModalComponent
     },
     private readonly store: Store<AppState>,
     private readonly dialogRef: MatDialogRef<CreateReservationFromTableModalComponent>,
-    private readonly dialog: MatDialog // Inyectar MatDialog para abrir el modal de error
+    private readonly dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -63,7 +70,7 @@ export class CreateReservationFromTableModalComponent
     this.initializeSelectors();
     this.setupUserControl();
     this.subscribeToModalState();
-    this.subscribeToErrorState(); // Suscribirse al estado de error
+    this.subscribeToErrorState();
   }
 
   private openModal() {
@@ -85,52 +92,52 @@ export class CreateReservationFromTableModalComponent
   }
 
   private setupUserControl() {
-    this.subscription.add(
-      this.userControl.valueChanges
-        .pipe(
-          debounceTime(300),
-          tap((searchTerm) => {
-            if (!this.selectedUser) {
-              this.store.dispatch(
-                getClubUserByNameOrId({ nameOrId: searchTerm })
-              );
-            }
-          })
-        )
-        .subscribe()
-    );
+    this.userControl.valueChanges
+      .pipe(
+        debounceTime(500), // Increased debounce time for better performance
+        tap((searchTerm) => {
+          if (!this.selectedUser && searchTerm) {
+            this.store.dispatch(
+              getClubUserByNameOrId({ nameOrId: searchTerm })
+            );
+          }
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
   }
 
   private subscribeToModalState() {
-    this.subscription.add(
-      this.store
-        .pipe(select(isModalOpen('createReservationFromTableModal')))
-        .subscribe((isOpen) => {
-          if (!isOpen && this.dialogRef.getState() !== MatDialogState.CLOSED) {
-            this.dialogRef.close();
-          }
-        })
-    );
+    this.store
+      .pipe(
+        select(isModalOpen('createReservationFromTableModal')),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((isOpen) => {
+        if (!isOpen && this.dialogRef.getState() !== MatDialogState.CLOSED) {
+          this.dialogRef.close();
+        }
+      });
 
-    this.subscription.add(
-      this.reservationCreated$?.subscribe((created) => {
+    this.reservationCreated$
+      ?.pipe(takeUntil(this.destroy$))
+      .subscribe((created) => {
         if (created) {
           this.closeModal();
         }
-      })
-    );
+      });
   }
 
   private subscribeToErrorState() {
-    this.subscription.add(
-      this.reservationCreatedFailure$?.subscribe((error) => {
+    this.reservationCreatedFailure$
+      ?.pipe(takeUntil(this.destroy$))
+      .subscribe((error) => {
         if (error) {
           this.openErrorDialog(
             'Por el momento no se puede realizar la reserva'
           );
         }
-      })
-    );
+      });
   }
 
   private openErrorDialog(error: string) {
@@ -144,32 +151,30 @@ export class CreateReservationFromTableModalComponent
   }
 
   displayUserName(user?: ClubUser): string {
-    return user?.completeName ?? ''; // Using optional chaining for better readability
+    return user?.completeName ?? '';
   }
 
   createReservation() {
-    const { date, hour } = this.data.reservationInfo; // Destructuring for clarity
-    const dateTime = this.formatDateTime(date, hour);
+    const { hour } = this.data.reservationInfo;
 
     this.store.dispatch(
       createReservationAdmin({
-        selecteDates: [dateTime],
+        selecteDates: [hour],
         userId: this.selectedUser?.userId?.toString() ?? '',
       })
     );
-  }
-
-  private formatDateTime(date: string, hour: string): string {
-    return `${date.replace(/-/g, '/')} ${hour}`;
   }
 
   closeModal() {
     this.store.dispatch(resetReservationCreated());
     this.dialogRef.close();
   }
+  trackByUserId(index: number, user: ClubUser): number {
+    return user.userId;
+  }
 
   ngOnDestroy() {
-    this.store.dispatch(resetReservationCreated());
-    this.subscription.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
