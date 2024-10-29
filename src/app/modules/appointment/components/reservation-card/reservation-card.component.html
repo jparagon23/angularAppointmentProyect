@@ -1,21 +1,56 @@
-<div
-  class="w-full bg-white p-3 sm:p-5 border-gray-300 rounded-lg shadow-md sm:shadow-xl max-w-full sm:max-w-sm transition-transform transform hover:scale-105 hover:shadow-2xl text-left sm:text-right"
-  (click)="openCancelReservationModal()"
->
-  <div class="text-xl sm:text-3xl font-bold text-black">
-    {{ reservation.date | fullDateFormat }}
+<div class="flex border rounded-lg shadow-lg p-4 bg-white">
+  <!-- Imagen a la izquierda -->
+  <div class="w-[247px]">
+    <img
+      src="../../../../../assets/backgrounds/polvo-ladrillo.jpg"
+      alt="Imagen"
+      class="w-full h-full object-cover rounded-md"
+    />
   </div>
-  <div class="text-lg sm:text-xl text-gray-700">
-    {{
-      (reservation.initialHour | hourTimeFormat) +
-        "-" +
-        (reservation.endHour | hourTimeFormat)
-    }}
-  </div>
-  <div class="text-base sm:text-lg text-gray-800">
-    {{ reservation.groupCourtNames }}
-  </div>
-  <div class="text-base sm:text-lg text-gray-600">
-    {{ reservation.clubName }}
+
+  <!-- Información a la derecha -->
+  <div class="w-[258px] pl-4">
+    <!-- Fecha y hora -->
+    <div>
+      <div class="text-2xl font-semibold text-[#35691a]">
+        {{ reservation.date | timeFormat : "medium" }}
+      </div>
+      <div class="text-lg text-[#35691a]">
+        {{
+          (reservation.initialHour | hourTimeFormat) +
+            "-" +
+            (reservation.endHour | hourTimeFormat)
+        }}
+      </div>
+    </div>
+
+    <!-- Lugar -->
+    <div>
+      <div class="text-base font-bold text-black">Lugar</div>
+      <div class="text-base text-gray-800">{{ reservation.clubName }}</div>
+
+      <!-- Cancha -->
+      <div>
+        <div class="text-base font-bold text-black">Cancha</div>
+        <div class="text-base text-gray-800">
+          {{ reservation.groupCourtNames }}
+        </div>
+      </div>
+
+      <!-- Tidivo de cancha -->
+      <div>
+        <div class="text-base font-bold text-black">Tipo de Cancha</div>
+        <div class="text-base text-gray-800">Arcilla</div>
+      </div>
+
+      <!-- Link para cancelar -->
+      <div class="flex justify-center mt-4">
+        <a
+          class="text-red-500 hover:underline text-base"
+          (click)="cancelReservation()"
+          >Cancelar Reserva</a
+        >
+      </div>
+    </div>
   </div>
 </div>

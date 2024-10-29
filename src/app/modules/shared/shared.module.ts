@@ -8,7 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectComponent } from './components/select/select.component';
 import { ErrorMessageComponent } from './components/error-message/error-message.component';
 import { CheckboxComponent } from './components/chechbox/chechbox.component';
-import { FullDateFormatPipe } from './pipes/time-format.pipe';
+import { TimeFormatPipe } from './pipes/time-format.pipe';
 import { LoaderComponent } from './components/loader/loader.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,7 +25,7 @@ import { TimePipe } from './pipes/time.pipe';
     SelectComponent,
     ErrorMessageComponent,
     CheckboxComponent,
-    FullDateFormatPipe,
+    TimeFormatPipe,
     TimePipe,
     LoaderComponent,
     UserInformationPageComponent,
@@ -48,7 +48,7 @@ import { TimePipe } from './pipes/time.pipe';
     InputComponent,
     SelectComponent,
     CheckboxComponent,
-    FullDateFormatPipe,
+    TimeFormatPipe,
     TimePipe,
     LoaderComponent,
     DateSelectorComponent,

@@ -15,7 +15,7 @@
       <div class="flex-grow">
         <div *ngIf="selectedReservation$ | async as reservation">
           <div class="text-xl md:text-3xl font-bold">
-            {{ reservation.date | fullDateFormat }}
+            {{ reservation.date | timeFormat }}
           </div>
           <div class="text-gray-600">
             {{ reservation.initialHour | hourTimeFormat }} -
