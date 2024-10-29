@@ -47,7 +47,7 @@ export class RegisterFormComponent implements OnInit {
       [
         Validators.required,
         Validators.pattern(/^\d+$/),
-        Validators.minLength(10),
+        Validators.minLength(6),
         Validators.maxLength(10),
       ],
     ],
