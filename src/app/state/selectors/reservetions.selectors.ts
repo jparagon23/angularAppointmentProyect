@@ -102,7 +102,7 @@ export const selectMatchingReservationId = (hour: string) =>
       ) {
         const matchingReservation =
           groupReservationInfo.individualReservations.find(
-            (res) => new Date(res.dateTime).getHours() === parseInt(hour, 10)
+            (res) => res.dateTime === hour
           );
         return matchingReservation
           ? matchingReservation.reservationId.toString()
@@ -115,4 +115,9 @@ export const selectMatchingReservationId = (hour: string) =>
 export const selectReservationConfiguration = createSelector(
   selectReservationsFeature,
   (state: ReservationState) => state.reservationConfiguration
+);
+
+export const selectCancellationCauses = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.cancelationCauses
 );

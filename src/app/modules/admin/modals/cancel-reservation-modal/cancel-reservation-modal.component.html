@@ -1,0 +1,65 @@
+<div class="bg-white p-4 md:p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
+  <p class="text-base md:text-lg font-semibold mb-4 text-center md:text-left">
+    {{ data.text }}
+  </p>
+
+  <!-- Dropdown for selecting the cancellation reason -->
+  <div class="mb-4">
+    <label for="reason" class="block text-sm font-medium text-gray-700 mb-2">
+      Motivo de cancelación
+    </label>
+    <select
+      id="reasonSelect"
+      [(ngModel)]="selectedReason"
+      (change)="onReasonChange($event)"
+      class="form-select mt-1 block w-full"
+    >
+      <option
+        *ngFor="let reason of cancellationReasons$ | async"
+        [value]="reason.id"
+      >
+        {{ reason.description }}
+      </option>
+      <option value="other">Otro</option>
+    </select>
+  </div>
+
+  <!-- Text input for custom reason (only shown if "Other" is selected) -->
+  <div *ngIf="selectedReason === 'other'" class="mb-4">
+    <label
+      for="customReason"
+      class="block text-sm font-medium text-gray-700 mb-2"
+    >
+      Por favor, especifique el motivo
+    </label>
+    <input
+      type="text"
+      id="customReason"
+      [(ngModel)]="customReason"
+      class="form-input mt-1 block w-full"
+      placeholder="Ingrese el motivo"
+    />
+  </div>
+
+  <div
+    class="flex flex-col space-y-2 md:flex-row md:justify-end md:space-x-4 md:space-y-0 w-full"
+  >
+    <app-button
+      [typeBtn]="'button'"
+      [color]="'continue'"
+      (click)="cancelConfirmed()"
+      class="w-full md:w-auto"
+    >
+      Confirmar
+    </app-button>
+
+    <app-button
+      [typeBtn]="'button'"
+      [color]="'danger'"
+      (click)="cancelProcess()"
+      class="w-full md:w-auto"
+    >
+      Cancelar
+    </app-button>
+  </div>
+</div>

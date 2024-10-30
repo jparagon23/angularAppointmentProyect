@@ -24,6 +24,16 @@
     >
       Disponibilidad
     </button>
+    <button
+      [ngClass]="{
+        'bg-blue-600 text-white': selectedTab === 'cancellation',
+        'bg-gray-200 text-gray-600': selectedTab !== 'cancellation'
+      }"
+      class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
+      (click)="selectTab('cancellation')"
+    >
+      Causas de cancelación
+    </button>
   </div>
 
   <div class="tab-content">
@@ -34,6 +44,10 @@
     <!-- Tab de Disponibilidad -->
     <div *ngIf="selectedTab === 'availability'">
       <app-court-config-component></app-court-config-component>
+    </div>
+    <!-- Tab de Causas de cancelación -->
+    <div *ngIf="selectedTab === 'cancellation'">
+      <app-cancellation-causes-config></app-cancellation-causes-config>
     </div>
   </div>
 </div>

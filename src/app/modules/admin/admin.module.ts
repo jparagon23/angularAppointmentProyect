@@ -15,6 +15,8 @@ import { CourtsPageComponent } from './components/court-config-component/courts-
 import { CourtCardComponentComponent } from './components/court-card-component/court-card-component.component';
 import { ClubConfigurationPageComponent } from './pages/club-configuration-page/club-configuration-page.component';
 import { CourtConfigComponentComponent } from './components/availability-config-component/court-config-component.component';
+import { CancelReservationModalComponent } from './modals/cancel-reservation-modal/cancel-reservation-modal.component';
+import { CancellationCausesConfigComponent } from './components/cancellation-causes-config/cancellation-causes-config.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +29,8 @@ import { CourtConfigComponentComponent } from './components/availability-config-
     CourtCardComponentComponent,
     ClubConfigurationPageComponent,
     CourtConfigComponentComponent,
+    CancelReservationModalComponent,
+    CancellationCausesConfigComponent,
   ],
   imports: [
     CommonModule,

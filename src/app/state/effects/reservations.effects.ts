@@ -14,14 +14,22 @@ import {
   cancelReservation,
   cancelReservationAdmin,
   cancelReservationSuccess,
+  createCancelReservationCauses,
+  createCancelReservationCausesFailure,
+  createCancelReservationCausesSuccess,
   createReservation,
   createReservationFailure,
   createReservationSuccess,
+  deleteCancelReservationCauses,
+  deleteCancelReservationCausesFailure,
+  deleteCancelReservationCausesSuccess,
   getReservationsByGroupId,
   getReservationsByGroupIdSuccess,
   loadAvailableSlots,
   loadAvailableSlotsFailure,
   loadAvailableSlotsSuccess,
+  loadCancelReservationCauses,
+  loadCancelReservationCausesSuccess,
   loadReservationConfiguration,
   loadReservationConfigurationSuccess,
   loadReservations,
@@ -30,6 +38,9 @@ import {
   loadReservationsAdminSuccess,
   loadReservationsFailure,
   loadReservationsSuccess,
+  updateCancelReservationCauses,
+  updateCancelReservationCausesFailure,
+  updateCancelReservationCausesSuccess,
 } from '../actions/reservations.actions';
 import { Store } from '@ngrx/store';
 import { selectDatePicked } from '../selectors/reservetions.selectors';
@@ -66,7 +77,7 @@ export class ReservationEffects {
     this.actions$.pipe(
       ofType(cancelReservation),
       switchMap(({ reservationId }) =>
-        this.reservationService.cancelReservation(reservationId).pipe(
+        this.reservationService.cancelReservation(reservationId, null).pipe(
           map(() => cancelReservationSuccess()),
           catchError((error) => of(loadReservationsFailure({ error })))
         )
@@ -77,8 +88,8 @@ export class ReservationEffects {
   cancelReservationAdmin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(cancelReservationAdmin),
-      switchMap(({ reservationId }) =>
-        this.reservationService.cancelReservation(reservationId).pipe(
+      switchMap(({ reservationId, cause }) =>
+        this.reservationService.cancelReservation(reservationId, cause).pipe(
           withLatestFrom(
             this.store.select(selectDatePicked),
             this.store.select(selectUser)
@@ -165,6 +176,76 @@ export class ReservationEffects {
           }),
           catchError((error) => of(loadAvailableSlotsFailure({ error })))
         )
+      )
+    )
+  );
+
+  loadCancellationCauses$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadCancelReservationCauses),
+      mergeMap(() =>
+        this.reservationService.getCancellationCauses().pipe(
+          map((causes) => {
+            return loadCancelReservationCausesSuccess({ causes });
+          }),
+          catchError((error) => of(loadAvailableSlotsFailure({ error })))
+        )
+      )
+    )
+  );
+
+  deleteCancellationCause$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteCancelReservationCauses),
+      mergeMap((action) =>
+        this.reservationService
+          .deleteCancellationCause(action.causeId.toString())
+          .pipe(
+            map(() => {
+              return deleteCancelReservationCausesSuccess({
+                causeId: action.causeId,
+              });
+            }),
+            catchError((error) =>
+              of(deleteCancelReservationCausesFailure({ error }))
+            )
+          )
+      )
+    )
+  );
+
+  createCancellationCause$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(createCancelReservationCauses),
+      mergeMap((action) =>
+        this.reservationService
+          .createCancellationCause(action.description)
+          .pipe(
+            map((cause) => {
+              return createCancelReservationCausesSuccess({ cause });
+            }),
+            catchError((error) =>
+              of(createCancelReservationCausesFailure({ error }))
+            )
+          )
+      )
+    )
+  );
+
+  updateCancellationCause$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateCancelReservationCauses),
+      mergeMap((action) =>
+        this.reservationService
+          .updateCancellationCause(action.causeId, action.description)
+          .pipe(
+            map((cause) => {
+              return updateCancelReservationCausesSuccess({ cause });
+            }),
+            catchError((error) =>
+              of(updateCancelReservationCausesFailure({ error }))
+            )
+          )
       )
     )
   );

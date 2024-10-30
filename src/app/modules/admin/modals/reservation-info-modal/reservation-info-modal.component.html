@@ -13,13 +13,13 @@
             <p class="mb-2" style="font-weight: 600; font-size: 1.2rem">
               Fecha:
               <span style="font-weight: 400">{{
-                data.reservationInfo.date
+                data.reservationInfo.date | timeFormat : "medium"
               }}</span>
             </p>
             <p class="mb-2" style="font-weight: 600; font-size: 1.2rem">
               Hora:
               <span style="font-weight: 400">{{
-                data.reservationInfo.hour
+                data.reservationInfo.hour | hourTimeFormat
               }}</span>
             </p>
             <p class="mb-2" style="font-weight: 600; font-size: 1.2rem">

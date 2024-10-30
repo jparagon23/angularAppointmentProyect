@@ -1,5 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { AvailableSlotsResponse } from 'src/app/models/AvailableSlotInfo.model';
+import { CancellationCause } from 'src/app/models/CancellationCause.model';
+import { CancellationClubCauses } from 'src/app/models/CancellationClubCauses.model';
 import { ClubAvailability } from 'src/app/models/ClubAvalability.model';
 import { ClubReservations } from 'src/app/models/ClubReservations.model';
 import { GroupReservationInfo } from 'src/app/models/GroupReservationInfo.model';
@@ -46,7 +48,7 @@ export const resetCancelReservationState = createAction(
 
 export const cancelReservationAdmin = createAction(
   '[Admin Dashboard] Cancel Reservation from admin',
-  props<{ reservationId: string }>()
+  props<{ reservationId: string; cause: CancellationCause }>()
 );
 
 // Acción para cargar espacios disponibles
@@ -132,5 +134,58 @@ export const loadReservationConfigurationSuccess = createAction(
 );
 export const loadReservationConfigurationFailure = createAction(
   '[User Dashboard] Load Reservation Configuration Failure',
+  props<{ error: any }>()
+);
+
+//---------------
+export const loadCancelReservationCauses = createAction(
+  '[User Dashboard] Load Reservation Causes'
+);
+export const loadCancelReservationCausesSuccess = createAction(
+  '[User Dashboard] Load Reservation Causes Success',
+  props<{ causes: CancellationClubCauses[] }>()
+);
+export const loadCancelReservationCausesFailure = createAction(
+  '[User Dashboard] Load Reservation Causes Failure',
+  props<{ error: any }>()
+);
+
+export const deleteCancelReservationCauses = createAction(
+  '[club configuration] Delete Reservation Causes',
+  props<{ causeId: number }>()
+);
+export const deleteCancelReservationCausesSuccess = createAction(
+  '[club configuration] Delete Reservation Causes Success',
+  props<{ causeId: number }>() // Agregar el causeId aquí
+);
+
+export const deleteCancelReservationCausesFailure = createAction(
+  '[club configuration] Delete Reservation Causes Failure',
+  props<{ error: any }>()
+);
+
+export const createCancelReservationCauses = createAction(
+  '[club configuration] create Reservation Causes',
+  props<{ description: string }>()
+);
+export const createCancelReservationCausesSuccess = createAction(
+  '[club configuration] create Reservation Causes Success',
+  props<{ cause: CancellationClubCauses }>() // Agregar el causeId aquí
+);
+export const createCancelReservationCausesFailure = createAction(
+  '[club configuration] create Reservation Causes Failure',
+  props<{ error: any }>()
+);
+
+export const updateCancelReservationCauses = createAction(
+  '[club configuration] Update Reservation Causes',
+  props<{ causeId: string; description: string }>()
+);
+export const updateCancelReservationCausesSuccess = createAction(
+  '[club configuration] Update Reservation Causes Success',
+  props<{ cause: CancellationClubCauses }>()
+);
+export const updateCancelReservationCausesFailure = createAction(
+  '[club configuration] Update Reservation Causes Failure',
   props<{ error: any }>()
 );

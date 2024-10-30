@@ -12,6 +12,8 @@ import { GroupReservationInfo } from '../models/GroupReservationInfo.model';
 import { User } from '../models/user.model';
 import { ClubAvailability } from '../models/ClubAvalability.model';
 import { AvailableSlotsResponse } from '../models/AvailableSlotInfo.model';
+import { CancellationCause } from '../models/CancellationCause.model';
+import { CancellationClubCauses } from '../models/CancellationClubCauses.model';
 
 @Injectable({
   providedIn: 'root',
@@ -103,16 +105,52 @@ export class ReservationService {
   }
 
   cancelReservation(
-    reservationId: string
+    reservationId: string,
+    cause: CancellationCause | null
   ): Observable<ReservationConfirmation> {
     const url = `${environment.API_URL}/reservation/${reservationId}`;
+    const body = { cause };
     return this.http.delete<ReservationConfirmation>(url, {
       headers: this.setHeaders(),
+      body: body,
     });
   }
 
   getReservationConfiguration(): Observable<ClubAvailability> {
-    const url = `${environment.API_URL}/configuration/club/${1}/availability`;
+    const url = `${environment.API_URL}/configuration/club/${this.user.userAdminClub}/availability`;
     return this.http.get<ClubAvailability>(url, { headers: this.setHeaders() });
+  }
+
+  getCancellationCauses(): Observable<CancellationClubCauses[]> {
+    const url = `${environment.API_URL}/configuration/club/${this.user.userAdminClub}/cancellation-causes`;
+    return this.http.get<CancellationClubCauses[]>(url, {
+      headers: this.setHeaders(),
+    });
+  }
+
+  deleteCancellationCause(causeId: string): Observable<void> {
+    const url = `${environment.API_URL}/configuration/club/${this.user.userAdminClub}/cancellation-causes/${causeId}`;
+    return this.http.delete<void>(url, { headers: this.setHeaders() });
+  }
+
+  createCancellationCause(
+    description: string
+  ): Observable<CancellationClubCauses> {
+    const url = `${environment.API_URL}/configuration/club/${this.user.userAdminClub}/cancellation-causes`;
+    const body = { description };
+    return this.http.post<CancellationClubCauses>(url, body, {
+      headers: this.setHeaders(),
+    });
+  }
+
+  updateCancellationCause(
+    causeId: string,
+    description: string
+  ): Observable<CancellationClubCauses> {
+    const url = `${environment.API_URL}/configuration/club/${this.user.userAdminClub}/cancellation-causes/${causeId}`;
+    const body = { description };
+    return this.http.put<CancellationClubCauses>(url, body, {
+      headers: this.setHeaders(),
+    });
   }
 }

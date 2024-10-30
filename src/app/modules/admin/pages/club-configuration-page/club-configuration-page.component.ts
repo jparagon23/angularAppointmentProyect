@@ -5,9 +5,9 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './club-configuration-page.component.html',
 })
 export class ClubConfigurationPageComponent {
-  selectedTab: 'courts' | 'availability' = 'courts';
+  selectedTab: 'courts' | 'availability' | 'cancellation' = 'courts';
 
-  selectTab(tab: 'courts' | 'availability'): void {
+  selectTab(tab: 'courts' | 'availability' | 'cancellation'): void {
     this.selectedTab = tab;
   }
 }

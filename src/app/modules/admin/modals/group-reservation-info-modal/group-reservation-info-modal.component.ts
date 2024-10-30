@@ -4,7 +4,11 @@ import {
   OnInit,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable, take } from 'rxjs';
 import { GroupReservationInfo } from 'src/app/models/GroupReservationInfo.model';
@@ -18,6 +22,8 @@ import {
   selectGroupReservationInfo,
   selectMatchingReservationId,
 } from 'src/app/state/selectors/reservetions.selectors';
+import { CancelReservationModalComponent } from '../cancel-reservation-modal/cancel-reservation-modal.component';
+import { CancellationCause } from 'src/app/models/CancellationCause.model';
 
 @Component({
   selector: 'app-group-reservation-info-modal',
@@ -40,7 +46,8 @@ export class GroupReservationInfoModalComponent implements OnInit {
     },
     private readonly modalService: ModalService,
     private readonly reservationInfoModal: MatDialogRef<GroupReservationInfoModalComponent>,
-    private readonly store: Store<AppState>
+    private readonly store: Store<AppState>,
+    public dialog: MatDialog
   ) {
     this.groupReservationInfo$ = this.store.select(selectGroupReservationInfo);
     this.selectedReservationId$ = this.store.select(
@@ -69,27 +76,52 @@ export class GroupReservationInfoModalComponent implements OnInit {
   }
 
   cancelGroupReservation(): void {
-    this.groupReservationInfo$.pipe(take(1)).subscribe((info) => {
-      if (info?.groupId) {
-        this.dispatchCancelAction(info.groupId);
-      } else {
-        this.logError('No group reservation info available');
+    const dialogRef = this.dialog.open(CancelReservationModalComponent, {
+      maxWidth: '50vw',
+      maxHeight: '50vh',
+      data: { text: '¿Estas seguro que quieres cancelar la reserva?' },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.groupReservationInfo$.pipe(take(1)).subscribe((info) => {
+          if (info?.groupId) {
+            this.dispatchCancelAction(info.groupId, result);
+          } else {
+            this.logError('No group reservation info available');
+          }
+        });
       }
     });
   }
 
   cancelSelectedReservation(): void {
-    this.selectedReservationId$.pipe(take(1)).subscribe((selectedId) => {
-      if (selectedId) {
-        this.dispatchCancelAction(`I-${selectedId}`);
-      } else {
-        this.logError('No selected reservation ID found');
+    const dialogRef = this.dialog.open(CancelReservationModalComponent, {
+      maxWidth: '50vw',
+      maxHeight: '50vh',
+      data: { text: '¿Estas seguro que quieres cancelar la reserva?' },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.selectedReservationId$.pipe(take(1)).subscribe((selectedId) => {
+          if (selectedId) {
+            this.dispatchCancelAction(`I-${selectedId}`, result);
+          } else {
+            this.logError('No selected reservation ID found');
+          }
+        });
       }
     });
   }
 
-  private dispatchCancelAction(reservationId: string): void {
-    this.store.dispatch(cancelReservationAdmin({ reservationId }));
+  private dispatchCancelAction(
+    reservationId: string,
+    cause: CancellationCause
+  ): void {
+    this.store.dispatch(
+      cancelReservationAdmin({ reservationId, cause: { customReason: 'hola' } })
+    );
     this.reservationInfoModal.close(); // Close modal after successful cancellation
   }
 }

@@ -4,7 +4,10 @@ import { format, toZonedTime } from 'date-fns-tz';
 import { ReservationInfoModalComponent } from '../../modals/reservation-info-modal/reservation-info-modal.component';
 import { ClubReservations } from 'src/app/models/ClubReservations.model';
 import { Store } from '@ngrx/store';
-import { loadReservationsAdmin } from 'src/app/state/actions/reservations.actions';
+import {
+  loadCancelReservationCauses,
+  loadReservationsAdmin,
+} from 'src/app/state/actions/reservations.actions';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import {
   filter,
@@ -50,6 +53,8 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentTime = new Date();
+
+    this.store.dispatch(loadCancelReservationCauses());
     this.reservations$ = this.store.select(selectClubReservations).pipe(
       filter((clubReservations) => !!clubReservations),
       catchError((err) => {
@@ -153,7 +158,7 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
   ): void {
     // Combine selectedDate and hour into a single datetime string
     const formattedHour = hour.length < 5 ? `0${hour}` : hour;
-    const combinedDateTime = `${this.selectedDate}T${formattedHour}`;
+    const combinedDateTime = `${this.selectedDate}T${formattedHour}:00`;
 
     const reservationInfo = {
       date: this.selectedDate,
@@ -200,9 +205,6 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
     const currentDate = format(zonedDate, 'yyyy-MM-dd', {
       timeZone: bogotaTimeZone,
     });
-
-    console.log('currentDate', currentDate);
-    console.log('fonmatSelectedDate', fonmatSelectedDate);
 
     if (fonmatSelectedDate > currentDate) {
       return false;

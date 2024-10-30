@@ -1,4 +1,6 @@
 import { AvailableSlotsResponse } from './AvailableSlotInfo.model';
+import { CancellationCause } from './CancellationCause.model';
+import { CancellationClubCauses } from './CancellationClubCauses.model';
 import { ClubAvailability } from './ClubAvalability.model';
 import { ClubReservations } from './ClubReservations.model';
 import { GroupReservationInfo } from './GroupReservationInfo.model';
@@ -31,4 +33,21 @@ export interface ReservationState {
   reservationConfigurationSuccess: boolean;
   reservationConfigurationFailure: boolean;
   reservationConfiguration: ClubAvailability | null;
+
+  loadingCauses: boolean;
+  cancellationCausesSuccess: boolean;
+  cancellationCausesFailure: boolean;
+  cancelationCauses: CancellationClubCauses[];
+
+  deleteCancelReservationLoading: boolean;
+  deleteCancelReservationSuccess: boolean;
+  deleteCancelReservationFailure: boolean;
+
+  createCancelReservationLoading: boolean;
+  createCancelReservationSuccess: boolean;
+  createCancelReservationFailure: boolean;
+
+  updateCancelReservationLoading: boolean;
+  updateCancelReservationSuccess: boolean;
+  updateCancelReservationFailure: boolean;
 }

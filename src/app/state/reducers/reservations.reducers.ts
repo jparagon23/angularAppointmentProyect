@@ -2,11 +2,23 @@ import {
   cancelReservation,
   cancelReservationFailure,
   cancelReservationSuccess,
+  createCancelReservationCauses,
+  createCancelReservationCausesFailure,
+  createCancelReservationCausesSuccess,
+  deleteCancelReservationCauses,
+  deleteCancelReservationCausesFailure,
+  deleteCancelReservationCausesSuccess,
+  loadCancelReservationCauses,
+  loadCancelReservationCausesFailure,
+  loadCancelReservationCausesSuccess,
   loadReservationConfiguration,
   loadReservationConfigurationFailure,
   loadReservationConfigurationSuccess,
   resetAvailableSlots,
   resetCancelReservationState,
+  updateCancelReservationCauses,
+  updateCancelReservationCausesFailure,
+  updateCancelReservationCausesSuccess,
 } from 'src/app/state/actions/reservations.actions';
 import { createReducer, on } from '@ngrx/store';
 import {
@@ -31,6 +43,7 @@ import {
 } from '../actions/reservations.actions';
 import { ReservationState } from 'src/app/models/reservations.state';
 import { logout } from '../actions/auth.actions';
+import { update } from 'lodash';
 
 export const initialState: ReservationState = {
   loadingUserReservations: false,
@@ -68,6 +81,23 @@ export const initialState: ReservationState = {
   reservationConfigurationSuccess: false,
   reservationConfigurationFailure: false,
   reservationConfiguration: null,
+
+  cancelationCauses: [],
+  loadingCauses: false,
+  cancellationCausesSuccess: false,
+  cancellationCausesFailure: false,
+
+  deleteCancelReservationLoading: false,
+  deleteCancelReservationSuccess: false,
+  deleteCancelReservationFailure: false,
+
+  createCancelReservationLoading: false,
+  createCancelReservationSuccess: false,
+  createCancelReservationFailure: false,
+
+  updateCancelReservationLoading: false,
+  updateCancelReservationSuccess: false,
+  updateCancelReservationFailure: false,
 };
 
 export const reservationsReducer = createReducer(
@@ -243,5 +273,87 @@ export const reservationsReducer = createReducer(
     error,
   })),
 
-  on(logout, (state) => initialState)
+  on(loadCancelReservationCauses, (state) => ({
+    ...state,
+    loadingCauses: true,
+    cancellationCausesSuccess: false,
+    cancellationCausesFailure: false,
+  })),
+  on(loadCancelReservationCausesSuccess, (state, { causes }) => ({
+    ...state,
+    cancelationCauses: causes,
+    loadingCauses: false,
+    cancellationCausesSuccess: true,
+  })),
+  on(loadCancelReservationCausesFailure, (state, { error }) => ({
+    ...state,
+    cancelationCauses: [],
+    loadingCauses: false,
+    cancellationCausesFailure: true,
+    error,
+  })),
+  on(deleteCancelReservationCauses, (state) => ({
+    ...state,
+    deleteCancelReservationLoading: true,
+    deleteCancelReservationSuccess: false,
+    deleteCancelReservationFailure: false,
+  })),
+  on(deleteCancelReservationCausesSuccess, (state, { causeId }) => ({
+    ...state,
+    cancelationCauses: state.cancelationCauses.filter(
+      (cause) => cause.id !== causeId
+    ),
+    deleteCancelReservationLoading: false,
+    deleteCancelReservationSuccess: true,
+  })),
+  on(deleteCancelReservationCausesFailure, (state, { error }) => ({
+    ...state,
+    deleteCancelReservationLoading: false,
+    deleteCancelReservationFailure: true,
+    error,
+  })),
+
+  on(createCancelReservationCauses, (state) => ({
+    ...state,
+    createCancelReservationLoading: true,
+    createCancelReservationSuccess: false,
+    createCancelReservationFailure: false,
+  })),
+  on(createCancelReservationCausesSuccess, (state, { cause }) => ({
+    ...state,
+    cancelationCauses: [...state.cancelationCauses, cause],
+    createCancelReservationLoading: false,
+    createCancelReservationSuccess: true,
+  })),
+  on(createCancelReservationCausesFailure, (state, { error }) => ({
+    ...state,
+    createCancelReservationLoading: false,
+    createCancelReservationFailure: true,
+    error,
+  })),
+  on(updateCancelReservationCauses, (state) => ({
+    ...state,
+    updateCancelReservationLoading: true,
+    updateCancelReservationSuccess: false,
+    updateCancelReservationFailure: false,
+  })),
+  on(updateCancelReservationCausesSuccess, (state, { cause }) => {
+    const causes = state.cancelationCauses.filter((c) => c.id !== cause.id);
+    causes.push(cause);
+    return {
+      ...state,
+      cancelationCauses: causes,
+      updateCancelReservationLoading: false,
+      updateCancelReservationSuccess: true,
+    };
+  }),
+  on(updateCancelReservationCausesFailure, (state, { error }) => ({
+    ...state,
+    updateCancelReservationLoading: false,
+    updateCancelReservationFailure: true,
+    error,
+  })),
+  on(logout, (state) => ({
+    ...initialState,
+  }))
 );
