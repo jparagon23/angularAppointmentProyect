@@ -71,7 +71,7 @@ export class CancelReservationModalComponent implements OnInit, OnDestroy {
     // Prepare the result based on the selected reason
     const reason =
       this.selectedReason === 'other'
-        ? { reasonText: this.customReason }
+        ? { customReason: this.customReason }
         : { cancellationReasonId: parseInt(this.selectedReason, 10) };
 
     console.log(reason);
