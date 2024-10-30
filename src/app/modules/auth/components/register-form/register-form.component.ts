@@ -69,7 +69,15 @@ export class RegisterFormComponent implements OnInit {
     ],
     categoryId: ['', [Validators.required]],
     roleId: 1,
-    password: ['', [Validators.required]],
+    password: [
+      '',
+      [
+        Validators.required,
+        Validators.pattern(
+          /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?\d)(?=.*?[#?!@$%^&*-+]).{8,}$/
+        ),
+      ],
+    ],
     confirmationPassword: [
       '',
       [Validators.required, this.matchPassword.bind(this)],
