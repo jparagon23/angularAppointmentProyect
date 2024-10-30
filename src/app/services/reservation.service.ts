@@ -109,7 +109,7 @@ export class ReservationService {
     cause: CancellationCause | null
   ): Observable<ReservationConfirmation> {
     const url = `${environment.API_URL}/reservation/${reservationId}`;
-    const body = { cause };
+    const body = { cancellationReasonId: cause?.cancellationReasonId };
     return this.http.delete<ReservationConfirmation>(url, {
       headers: this.setHeaders(),
       body: body,
