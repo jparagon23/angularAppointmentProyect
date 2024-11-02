@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  API_URL: 'appointmentproyect-develop.up.railway.app',
+  API_URL: 'https://appointmentproyect-develop.up.railway.app/api/v1',
 };
 
 /*
