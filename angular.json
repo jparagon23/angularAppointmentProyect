@@ -38,7 +38,6 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-
               "budgets": [
                 {
                   "type": "initial",
