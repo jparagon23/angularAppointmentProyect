@@ -74,8 +74,6 @@ export class CancelReservationModalComponent implements OnInit, OnDestroy {
         ? { customReason: this.customReason }
         : { cancellationReasonId: parseInt(this.selectedReason, 10) };
 
-    console.log(reason);
-
     // Pass the result to the parent
     this.dialogRef.close(reason);
   }

@@ -61,7 +61,7 @@ export class ClubEffects {
       this.actions$.pipe(
         ofType(createReservationAdminFailure),
         map(() => {
-          console.log('Failed to create reservation');
+          console.error('Failed to create reservation');
         })
       ),
     { dispatch: false }

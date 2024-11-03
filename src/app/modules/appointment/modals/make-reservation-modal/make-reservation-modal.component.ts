@@ -160,8 +160,6 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     const inputElement = event.target as HTMLInputElement;
     const date = inputElement.value;
 
-    console.log('Date selected:', date);
-
     if (date >= this.minDate && date <= this.maxDate) {
       this.selectedDate = date;
       this.selectedSlots = [];
@@ -179,8 +177,6 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   }
 
   onDateChange1(date: string): void {
-    console.log('Date selected:', date);
-
     if (date >= this.minDate && date <= this.maxDate) {
       this.selectedDate = date;
       this.selectedSlots = [];
@@ -207,15 +203,11 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
 
   private selectSlot(slot: any) {
     this.selectedSlots = [...this.selectedSlots, slot];
-    console.log('Slot selected:', slot);
-    console.log('Selected slots:', this.selectedSlots);
     // this.store.dispatch(selectSlot({ slot }));
   }
 
   private deselectSlot(slot: any) {
     this.selectedSlots = this.selectedSlots.filter((s) => s !== slot);
-    console.log('Slot deselected:', slot);
-    console.log('Selected slots:', this.selectedSlots);
     // this.store.dispatch(deselectSlot({ slot }));
   }
 

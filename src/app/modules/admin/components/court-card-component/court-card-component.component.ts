@@ -27,11 +27,6 @@ export class CourtCardComponentComponent implements OnInit {
   // Guarda los cambios y sale del modo de edición
   saveChanges() {
     this.isEditing = false;
-    // Aquí puedes agregar la lógica para guardar los datos en el backend si es necesario
-    console.log('Nombre de la cancha guardado:', this.courtName);
-    console.log('Hora de inicio guardada:', this.startTime);
-    console.log('Hora de fin guardada:', this.endTime);
-    console.log('The id of the court is', this.court.id);
   }
 
   cancelEdit() {
