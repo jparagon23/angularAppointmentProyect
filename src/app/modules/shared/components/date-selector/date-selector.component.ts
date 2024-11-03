@@ -57,7 +57,6 @@ export class DateSelectorComponent implements OnInit {
       this.datePipe.transform(this.initialDateParsed, 'yyyy-MM-dd') ?? ''
     ); // Emitir la fecha seleccionada
     this.updateButtonStates(); // Update button states after changing the date
-    console.log('selectedDate ' + this.initialDateParsed);
   }
 
   // Update button states based on current date
@@ -78,6 +77,5 @@ export class DateSelectorComponent implements OnInit {
       this.datePipe.transform(this.initialDateParsed, 'yyyy-MM-dd') ?? ''
     ); // Emitir la fecha seleccionada
     this.updateButtonStates(); // Update button states after date change
-    console.log('selectedDate ' + this.initialDateParsed);
   }
 }

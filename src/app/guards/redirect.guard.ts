@@ -7,7 +7,6 @@ export const redirectGuard: CanActivateFn = () => {
 
   const isValidToken: string | unknown = inject(TokenService).isValidToken();
   if (isValidToken) {
-    console.log('redirectGuard: valid token');
     inject(Router).navigate(['/home']);
   }
   return true;

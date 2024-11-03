@@ -69,7 +69,6 @@ export class CancellationCausesConfigComponent {
     this.store.dispatch(
       createCancelReservationCauses({ description: cause.description })
     );
-    console.log('Creating new cause:', cause);
   }
 
   // Logic to delete a cause
