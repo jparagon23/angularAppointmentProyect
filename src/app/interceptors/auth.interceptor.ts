@@ -7,7 +7,7 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, retryWhen, delay, scan } from 'rxjs/operators';
+import { catchError, retryWhen, delay, scan, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ModalService } from '../services/modal.service';
 import { TokenService } from '../services/token.service';
@@ -27,20 +27,23 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    console.log('AuthInterceptor: Intercepting request', req);
+
     return next.handle(this.addAuthToken(req)).pipe(
       retryWhen((errors) =>
         errors.pipe(
+          tap(() => console.log('Retrying request...')),
           scan((retryCount, error) => {
             if (
               retryCount >= this.maxRetries ||
               !(error instanceof HttpErrorResponse) ||
               error.status !== 0
             ) {
-              throw error;
+              throw error; // Stop retrying if max retries reached or error is not a network error
             }
-            return retryCount + 1;
+            return retryCount + 1; // Increment the retry count
           }, 0),
-          delay(this.retryDelayMs)
+          delay(this.retryDelayMs) // Wait before retrying
         )
       ),
       catchError((error: HttpErrorResponse) => this.handleAuthError(error))
@@ -78,6 +81,8 @@ export class AuthInterceptor implements HttpInterceptor {
    * and redirecting to the login page
    */
   private handleUnauthorizedError(): void {
+    console.log('Handling unauthorized error: redirecting to login');
+
     this.tokenService.removeToken();
     this.modalService.closeAllModals();
     this.router.navigate(['/login']);

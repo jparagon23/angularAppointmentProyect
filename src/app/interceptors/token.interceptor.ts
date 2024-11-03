@@ -28,6 +28,8 @@ export class TokenInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
+    console.log('TokenInterceptor');
+
     if (request.context.get(CHECK_TOKEN)) {
       const isValidToken = this.tokenService.isValidToken();
 

@@ -9,23 +9,24 @@ export class TokenService {
   constructor() {}
 
   saveToken(token: string) {
-    setCookie('token-appnet', token, { expires: 365, path: '/' });
+    setCookie('token-tennapp', token, { expires: 365, path: '/' });
+    console.log('Token saved', token);
   }
 
   getToken() {
-    const token = getCookie('token-appnet');
+    const token = getCookie('token-tennapp');
 
     return token;
   }
 
   getUserId(): number | null {
-    const userIdCookie = getCookie('user-id-appnet');
+    const userIdCookie = getCookie('user-id-tennapp');
     return userIdCookie ? parseInt(userIdCookie, 10) : null;
   }
 
   removeToken() {
-    removeCookie('token-appnet');
-    removeCookie('refresh-token-appnet');
+    removeCookie('token-tennapp');
+    removeCookie('refresh-token-tennapp');
   }
 
   isValidToken(): boolean {
@@ -53,15 +54,16 @@ export class TokenService {
   }
 
   saveRefreshToken(token: string) {
-    setCookie('refresh-token-appnet', token, { expires: 365, path: '/' });
+    setCookie('refresh-token-tennapp', token, { expires: 365, path: '/' });
+    console.log('Refresh token saved', token);
   }
 
   getRefreshToken() {
-    const token = getCookie('refresh-token-appnet');
+    const token = getCookie('refresh-token-tennapp');
     return token;
   }
   removeRefreshToken() {
-    removeCookie('refresh-token-appnet');
+    removeCookie('refresh-token-tennapp');
   }
 
   isValidRefreshToken(): boolean {
