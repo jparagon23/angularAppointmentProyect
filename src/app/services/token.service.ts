@@ -10,7 +10,6 @@ export class TokenService {
 
   saveToken(token: string) {
     setCookie('token-tennapp', token, { expires: 365, path: '/' });
-    console.log('Token saved', token);
   }
 
   getToken() {
@@ -55,7 +54,6 @@ export class TokenService {
 
   saveRefreshToken(token: string) {
     setCookie('refresh-token-tennapp', token, { expires: 365, path: '/' });
-    console.log('Refresh token saved', token);
   }
 
   getRefreshToken() {
