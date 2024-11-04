@@ -55,7 +55,7 @@ export class LoginFormComponent implements OnInit {
 
     // Also check for email in query parameters and override if present
     this.route.queryParamMap.subscribe((params) => {
-      const emailParam = params.get('email');
+      const emailParam = params.get('forehappEmail');
       if (emailParam !== null) {
         this.loginForm.controls.email.setValue(emailParam);
       }
@@ -67,9 +67,9 @@ export class LoginFormComponent implements OnInit {
       const { email, password, rememberMe } = this.loginForm.value;
 
       if (rememberMe) {
-        localStorage.setItem('tennappEmail', email!);
+        localStorage.setItem('forehappEmail', email!);
       } else {
-        localStorage.removeItem('tennappEmail');
+        localStorage.removeItem('forehappEmail');
       }
       this.store.dispatch(login({ email: email!, password: password! }));
     }
