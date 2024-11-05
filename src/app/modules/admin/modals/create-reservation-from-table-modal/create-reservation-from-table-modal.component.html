@@ -11,9 +11,7 @@
         >Día de la reserva:</label
       >
       <p class="text-gray-600 text-sm sm:text-base">
-        {{
-          data.reservationInfo.date | date : "EEEE d 'de' MMMM 'de' y" : "es"
-        }}
+        {{ data.reservationInfo.date | timeFormat : "long" }}
       </p>
     </div>
 
@@ -22,7 +20,7 @@
         >Hora:</label
       >
       <p class="text-gray-600 text-sm sm:text-base">
-        {{ data.reservationInfo.hour }}
+        {{ data.reservationInfo.hour | hourTimeFormat }}
       </p>
     </div>
 
