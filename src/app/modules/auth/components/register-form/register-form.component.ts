@@ -188,6 +188,7 @@ export class RegisterFormComponent implements OnInit {
           },
         ],
         categoryId: this.registerForm.get('categoryId')!.value,
+        userClub: 1,
       };
 
       delete formData.confirmationPassword;
