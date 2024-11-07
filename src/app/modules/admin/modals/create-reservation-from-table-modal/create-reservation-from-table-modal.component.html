@@ -35,7 +35,7 @@
           id="user"
           type="text"
           [disabled]="(loadingUsers$ | async) ?? false"
-          placeholder="Start typing"
+          placeholder="Empieza a escribir"
           class="outline-none flex-grow text-gray-700 text-sm sm:text-base"
           [formControl]="userControl"
           [matAutocomplete]="auto"
@@ -52,11 +52,23 @@
           >
             {{ user.completeName }}
           </mat-option>
+
+          <!-- Opción para crear usuario cuando la lista es vacía -->
+          <mat-option
+            *ngIf="
+              (filteredUsers$ | async)?.length === 0 &&
+              userControl.value &&
+              !isnewUser &&
+              !(loadingUsers$ | async)
+            "
+            (click)="openCreateUserModal()"
+          >
+            <em>Crear nuevo usuario</em>
+          </mat-option>
         </mat-autocomplete>
       </div>
     </div>
 
-    <!-- Ajustar botones para que estén uno sobre otro en mobile y horizontal en pantallas más grandes -->
     <div
       class="flex flex-col space-y-2 sm:flex-row sm:justify-end sm:space-x-4 sm:space-y-0"
     >

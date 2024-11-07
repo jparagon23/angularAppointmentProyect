@@ -1,0 +1,56 @@
+<div class="m-3">
+  <h2 mat-dialog-title class="text-lg font-semibold text-gray-800">
+    Crear Nuevo Usuario
+  </h2>
+
+  <div mat-dialog-content class="space-y-4 mt-2">
+    <!-- Campo Nombre -->
+    <div class="w-full">
+      <app-input
+        [control]="userForm.controls['name']"
+        [name]="'nombre'"
+        [type]="'text'"
+        [placeholder]="'Ingresa el nombre'"
+        class="w-full"
+      ></app-input>
+    </div>
+
+    <!-- Campo Apellido -->
+    <div class="w-full">
+      <app-input
+        [control]="userForm.controls['lastName']"
+        [name]="'apellido'"
+        [type]="'text'"
+        [placeholder]="'Ingresa el apellido'"
+        class="w-full"
+      ></app-input>
+    </div>
+
+    <!-- Campo Correo -->
+    <div class="w-full">
+      <app-input
+        [control]="userForm.controls['email']"
+        [name]="'correo'"
+        [type]="'email'"
+        [placeholder]="'Ingresa el correo electrónico'"
+        class="w-full"
+      ></app-input>
+    </div>
+  </div>
+  <div
+    class="pt-4 flex flex-col space-y-2 sm:flex-row sm:justify-between sm:space-y-0"
+  >
+    <app-button [typeBtn]="'submit'" [color]="'danger'" (click)="onCancel()"
+      >Cancelar</app-button
+    >
+
+    <app-button
+      [typeBtn]="'submit'"
+      [color]="'success'"
+      (click)="onSave()"
+      [disabled]="userForm.invalid"
+    >
+      Crear reserva
+    </app-button>
+  </div>
+</div>

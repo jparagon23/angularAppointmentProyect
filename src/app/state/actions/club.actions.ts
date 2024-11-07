@@ -1,3 +1,4 @@
+import { LightUser } from 'src/app/models/LightUser.model';
 import { createAction, props } from '@ngrx/store';
 import { ClubUser } from 'src/app/models/clubUsers.model';
 
@@ -18,7 +19,11 @@ export const getClubUserByNameOrIdFailure = createAction(
 
 export const createReservationAdmin = createAction(
   '[Admin Dashboard] Create Reservation',
-  props<{ selecteDates: string[]; userId: string }>()
+  props<{
+    selecteDates: string[];
+    userId: string;
+    lightUser: LightUser | null;
+  }>()
 );
 
 export const createReservationAdminSuccess = createAction(
@@ -33,3 +38,5 @@ export const createReservationAdminFailure = createAction(
 export const resetReservationCreated = createAction(
   '[Club] Reset Reservation Created'
 );
+
+export const resetClubUsers = createAction('[Club] Reset Club Users');

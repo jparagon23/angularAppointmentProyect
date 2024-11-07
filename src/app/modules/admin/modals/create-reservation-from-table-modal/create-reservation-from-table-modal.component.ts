@@ -1,3 +1,5 @@
+import { LightUser } from 'src/app/models/LightUser.model';
+// import { ClubUser } from './../../../../models/clubUsers.model';
 import {
   Component,
   Inject,
@@ -26,12 +28,15 @@ import {
 import {
   createReservationAdmin,
   getClubUserByNameOrId,
+  resetClubUsers,
   resetReservationCreated,
 } from 'src/app/state/actions/club.actions';
 import { AppState } from 'src/app/state/app.state';
 import { isModalOpen } from 'src/app/state/selectors/modals.selectors';
 import { openModal } from 'src/app/state/actions/modals.actions';
 import { ErrorModalComponent } from '../error-modal/error-modal.component';
+import { CreateLightUserModalComponent } from '../create-light-user-modal/create-light-user-modal.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-reservation-from-table-modal',
@@ -41,6 +46,8 @@ import { ErrorModalComponent } from '../error-modal/error-modal.component';
 export class CreateReservationFromTableModalComponent
   implements OnInit, OnDestroy
 {
+  isnewUser = false;
+  lightUser: LightUser | null = null;
   userControl = new FormControl();
   filteredUsers$?: Observable<ClubUser[]>;
   loadingUsers$?: Observable<boolean>;
@@ -66,11 +73,16 @@ export class CreateReservationFromTableModalComponent
   ) {}
 
   ngOnInit() {
+    this.clearSelectors();
     this.openModal();
     this.initializeSelectors();
     this.setupUserControl();
     this.subscribeToModalState();
     this.subscribeToErrorState();
+  }
+  clearSelectors() {
+    this.store.dispatch(resetReservationCreated());
+    this.store.dispatch(resetClubUsers());
   }
 
   private openModal() {
@@ -80,8 +92,12 @@ export class CreateReservationFromTableModalComponent
   }
 
   private initializeSelectors() {
-    this.filteredUsers$ = this.store.select(selectClubUsers);
-    this.loadingUsers$ = this.store.select(selectLoadingClubUsers);
+    this.filteredUsers$ = this.store
+      .select(selectClubUsers)
+      .pipe(tap((users) => console.log('Filtered Users:', users)));
+    this.loadingUsers$ = this.store
+      .select(selectLoadingClubUsers)
+      .pipe(tap((loading) => console.log('Loading Users:', loading)));
     this.reservationCreated$ = this.store.select(selectReservationCreated);
     this.reservationCreatedLoader$ = this.store.select(
       loadingCreateReservation
@@ -141,8 +157,12 @@ export class CreateReservationFromTableModalComponent
   }
 
   private openErrorDialog(error: string) {
-    this.dialog.open(ErrorModalComponent, {
-      data: { message: error },
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: error,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'OK',
     });
   }
 
@@ -161,6 +181,7 @@ export class CreateReservationFromTableModalComponent
       createReservationAdmin({
         selecteDates: [hour],
         userId: this.selectedUser?.userId?.toString() ?? '',
+        lightUser: this.selectedUser?.userId ? null : this.lightUser,
       })
     );
   }
@@ -170,11 +191,34 @@ export class CreateReservationFromTableModalComponent
     this.dialogRef.close();
   }
   trackByUserId(index: number, user: ClubUser): number {
-    return user.userId;
+    return user.userId ?? 0;
   }
 
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  openCreateUserModal() {
+    const dialogRef = this.dialog.open(CreateLightUserModalComponent, {
+      width: '400px',
+      data: {},
+    });
+
+    dialogRef.afterClosed().subscribe((result: LightUser) => {
+      if (result) {
+        const lightUser: ClubUser = {
+          userId: null,
+          userIdentification: result.email,
+          completeName: `${result.name} ${result.lastName}`,
+        };
+
+        // Actualizar selectedUser y el valor de userControl
+        this.selectedUser = lightUser;
+        this.userControl.setValue(lightUser);
+        this.isnewUser = true;
+        this.lightUser = result;
+      }
+    });
   }
 }
