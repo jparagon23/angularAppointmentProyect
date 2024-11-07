@@ -7,6 +7,7 @@ import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 import * as AuthActions from '../actions/register.actions';
 import swal from 'sweetalert2';
 import { HttpResponse } from '@angular/common/http';
+import { EmailAvailabilityResponse } from 'src/app/models/EmailAvailabilityResponse.model';
 
 @Injectable()
 export class RegisterEffects {
@@ -33,9 +34,10 @@ export class RegisterEffects {
       ofType(AuthActions.checkEmailAvailability),
       mergeMap(({ email }) =>
         this.authService.checkEmailAvailability(email).pipe(
-          map((response: HttpResponse<boolean>) =>
+          map((response: HttpResponse<EmailAvailabilityResponse>) =>
             AuthActions.checkEmailAvailabilitySuccess({
-              available: response.body!,
+              emailAvailabilityResponse:
+                response.body as EmailAvailabilityResponse,
             })
           ),
           catchError(() => of(AuthActions.checkEmailAvailabilityFailure()))

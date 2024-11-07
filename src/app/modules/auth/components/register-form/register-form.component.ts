@@ -1,6 +1,6 @@
 import { CommonType } from './../../../../models/InitialSignUpData.interface';
 import { HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -16,12 +16,15 @@ import { AuthService } from 'src/app/services/auth.service';
 import * as moment from 'moment-timezone';
 import { RequestStatus } from 'src/app/models/request-status.model';
 import { CustomValidators } from 'src/app/utils/validators';
+import { EmailAvailabilityResponse } from 'src/app/models/EmailAvailabilityResponse.model';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
 })
 export class RegisterFormComponent implements OnInit {
   public formSubmitted = false;
+  @Input() lightForm = false;
   public initialData!: InitialSignUpData;
   public genders: CommonType[] = [
     { id: 'MALE', description: 'Masculino' },
@@ -29,7 +32,7 @@ export class RegisterFormComponent implements OnInit {
     { id: 'OTHER', description: 'Otro' },
   ];
   public blurredFields: Set<string> = new Set<string>();
-  showRegisterForm = false;
+  @Input() showRegisterForm = false;
   status: RequestStatus = 'init';
   statusUser: RequestStatus = 'init';
 
@@ -94,6 +97,14 @@ export class RegisterFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (this.lightForm) {
+      // Eliminar los campos no necesarios en el formulario si lightForm es true
+      (this.registerForm as any).removeControl('name');
+      (this.registerForm as any).removeControl('lastname');
+      (this.registerForm as any).removeControl('email');
+      (this.registerForm as any).removeControl('roleId');
+    }
+
     this.authService.getInitialSignUpData().subscribe({
       next: (data) => {
         this.initialData = data;
@@ -107,15 +118,40 @@ export class RegisterFormComponent implements OnInit {
       this.statusUser = 'loading';
       const { email } = this.formUser.getRawValue();
       this.authService.checkEmailAvailability(email).subscribe({
-        next: (response: HttpResponse<boolean>) => {
+        next: (response: HttpResponse<EmailAvailabilityResponse>) => {
           this.statusUser = 'success';
 
-          if (response.body) {
+          if (response.body?.creationResponse === 3) {
             this.registerForm.controls.email.setValue(email);
             this.showRegisterForm = true;
-          } else {
+          } else if (response.body?.creationResponse === 1) {
             this.router.navigate(['/login'], {
               queryParams: { email },
+            });
+          } else if (response.body?.creationResponse === 2) {
+            console.log('User already exists');
+            console.log('userId', response.body.userId);
+
+            this.authService.setUserId(response.body.userId.toString());
+            this.authService.resendAuthenticationCode().subscribe({
+              next: () => {
+                swal
+                  .fire(
+                    'El correo se encuentra pre-registrado',
+                    'Se ha enviado un código de verificación a su correo electrónico',
+                    'warning'
+                  )
+                  .then(() => {
+                    this.router.navigate(['authAccount'], {
+                      relativeTo: this.route,
+                      queryParams: { 'pre-registered': true },
+                    });
+                  });
+              },
+              error: () => {
+                // Handle error if needed
+                this.statusUser = 'failed';
+              },
             });
           }
         },
@@ -188,20 +224,44 @@ export class RegisterFormComponent implements OnInit {
           },
         ],
         categoryId: this.registerForm.get('categoryId')!.value,
-        userClub: 1,
+        userClub: !this.lightForm ? 1 : undefined, // Only add userClub if lightForm is false
       };
 
+      // Remove fields not needed
       delete formData.confirmationPassword;
       delete formData.phoneTypeId;
 
-      this.authService.createUser(formData).subscribe({
-        next: (response) => {
-          this.router.navigate(['authAccount'], { relativeTo: this.route });
-        },
-        error: (error) => {
-          swal.fire('Error', error.error.message[0], 'error');
-        },
-      });
+      // Select the appropriate service and response handling based on lightForm
+      if (!this.lightForm) {
+        this.authService.createUser(formData).subscribe({
+          next: () => {
+            this.router.navigate(['authAccount'], { relativeTo: this.route });
+          },
+          error: (error) => {
+            swal.fire('Error', error.error.message[0], 'error');
+          },
+        });
+      } else {
+        delete formData.name;
+        delete formData.lastname;
+        delete formData.email;
+        delete formData.roleId;
+        delete formData.userClub;
+        this.authService.completePreRegisterUser(formData).subscribe({
+          next: (response) => {
+            Swal.fire({
+              icon: 'success',
+              text: 'Usuario creado con exito',
+            });
+            this.router.navigate(['login'], {
+              queryParams: { email: response.email },
+            });
+          },
+          error: (error) => {
+            swal.fire('Error', error.error.message[0], 'error');
+          },
+        });
+      }
     } else {
       console.error('documentType is null or undefined.');
     }

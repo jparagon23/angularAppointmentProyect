@@ -6,6 +6,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { InitialSignUpData } from '../models/InitialSignUpData.interface';
 import { TokenService } from './token.service';
 import { User, UserData } from '../models/user.model';
+import { EmailAvailabilityResponse } from '../models/EmailAvailabilityResponse.model';
 
 @Injectable({
   providedIn: 'root',
@@ -48,10 +49,15 @@ export class AuthService {
     return this.user?.id;
   }
 
-  checkEmailAvailability(email: string): Observable<HttpResponse<boolean>> {
+  checkEmailAvailability(
+    email: string
+  ): Observable<HttpResponse<EmailAvailabilityResponse>> {
     const url = `${this.apiUrl}/auth/check-email-availability`;
     const params = new HttpParams().set('email', email);
-    return this.http.get<boolean>(url, { observe: 'response', params });
+    return this.http.get<EmailAvailabilityResponse>(url, {
+      observe: 'response',
+      params,
+    });
   }
 
   createUser(formData: any) {
@@ -148,13 +154,26 @@ export class AuthService {
   }
 
   resendAuthenticationCode() {
+    console.log('resendAuthenticationCode');
+
     const userId = this.user?.id ?? -1;
+    console.log('userId', userId);
+
     const url = `${this.apiUrl}/auth/resend-auth-code`;
+    console.log('url', url);
+
     const params = new HttpParams().set('userId', userId.toString());
     return this.http.post(url, {}, { params });
   }
 
   setUserId(userId: string) {
     this.user = { id: userId } as unknown as User;
+  }
+
+  completePreRegisterUser(formData: any): Observable<User> {
+    return this.http.put<User>(
+      `${this.apiUrl}/auth/pre-register/` + this.user?.id,
+      formData
+    );
   }
 }

@@ -35,7 +35,7 @@
     (ngSubmit)="register()"
   >
     <!-- Name and Lastname fields (mobile-first) -->
-    <div class="space-y-4 md:space-y-0 md:flex md:space-x-4">
+    <div class="space-y-4 md:space-y-0 md:flex md:space-x-4" *ngIf="!lightForm">
       <div class="w-full">
         <app-input
           [control]="registerForm.controls['name']"
@@ -129,7 +129,7 @@
     </div>
 
     <!-- Email field -->
-    <div class="w-full">
+    <div class="w-full" *ngIf="!lightForm">
       <app-input
         [control]="registerForm.controls['email']"
         [name]="'Correo'"

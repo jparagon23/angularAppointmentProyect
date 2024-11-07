@@ -1,3 +1,4 @@
+import { EmailAvailabilityResponse } from './../../models/EmailAvailabilityResponse.model';
 import { createAction, props } from '@ngrx/store';
 import { InitialSignUpData } from 'src/app/models/InitialSignUpData.interface';
 
@@ -18,7 +19,7 @@ export const checkEmailAvailability = createAction(
 );
 export const checkEmailAvailabilitySuccess = createAction(
   '[register component effect] Check Email Availability Success',
-  props<{ available: boolean }>()
+  props<{ emailAvailabilityResponse: EmailAvailabilityResponse }>()
 );
 export const checkEmailAvailabilityFailure = createAction(
   '[register component effect]] Check Email Availability Failure'
