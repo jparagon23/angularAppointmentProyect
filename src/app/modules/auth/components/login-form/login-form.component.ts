@@ -67,9 +67,9 @@ export class LoginFormComponent implements OnInit {
       const { email, password, rememberMe } = this.loginForm.value;
 
       if (rememberMe) {
-        localStorage.setItem('tennappEmail', email!);
+        localStorage.setItem('forehAppEmail', email!);
       } else {
-        localStorage.removeItem('tennappEmail');
+        localStorage.removeItem('forehAppEmail');
       }
       this.store.dispatch(login({ email: email!, password: password! }));
     }

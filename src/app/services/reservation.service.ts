@@ -1,3 +1,4 @@
+import { LightUser } from 'src/app/models/LightUser.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { TokenService } from './token.service';
@@ -94,10 +95,15 @@ export class ReservationService {
 
   createReservationAdmin(
     selectedSlots: string[],
-    userId: string
+    userId: string,
+    lightUser: LightUser | null
   ): Observable<ReservationConfirmation> {
     const url = `${environment.API_URL}/reservation/${userId}`;
-    const body = { appointmentTime: selectedSlots, clubId: 1 };
+    const body = {
+      appointmentTime: selectedSlots,
+      clubId: 1,
+      lightUser: lightUser,
+    };
 
     return this.http.post<ReservationConfirmation>(url, body, {
       headers: this.setHeaders(),

@@ -8,6 +8,7 @@ import {
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
+import { EmailAvailabilityResponse } from '../models/EmailAvailabilityResponse.model';
 
 export class CustomValidators {
   static MatchValidator(source: string, target: string): ValidatorFn {
@@ -24,8 +25,11 @@ export class CustomValidators {
   static checkIfEmailIsAvailable(authService: AuthService): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       return authService.checkEmailAvailability(control.value).pipe(
-        map((response: HttpResponse<boolean>) => {
-          return response.body ? null : { emailNotAvailable: true };
+        map((response: HttpResponse<EmailAvailabilityResponse>) => {
+          return response.body?.creationResponse == 1 ||
+            response.body?.creationResponse == 2
+            ? { emailNotAvailable: true }
+            : null;
         }),
         catchError(() => of({ emailCheckFailed: true }))
       );

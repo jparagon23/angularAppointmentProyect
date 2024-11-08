@@ -1,5 +1,5 @@
 export interface ClubUser {
-  userId: number;
+  userId: number | null;
   userIdentification: string;
   completeName: string;
 }

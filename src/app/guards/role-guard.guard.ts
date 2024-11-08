@@ -10,6 +10,7 @@ import { loadUser } from 'src/app/state/actions/users.actions';
 let hasRedirected = false;
 
 export const roleGuard: CanActivateFn = () => {
+  console.log('roleGuard');
   const store = inject(Store<AppState>);
   const router = inject(Router);
 
@@ -20,16 +21,13 @@ export const roleGuard: CanActivateFn = () => {
         if (!hasRedirected) {
           hasRedirected = true; // Evita redirecciones adicionales
           if (user.role == 2) {
-            console.log('User is admin, navigating to home/admin');
             router.navigate(['home/admin']);
           } else {
-            console.log('User is not admin, navigating to home/user');
             router.navigate(['home/user']);
           }
         }
         return of(true);
       } else {
-        console.log('User is not loaded, loading user');
         store.dispatch(loadUser());
         store
           .select(selectUser)

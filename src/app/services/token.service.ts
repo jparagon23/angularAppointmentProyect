@@ -9,24 +9,23 @@ export class TokenService {
   constructor() {}
 
   saveToken(token: string) {
-    setCookie('token-tennapp', token, { expires: 365, path: '/' });
-    console.log('Token saved', token);
+    setCookie('token-forehapp', token, { expires: 365, path: '/' });
   }
 
   getToken() {
-    const token = getCookie('token-tennapp');
+    const token = getCookie('token-forehapp');
 
     return token;
   }
 
   getUserId(): number | null {
-    const userIdCookie = getCookie('user-id-tennapp');
+    const userIdCookie = getCookie('user-id-forehapp');
     return userIdCookie ? parseInt(userIdCookie, 10) : null;
   }
 
   removeToken() {
-    removeCookie('token-tennapp');
-    removeCookie('refresh-token-tennapp');
+    removeCookie('token-forehapp');
+    removeCookie('refresh-token-forehapp');
   }
 
   isValidToken(): boolean {
@@ -54,16 +53,15 @@ export class TokenService {
   }
 
   saveRefreshToken(token: string) {
-    setCookie('refresh-token-tennapp', token, { expires: 365, path: '/' });
-    console.log('Refresh token saved', token);
+    setCookie('refresh-token-forehapp', token, { expires: 365, path: '/' });
   }
 
   getRefreshToken() {
-    const token = getCookie('refresh-token-tennapp');
+    const token = getCookie('refresh-token-forehapp');
     return token;
   }
   removeRefreshToken() {
-    removeCookie('refresh-token-tennapp');
+    removeCookie('refresh-token-forehapp');
   }
 
   isValidRefreshToken(): boolean {

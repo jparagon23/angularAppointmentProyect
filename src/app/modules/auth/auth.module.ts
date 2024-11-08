@@ -18,6 +18,7 @@ import { AccountAuthenticationComponent } from './pages/account-authentication/a
 import { AccountAuthFormComponent } from './components/account-auth-form/account-auth-form.component';
 import { ForgotPasswordFormComponent } from './components/forgot-password/forgot-password-form.component';
 import { RecoveryFormComponent } from './components/recovery-form/recovery-form.component';
+import { PreRegisterComponent } from './pages/pre-register/pre-register.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { RecoveryFormComponent } from './components/recovery-form/recovery-form.
     AccountAuthFormComponent,
     ForgotPasswordFormComponent,
     RecoveryFormComponent,
+    PreRegisterComponent,
   ],
   imports: [
     CommonModule,

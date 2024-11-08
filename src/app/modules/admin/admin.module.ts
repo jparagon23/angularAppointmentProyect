@@ -17,6 +17,7 @@ import { ClubConfigurationPageComponent } from './pages/club-configuration-page/
 import { CourtConfigComponentComponent } from './components/availability-config-component/court-config-component.component';
 import { CancelReservationModalComponent } from './modals/cancel-reservation-modal/cancel-reservation-modal.component';
 import { CancellationCausesConfigComponent } from './components/cancellation-causes-config/cancellation-causes-config.component';
+import { CreateLightUserModalComponent } from './modals/create-light-user-modal/create-light-user-modal.component';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { CancellationCausesConfigComponent } from './components/cancellation-cau
     CourtConfigComponentComponent,
     CancelReservationModalComponent,
     CancellationCausesConfigComponent,
+    CreateLightUserModalComponent,
   ],
   imports: [
     CommonModule,

@@ -6,6 +6,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { RecoveryComponent } from './pages/recovery/recovery.component';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 import { AccountAuthenticationComponent } from './pages/account-authentication/account-authentication.component';
+import { PreRegisterComponent } from './pages/pre-register/pre-register.component';
 
 const routes: Routes = [
   {
@@ -43,6 +44,11 @@ const routes: Routes = [
         path: 'recovery',
         component: RecoveryComponent,
         title: 'Recovery',
+      },
+      {
+        path: 'pre-registration',
+        component: PreRegisterComponent,
+        title: 'Complete Pre-Registration',
       },
     ],
   },

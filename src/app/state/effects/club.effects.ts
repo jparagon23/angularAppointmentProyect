@@ -35,7 +35,11 @@ export class ClubEffects {
       ofType(createReservationAdmin),
       switchMap((action) =>
         this.reservationService
-          .createReservationAdmin(action.selecteDates, action.userId)
+          .createReservationAdmin(
+            action.selecteDates,
+            action.userId,
+            action.lightUser
+          )
           .pipe(
             // Si la creación de la reserva es exitosa, solo lanzamos `createReservationAdminSuccess`
             map(() => createReservationAdminSuccess()),

@@ -35,11 +35,14 @@ export const registerReducer = createReducer(
     ...state,
     loading: true,
   })),
-  on(AuthActions.checkEmailAvailabilitySuccess, (state, { available }) => ({
-    ...state,
-    emailAvailable: available,
-    loading: false,
-  })),
+  on(
+    AuthActions.checkEmailAvailabilitySuccess,
+    (state, { emailAvailabilityResponse }) => ({
+      ...state,
+      emailAvailable: emailAvailabilityResponse.creationResponse === 3,
+      loading: false,
+    })
+  ),
   on(AuthActions.checkEmailAvailabilityFailure, (state) => ({
     ...state,
     loading: false,
