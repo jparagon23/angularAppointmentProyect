@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 
 import { InitialSignUpData } from 'src/app/models/InitialSignUpData.interface';
 import { AuthService } from 'src/app/services/auth.service';
@@ -17,7 +17,6 @@ import * as moment from 'moment-timezone';
 import { RequestStatus } from 'src/app/models/request-status.model';
 import { CustomValidators } from 'src/app/utils/validators';
 import { EmailAvailabilityResponse } from 'src/app/models/EmailAvailabilityResponse.model';
-import Swal from 'sweetalert2';
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
@@ -135,18 +134,16 @@ export class RegisterFormComponent implements OnInit {
             this.authService.setUserId(response.body.userId.toString());
             this.authService.resendAuthenticationCode().subscribe({
               next: () => {
-                swal
-                  .fire(
-                    'El correo se encuentra pre-registrado',
-                    'Se ha enviado un código de verificación a su correo electrónico',
-                    'warning'
-                  )
-                  .then(() => {
-                    this.router.navigate(['authAccount'], {
-                      relativeTo: this.route,
-                      queryParams: { 'pre-registered': true },
-                    });
+                Swal.fire(
+                  'El correo se encuentra pre-registrado',
+                  'Se ha enviado un código de verificación a su correo electrónico',
+                  'warning'
+                ).then(() => {
+                  this.router.navigate(['authAccount'], {
+                    relativeTo: this.route,
+                    queryParams: { 'pre-registered': true },
                   });
+                });
               },
               error: () => {
                 // Handle error if needed
@@ -238,7 +235,7 @@ export class RegisterFormComponent implements OnInit {
             this.router.navigate(['authAccount'], { relativeTo: this.route });
           },
           error: (error) => {
-            swal.fire('Error', error.error.message[0], 'error');
+            Swal.fire('Error', error.error.message[0], 'error');
           },
         });
       } else {
@@ -258,7 +255,7 @@ export class RegisterFormComponent implements OnInit {
             });
           },
           error: (error) => {
-            swal.fire('Error', error.error.message[0], 'error');
+            Swal.fire('Error', error.error.message[0], 'error');
           },
         });
       }

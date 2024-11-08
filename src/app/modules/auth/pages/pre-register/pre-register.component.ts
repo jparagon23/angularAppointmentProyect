@@ -1,5 +1,4 @@
-import { HttpResponse } from '@angular/common/http';
-import swal from 'sweetalert2';
+// import swal from 'sweetalert2';
 import { Component } from '@angular/core';
 import {
   AbstractControl,
@@ -9,10 +8,8 @@ import {
 } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import * as moment from 'moment';
-import { EmailAvailabilityResponse } from 'src/app/models/EmailAvailabilityResponse.model';
 import { RequestStatus } from 'src/app/models/request-status.model';
 import { AuthService } from 'src/app/services/auth.service';
-import { CustomValidators } from 'src/app/utils/validators';
 import {
   CommonType,
   InitialSignUpData,
@@ -22,7 +19,6 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-pre-register',
   templateUrl: './pre-register.component.html',
-  styleUrls: ['./pre-register.component.css'],
 })
 export class PreRegisterComponent {
   public formSubmitted = false;
@@ -170,7 +166,7 @@ export class PreRegisterComponent {
           });
         },
         error: (error) => {
-          swal.fire('Error', error.error.message[0], 'error');
+          Swal.fire('Error', error.error.message[0], 'error');
         },
       });
     } else {
