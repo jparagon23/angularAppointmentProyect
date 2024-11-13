@@ -7,14 +7,36 @@ import {
 import { Store } from '@ngrx/store';
 import { ConfirmationModalComponent } from 'src/app/modules/appointment/modals/confirmation-modal/confirmation-modal.component';
 import { ModalService } from 'src/app/services/modal.service';
-import { cancelReservationAdmin } from 'src/app/state/actions/reservations.actions';
+import {
+  cancelReservationAdmin,
+  resetCancelReservationAdminState,
+} from 'src/app/state/actions/reservations.actions';
 import { CancelReservationModalComponent } from '../cancel-reservation-modal/cancel-reservation-modal.component';
+import { Observable, Subject, takeUntil } from 'rxjs';
+import {
+  selectCancelReservationAdminFailure,
+  selectCancelReservationAdminLoading,
+  selectCancelReservationAdminSuccess,
+} from 'src/app/state/selectors/reservetions.selectors';
 
 @Component({
   selector: 'app-reservation-info-modal',
   templateUrl: './reservation-info-modal.component.html',
 })
 export class ReservationInfoModalComponent {
+  cancelReservationAdminLoading$?: Observable<boolean> = this.store.select(
+    selectCancelReservationAdminLoading
+  );
+  cancelReservationAdminSuccess$: Observable<boolean> = this.store.select(
+    selectCancelReservationAdminSuccess
+  );
+
+  cancelResevationAdminFailure$: Observable<boolean> = this.store.select(
+    selectCancelReservationAdminFailure
+  );
+
+  private readonly destroy$ = new Subject<void>();
+
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: {
@@ -33,6 +55,19 @@ export class ReservationInfoModalComponent {
 
   ngOnInit() {
     this.modalService.add(this.reservationInfoModal);
+
+    this.cancelReservationAdminSuccess$
+      ?.pipe(takeUntil(this.destroy$))
+      .subscribe((created) => {
+        if (created) {
+          this.closeModal();
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   cancelReservation() {
@@ -52,12 +87,15 @@ export class ReservationInfoModalComponent {
             })
           );
         }
-
-        this.reservationInfoModal.close(true);
       }
       if (result === false) {
         /* empty */
       }
     });
+  }
+
+  closeModal() {
+    this.store.dispatch(resetCancelReservationAdminState());
+    this.reservationInfoModal.close(true);
   }
 }

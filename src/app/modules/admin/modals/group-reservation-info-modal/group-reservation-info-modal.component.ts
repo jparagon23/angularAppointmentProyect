@@ -10,15 +10,19 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { Observable, take } from 'rxjs';
+import { Observable, Subject, take, takeUntil } from 'rxjs';
 import { GroupReservationInfo } from 'src/app/models/GroupReservationInfo.model';
 import { ModalService } from 'src/app/services/modal.service';
 import {
   cancelReservationAdmin,
   getReservationsByGroupId,
+  resetCancelReservationAdminState,
 } from 'src/app/state/actions/reservations.actions';
 import { AppState } from 'src/app/state/app.state';
 import {
+  selectCancelReservationAdminFailure,
+  selectCancelReservationAdminLoading,
+  selectCancelReservationAdminSuccess,
   selectGroupReservationInfo,
   selectMatchingReservationId,
 } from 'src/app/state/selectors/reservetions.selectors';
@@ -33,6 +37,19 @@ import { CancellationCause } from 'src/app/models/CancellationCause.model';
 export class GroupReservationInfoModalComponent implements OnInit {
   groupReservationInfo$: Observable<GroupReservationInfo | null>;
   selectedReservationId$: Observable<string | null>;
+
+  cancelReservationAdminLoading$?: Observable<boolean> = this.store.select(
+    selectCancelReservationAdminLoading
+  );
+  cancelReservationAdminSuccess$: Observable<boolean> = this.store.select(
+    selectCancelReservationAdminSuccess
+  );
+
+  cancelResevationAdminFailure$: Observable<boolean> = this.store.select(
+    selectCancelReservationAdminFailure
+  );
+
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
@@ -58,6 +75,18 @@ export class GroupReservationInfoModalComponent implements OnInit {
   ngOnInit() {
     this.modalService.add(this.reservationInfoModal);
     this.loadReservationInfo();
+
+    this.cancelReservationAdminSuccess$
+      ?.pipe(takeUntil(this.destroy$))
+      .subscribe((created) => {
+        if (created) {
+          this.closeModal();
+        }
+      });
+  }
+  closeModal() {
+    this.store.dispatch(resetCancelReservationAdminState());
+    this.reservationInfoModal.close();
   }
 
   private loadReservationInfo() {
@@ -120,6 +149,10 @@ export class GroupReservationInfoModalComponent implements OnInit {
     this.store.dispatch(
       cancelReservationAdmin({ reservationId, cause: { customReason: 'hola' } })
     );
-    this.reservationInfoModal.close(); // Close modal after successful cancellation
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

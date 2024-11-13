@@ -7,6 +7,7 @@ import { Observable, Subscription } from 'rxjs';
 import {
   createReservation,
   loadAvailableSlots,
+  loadReservations,
   resetCreateReservation,
 } from 'src/app/state/actions/reservations.actions';
 import { AppState } from 'src/app/state/app.state';
@@ -240,6 +241,7 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
 
   private handleReservationSuccess(): void {
     this.dialogRef.close();
+
     Swal.fire({
       icon: 'success',
       title: 'Reserva creada',
@@ -247,7 +249,7 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
       confirmButtonColor: '#3085d6',
       confirmButtonText: 'OK',
     }).then(() => {
-      this.store.dispatch(resetCreateReservation());
+      this.store.dispatch(loadReservations());
     });
   }
 
@@ -258,8 +260,6 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
       text: 'No se pudo crear la reserva. Inténtalo de nuevo.',
       confirmButtonColor: '#d33',
       confirmButtonText: 'OK',
-    }).then(() => {
-      this.store.dispatch(resetCreateReservation());
     });
   }
 

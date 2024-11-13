@@ -10,7 +10,6 @@ import { SharedModule } from '../shared/shared.module';
 import { ReservationCardComponent } from './components/reservation-card/reservation-card.component';
 import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.component';
 import { FormsModule } from '@angular/forms';
-import { CancelReservationModalComponent } from './modals/cancel-reservation-modal/cancel-reservation-modal.component';
 import { ConfirmationModalComponent } from './modals/confirmation-modal/confirmation-modal.component';
 import { AvailableSlotCardComponent } from './components/available-slot-card/available-slot-card.component';
 
@@ -19,7 +18,6 @@ import { AvailableSlotCardComponent } from './components/available-slot-card/ava
     MakeReservationModalComponent,
     ReservationCardComponent,
     DashboardPageComponent,
-    CancelReservationModalComponent,
     ConfirmationModalComponent,
     AvailableSlotCardComponent,
   ],

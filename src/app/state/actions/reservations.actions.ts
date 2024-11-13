@@ -51,6 +51,19 @@ export const cancelReservationAdmin = createAction(
   props<{ reservationId: string; cause: CancellationCause }>()
 );
 
+export const cancelReservationAdminSuccess = createAction(
+  '[Admin Dashboard] Cancel Reservation from admin Success'
+);
+
+export const cancelReservationAdminFailure = createAction(
+  '[Admin Dashboard] Cancel Reservation from admin Failure',
+  props<{ error: any }>()
+);
+
+export const resetCancelReservationAdminState = createAction(
+  '[Admin Dashboard] Reset Cancel Reservation from admin'
+);
+
 // Acción para cargar espacios disponibles
 export const loadAvailableSlots = createAction(
   '[Reservation] Load Available Slots',
