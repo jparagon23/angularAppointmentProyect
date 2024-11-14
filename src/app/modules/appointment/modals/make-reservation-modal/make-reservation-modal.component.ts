@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { toZonedTime, format } from 'date-fns-tz';
-import { Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged, filter, Observable, Subscription } from 'rxjs';
 import {
   createReservation,
   loadAvailableSlots,
@@ -24,6 +24,9 @@ import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-m
 import Swal from 'sweetalert2';
 import { ClubAvailability } from 'src/app/models/ClubAvalability.model';
 import { AvailableSlotsResponse } from 'src/app/models/AvailableSlotInfo.model';
+import { User } from 'src/app/models/user.model';
+import { selectUser } from 'src/app/state/selectors/users.selectors';
+import { UserNameMakeReservationModalComponent } from 'src/app/modules/admin/modals/user-name-make-reservation-modal/user-name-make-reservation-modal.component';
 
 @Component({
   selector: 'app-make-reservation-modal',
@@ -53,6 +56,10 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     selectGetAvailableSlotsFailure
   );
 
+  user$: Observable<User> = new Observable<User>();
+
+  user: User | null = null;
+
   private readonly subscriptions = new Subscription();
 
   constructor(
@@ -65,6 +72,17 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.modalService.add(this.dialogRef);
     this.initializeSubscriptions();
+
+    this.user$ = this.store.select(selectUser).pipe(
+      filter((user): user is User => user !== null),
+      distinctUntilChanged()
+    );
+
+    this.user$.subscribe((user) => {
+      if (user) {
+        this.user = user;
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -74,17 +92,21 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   }
 
   private initializeSubscriptions(): void {
-    this.subscriptions.add(
-      this.store.select(selectReservationConfiguration).subscribe((config) => {
-        if (config) {
-          this.handleReservationConfiguration(config);
-          this.selectedDate = this.initializeSelectedDate();
-          if (this.selectedDate) {
-            this.fetchAvailableSlots(this.selectedDate);
-          }
-        }
-      })
-    );
+    if (this.user?.role === 1) {
+      this.subscriptions.add(
+        this.store
+          .select(selectReservationConfiguration)
+          .subscribe((config) => {
+            if (config) {
+              this.handleReservationConfiguration(config);
+            }
+          })
+      );
+    }
+    this.selectedDate = this.initializeSelectedDate();
+    if (this.selectedDate) {
+      this.fetchAvailableSlots(this.selectedDate);
+    }
 
     this.subscriptions.add(
       this.createReservationSuccess$.subscribe((success) => {
@@ -119,11 +141,15 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
       timeZone: bogotaTimeZone,
     });
 
-    // Verificar si la fecha actual está fuera del rango permitido
-    if (formattedToday < this.minDate || formattedToday > this.maxDate) {
-      return this.minDate; // Retornar cadena vacía si está fuera del rango
+    if (this.user?.role === 1) {
+      // Verificar si la fecha actual está fuera del rango permitido
+      if (formattedToday < this.minDate || formattedToday > this.maxDate) {
+        return this.minDate; // Retornar cadena vacía si está fuera del rango
+      } else {
+        return formattedToday; // Si está dentro del rango, retornar la fecha de hoy
+      }
     } else {
-      return formattedToday; // Si está dentro del rango, retornar la fecha de hoy
+      return formattedToday;
     }
   }
 
@@ -224,19 +250,37 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const dialogRef = this.dialog.open(ConfirmationModalComponent, {
-      maxWidth: '50vw',
-      maxHeight: '50vh',
-      data: { text: '¿Estas seguro que quieres realizar esta reserva?' },
-    });
+    if (this.user?.role === 1) {
+      const dialogRef = this.dialog.open(ConfirmationModalComponent, {
+        maxWidth: '50vw',
+        maxHeight: '50vh',
+        data: { text: '¿Estas seguro que quieres realizar esta reserva?' },
+      });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result === true) {
-        this.store.dispatch(
-          createReservation({ selectedSlots: this.selectedSlots })
-        );
-      }
-    });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result === true) {
+          this.store.dispatch(
+            createReservation({ selectedSlots: this.selectedSlots })
+          );
+        }
+      });
+    } else if (this.user?.role === 2) {
+      const dialogRef = this.dialog.open(
+        UserNameMakeReservationModalComponent,
+        {
+          maxWidth: '50vw',
+          maxHeight: '50vh',
+        }
+      );
+
+      // dialogRef.afterClosed().subscribe((result) => {
+      //   if (result === true) {
+      //     this.store.dispatch(
+      //       createReservation({ selectedSlots: this.selectedSlots })
+      //     );
+      //   }
+      // });
+    }
   }
 
   private handleReservationSuccess(): void {

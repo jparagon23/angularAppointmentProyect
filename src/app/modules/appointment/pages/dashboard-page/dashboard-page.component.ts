@@ -112,6 +112,5 @@ export class DashboardPageComponent implements OnInit {
   private hideLoadingSpinner(): void {
     if (!this.isLoading) return;
     this.isLoading = false;
-    //Swal.close();
   }
 }
