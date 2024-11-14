@@ -27,19 +27,21 @@ import { AvailableSlotsResponse } from 'src/app/models/AvailableSlotInfo.model';
 import { User } from 'src/app/models/user.model';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { UserNameMakeReservationModalComponent } from 'src/app/modules/admin/modals/user-name-make-reservation-modal/user-name-make-reservation-modal.component';
+import { createReservationAdmin } from 'src/app/state/actions/club.actions';
 
 @Component({
   selector: 'app-make-reservation-modal',
   templateUrl: './make-reservation-modal.component.html',
 })
 export class MakeReservationModalComponent implements OnInit, OnDestroy {
-  selectedDate: string = ''; // Inicialmente vacío, se llenará tras recibir la configuración
+  selectedDate: string = '';
   availableTimeSlots$: Observable<AvailableSlotsResponse | null> =
     this.store.select(selectAvailableSlots);
   selectedSlots: string[] = [];
   minDate: string = '';
   maxDate: string = '';
   noAvailability: boolean = false;
+
   createReservationLoader$: Observable<boolean> = this.store.select(
     selectCreateReservationLoading
   );
@@ -273,13 +275,23 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
         }
       );
 
-      // dialogRef.afterClosed().subscribe((result) => {
-      //   if (result === true) {
-      //     this.store.dispatch(
-      //       createReservation({ selectedSlots: this.selectedSlots })
-      //     );
-      //   }
-      // });
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          console.log({
+            selecteDates: this.selectedSlots,
+            userId: result.userId,
+            lightUser: result.lightUser,
+          });
+
+          this.store.dispatch(
+            createReservationAdmin({
+              selecteDates: this.selectedSlots,
+              userId: result.userId,
+              lightUser: result.lightUser,
+            })
+          );
+        }
+      });
     }
   }
 

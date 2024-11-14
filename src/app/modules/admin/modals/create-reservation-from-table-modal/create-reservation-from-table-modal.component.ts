@@ -31,6 +31,7 @@ import { AppState } from 'src/app/state/app.state';
 import { isModalOpen } from 'src/app/state/selectors/modals.selectors';
 import { openModal } from 'src/app/state/actions/modals.actions';
 import Swal from 'sweetalert2';
+import { UserListReturn } from 'src/app/models/UserListReturn.model';
 
 @Component({
   selector: 'app-create-reservation-from-table-modal',
@@ -40,6 +41,7 @@ import Swal from 'sweetalert2';
 export class CreateReservationFromTableModalComponent
   implements OnInit, OnDestroy
 {
+  userReturn!: UserListReturn | null;
   isnewUser = false;
   lightUser: LightUser | null = null;
   reservationCreated$?: Observable<boolean>;
@@ -134,22 +136,20 @@ export class CreateReservationFromTableModalComponent
     });
   }
 
-  onUserSelected(user: ClubUser | LightUser) {
-    this.selectedUser = user as ClubUser;
-    if ('userId' in user && !user.userId) {
-      this.lightUser = user as unknown as LightUser;
-      this.isnewUser = true;
-    }
+  onUserSelected(user: UserListReturn | null) {
+    this.userReturn = user;
   }
 
   createReservation() {
     const { hour } = this.data.reservationInfo;
 
+    console.log(this.userReturn);
+
     this.store.dispatch(
       createReservationAdmin({
         selecteDates: [hour],
-        userId: this.selectedUser?.userId?.toString() ?? '',
-        lightUser: this.selectedUser?.userId ? null : this.lightUser,
+        userId: this.userReturn?.userId ?? '',
+        lightUser: this.userReturn?.lightUser ?? null,
       })
     );
   }

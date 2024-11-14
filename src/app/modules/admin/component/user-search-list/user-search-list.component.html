@@ -6,7 +6,6 @@
     <input
       id="user"
       type="text"
-      [disabled]="(loadingUsers$ | async) ?? false"
       placeholder="Empieza a escribir"
       class="outline-none flex-grow text-gray-700 text-sm sm:text-base"
       [formControl]="userControl"

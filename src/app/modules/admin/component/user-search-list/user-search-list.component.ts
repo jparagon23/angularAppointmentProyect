@@ -20,6 +20,7 @@ import {
   selectLoadingClubUsers,
 } from 'src/app/state/selectors/club.selectors';
 import { CreateLightUserModalComponent } from '../../modals/create-light-user-modal/create-light-user-modal.component';
+import { UserListReturn } from 'src/app/models/UserListReturn.model';
 
 @Component({
   selector: 'app-user-search-list',
@@ -27,7 +28,7 @@ import { CreateLightUserModalComponent } from '../../modals/create-light-user-mo
   styleUrls: ['./user-search-list.component.css'],
 })
 export class UserSearchListComponent implements OnInit, OnDestroy {
-  @Output() userSelected = new EventEmitter<ClubUser | LightUser>();
+  @Output() userReturn = new EventEmitter<UserListReturn | null>();
 
   loadingUsers$ = this.store.select(selectLoadingClubUsers);
   filteredUsers$ = this.store.select(selectClubUsers);
@@ -59,14 +60,25 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
   }
 
   private searchUserIfNeeded(searchTerm: string | null): void {
-    if (!this.selectedUser && searchTerm) {
-      this.store.dispatch(getClubUserByNameOrId({ nameOrId: searchTerm }));
+    console.log(searchTerm);
+
+    if (typeof searchTerm === 'string') {
+      this.selectedUser = undefined;
+      this.userReturn.emit(null);
+
+      if (searchTerm && searchTerm.trim().length > 0) {
+        this.store.dispatch(getClubUserByNameOrId({ nameOrId: searchTerm }));
+      }
     }
   }
 
   onUserSelected(user: ClubUser): void {
     this.selectedUser = user;
-    this.userSelected.emit(user);
+
+    this.userReturn.emit({
+      userId: this.selectedUser?.userId?.toString() ?? '',
+      lightUser: this.selectedUser?.userId ? null : this.lightUser,
+    });
   }
 
   displayUserName(user?: ClubUser): string {
@@ -101,7 +113,10 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
     this.userControl.setValue(newUser);
     this.isnewUser = true;
     this.lightUser = result;
-    this.userSelected.emit(newUser);
+    this.userReturn.emit({
+      userId: this.selectedUser?.userId?.toString() ?? '',
+      lightUser: this.selectedUser?.userId ? null : this.lightUser,
+    });
   }
 
   ngOnDestroy(): void {

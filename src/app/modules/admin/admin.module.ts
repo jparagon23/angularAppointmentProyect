@@ -20,6 +20,7 @@ import { CancellationCausesConfigComponent } from './components/cancellation-cau
 import { CreateLightUserModalComponent } from './modals/create-light-user-modal/create-light-user-modal.component';
 import { UserNameMakeReservationModalComponent } from './modals/user-name-make-reservation-modal/user-name-make-reservation-modal.component';
 import { UserSearchListComponent } from './component/user-search-list/user-search-list.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { UserSearchListComponent } from './component/user-search-list/user-searc
     MatInputModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
+    MatDialogModule,
   ],
 })
 export class AdminModule {}
