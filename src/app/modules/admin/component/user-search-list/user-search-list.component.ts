@@ -60,8 +60,6 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
   }
 
   private searchUserIfNeeded(searchTerm: string | null): void {
-    console.log(searchTerm);
-
     if (typeof searchTerm === 'string') {
       this.selectedUser = undefined;
       this.userReturn.emit(null);

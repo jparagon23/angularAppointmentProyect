@@ -50,8 +50,11 @@ import {
 })
 export class MakeReservationModalComponent implements OnInit, OnDestroy {
   selectedDate: string = '';
+  selectedDateLoaded: boolean = false;
+  rangeDateLoaded: boolean = false;
   availableTimeSlots$: Observable<AvailableSlotsResponse | null> =
     this.store.select(selectAvailableSlots);
+
   selectedSlots: string[] = [];
   minDate: string = '';
   maxDate: string = '';
@@ -126,8 +129,6 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   }
 
   private initializeSubscriptions(): void {
-    console.log(this.user?.role);
-
     if (this.user?.role === 1) {
       this.subscriptions.add(
         this.store
@@ -135,6 +136,8 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
           .subscribe((config) => {
             if (config) {
               this.handleReservationConfiguration(config);
+              this.selectedDate = this.initializeSelectedDate();
+              this.fetchAvailableSlots(this.selectedDate);
             }
           })
       );
@@ -146,9 +149,7 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
         endDate: '',
         noAvailability: false,
       });
-    }
-    this.selectedDate = this.initializeSelectedDate();
-    if (this.selectedDate) {
+      this.selectedDate = this.initializeSelectedDate();
       this.fetchAvailableSlots(this.selectedDate);
     }
 
@@ -194,8 +195,6 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   }
 
   private initializeSelectedDate(): string {
-    console.log(this.user?.role);
-
     const today = new Date();
     const bogotaTimeZone = 'America/Bogota';
     const zonedDate = toZonedTime(today, bogotaTimeZone);
@@ -206,22 +205,28 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     if (this.user?.role === 1) {
       // Verificar si la fecha actual está fuera del rango permitido
       if (formattedToday < this.minDate || formattedToday > this.maxDate) {
+        this.selectedDateLoaded = true;
+
         return this.minDate; // Retornar cadena vacía si está fuera del rango
       } else {
+        this.selectedDateLoaded = true;
+
         return formattedToday; // Si está dentro del rango, retornar la fecha de hoy
       }
     } else {
+      this.selectedDateLoaded = true;
+
       return formattedToday;
     }
   }
 
   private handleReservationConfiguration(config: ClubAvailability): void {
-    console.log('config', config);
-
     this.noAvailability = config.noAvailability || false;
     if (this.noAvailability) {
       this.minDate = '';
       this.maxDate = '';
+      this.rangeDateLoaded = true;
+
       return;
     }
 
@@ -235,9 +240,11 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     if (config.alwaysAvailable) {
       this.minDate = formattedToday;
       this.maxDate = '2100-12-31';
+      this.rangeDateLoaded = true;
     } else if (config.byRange && config.initialDate && config.endDate) {
       this.minDate = config.initialDate;
       this.maxDate = config.endDate;
+      this.rangeDateLoaded = true;
     }
   }
 
@@ -248,10 +255,6 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   }
 
   onDateChange(date: string): void {
-    console.log(date);
-    console.log(this.minDate);
-    console.log(this.maxDate);
-
     if (date >= this.minDate && date <= this.maxDate) {
       this.selectedDate = date;
       this.selectedSlots = [];

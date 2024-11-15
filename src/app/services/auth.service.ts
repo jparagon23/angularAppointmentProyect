@@ -154,13 +154,9 @@ export class AuthService {
   }
 
   resendAuthenticationCode() {
-    console.log('resendAuthenticationCode');
-
     const userId = this.user?.id ?? -1;
-    console.log('userId', userId);
 
     const url = `${this.apiUrl}/auth/resend-auth-code`;
-    console.log('url', url);
 
     const params = new HttpParams().set('userId', userId.toString());
     return this.http.post(url, {}, { params });

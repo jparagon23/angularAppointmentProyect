@@ -128,9 +128,6 @@ export class RegisterFormComponent implements OnInit {
               queryParams: { email },
             });
           } else if (response.body?.creationResponse === 2) {
-            console.log('User already exists');
-            console.log('userId', response.body.userId);
-
             this.authService.setUserId(response.body.userId.toString());
             this.authService.resendAuthenticationCode().subscribe({
               next: () => {

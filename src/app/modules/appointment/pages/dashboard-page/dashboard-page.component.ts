@@ -46,7 +46,6 @@ export class DashboardPageComponent implements OnInit {
     this.loadingReservations$ = this.store.select(selectReservationLoading);
     this.userReservations$ = this.store.select(selectListReservations);
     this.store.dispatch(loadReservations());
-    console.log('Reservations loading dispatched');
 
     this.handleCancelReservationSuccess();
     this.handleCancelReservationFailure();
@@ -57,8 +56,6 @@ export class DashboardPageComponent implements OnInit {
     this.subscriptions.add(
       this.cancelReservationSuccess$.subscribe((success) => {
         if (success) {
-          console.log('Cancel reservation success');
-
           Swal.fire({
             icon: 'success',
             title: 'Reserva cancelada',

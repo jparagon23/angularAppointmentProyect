@@ -143,8 +143,6 @@ export class CreateReservationFromTableModalComponent
   createReservation() {
     const { hour } = this.data.reservationInfo;
 
-    console.log(this.userReturn);
-
     this.store.dispatch(
       createReservationAdmin({
         selecteDates: [hour],
