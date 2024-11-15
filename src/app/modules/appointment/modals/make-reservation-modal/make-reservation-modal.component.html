@@ -5,7 +5,7 @@
   }
 </style>
 
-<div *ngIf="!(selectedDate == ''); else loading">
+<div *ngIf="rangeDateLoaded && selectedDateLoaded; else loading">
   <div
     mat-dialog-content
     class="overflow-x-hidden overflow-y-auto max-h-screen w-full md:w-[80vw] lg:w-[90vw]"
@@ -23,13 +23,23 @@
     <div *ngIf="!noAvailability">
       <!-- Mostrar el loader si está cargando -->
       <div
-        *ngIf="createReservationLoader$ | async"
+        *ngIf="
+          (createReservationLoader$ | async) ||
+          (createReservationAdminLoader$ | async)
+        "
         class="flex justify-center items-center h-full"
       >
         <app-loader></app-loader>
       </div>
 
-      <div *ngIf="!(createReservationLoader$ | async)">
+      <div
+        *ngIf="
+          !(
+            (createReservationLoader$ | async) ||
+            (createReservationAdminLoader$ | async)
+          )
+        "
+      >
         <div
           class="text-2xl md:text-3xl border-b-2 border-gray-300 mb-2 text-black"
         >
@@ -43,7 +53,7 @@
               [initialDate]="selectedDate"
               [minDate]="minDate"
               [maxDate]="maxDate"
-              (dateSelected)="onDateChange1($event)"
+              (dateSelected)="onDateChange($event)"
             ></app-date-selector>
           </div>
         </div>
