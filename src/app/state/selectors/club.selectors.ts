@@ -32,3 +32,8 @@ export const reservationCreatedFailure = createSelector(
   selectClubState,
   (state: ClubState) => state.reservationCreatedFailure
 );
+
+export const selectCreateReservationAdminSuccess = createSelector(
+  selectClubState,
+  (state: ClubState) => state.reservationCreated
+);

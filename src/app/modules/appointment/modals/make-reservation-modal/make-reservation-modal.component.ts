@@ -3,7 +3,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { toZonedTime, format } from 'date-fns-tz';
-import { distinctUntilChanged, filter, Observable, Subscription } from 'rxjs';
+import {
+  distinctUntilChanged,
+  filter,
+  Observable,
+  Subscription,
+  take,
+  tap,
+} from 'rxjs';
 import {
   createReservation,
   loadAvailableSlots,
@@ -27,7 +34,15 @@ import { AvailableSlotsResponse } from 'src/app/models/AvailableSlotInfo.model';
 import { User } from 'src/app/models/user.model';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { UserNameMakeReservationModalComponent } from 'src/app/modules/admin/modals/user-name-make-reservation-modal/user-name-make-reservation-modal.component';
-import { createReservationAdmin } from 'src/app/state/actions/club.actions';
+import {
+  createReservationAdmin,
+  resetReservationCreated,
+} from 'src/app/state/actions/club.actions';
+import {
+  loadingCreateReservation,
+  reservationCreatedFailure,
+  selectCreateReservationAdminSuccess,
+} from 'src/app/state/selectors/club.selectors';
 
 @Component({
   selector: 'app-make-reservation-modal',
@@ -42,20 +57,37 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   maxDate: string = '';
   noAvailability: boolean = false;
 
+  // Loading and state observables
+
   createReservationLoader$: Observable<boolean> = this.store.select(
     selectCreateReservationLoading
   );
+
+  createReservationAdminLoader$: Observable<boolean> = this.store.select(
+    loadingCreateReservation
+  );
+
+  loadingAvailableSlots$: Observable<boolean> = this.store.select(
+    selectLoadingAvailableSlots
+  );
+  loadingAvailableSlotsFailure$: Observable<boolean> = this.store.select(
+    selectGetAvailableSlotsFailure
+  );
+
+  // Success and failure observables
+
   createReservationSuccess$: Observable<boolean> = this.store.select(
     selectCreateReservationSuccess
   );
   createReservationFailure$: Observable<boolean> = this.store.select(
     selectCreateReservationFailure
   );
-  loadingAvailableSlots$: Observable<boolean> = this.store.select(
-    selectLoadingAvailableSlots
+
+  createReservationAdminSuccess$: Observable<boolean> = this.store.select(
+    selectCreateReservationAdminSuccess
   );
-  loadingAvailableSlotsFailure$: Observable<boolean> = this.store.select(
-    selectGetAvailableSlotsFailure
+  createReservationAdminFailure$: Observable<boolean> = this.store.select(
+    reservationCreatedFailure
   );
 
   user$: Observable<User> = new Observable<User>();
@@ -73,17 +105,16 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.modalService.add(this.dialogRef);
-    this.initializeSubscriptions();
 
     this.user$ = this.store.select(selectUser).pipe(
       filter((user): user is User => user !== null),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      tap((user) => (this.user = user)), // Set this.user once the user is available
+      take(1) // Complete after the first emission
     );
 
-    this.user$.subscribe((user) => {
-      if (user) {
-        this.user = user;
-      }
+    this.user$.subscribe(() => {
+      this.initializeSubscriptions(); // Call only after this.user is set
     });
   }
 
@@ -91,9 +122,12 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     this.modalService.remove(this.dialogRef);
     this.subscriptions.unsubscribe();
     this.store.dispatch(resetCreateReservation());
+    this.store.dispatch(resetReservationCreated());
   }
 
   private initializeSubscriptions(): void {
+    console.log(this.user?.role);
+
     if (this.user?.role === 1) {
       this.subscriptions.add(
         this.store
@@ -104,6 +138,14 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
             }
           })
       );
+    } else if (this.user?.role === 2) {
+      this.handleReservationConfiguration({
+        alwaysAvailable: true,
+        byRange: false,
+        initialDate: '',
+        endDate: '',
+        noAvailability: false,
+      });
     }
     this.selectedDate = this.initializeSelectedDate();
     if (this.selectedDate) {
@@ -133,9 +175,27 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
         }
       })
     );
+
+    this.subscriptions.add(
+      this.createReservationAdminSuccess$.subscribe((success) => {
+        if (success) {
+          this.handleReservationSuccess();
+        }
+      })
+    );
+
+    this.subscriptions.add(
+      this.createReservationAdminFailure$.subscribe((failure) => {
+        if (failure) {
+          this.handleReservationFailure();
+        }
+      })
+    );
   }
 
   private initializeSelectedDate(): string {
+    console.log(this.user?.role);
+
     const today = new Date();
     const bogotaTimeZone = 'America/Bogota';
     const zonedDate = toZonedTime(today, bogotaTimeZone);
@@ -156,6 +216,8 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   }
 
   private handleReservationConfiguration(config: ClubAvailability): void {
+    console.log('config', config);
+
     this.noAvailability = config.noAvailability || false;
     if (this.noAvailability) {
       this.minDate = '';
@@ -185,27 +247,11 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDateChange(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const date = inputElement.value;
+  onDateChange(date: string): void {
+    console.log(date);
+    console.log(this.minDate);
+    console.log(this.maxDate);
 
-    if (date >= this.minDate && date <= this.maxDate) {
-      this.selectedDate = date;
-      this.selectedSlots = [];
-      this.fetchAvailableSlots(this.selectedDate);
-    } else {
-      this.selectedDate = ''; // Restablecer la fecha seleccionada si no está en el rango permitido
-      Swal.fire({
-        icon: 'warning',
-        title: 'Fecha no válida',
-        text: 'La fecha seleccionada no está dentro del rango permitido.',
-        confirmButtonColor: '#f39c12',
-        confirmButtonText: 'OK',
-      });
-    }
-  }
-
-  onDateChange1(date: string): void {
     if (date >= this.minDate && date <= this.maxDate) {
       this.selectedDate = date;
       this.selectedSlots = [];
@@ -277,12 +323,6 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
 
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
-          console.log({
-            selecteDates: this.selectedSlots,
-            userId: result.userId,
-            lightUser: result.lightUser,
-          });
-
           this.store.dispatch(
             createReservationAdmin({
               selecteDates: this.selectedSlots,
