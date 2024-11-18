@@ -134,3 +134,18 @@ export const selectCancelReservationAdminFailure = createSelector(
   selectReservationsFeature,
   (state: ReservationState) => state.cancelReservationAdminFailure
 );
+
+export const selectCreateCancelReservationSuccess = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.createCancelReservationSuccess
+);
+
+export const selectupdateCancelReservationSuccess = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.updateCancelReservationSuccess
+);
+
+export const selectdeleteCancelReservationSuccess = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.deleteCancelReservationSuccess
+);

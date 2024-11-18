@@ -359,6 +359,9 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
       text: 'No se pudo crear la reserva. Inténtalo de nuevo.',
       confirmButtonColor: '#d33',
       confirmButtonText: 'OK',
+    }).then(() => {
+      this.selectedSlots = [];
+      this.fetchAvailableSlots(this.selectedDate);
     });
   }
 

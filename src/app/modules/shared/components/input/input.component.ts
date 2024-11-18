@@ -1,7 +1,6 @@
 // input.component.ts
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormControl } from '@angular/forms';
-import { errorMessages } from '../../constants/Constants.constants';
 import { Functions } from 'src/app/utils/funcitons';
 
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';

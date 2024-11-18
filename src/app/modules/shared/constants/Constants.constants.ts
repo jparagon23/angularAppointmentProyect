@@ -11,6 +11,7 @@ export const errorMessages: CustomError[] = [
     description: 'La longitud máxima es de ${requiredLength} dígitos.',
   },
   { type: 'pattern', description: 'Formato inválido.' },
+  { type: 'email', description: 'El correo electrónico no es válido.' }, // Añadido
   { type: 'passwordMismatch', description: 'Las contraseñas no coinciden.' },
   {
     type: 'emailNotAvailable',
