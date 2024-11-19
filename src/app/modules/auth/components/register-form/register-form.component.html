@@ -70,7 +70,7 @@
       <div class="w-full">
         <app-input
           [control]="registerForm.controls['birthdate']"
-          [name]="'cumpleaños'"
+          [name]="'fechaDeNacimiento'"
           [type]="'date'"
           [placeholder]="'Selecciona tu fecha de nacimiento'"
           class="w-full"
@@ -97,7 +97,7 @@
           [control]="registerForm.controls['document']"
           [name]="'documento'"
           [type]="'text'"
-          [placeholder]="'Ingresa tu documento'"
+          [placeholder]="'Ingresa tu número de documento'"
           class="w-full"
         ></app-input>
       </div>
@@ -122,7 +122,7 @@
           [name]="'telefono'"
           [description]="'Teléfono'"
           [type]="'text'"
-          [placeholder]="'Ingresa tu numero telefonico'"
+          [placeholder]="'Ingresa tu número telefónico'"
           class="w-full"
         ></app-input>
       </div>
@@ -134,7 +134,7 @@
         [control]="registerForm.controls['email']"
         [name]="'Correo'"
         [type]="'email'"
-        [placeholder]="'Ingresa tu correo'"
+        [placeholder]="'Ingresa tu correo electrónico'"
         class="w-full"
       ></app-input>
     </div>
