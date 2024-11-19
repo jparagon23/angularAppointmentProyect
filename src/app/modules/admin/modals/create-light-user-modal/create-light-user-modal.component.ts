@@ -31,7 +31,6 @@ export class CreateLightUserModalComponent {
         lastName: this.userForm.value.lastName || '',
         email: this.userForm.value.email || '',
       };
-      console.log('User created', user);
       this.dialogRef.close(user);
     }
   }

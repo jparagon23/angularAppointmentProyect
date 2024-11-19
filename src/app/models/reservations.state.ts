@@ -50,4 +50,8 @@ export interface ReservationState {
   updateCancelReservationLoading: boolean;
   updateCancelReservationSuccess: boolean;
   updateCancelReservationFailure: boolean;
+
+  cancelReservationAdminLoading: boolean;
+  cancelReservationAdminSuccess: boolean;
+  cancelReservationAdminFailure: boolean;
 }

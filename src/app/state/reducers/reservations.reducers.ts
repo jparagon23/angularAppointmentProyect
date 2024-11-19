@@ -1,5 +1,10 @@
 import {
   cancelReservation,
+  cancelReservationAdminFailure,
+  cancelReservationAdminSuccess,
+  resetCancelReservationAdminState,
+} from './../actions/reservations.actions';
+import {
   cancelReservationFailure,
   cancelReservationSuccess,
   createCancelReservationCauses,
@@ -98,6 +103,10 @@ export const initialState: ReservationState = {
   updateCancelReservationLoading: false,
   updateCancelReservationSuccess: false,
   updateCancelReservationFailure: false,
+
+  cancelReservationAdminLoading: false,
+  cancelReservationAdminSuccess: false,
+  cancelReservationAdminFailure: false,
 };
 
 export const reservationsReducer = createReducer(
@@ -144,7 +153,23 @@ export const reservationsReducer = createReducer(
 
   on(cancelReservationAdmin, (state) => ({
     ...state,
-    reservationCanceled: true,
+    cancelReservationAdminLoading: true,
+  })),
+  on(cancelReservationAdminSuccess, (state) => ({
+    ...state,
+    cancelReservationAdminLoading: false,
+    cancelReservationAdminSuccess: true,
+  })),
+  on(cancelReservationAdminFailure, (state) => ({
+    ...state,
+    cancelReservationAdminLoading: false,
+    cancelReservationAdminFailure: true,
+  })),
+  on(resetCancelReservationAdminState, (state) => ({
+    ...state,
+    cancelReservationAdminLoading: false,
+    cancelReservationAdminSuccess: false,
+    cancelReservationAdminFailure: false,
   })),
   // Cargando los espacios disponibles
   on(loadAvailableSlots, (state) => ({

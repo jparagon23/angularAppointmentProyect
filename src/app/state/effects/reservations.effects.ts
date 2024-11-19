@@ -13,6 +13,8 @@ import { ReservationService } from 'src/app/services/reservation.service';
 import {
   cancelReservation,
   cancelReservationAdmin,
+  cancelReservationAdminFailure,
+  cancelReservationAdminSuccess,
   cancelReservationSuccess,
   createCancelReservationCauses,
   createCancelReservationCausesFailure,
@@ -68,8 +70,10 @@ export class ReservationEffects {
   // Return action creators
   loadReservations$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(createReservationSuccess, cancelReservationSuccess),
-      concatMap(() => of(loadReservations()))
+      ofType(cancelReservationSuccess),
+      switchMap(() => {
+        return of(loadReservations());
+      })
     )
   );
 
@@ -85,19 +89,25 @@ export class ReservationEffects {
     )
   );
 
+  // First Effect: Handles cancelReservationAdmin and triggers success or failure actions
   cancelReservationAdmin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(cancelReservationAdmin),
       switchMap(({ reservationId, cause }) =>
         this.reservationService.cancelReservation(reservationId, cause).pipe(
-          withLatestFrom(
-            this.store.select(selectDatePicked),
-            this.store.select(selectUser)
-          ),
-          map(([_, date]) => loadReservationsAdmin({ date })),
-          catchError((error) => of(loadReservationsFailure({ error })))
+          map(() => cancelReservationAdminSuccess()), // Dispatch success action
+          catchError((error) => of(cancelReservationAdminFailure({ error }))) // Dispatch failure action
         )
       )
+    )
+  );
+
+  // Second Effect: Listens for success and then triggers loadReservationsAdmin, with error handling
+  loadReservationsAfterCancelSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(cancelReservationAdminSuccess),
+      withLatestFrom(this.store.select(selectDatePicked)),
+      map(([_, date]) => loadReservationsAdmin({ date }))
     )
   );
 

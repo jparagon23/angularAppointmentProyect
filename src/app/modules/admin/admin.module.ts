@@ -18,6 +18,9 @@ import { CourtConfigComponentComponent } from './components/availability-config-
 import { CancelReservationModalComponent } from './modals/cancel-reservation-modal/cancel-reservation-modal.component';
 import { CancellationCausesConfigComponent } from './components/cancellation-causes-config/cancellation-causes-config.component';
 import { CreateLightUserModalComponent } from './modals/create-light-user-modal/create-light-user-modal.component';
+import { UserNameMakeReservationModalComponent } from './modals/user-name-make-reservation-modal/user-name-make-reservation-modal.component';
+import { UserSearchListComponent } from './component/user-search-list/user-search-list.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -33,6 +36,8 @@ import { CreateLightUserModalComponent } from './modals/create-light-user-modal/
     CancelReservationModalComponent,
     CancellationCausesConfigComponent,
     CreateLightUserModalComponent,
+    UserNameMakeReservationModalComponent,
+    UserSearchListComponent,
   ],
   imports: [
     CommonModule,
@@ -43,6 +48,7 @@ import { CreateLightUserModalComponent } from './modals/create-light-user-modal/
     MatInputModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
+    MatDialogModule,
   ],
 })
 export class AdminModule {}

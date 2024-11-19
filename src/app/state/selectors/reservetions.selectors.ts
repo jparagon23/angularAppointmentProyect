@@ -1,6 +1,6 @@
 import { ReservationState } from 'src/app/models/reservations.state';
 import { AppState } from '../app.state';
-import { createSelector } from '@ngrx/store';
+import { createSelector, select } from '@ngrx/store';
 import { GroupReservationInfo } from 'src/app/models/GroupReservationInfo.model';
 
 export const selectReservationsFeature = (state: AppState) =>
@@ -120,4 +120,32 @@ export const selectReservationConfiguration = createSelector(
 export const selectCancellationCauses = createSelector(
   selectReservationsFeature,
   (state: ReservationState) => state.cancelationCauses
+);
+
+export const selectCancelReservationAdminLoading = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.cancelReservationAdminLoading
+);
+export const selectCancelReservationAdminSuccess = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.cancelReservationAdminSuccess
+);
+export const selectCancelReservationAdminFailure = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.cancelReservationAdminFailure
+);
+
+export const selectCreateCancelReservationSuccess = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.createCancelReservationSuccess
+);
+
+export const selectupdateCancelReservationSuccess = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.updateCancelReservationSuccess
+);
+
+export const selectdeleteCancelReservationSuccess = createSelector(
+  selectReservationsFeature,
+  (state: ReservationState) => state.deleteCancelReservationSuccess
 );

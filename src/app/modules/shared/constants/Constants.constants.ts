@@ -1,24 +1,33 @@
 import { CustomError } from 'src/app/models/CustomError.model';
 
 export const errorMessages: CustomError[] = [
-  { type: 'required', description: 'This field is required.' },
-  { type: 'minlength', description: 'Minimum length is ${requiredLength}.' },
-  { type: 'maxlength', description: 'Maximum length is ${requiredLength}.' },
-  { type: 'pattern', description: 'Invalid format.' },
-  { type: 'passwordMismatch', description: 'The passwords dont match' },
-  { type: 'emailNotAvailable', description: 'The emai is already in use' },
+  { type: 'required', description: 'El campo es requerido.' },
+  {
+    type: 'minlength',
+    description: 'La longitud mínima es de ${requiredLength} dígitos.',
+  },
+  {
+    type: 'maxlength',
+    description: 'La longitud máxima es de ${requiredLength} dígitos.',
+  },
+  { type: 'pattern', description: 'Formato inválido.' },
+  { type: 'email', description: 'El correo electrónico no es válido.' }, // Añadido
+  { type: 'passwordMismatch', description: 'Las contraseñas no coinciden.' },
+  {
+    type: 'emailNotAvailable',
+    description: 'El correo electrónico ya está en uso.',
+  },
   {
     type: 'invalidBirthdate',
-    description: 'The user must be at least 5 years old.',
+    description: 'La edad mínima para registrarse es de 5 años.',
   },
-  { type: 'passwordsDoNotMatch', description: 'The passwords do not match.' },
+  { type: 'passwordsDoNotMatch', description: 'Las contraseñas no coinciden.' },
   {
     type: 'emailAlreadyInUse',
-    description: 'There is already a user with that email.',
+    description: 'Ya existe un usuario con ese correo electrónico.',
   },
   {
     type: 'tokenNotValid',
-    description: 'El código ingresado no es valido. Intenta de nuevo',
+    description: 'El código ingresado no es válido. Intenta de nuevo.',
   },
-  // Add more error types as needed
 ];

@@ -1,0 +1,44 @@
+<div
+  class="p-6 bg-white rounded-lg shadow-md max-w-md mx-auto"
+  mat-dialog-content
+>
+  <div class="mb-4">
+    <h2 class="text-xl font-semibold text-gray-800">Selecciona el usuario</h2>
+  </div>
+  <div class="mb-6">
+    <p class="text-sm text-gray-600">
+      Ingresa el nombre del usuario al que le registrarás la reserva
+    </p>
+  </div>
+  <div class="mb-4">
+    <app-user-search-list
+      (userReturn)="onUserSelected($event)"
+    ></app-user-search-list>
+  </div>
+
+  <div
+    class="flex flex-col space-y-3 justify-center mt-6 md:flex-row md:space-y-0 md:space-x-3 w-full"
+  >
+    <div class="w-full md:w-auto">
+      <app-button
+        [typeBtn]="'submit'"
+        [color]="'danger'"
+        [mat-dialog-close]="false"
+        class="w-full md:w-auto"
+      >
+        Cancelar
+      </app-button>
+    </div>
+
+    <div class="w-full md:w-auto">
+      <app-button
+        [typeBtn]="'reset'"
+        [color]="'continue'"
+        (click)="onClickReservate()"
+        class="w-full md:w-auto bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 text-white transition-all duration-300"
+      >
+        Reservar
+      </app-button>
+    </div>
+  </div>
+</div>

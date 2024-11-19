@@ -10,6 +10,7 @@ const routes: Routes = [
     children: [
       {
         path: 'user',
+        title: 'Forehapp',
         loadChildren: () =>
           import('../appointment/appointment.module').then(
             (m) => m.AppointmentModule
@@ -17,6 +18,7 @@ const routes: Routes = [
       },
       {
         path: 'admin',
+        title: 'Forehapp',
         loadChildren: () =>
           import('../admin/admin.module').then((m) => m.AdminModule),
       },

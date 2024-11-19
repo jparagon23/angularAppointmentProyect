@@ -7,66 +7,25 @@
     </h2>
 
     <div class="mb-3 sm:mb-4">
-      <label class="block text-gray-700 font-semibold mb-1 sm:text-sm"
-        >Día de la reserva:</label
-      >
+      <div class="block text-gray-700 font-semibold mb-1 sm:text-sm">
+        Día de la reserva:
+      </div>
       <p class="text-gray-600 text-sm sm:text-base">
         {{ data.reservationInfo.date | timeFormat : "long" }}
       </p>
     </div>
 
     <div class="mb-3 sm:mb-4">
-      <label class="block text-gray-700 font-semibold mb-1 sm:text-sm"
-        >Hora:</label
-      >
+      <div class="block text-gray-700 font-semibold mb-1 sm:text-sm">Hora:</div>
       <p class="text-gray-600 text-sm sm:text-base">
         {{ data.reservationInfo.hour | hourTimeFormat }}
       </p>
     </div>
 
     <div class="mb-4 sm:mb-6">
-      <label
-        for="user"
-        class="block text-gray-700 font-semibold mb-1 sm:text-sm"
-        >Usuario:</label
-      >
-      <div class="flex items-center border border-gray-300 rounded-md p-2">
-        <input
-          id="user"
-          type="text"
-          [disabled]="(loadingUsers$ | async) ?? false"
-          placeholder="Empieza a escribir"
-          class="outline-none flex-grow text-gray-700 text-sm sm:text-base"
-          [formControl]="userControl"
-          [matAutocomplete]="auto"
-        />
-
-        <mat-autocomplete
-          #auto="matAutocomplete"
-          (optionSelected)="onUserSelected($event.option.value)"
-          [displayWith]="displayUserName"
-        >
-          <mat-option
-            *ngFor="let user of filteredUsers$ | async; trackBy: trackByUserId"
-            [value]="user"
-          >
-            {{ user.completeName }}
-          </mat-option>
-
-          <!-- Opción para crear usuario cuando la lista es vacía -->
-          <mat-option
-            *ngIf="
-              (filteredUsers$ | async)?.length === 0 &&
-              userControl.value &&
-              !isnewUser &&
-              !(loadingUsers$ | async)
-            "
-            (click)="openCreateUserModal()"
-          >
-            <em>Crear nuevo usuario</em>
-          </mat-option>
-        </mat-autocomplete>
-      </div>
+      <app-user-search-list
+        (userReturn)="onUserSelected($event)"
+      ></app-user-search-list>
     </div>
 
     <div
@@ -80,7 +39,7 @@
         [typeBtn]="'submit'"
         [color]="'success'"
         (click)="createReservation()"
-        [disabled]="!selectedUser"
+        [disabled]="userReturn == null"
       >
         Crear reserva
       </app-button>
