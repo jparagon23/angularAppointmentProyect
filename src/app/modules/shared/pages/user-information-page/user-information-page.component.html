@@ -25,10 +25,11 @@
     <ng-container *ngIf="!isEditing; else editMode">
       <!-- User Info Display -->
       <p><strong>Nombre:</strong> {{ user.name | titlecase }}</p>
-      <p><strong>Apellido:</strong> {{ user.lastname | titlecase }}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Apellidos:</strong> {{ user.lastname | titlecase }}</p>
+      <p><strong>Correo electrónico:</strong> {{ user.email }}</p>
       <p>
-        <strong>Cumpleaños:</strong> {{ user.birthdate | date : "dd/MM/yyyy" }}
+        <strong>Fecha de nacimiento:</strong>
+        {{ user.birthdate | date : "dd/MM/yyyy" }}
       </p>
       <p>
         <strong>Tipo de identificación:</strong>
@@ -37,7 +38,7 @@
             getIdentificationTypeDescription(
               user?.documentType,
               initialData.documentTypes
-            ) | titlecase
+            ) | capitalizeFirstWord
           }}
         </span>
       </p>
