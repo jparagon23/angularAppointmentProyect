@@ -17,6 +17,7 @@ import { DateSelectorComponent } from './components/date-selector/date-selector.
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { TimePipe } from './pipes/time.pipe';
+import { CapitalizeFirstWordPipe } from './pipes/capitalize-first-word.pipe';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { TimePipe } from './pipes/time.pipe';
     UserInformationPageComponent,
     DateSelectorComponent,
     TimePipe,
+    CapitalizeFirstWordPipe,
   ],
 
   imports: [
@@ -52,6 +54,7 @@ import { TimePipe } from './pipes/time.pipe';
     TimePipe,
     LoaderComponent,
     DateSelectorComponent,
+    CapitalizeFirstWordPipe,
   ],
 })
 export class SharedModule {}

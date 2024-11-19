@@ -3,7 +3,10 @@ import { Store } from '@ngrx/store';
 import { cloneDeep, update } from 'lodash';
 import { Observable, Subscription } from 'rxjs';
 import { filter, distinctUntilChanged } from 'rxjs/operators';
-import { InitialSignUpData } from 'src/app/models/InitialSignUpData.interface';
+import {
+  CommonType,
+  InitialSignUpData,
+} from 'src/app/models/InitialSignUpData.interface';
 import { User } from 'src/app/models/user.model';
 import { UserState } from 'src/app/models/user.state';
 import { loadInitialSignUpData } from 'src/app/state/actions/register.actions';
@@ -30,6 +33,12 @@ export class UserInformationPageComponent implements OnInit {
   userEditable!: Partial<User>; // Copia mutable de user
   originalUser!: Partial<User>; // Copia mutable de user
   initialData!: InitialSignUpData;
+
+  public genders: CommonType[] = [
+    { id: 'MALE', description: 'Masculino' },
+    { id: 'FEMALE', description: 'Femenino' },
+    { id: 'OTHER', description: 'Otro' },
+  ];
 
   updateUserInfo$ = this.store.select(selectUpdateUserInfo);
 
@@ -179,5 +188,10 @@ export class UserInformationPageComponent implements OnInit {
       (type) => type.id === documentTypeId
     );
     return documentType ? documentType.description : '';
+  }
+
+  getGenderDescription(genderId: string): string {
+    const gender = this.genders.find((g) => g.id === genderId);
+    return gender ? gender.description : 'No especificado';
   }
 }

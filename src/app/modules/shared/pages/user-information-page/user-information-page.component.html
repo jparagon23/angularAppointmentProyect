@@ -8,16 +8,7 @@
       <div
         class="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center"
       >
-        <svg
-          class="w-16 h-16 text-gray-500"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M12 12c2.97 0 5.39-2.42 5.39-5.39C17.39 4.61 14.97 2.19 12 2.19S6.61 4.61 6.61 7.61c0 2.97 2.42 5.39 5.39 5.39zm0 1.69c-3.38 0-10.5 1.69-10.5 5.39v2.03h21v-2.03c0-3.7-7.12-5.39-10.5-5.39z"
-          />
-        </svg>
+        <i class="fas fa-user text-gray-500 text-4xl"></i>
       </div>
     </div>
 
@@ -25,10 +16,11 @@
     <ng-container *ngIf="!isEditing; else editMode">
       <!-- User Info Display -->
       <p><strong>Nombre:</strong> {{ user.name | titlecase }}</p>
-      <p><strong>Apellido:</strong> {{ user.lastname | titlecase }}</p>
-      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Apellidos:</strong> {{ user.lastname | titlecase }}</p>
+      <p><strong>Correo electrónico:</strong> {{ user.email }}</p>
       <p>
-        <strong>Cumpleaños:</strong> {{ user.birthdate | date : "dd/MM/yyyy" }}
+        <strong>Fecha de nacimiento:</strong>
+        {{ user.birthdate | date : "dd/MM/yyyy" }}
       </p>
       <p>
         <strong>Tipo de identificación:</strong>
@@ -37,7 +29,7 @@
             getIdentificationTypeDescription(
               user?.documentType,
               initialData.documentTypes
-            ) | titlecase
+            ) | capitalizeFirstWord
           }}
         </span>
       </p>
@@ -46,7 +38,7 @@
         <strong>Teléfono:</strong>
         {{ user.userPhones[0].phoneNumber }}
       </p>
-      <p><strong>Género:</strong> {{ user.gender | titlecase }}</p>
+      <p><strong>Género:</strong> {{ getGenderDescription(user.gender) }}</p>
       <p>
         <strong>Habilitar notificaciones:</strong>
         {{ user.allowNotification == "T" ? "Sí" : "No" }}
