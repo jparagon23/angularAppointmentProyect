@@ -46,7 +46,7 @@
         <strong>Teléfono:</strong>
         {{ user.userPhones[0].phoneNumber }}
       </p>
-      <p><strong>Género:</strong> {{ user.gender | titlecase }}</p>
+      <p><strong>Género:</strong> {{ getGenderDescription(user.gender) }}</p>
       <p>
         <strong>Habilitar notificaciones:</strong>
         {{ user.allowNotification == "T" ? "Sí" : "No" }}
