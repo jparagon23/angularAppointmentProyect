@@ -31,3 +31,8 @@ body {
   border-radius: 0.375rem; /* Añade bordes redondeados si es necesario */
   opacity: 1; /* Asegúrate de que la opacidad sea 1 */
 }
+
+.swal2-html-container {
+  overflow-y: scroll;
+  width: 100%;
+}
