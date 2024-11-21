@@ -17,6 +17,7 @@ import * as moment from 'moment-timezone';
 import { RequestStatus } from 'src/app/models/request-status.model';
 import { CustomValidators } from 'src/app/utils/validators';
 import { EmailAvailabilityResponse } from 'src/app/models/EmailAvailabilityResponse.model';
+import { TERMS_AND_CONDITIONS } from 'src/app/modules/shared/constants/Constants.constants';
 @Component({
   selector: 'app-register-form',
   templateUrl: './register-form.component.html',
@@ -259,5 +260,14 @@ export class RegisterFormComponent implements OnInit {
     } else {
       console.error('documentType is null or undefined.');
     }
+  }
+
+  openTermsModal(): void {
+    Swal.fire({
+      title: 'Términos y condiciones',
+      html: TERMS_AND_CONDITIONS,
+      showCloseButton: true,
+      width: '600px', // Ajusta el ancho del modal según sea necesario
+    });
   }
 }
