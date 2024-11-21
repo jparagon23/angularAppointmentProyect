@@ -33,7 +33,7 @@ export const errorMessages: CustomError[] = [
 ];
 
 export const TERMS_AND_CONDITIONS = `
-  <div style="text-align: left; max-height: 400px; overflow-y: auto;">
+  <div style="text-align: left; max-height: 400px; overflow-y: auto;-webkit-overflow-scrolling: touch;">
     <h2><strong>Términos y Condiciones de Uso</strong></h2>
     <p><em>Última actualización: 21 de noviembre de 2024</em></p>
     <p>Estos Términos y Condiciones regulan el acceso y uso de la aplicación de gestión de reservas de canchas de tenis, <strong>Forehapp</strong> (en adelante, la "Aplicación"). Al utilizar la Aplicación, usted acepta los presentes términos y condiciones. Si no está de acuerdo con ellos, no utilice la Aplicación.</p>
