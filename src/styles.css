@@ -36,3 +36,8 @@ body {
   overflow-y: scroll;
   width: 100%;
 }
+
+.swal2-shown {
+  overflow: unset !important;
+  padding-right: 0px !important;
+}
