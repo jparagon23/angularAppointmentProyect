@@ -197,7 +197,11 @@
       <app-checkbox
         [control]="registerForm.controls.agreeTerms"
         [name]="'aceptarTerminos'"
+        [description]="'Acepto los términos y condiciones'"
       ></app-checkbox>
+      <div class="text-blue-500 cursor-pointer" (click)="openTermsModal()">
+        Leer términos y condiciones
+      </div>
     </div>
 
     <!-- Submit button -->
