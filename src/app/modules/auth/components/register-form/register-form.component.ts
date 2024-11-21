@@ -267,6 +267,7 @@ export class RegisterFormComponent implements OnInit {
       title: 'Términos y condiciones',
       html: TERMS_AND_CONDITIONS,
       showCloseButton: true,
+      backdrop: false,
     });
   }
 }
