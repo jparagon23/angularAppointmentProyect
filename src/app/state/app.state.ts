@@ -11,6 +11,7 @@ import {
   ClubConfigurationState,
   configurationReducer,
 } from './reducers/clubConfiguration.reducers';
+import { reportReducer, ReportState } from './reducers/report.reducers';
 
 export interface AppState {
   user: UserState;
@@ -20,6 +21,7 @@ export interface AppState {
   modals: ModalState;
   register: RegisterState;
   clubConfiguration: ClubConfigurationState;
+  report: ReportState;
 }
 
 export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
@@ -30,4 +32,5 @@ export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
   modals: modalReducer,
   register: registerReducer,
   clubConfiguration: configurationReducer,
+  report: reportReducer,
 };

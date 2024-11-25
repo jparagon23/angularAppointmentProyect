@@ -31,6 +31,16 @@
           >
         </div>
 
+        <div class="ml-4">
+          <app-button
+            typeBtn="button"
+            color="navbar"
+            (click)="redirectToReportComponent()"
+            *ngIf="user?.role === 2"
+            >Reportes</app-button
+          >
+        </div>
+
         <div class="flex sm:hidden">
           <!-- Botón Crear Reserva para móviles, siempre visible -->
           <app-button

@@ -21,6 +21,7 @@ import { CreateLightUserModalComponent } from './modals/create-light-user-modal/
 import { UserNameMakeReservationModalComponent } from './modals/user-name-make-reservation-modal/user-name-make-reservation-modal.component';
 import { UserSearchListComponent } from './component/user-search-list/user-search-list.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ClubReportsComponent } from './pages/club-reports/club-reports.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     CreateLightUserModalComponent,
     UserNameMakeReservationModalComponent,
     UserSearchListComponent,
+    ClubReportsComponent,
   ],
   imports: [
     CommonModule,

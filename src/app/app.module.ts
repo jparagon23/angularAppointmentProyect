@@ -24,6 +24,7 @@ import { SharedModule } from './modules/shared/shared.module';
 import { RedirectEffects } from './state/effects/redirect.effects';
 import { RegisterEffects } from './state/effects/register.effects';
 import { ClubConfigurationEffects } from './state/effects/clubConfiguration.effects';
+import { ReportEffects } from './state/effects/report.effects';
 
 registerLocaleData(localeEs, 'es');
 
@@ -53,6 +54,7 @@ registerLocaleData(localeEs, 'es');
       RedirectEffects,
       RegisterEffects,
       ClubConfigurationEffects,
+      ReportEffects,
     ]),
     SharedModule,
   ],

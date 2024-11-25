@@ -39,6 +39,7 @@ export class TimeFormatPipe implements PipeTransform {
 
     // Format the date
     const formattedDate = formatter.format(date);
+    console.log('returning formatted date', formattedDate);
 
     return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
   }

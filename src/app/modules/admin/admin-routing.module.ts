@@ -4,6 +4,7 @@ import { AdminDashboardPageComponent } from './pages/admin-dashboard-page/admin-
 import { CourtsPageComponent } from './components/court-config-component/courts-page.component';
 import { ClubConfigurationPageComponent } from './pages/club-configuration-page/club-configuration-page.component';
 import { UserInformationPageComponent } from '../shared/pages/user-information-page/user-information-page.component';
+import { ClubReportsComponent } from './pages/club-reports/club-reports.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,10 @@ const routes: Routes = [
   {
     path: 'user-information',
     component: UserInformationPageComponent,
+  },
+  {
+    path: 'reports',
+    component: ClubReportsComponent,
   },
 ];
 
