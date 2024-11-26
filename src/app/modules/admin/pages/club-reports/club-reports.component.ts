@@ -114,13 +114,6 @@ export class ClubReportsComponent implements OnInit, OnDestroy {
       }),
     };
 
-    // const transformedReservationsByDay = {
-    //   ...report.reservationsByDay,
-    //   labels: report.reservationsByDay.labels.map((label: string) =>
-    //     this.timeFormatPipe.transform(label, 'long')
-    //   ),
-    // };
-
     this.updateChart(
       'reservationMadeByDay',
       'line',

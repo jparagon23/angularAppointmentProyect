@@ -34,6 +34,9 @@ export class UserInformationPageComponent implements OnInit {
   originalUser!: Partial<User>; // Copia mutable de user
   initialData!: InitialSignUpData;
 
+  profileImage: string | null =
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABJElEQVR4nGNgoBUgAylIrYSk/D+5HIk+RJKo+Qmk/38IcVvgBhRdgAZMGWDPqDuwUl/gmGoQEGtHNiAAOAGkAx8PTEHOMkFYkHh2qCVrBBG3AU6DFYMCA4BjxQ/j1Ah/JhxV8oBRKaDFXH9ExxfwgVcwlJDZ4VAZojw3HwNITLO8AdUEgyVzo0h+4NgHLzRAaN0PGykWC6RDyB6YQdFsBLwC5+BVlGNhxQYlB1gHaQ/ImcUBmOPrgfFGAOACiIHLcAWUUfxMiFfQXZgBUUsD+wZhlI9NlMBBRLMwBaDshDGBSMhOEZhxUNgBRGhjE9NQNiBVJlP9GWYQAiI0hXw9IQss0RgFNFKhgdwGEGAOMDBAxiQoIUAAAAASUVORK5CYII=';
+
   public genders: CommonType[] = [
     { id: 'MALE', description: 'Masculino' },
     { id: 'FEMALE', description: 'Femenino' },
@@ -43,6 +46,8 @@ export class UserInformationPageComponent implements OnInit {
   updateUserInfo$ = this.store.select(selectUpdateUserInfo);
 
   private readonly subscriptions = new Subscription();
+  selectedFile: File | undefined;
+  showMenu = false;
 
   constructor(private store: Store<AppState>) {
     this.user$ = this.store.select(selectUser);
@@ -90,6 +95,24 @@ export class UserInformationPageComponent implements OnInit {
 
   private loadInitialData(): void {
     this.store.dispatch(loadInitialSignUpData());
+  }
+
+  onUploadButtonClick(event: MouseEvent) {
+    if (this.userEditable.profileImage) {
+      // Mostrar menú si ya hay imagen
+      this.showMenu = !this.showMenu;
+    } else {
+      // Si no hay imagen, simular clic en el input de archivo
+      const inputFile = document.getElementById('upload-photo') as HTMLElement;
+      inputFile.click();
+    }
+    event.stopPropagation(); // Evita que se cierre el menú al hacer clic
+  }
+
+  onSelectPhoto() {
+    this.showMenu = false;
+    const inputFile = document.getElementById('upload-photo') as HTMLElement;
+    inputFile.click();
   }
 
   private handleUpdateSuccess(): void {
@@ -159,8 +182,18 @@ export class UserInformationPageComponent implements OnInit {
           ? 'T'
           : 'F';
       }
+      if (this.originalUser.profileImage !== this.userEditable.profileImage) {
+        updatedData.profileImage = this.userEditable.profileImage;
+        console.log(
+          'Foto de perfil actualizada',
+          updatedData.profileImage,
+          this.userEditable.profileImage
+        );
+      }
 
       if (Object.keys(updatedData).length > 0) {
+        console.log(updatedData.profileImage);
+
         this.store.dispatch(updateUser({ user: updatedData }));
       } else {
         this.isEditing = false;
@@ -193,5 +226,24 @@ export class UserInformationPageComponent implements OnInit {
   getGenderDescription(genderId: string): string {
     const gender = this.genders.find((g) => g.id === genderId);
     return gender ? gender.description : 'No especificado';
+  }
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.userEditable.profileImage = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  onDeletePhoto() {
+    this.userEditable.profileImage = null;
+    this.showMenu = false;
+    console.log('Foto de perfil eliminada');
   }
 }

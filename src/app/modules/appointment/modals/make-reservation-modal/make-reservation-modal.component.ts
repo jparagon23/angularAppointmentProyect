@@ -242,9 +242,16 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
       this.maxDate = '2100-12-31';
       this.rangeDateLoaded = true;
     } else if (config.byRange && config.initialDate && config.endDate) {
-      this.minDate = config.initialDate;
-      this.maxDate = config.endDate;
-      this.rangeDateLoaded = true;
+      if (config.endDate > formattedToday) {
+        this.minDate = config.initialDate;
+        this.maxDate = config.endDate;
+        this.rangeDateLoaded = true;
+      } else {
+        this.minDate = '';
+        this.maxDate = '';
+        this.noAvailability = true;
+        this.rangeDateLoaded = true;
+      }
     }
   }
 

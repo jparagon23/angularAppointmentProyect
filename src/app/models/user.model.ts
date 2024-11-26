@@ -19,6 +19,7 @@ export interface User {
   allowNotification: string | boolean;
   role: number;
   userAdminClub: number;
+  profileImage: string | null;
 }
 
 export interface UserData {
