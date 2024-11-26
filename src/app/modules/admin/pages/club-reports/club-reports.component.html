@@ -1,0 +1,102 @@
+<div class="p-6 space-y-8">
+  <!-- Título de la página -->
+  <h1 class="text-3xl font-bold text-center">Reportes</h1>
+
+  <!-- Selector de rango de fechas -->
+  <div
+    class="flex flex-col md:flex-row justify-center items-center gap-4 bg-gray-100 shadow-md rounded-lg p-6"
+  >
+    <div class="flex items-center">
+      <label for="startDate" class="text-lg font-medium mb-2 mx-1"
+        >Fecha Inicio:</label
+      >
+      <input
+        id="startDate"
+        type="date"
+        [(ngModel)]="startDate"
+        class="border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+      />
+    </div>
+    <div class="flex items-center">
+      <label for="endDate" class="text-lg font-medium mb-2 mx-1"
+        >Fecha Fin:</label
+      >
+      <input
+        id="endDate"
+        type="date"
+        [(ngModel)]="endDate"
+        class="border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+      />
+    </div>
+    <button
+      class="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700 transition"
+      (click)="generateReports()"
+    >
+      Generar Reportes
+    </button>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="chart-container bg-white shadow-md rounded-lg p-4">
+      <h3 class="text-center text-lg font-semibold mb-4">
+        No. reservas por día
+      </h3>
+      <canvas id="reservationByDay"></canvas>
+    </div>
+
+    <div class="chart-container bg-white shadow-md rounded-lg p-4">
+      <h3 class="text-center text-lg font-semibold mb-4">
+        No. reservas realizadas por día
+      </h3>
+      <canvas id="reservationMadeByDay"></canvas>
+    </div>
+
+    <div class="chart-container bg-white shadow-md rounded-lg p-4">
+      <h3 class="text-center text-lg font-semibold mb-4">
+        No. reservas por día de la semana
+      </h3>
+      <canvas id="reservationByDayOfWeek"></canvas>
+    </div>
+
+    <div class="chart-container bg-white shadow-md rounded-lg p-4">
+      <h3 class="text-center text-lg font-semibold mb-4">
+        No. reservas por hora
+      </h3>
+      <canvas id="reservationByHour"></canvas>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg p-4">
+      <h3 class="text-center text-lg font-semibold mb-4">
+        Reservas por usuario
+      </h3>
+      <table class="table-auto w-full border-collapse border border-gray-200">
+        <thead>
+          <tr class="bg-gray-100">
+            <th class="border border-gray-300 px-4 py-2 text-left">#</th>
+            <th class="border border-gray-300 px-4 py-2 text-left">Usuario</th>
+            <th class="border border-gray-300 px-4 py-2 text-left">
+              No. Reservas
+            </th>
+          </tr>
+        </thead>
+        <tbody *ngIf="users && users.length; else noData">
+          <tr *ngFor="let user of users; let i = index">
+            <td class="border border-gray-300 px-4 py-2">{{ i + 1 }}</td>
+            <td class="border border-gray-300 px-4 py-2">{{ user.user }}</td>
+            <td class="border border-gray-300 px-4 py-2">
+              {{ user.reservations }}
+            </td>
+          </tr>
+        </tbody>
+        <ng-template #noData>
+          <tr>
+            <td colspan="3" class="text-center py-4">
+              No hay datos disponibles.
+            </td>
+          </tr>
+        </ng-template>
+      </table>
+    </div>
+  </div>
+</div>

@@ -112,6 +112,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['home/admin/configuration']);
   }
 
+  redirectToReportComponent() {
+    this.router.navigate(['home/admin/reports']);
+  }
+
   redirectToUserInformation() {
     this.user$.subscribe((user) => {
       if (user.role === 2) {

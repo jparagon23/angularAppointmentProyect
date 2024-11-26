@@ -32,12 +32,12 @@ body {
   opacity: 1; /* Asegúrate de que la opacidad sea 1 */
 }
 
-.swal2-html-container {
-  overflow-y: scroll;
-  width: 100%;
-}
-
 .swal2-shown {
   overflow: unset !important;
   padding-right: 0px !important;
+}
+
+.swal2-html-container {
+  overflow-y: scroll;
+  width: 100%;
 }
