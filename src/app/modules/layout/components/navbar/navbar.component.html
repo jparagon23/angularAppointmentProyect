@@ -1,6 +1,7 @@
 <ng-container *ngIf="user$ | async as user">
   <nav class="bg-green-700 border-gray-200 px-4 py-3 shadow-md">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+      <!-- Sección izquierda: Logo y menú principal -->
       <div class="flex items-center justify-between w-full sm:w-auto">
         <!-- Logo -->
         <a routerLink="/app">
@@ -13,43 +14,24 @@
           />
         </a>
 
-        <div class="ml-4"></div>
-        <app-button
-          typeBtn="button"
-          color="navbar"
-          (click)="redirectToDashboard()"
-          >Inicio</app-button
-        >
-
-        <div class="ml-4">
+        <!-- Botones principales para móviles y desktop -->
+        <div class="flex items-center space-x-4">
+          <!-- Siempre visible: Inicio -->
           <app-button
             typeBtn="button"
             color="navbar"
-            (click)="redirectToConfigurationComponent()"
-            *ngIf="user?.role === 2"
-            >Configuración club</app-button
+            (click)="redirectToDashboard()"
           >
+            Inicio
+          </app-button>
+          <!-- Siempre visible: Crear Reserva -->
+          <app-button typeBtn="button" color="navbar" (click)="OpenDialog()">
+            Crear Reserva
+          </app-button>
         </div>
 
-        <div class="ml-4">
-          <app-button
-            typeBtn="button"
-            color="navbar"
-            (click)="redirectToReportComponent()"
-            *ngIf="user?.role === 2"
-            >Reportes</app-button
-          >
-        </div>
-
-        <div class="flex sm:hidden">
-          <!-- Botón Crear Reserva para móviles, siempre visible -->
-          <app-button
-            typeBtn="button"
-            color="navbar"
-            (click)="OpenDialog()"
-            *ngIf="user?.role === 1"
-            >Crear Reserva</app-button
-          >
+        <!-- Botón de menú hamburguesa para móviles -->
+        <div class="sm:hidden">
           <button
             type="button"
             class="text-white ml-4"
@@ -60,16 +42,28 @@
         </div>
       </div>
 
-      <!-- Botón Crear Reserva y opciones de usuario siempre visible en desktop -->
+      <!-- Opciones visibles en desktop -->
       <div
         class="hidden sm:flex sm:items-center sm:space-x-6 w-full sm:w-auto justify-end"
       >
-        <!-- Botón Crear Reserva para escritorio -->
-        <div class="flex space-x-2">
-          <app-button typeBtn="button" color="navbar" (click)="OpenDialog()"
-            >Crear Reserva</app-button
+        <!-- Botones adicionales: Configuración y Reportes -->
+        <div class="flex space-x-2" *ngIf="user?.role === 2">
+          <app-button
+            typeBtn="button"
+            color="navbar"
+            (click)="redirectToConfigurationComponent()"
           >
+            Configuración club
+          </app-button>
+          <app-button
+            typeBtn="button"
+            color="navbar"
+            (click)="redirectToReportComponent()"
+          >
+            Reportes
+          </app-button>
         </div>
+
         <!-- Botón de usuario en desktop -->
         <div class="flex space-x-2">
           <app-button
@@ -86,11 +80,28 @@
       </div>
     </div>
 
-    <!-- Menú móvil (sin el botón Crear Reserva) -->
+    <!-- Menú colapsable para móviles -->
     <div
       *ngIf="isOpenMobileMenu"
       class="flex flex-col sm:hidden space-y-2 mt-3"
     >
+      <!-- Opciones adicionales -->
+      <app-button
+        typeBtn="button"
+        color="navbar"
+        (click)="redirectToConfigurationComponent()"
+        *ngIf="user?.role === 2"
+      >
+        Configuración club
+      </app-button>
+      <app-button
+        typeBtn="button"
+        color="navbar"
+        (click)="redirectToReportComponent()"
+        *ngIf="user?.role === 2"
+      >
+        Reportes
+      </app-button>
       <app-button
         typeBtn="button"
         color="navbar"
@@ -102,8 +113,6 @@
       </app-button>
     </div>
   </nav>
-
-  <!-- Avatar dropdown -->
   <ng-template
     cdkConnectedOverlay
     [cdkConnectedOverlayOrigin]="menuOverlay"
