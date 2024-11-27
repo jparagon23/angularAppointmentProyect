@@ -3,9 +3,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { toZonedTime, format } from 'date-fns-tz';
+import { CLUB_ADMIN_ROLE } from 'src/app/modules/shared/constants/Constants.constants';
 import {
   distinctUntilChanged,
   filter,
+  map,
   Observable,
   Subscription,
   take,
@@ -30,7 +32,10 @@ import {
 import { ConfirmationModalComponent } from '../confirmation-modal/confirmation-modal.component';
 import Swal from 'sweetalert2';
 import { ClubAvailability } from 'src/app/models/ClubAvalability.model';
-import { AvailableSlotsResponse } from 'src/app/models/AvailableSlotInfo.model';
+import {
+  AvailableSlot,
+  AvailableSlotsResponse,
+} from 'src/app/models/AvailableSlotInfo.model';
 import { User } from 'src/app/models/user.model';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { UserNameMakeReservationModalComponent } from 'src/app/modules/admin/modals/user-name-make-reservation-modal/user-name-make-reservation-modal.component';
@@ -43,6 +48,8 @@ import {
   reservationCreatedFailure,
   selectCreateReservationAdminSuccess,
 } from 'src/app/state/selectors/club.selectors';
+import { selectCourts } from 'src/app/state/selectors/clubConfiguration.selectors';
+import { CourtDetail } from 'src/app/models/CourtDetail.model';
 
 @Component({
   selector: 'app-make-reservation-modal',
@@ -56,9 +63,12 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     this.store.select(selectAvailableSlots);
 
   selectedSlots: string[] = [];
+  selectedCourt: string = '';
+  posibleCourts: string[][] = [];
   minDate: string = '';
   maxDate: string = '';
   noAvailability: boolean = false;
+  public ADMIN_ROLE = CLUB_ADMIN_ROLE;
 
   // Loading and state observables
 
@@ -98,6 +108,8 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   user: User | null = null;
 
   private readonly subscriptions = new Subscription();
+
+  courts$: Observable<CourtDetail[]> = this.store.select(selectCourts);
 
   constructor(
     public dialogRef: MatDialogRef<MakeReservationModalComponent>,
@@ -194,6 +206,15 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     );
   }
 
+  getCourtNameById(id: number): Observable<string> {
+    return this.courts$.pipe(
+      map((courts) => {
+        const court = courts.find((c) => c.id === id); // Busca la cancha por su ID
+        return court ? court.name : `Cancha con ID ${id} no encontrada`;
+      })
+    );
+  }
+
   private initializeSelectedDate(): string {
     const today = new Date();
     const bogotaTimeZone = 'America/Bogota';
@@ -265,6 +286,8 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     if (date >= this.minDate && date <= this.maxDate) {
       this.selectedDate = date;
       this.selectedSlots = [];
+      this.selectedCourt = '';
+      this.posibleCourts = [];
       this.fetchAvailableSlots(this.selectedDate);
     } else {
       this.selectedDate = ''; // Restablecer la fecha seleccionada si no está en el rango permitido
@@ -278,24 +301,42 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSlotSelected(slot: any) {
-    if (this.selectedSlots.includes(slot)) {
-      this.deselectSlot(slot);
+  onSlotSelected(slot: AvailableSlot) {
+    if (this.selectedSlots.includes(slot.date.initialDateTime)) {
+      this.deselectSlot(slot.date.initialDateTime);
     } else {
-      this.selectSlot(slot);
+      this.selectSlot(slot.date.initialDateTime);
     }
+
+    console.log(slot.date.availableCourts);
+
+    if (this.posibleCourts.includes(slot.date.availableCourts)) {
+      this.deselectCourt(slot.date.availableCourts);
+    } else {
+      this.posibleCourt(slot.date.availableCourts);
+    }
+
+    console.log(this.posibleCourts);
   }
 
-  private selectSlot(slot: any) {
+  private posibleCourt(slot: string[]) {
+    this.posibleCourts = [...this.posibleCourts, slot];
+    // this.store.dispatch(selectSlot({ slot }));
+  }
+
+  private selectSlot(slot: string) {
     this.selectedSlots = [...this.selectedSlots, slot];
     // this.store.dispatch(selectSlot({ slot }));
   }
 
-  private deselectSlot(slot: any) {
+  private deselectSlot(slot: string) {
     this.selectedSlots = this.selectedSlots.filter((s) => s !== slot);
     // this.store.dispatch(deselectSlot({ slot }));
   }
 
+  private deselectCourt(slot: string[]) {
+    this.posibleCourts = this.posibleCourts.filter((s) => s !== slot);
+  }
   onClickContinue(): void {
     if (this.selectedSlots.length === 0) {
       Swal.fire({
@@ -338,11 +379,25 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
               selecteDates: this.selectedSlots,
               userId: result.userId,
               lightUser: result.lightUser,
+              court: this.selectedCourt,
             })
           );
         }
       });
     }
+  }
+
+  getCommonCourts(): string[] {
+    if (this.posibleCourts.length === 0) return [];
+
+    // Calcula la intersección de todas las listas
+    return this.posibleCourts.reduce((common, current) =>
+      common.filter((value) => current.includes(value))
+    );
+  }
+
+  onCourtSelected(court: string) {
+    this.selectedCourt = court;
   }
 
   private handleReservationSuccess(): void {

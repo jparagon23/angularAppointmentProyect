@@ -70,3 +70,5 @@ export const TERMS_AND_CONDITIONS = `
     <p>Al aceptar estos términos, el Usuario reconoce que ha leído y entendido las condiciones, y que acepta cumplirlas en su totalidad.</p>
   </div>
 `;
+
+export const CLUB_ADMIN_ROLE = 2;

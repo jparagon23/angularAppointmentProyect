@@ -10,6 +10,7 @@ import {
 import { combineLatest } from 'rxjs';
 import { filter, distinctUntilChanged } from 'rxjs/operators';
 import { loadInitialSignUpData } from 'src/app/state/actions/register.actions';
+import { loadCourts } from 'src/app/state/actions/clubConfiguration.actions';
 
 @Component({
   selector: 'app-layout',
@@ -27,7 +28,5 @@ export class LayoutComponent implements OnInit {
     private readonly router: Router
   ) {}
 
-  ngOnInit(): void {
-    //this.store.dispatch(loadUser());
-  }
+  ngOnInit(): void {}
 }

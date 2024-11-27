@@ -96,13 +96,15 @@ export class ReservationService {
   createReservationAdmin(
     selectedSlots: string[],
     userId: string,
-    lightUser: LightUser | null
+    lightUser: LightUser | null,
+    court: string | null
   ): Observable<ReservationConfirmation> {
     const url = `${environment.API_URL}/reservation/${userId}`;
     const body = {
       appointmentTime: selectedSlots,
       clubId: 1,
       lightUser: lightUser,
+      courtId: court,
     };
 
     return this.http.post<ReservationConfirmation>(url, body, {

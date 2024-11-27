@@ -8,7 +8,7 @@ export interface AvailableSlotInfo {
 export interface DateInfo {
   initialDateTime: string;
   endDateTime: string;
-  times: number;
+  availableCourts: string[];
 }
 
 export interface AvailableSlot {
