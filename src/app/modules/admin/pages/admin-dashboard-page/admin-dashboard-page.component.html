@@ -1,17 +1,12 @@
-<div
-  class="flex flex-col items-start border-b-4 border-gray-300 mb-5 md:flex-row md:items-center"
->
-  <div class="text-xl font-bold mb-3 md:text-4xl md:mr-5">
-    Reservas del club
-  </div>
+<div class="flex flex-col items-start border-b-4 border-gray-300 mb-5">
+  <div class="text-xl font-bold mb-3 md:text-4xl">Reservas del club</div>
   <div>
-    <input
-      name="appointmentDate"
-      type="date"
-      [(ngModel)]="selectedDate"
-      (change)="onDateChange($event)"
-      class="p-2 border rounded w-full md:w-auto"
-    />
+    <app-date-selector
+      [initialDate]="selectedDate"
+      [minDate]="'1900-01-01'"
+      [maxDate]="'2100-12-31'"
+      (dateSelected)="onDateChange($event)"
+    ></app-date-selector>
   </div>
 </div>
 
