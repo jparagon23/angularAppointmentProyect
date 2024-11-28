@@ -407,9 +407,12 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     if (this.posibleCourts.length === 0) return [];
 
     // Calcula la intersección de todas las listas
-    return this.posibleCourts.reduce((common, current) =>
+    const commonCourts = this.posibleCourts.reduce((common, current) =>
       common.filter((value) => current.includes(value))
     );
+
+    // Devuelve una copia ordenada del resultado
+    return [...commonCourts].sort((a, b) => a.localeCompare(b));
   }
 
   onCourtSelected(court: string) {

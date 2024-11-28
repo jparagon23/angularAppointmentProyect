@@ -138,9 +138,8 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  onDateChange(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    this.selectedDate = inputElement.value;
+  onDateChange(date: string): void {
+    this.selectedDate = date;
     this.loadReservations();
     this.store.dispatch(selectedClubDate({ date: this.selectedDate }));
   }
@@ -171,11 +170,11 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
     };
 
     if (reservation.id === '-1') {
-      this.dialog.open(CreateReservationFromTableModalComponent, {
-        maxWidth: '50vw',
-        maxHeight: '50vh',
-        data: { reservationInfo },
-      });
+      // this.dialog.open(CreateReservationFromTableModalComponent, {
+      //   maxWidth: '50vw',
+      //   maxHeight: '50vh',
+      //   data: { reservationInfo },
+      // });
       return;
     }
 
