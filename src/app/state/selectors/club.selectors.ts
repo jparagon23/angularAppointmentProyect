@@ -37,3 +37,8 @@ export const selectCreateReservationAdminSuccess = createSelector(
   selectClubState,
   (state: ClubState) => state.reservationCreated
 );
+
+export const selectSelectedClubDate = createSelector(
+  selectClubState,
+  (state: ClubState) => state.selectedClubDate
+);
