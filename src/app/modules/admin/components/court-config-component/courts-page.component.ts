@@ -42,12 +42,7 @@ export class CourtsPageComponent implements OnInit, OnDestroy {
   constructor(private readonly store: Store<AppState>) {}
 
   ngOnInit(): void {
-    this.loadCourts();
     this.handleCourtCreation();
-  }
-
-  private loadCourts(): void {
-    this.store.dispatch(loadCourts());
   }
 
   private handleCourtCreation(): void {

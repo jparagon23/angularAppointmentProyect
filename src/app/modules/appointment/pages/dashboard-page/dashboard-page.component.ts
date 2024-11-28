@@ -14,6 +14,7 @@ import {
   resetCancelReservationState,
 } from 'src/app/state/actions/reservations.actions';
 import Swal from 'sweetalert2';
+import { loadCourts } from 'src/app/state/actions/clubConfiguration.actions';
 
 @Component({
   selector: 'app-dashboard-page',

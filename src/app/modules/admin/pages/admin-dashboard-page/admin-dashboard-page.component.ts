@@ -30,6 +30,7 @@ import { GroupReservationInfoModalComponent } from '../../modals/group-reservati
 import { CreateReservationFromTableModalComponent } from '../../modals/create-reservation-from-table-modal/create-reservation-from-table-modal.component';
 
 import { parse, isBefore, isAfter } from 'date-fns';
+import { loadCourts } from 'src/app/state/actions/clubConfiguration.actions';
 
 @Component({
   selector: 'app-admin-dashboard-page',
@@ -53,7 +54,7 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentTime = new Date();
-
+    this.store.dispatch(loadCourts());
     this.store.dispatch(loadCancelReservationCauses());
     this.reservations$ = this.store.select(selectClubReservations).pipe(
       filter((clubReservations) => !!clubReservations),

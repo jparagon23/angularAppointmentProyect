@@ -148,6 +148,7 @@ export class CreateReservationFromTableModalComponent
         selecteDates: [hour],
         userId: this.userReturn?.userId ?? '',
         lightUser: this.userReturn?.lightUser ?? null,
+        court: null,
       })
     );
   }

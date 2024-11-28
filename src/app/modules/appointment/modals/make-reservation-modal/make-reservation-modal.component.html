@@ -94,8 +94,54 @@
                         club: 'Campo verde',
                         courtType: 'Polvo de ladrillo'
                       }"
-                      (slotSelected)="onSlotSelected(slot.date.initialDateTime)"
+                      (slotSelected)="onSlotSelected(slot)"
                     ></app-available-slot-card>
+                  </div>
+                </div>
+                <div
+                  *ngIf="
+                    selectedSlots.length > 0 &&
+                    user?.role == ADMIN_ROLE &&
+                    getCommonCourts().length > 0
+                  "
+                  class="p-4 bg-white rounded-lg shadow-md"
+                >
+                  <!-- Título -->
+                  <div class="font-bold text-xl">
+                    Canchas disponibles para la selección (Opcional, si no el
+                    sistema asignará una)
+                  </div>
+
+                  <!-- Lista de canchas disponibles -->
+                  <div *ngFor="let courtId of getCommonCourts()">
+                    <div class="flex items-center space-x-3 mb-3 mt-3">
+                      <!-- Checkbox -->
+                      <input
+                        type="checkbox"
+                        name="court"
+                        [value]="courtId"
+                        (change)="onCourtSelected(courtId)"
+                        class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <!-- Nombre de la cancha -->
+                      <span
+                        *ngIf="getCourtNameById(+courtId) | async as courtName"
+                        class="text-lg text-gray-700"
+                      >
+                        {{ courtName }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  *ngIf="
+                    selectedSlots.length > 0 &&
+                    user?.role == ADMIN_ROLE &&
+                    getCommonCourts().length == 0
+                  "
+                >
+                  <div class="font-bold text-xl mt-3">
+                    El sistema asignara automaticamente las canchas
                   </div>
                 </div>
 

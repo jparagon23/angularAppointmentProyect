@@ -23,6 +23,7 @@ export const createReservationAdmin = createAction(
     selecteDates: string[];
     userId: string;
     lightUser: LightUser | null;
+    court: string | null;
   }>()
 );
 
