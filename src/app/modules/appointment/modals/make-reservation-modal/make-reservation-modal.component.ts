@@ -47,6 +47,7 @@ import {
   loadingCreateReservation,
   reservationCreatedFailure,
   selectCreateReservationAdminSuccess,
+  selectSelectedClubDate,
 } from 'src/app/state/selectors/club.selectors';
 import { selectCourts } from 'src/app/state/selectors/clubConfiguration.selectors';
 import { CourtDetail } from 'src/app/models/CourtDetail.model';
@@ -88,6 +89,10 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   );
 
   // Success and failure observables
+
+  selectedClubDate$: Observable<string> = this.store.select(
+    selectSelectedClubDate
+  );
 
   createReservationSuccess$: Observable<boolean> = this.store.select(
     selectCreateReservationSuccess
@@ -223,22 +228,33 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
       timeZone: bogotaTimeZone,
     });
 
+    // Para usuarios con role === 1
     if (this.user?.role === 1) {
-      // Verificar si la fecha actual está fuera del rango permitido
-      if (formattedToday < this.minDate || formattedToday > this.maxDate) {
-        this.selectedDateLoaded = true;
-
-        return this.minDate; // Retornar cadena vacía si está fuera del rango
-      } else {
-        this.selectedDateLoaded = true;
-
-        return formattedToday; // Si está dentro del rango, retornar la fecha de hoy
-      }
-    } else {
       this.selectedDateLoaded = true;
 
-      return formattedToday;
+      // Convertimos fechas a Date para realizar comparaciones
+      const todayDate = new Date(formattedToday);
+      const minDate = new Date(this.minDate);
+      const maxDate = new Date(this.maxDate);
+
+      // Validamos el rango
+      if (todayDate < minDate || todayDate > maxDate) {
+        return this.minDate; // Retorna la fecha mínima si está fuera del rango
+      } else {
+        return formattedToday; // Retorna la fecha de hoy si está dentro del rango
+      }
     }
+
+    // Para otros usuarios, manejamos la lógica con observables
+    let selectedDate = formattedToday; // Por defecto, usamos la fecha de hoy
+    this.selectedClubDate$.subscribe((date) => {
+      if (date) {
+        selectedDate = date;
+      }
+      this.selectedDateLoaded = true; // Marcamos como cargada una vez que el observable emite
+    });
+
+    return selectedDate;
   }
 
   private handleReservationConfiguration(config: ClubAvailability): void {

@@ -8,6 +8,7 @@ import {
   createReservationAdminFailure,
   resetReservationCreated,
   resetClubUsers,
+  selectedClubDate,
 } from '../actions/club.actions';
 import { createReducer, on } from '@ngrx/store';
 import { logout } from '../actions/auth.actions';
@@ -18,6 +19,7 @@ export interface ClubState {
   reservationCreatedFailure: boolean;
   loadingCreateReservation: boolean;
   error: any;
+  selectedClubDate: string;
 }
 
 export const initialState: ClubState = {
@@ -27,6 +29,7 @@ export const initialState: ClubState = {
   reservationCreated: false,
   loadingCreateReservation: false,
   reservationCreatedFailure: false,
+  selectedClubDate: '',
 };
 
 export const clubReducer = createReducer(
@@ -71,5 +74,9 @@ export const clubReducer = createReducer(
     ...state,
     clubUsers: [],
   })),
-  on(logout, (state: ClubState) => initialState)
+  on(logout, (state: ClubState) => initialState),
+  on(selectedClubDate, (state: ClubState, { date }) => ({
+    ...state,
+    selectedClubDate: date,
+  }))
 );
