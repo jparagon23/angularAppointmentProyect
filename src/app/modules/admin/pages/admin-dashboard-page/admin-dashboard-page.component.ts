@@ -31,6 +31,7 @@ import { CreateReservationFromTableModalComponent } from '../../modals/create-re
 
 import { parse, isBefore, isAfter } from 'date-fns';
 import { loadCourts } from 'src/app/state/actions/clubConfiguration.actions';
+import { selectedClubDate } from 'src/app/state/actions/club.actions';
 
 @Component({
   selector: 'app-admin-dashboard-page',
@@ -141,6 +142,7 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
     const inputElement = event.target as HTMLInputElement;
     this.selectedDate = inputElement.value;
     this.loadReservations();
+    this.store.dispatch(selectedClubDate({ date: this.selectedDate }));
   }
 
   loadReservations(): void {

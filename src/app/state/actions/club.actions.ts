@@ -41,3 +41,8 @@ export const resetReservationCreated = createAction(
 );
 
 export const resetClubUsers = createAction('[Club] Reset Club Users');
+
+export const selectedClubDate = createAction(
+  '[Admin Dashboard] Selected Club Date',
+  props<{ date: string }>()
+);
