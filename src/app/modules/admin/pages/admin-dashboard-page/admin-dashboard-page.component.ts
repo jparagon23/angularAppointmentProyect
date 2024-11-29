@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { format, toZonedTime } from 'date-fns-tz';
 import { ReservationInfoModalComponent } from '../../modals/reservation-info-modal/reservation-info-modal.component';
@@ -49,12 +49,18 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
   private loadIntervalSet = false;
 
+  mousedownStartTime: number = 0;
+
+  isDragging = false;
   currentTime = new Date();
+  hasMoved: boolean = false;
 
   constructor(public dialog: MatDialog, private readonly store: Store<any>) {}
 
   isPastTimes: boolean[] = [];
   isCurrentTimeSlots: boolean[] = [];
+
+  selectedSlots: { hour: string; courtId: string }[] = [];
 
   ngOnInit(): void {
     this.currentTime = new Date();
@@ -166,7 +172,7 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
       date: this.selectedDate,
       id: reservation.id,
       user: reservation.description,
-      hour: combinedDateTime,
+      hour: [combinedDateTime],
       courtId: reservation.courtId,
     };
 
@@ -253,6 +259,101 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
           );
       });
       return isCurrentSlot;
+    }
+  }
+
+  onMouseDown(reservation: Reservation, hour: any): void {
+    this.mousedownStartTime = Date.now(); // Tiempo en el que comienza el mousedown
+    this.hasMoved = false; // Reinicia el estado de movimiento
+
+    if (reservation.description === 'Disponible') {
+      this.isDragging = true; // Activa el estado de arrastre
+      this.toggleSlotSelection(reservation, hour); // Selecciona el slot inicial
+    }
+  }
+
+  onMouseEnter(reservation: Reservation, hour: any): void {
+    this.hasMoved = true; // Marca que hubo movimiento
+    if (this.isDragging && reservation.description === 'Disponible') {
+      this.toggleSlotSelection(reservation, hour); // Selecciona el slot durante el arrastre
+    }
+  }
+
+  onMouseUp(): void {
+    const clickDuration = Date.now() - this.mousedownStartTime;
+
+    if (this.hasMoved && clickDuration > 200) {
+      this.isDragging = false;
+
+      const hours = this.selectedSlots.map((slot) => slot.hour);
+      const courtId = this.selectedSlots[0].courtId;
+
+      const reservationInfo = {
+        date: this.selectedDate,
+        id: '-1',
+        user: null,
+        hour: hours,
+        courtId: courtId,
+      };
+
+      this.dialog.open(CreateReservationFromTableModalComponent, {
+        maxWidth: '50vw',
+        maxHeight: '50vh',
+        data: { reservationInfo },
+      });
+    }
+
+    this.selectedSlots = [];
+  }
+
+  toggleSlotSelection(reservation: Reservation, hour: any): void {
+    const formattedHour = hour.length < 5 ? `0${hour}` : hour;
+    const combinedDateTime = `${this.selectedDate}T${formattedHour}:00`;
+
+    // Verifica si ya hay slots seleccionados
+    if (this.selectedSlots.length > 0) {
+      const selectedCourtId = this.selectedSlots[0].courtId; // Usa el courtId del primer slot seleccionado
+      if (reservation.courtId?.toString() !== selectedCourtId) {
+        console.warn(`Solo se pueden seleccionar horas en la misma cancha`);
+        return; // Evita agregar el slot si no coincide el courtId
+      }
+    }
+
+    const existingSlot = this.selectedSlots.find(
+      (slot) => slot.hour === combinedDateTime
+    );
+    if (existingSlot) {
+      // Si ya existe, lo eliminamos
+      this.selectedSlots = this.selectedSlots.filter(
+        (slot) => slot.hour !== combinedDateTime
+      );
+    } else {
+      // Si no existe, lo agregamos
+      this.selectedSlots.push({
+        hour: combinedDateTime,
+        courtId: reservation.courtId ? reservation.courtId.toString() : '',
+      });
+    }
+  }
+
+  isSlotSelected(reservation: Reservation, hour: any): boolean {
+    const formattedHour = hour.length < 5 ? `0${hour}` : hour;
+    return this.selectedSlots.some(
+      (slot) =>
+        slot.hour === `${this.selectedDate}T${formattedHour}:00` &&
+        slot.courtId === reservation.courtId?.toString()
+    );
+  }
+
+  @HostListener('document:mouseup')
+  onDocumentMouseUp(): void {
+    this.isDragging = false;
+  }
+
+  @HostListener('document:mousedown', ['$event'])
+  preventTextSelection(event: MouseEvent): void {
+    if (this.isDragging) {
+      event.preventDefault();
     }
   }
 }
