@@ -107,6 +107,8 @@ export class ReservationService {
       courtId: court,
     };
 
+    console.log(body);
+
     return this.http.post<ReservationConfirmation>(url, body, {
       headers: this.setHeaders(),
     });

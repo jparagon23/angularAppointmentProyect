@@ -2,7 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { format, toZonedTime } from 'date-fns-tz';
 import { ReservationInfoModalComponent } from '../../modals/reservation-info-modal/reservation-info-modal.component';
-import { ClubReservations } from 'src/app/models/ClubReservations.model';
+import {
+  ClubReservations,
+  Reservation,
+} from 'src/app/models/ClubReservations.model';
 import { Store } from '@ngrx/store';
 import {
   loadCancelReservationCauses,
@@ -154,10 +157,7 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  onReservationClick(
-    reservation: { id: string | null; description: string },
-    hour: string
-  ): void {
+  onReservationClick(reservation: Reservation, hour: string): void {
     // Combine selectedDate and hour into a single datetime string
     const formattedHour = hour.length < 5 ? `0${hour}` : hour;
     const combinedDateTime = `${this.selectedDate}T${formattedHour}:00`;
@@ -167,14 +167,15 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
       id: reservation.id,
       user: reservation.description,
       hour: combinedDateTime,
+      courtId: reservation.courtId,
     };
 
     if (reservation.id === '-1') {
-      // this.dialog.open(CreateReservationFromTableModalComponent, {
-      //   maxWidth: '50vw',
-      //   maxHeight: '50vh',
-      //   data: { reservationInfo },
-      // });
+      this.dialog.open(CreateReservationFromTableModalComponent, {
+        maxWidth: '50vw',
+        maxHeight: '50vh',
+        data: { reservationInfo },
+      });
       return;
     }
 
