@@ -17,9 +17,11 @@
 
     <div class="mb-3 sm:mb-4">
       <div class="block text-gray-700 font-semibold mb-1 sm:text-sm">Hora:</div>
-      <p class="text-gray-600 text-sm sm:text-base">
-        {{ data.reservationInfo.hour | hourTimeFormat }}
-      </p>
+      <div *ngFor="let hour of data.reservationInfo.hour">
+        <p class="text-gray-600 text-sm sm:text-base">
+          {{ hour | hourTimeFormat }}
+        </p>
+      </div>
     </div>
 
     <div class="mb-4 sm:mb-6">

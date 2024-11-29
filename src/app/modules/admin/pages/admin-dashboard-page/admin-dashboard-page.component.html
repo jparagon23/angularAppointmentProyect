@@ -62,6 +62,10 @@
                 *ngFor="let reservation of row.reservations.slice(1)"
                 class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base"
                 [ngClass]="{
+                  'bg-green-300': isSlotSelected(
+                    reservation,
+                    row.reservations[0].description
+                  ),
                   'cursor-not-allowed': isPastTimes[i] || isCurrentTimeSlots[i],
                   'cursor-pointer': !isPastTimes[i] && !isCurrentTimeSlots[i],
                   'text-green-700':
@@ -87,6 +91,13 @@
                         row.reservations[0].description || ''
                       )
                 "
+                (mousedown)="
+                  onMouseDown(reservation, row.reservations[0].description)
+                "
+                (mouseenter)="
+                  onMouseEnter(reservation, row.reservations[0].description)
+                "
+                (mouseup)="onMouseUp()"
               >
                 {{ reservation.description }}
               </td>
@@ -129,5 +140,8 @@
     left: 0;
     top: 0;
     z-index: 15; /* Mayor para la intersección de primera fila y columna */
+  }
+  td.bg-green-300 {
+    background-color: #d4f5d4; /* Color de selección */
   }
 </style>

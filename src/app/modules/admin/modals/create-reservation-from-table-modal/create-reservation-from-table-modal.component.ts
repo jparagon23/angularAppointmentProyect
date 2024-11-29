@@ -57,7 +57,7 @@ export class CreateReservationFromTableModalComponent
         date: string;
         id: string | null;
         user: string;
-        hour: string;
+        hour: string[];
         courtId: number | null;
       };
     },
@@ -148,7 +148,7 @@ export class CreateReservationFromTableModalComponent
 
     this.store.dispatch(
       createReservationAdmin({
-        selecteDates: [hour],
+        selecteDates: hour,
         userId: this.userReturn?.userId ?? '',
         lightUser: this.userReturn?.lightUser ?? null,
         courts: courtsId ? [courtsId.toString()] : null,
