@@ -144,16 +144,14 @@ export class CreateReservationFromTableModalComponent
   createReservation() {
     const { hour } = this.data.reservationInfo;
 
-    const courtId = this.data.reservationInfo.courtId;
-
-    console.log(courtId);
+    const courtsId = this.data.reservationInfo.courtId;
 
     this.store.dispatch(
       createReservationAdmin({
         selecteDates: [hour],
         userId: this.userReturn?.userId ?? '',
         lightUser: this.userReturn?.lightUser ?? null,
-        court: courtId ? courtId.toString() : null,
+        courts: courtsId ? [courtsId.toString()] : null,
       })
     );
   }

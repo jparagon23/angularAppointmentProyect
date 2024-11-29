@@ -64,7 +64,7 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     this.store.select(selectAvailableSlots);
 
   selectedSlots: string[] = [];
-  selectedCourt: string = '';
+  selectedCourt: string[] = [];
   posibleCourts: string[][] = [];
   minDate: string = '';
   maxDate: string = '';
@@ -302,7 +302,7 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
     if (date >= this.minDate && date <= this.maxDate) {
       this.selectedDate = date;
       this.selectedSlots = [];
-      this.selectedCourt = '';
+      this.selectedCourt = [];
       this.posibleCourts = [];
       this.fetchAvailableSlots(this.selectedDate);
     } else {
@@ -324,15 +324,11 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
       this.selectSlot(slot.date.initialDateTime);
     }
 
-    console.log(slot.date.availableCourts);
-
     if (this.posibleCourts.includes(slot.date.availableCourts)) {
       this.deselectCourt(slot.date.availableCourts);
     } else {
       this.posibleCourt(slot.date.availableCourts);
     }
-
-    console.log(this.posibleCourts);
   }
 
   private posibleCourt(slot: string[]) {
@@ -395,7 +391,7 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
               selecteDates: this.selectedSlots,
               userId: result.userId,
               lightUser: result.lightUser,
-              court: this.selectedCourt,
+              courts: this.selectedCourt,
             })
           );
         }
@@ -416,7 +412,14 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   }
 
   onCourtSelected(court: string) {
-    this.selectedCourt = court;
+    console.log(this.selectedCourt);
+
+    if (this.selectedCourt.includes(court)) {
+      this.selectedCourt = this.selectedCourt.filter((c) => c !== court);
+    } else {
+      this.selectedCourt = [...this.selectedCourt, court];
+    }
+    console.log(this.selectedCourt);
   }
 
   private handleReservationSuccess(): void {

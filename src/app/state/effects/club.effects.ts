@@ -39,7 +39,7 @@ export class ClubEffects {
             action.selecteDates,
             action.userId,
             action.lightUser,
-            action.court
+            action.courts
           )
           .pipe(
             // Si la creación de la reserva es exitosa, solo lanzamos `createReservationAdminSuccess`
