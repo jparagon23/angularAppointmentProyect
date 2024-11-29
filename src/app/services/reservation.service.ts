@@ -97,17 +97,15 @@ export class ReservationService {
     selectedSlots: string[],
     userId: string,
     lightUser: LightUser | null,
-    court: string | null
+    court: string[] | null
   ): Observable<ReservationConfirmation> {
     const url = `${environment.API_URL}/reservation/${userId}`;
     const body = {
       appointmentTime: selectedSlots,
       clubId: 1,
       lightUser: lightUser,
-      courtId: court,
+      courtsId: court,
     };
-
-    console.log(body);
 
     return this.http.post<ReservationConfirmation>(url, body, {
       headers: this.setHeaders(),
