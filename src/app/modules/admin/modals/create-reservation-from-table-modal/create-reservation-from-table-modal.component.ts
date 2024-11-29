@@ -58,6 +58,7 @@ export class CreateReservationFromTableModalComponent
         id: string | null;
         user: string;
         hour: string;
+        courtId: number | null;
       };
     },
     private readonly store: Store<AppState>,
@@ -143,12 +144,16 @@ export class CreateReservationFromTableModalComponent
   createReservation() {
     const { hour } = this.data.reservationInfo;
 
+    const courtId = this.data.reservationInfo.courtId;
+
+    console.log(courtId);
+
     this.store.dispatch(
       createReservationAdmin({
         selecteDates: [hour],
         userId: this.userReturn?.userId ?? '',
         lightUser: this.userReturn?.lightUser ?? null,
-        court: null,
+        court: courtId ? courtId.toString() : null,
       })
     );
   }

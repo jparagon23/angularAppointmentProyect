@@ -1,6 +1,7 @@
 export interface Reservation {
   id: string | null;
   description: string;
+  courtId: number | null;
 }
 
 export interface ReservationData {
