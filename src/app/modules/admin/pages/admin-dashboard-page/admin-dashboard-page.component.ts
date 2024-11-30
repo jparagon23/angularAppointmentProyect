@@ -172,7 +172,7 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
       date: this.selectedDate,
       id: reservation.id,
       user: reservation.description,
-      hour: [combinedDateTime],
+      hour: reservation.id === '-1' ? [combinedDateTime] : combinedDateTime,
       courtId: reservation.courtId,
     };
 
