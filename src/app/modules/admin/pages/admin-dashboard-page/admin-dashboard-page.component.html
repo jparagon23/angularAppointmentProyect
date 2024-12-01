@@ -28,7 +28,7 @@
                   let header of reservations.reservationHeaders;
                   let i = index
                 "
-                class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base sticky-header"
+                class="border bg-white px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base sticky-header"
                 [ngClass]="{ 'sticky-header-column': i === 0 }"
               >
                 {{ header }}
@@ -61,28 +61,13 @@
               <td
                 *ngFor="let reservation of row.reservations.slice(1)"
                 class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base"
-                [ngClass]="{
-                  'bg-green-300': isSlotSelected(
+                [ngClass]="
+                  getReservationClass(
                     reservation,
+                    i,
                     row.reservations[0].description
-                  ),
-                  'cursor-not-allowed': isPastTimes[i] || isCurrentTimeSlots[i],
-                  'cursor-pointer': !isPastTimes[i] && !isCurrentTimeSlots[i],
-                  'text-green-700':
-                    reservation.description === 'Disponible' &&
-                    ((!isPastTimes[i] && !isCurrentTimeSlots[i]) ||
-                      (isPastTimes[i] && isCurrentTimeSlots[i])),
-                  'text-red-600':
-                    reservation.description === 'No disponible' &&
-                    ((!isPastTimes[i] && !isCurrentTimeSlots[i]) ||
-                      (isPastTimes[i] && isCurrentTimeSlots[i])),
-                  'text-yellow-500':
-                    reservation.description !== 'Disponible' &&
-                    reservation.description !== 'No disponible',
-                  'bg-gray-100': isPastTimes[i],
-                  'bg-red-100': isCurrentTimeSlots[i],
-                  'hover:bg-none': isPastTimes[i] || isCurrentTimeSlots[i]
-                }"
+                  )
+                "
                 (click)="
                   isPastTimes[i] || isCurrentTimeSlots[i]
                     ? null
