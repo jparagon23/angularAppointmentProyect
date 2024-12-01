@@ -62,6 +62,10 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
 
   selectedSlots: { hour: string; courtId: string }[] = [];
 
+  private availableColors: string[] = ['bg-yellow-100 text-black'];
+
+  private nameColorMap: { [key: string]: string } = {};
+
   ngOnInit(): void {
     this.currentTime = new Date();
     this.store.dispatch(loadCourts());
@@ -355,5 +359,57 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
     if (this.isDragging) {
       event.preventDefault();
     }
+  }
+
+  getColorForName(name: string): string {
+    if (!this.nameColorMap[name]) {
+      this.nameColorMap[name] =
+        this.availableColors[
+          Object.keys(this.nameColorMap).length % this.availableColors.length
+        ];
+    }
+    return this.nameColorMap[name];
+  }
+
+  getReservationClass(
+    reservation: any,
+    index: number,
+    rowDescription: string
+  ): { [key: string]: boolean } {
+    // Definir las clases predeterminadas (más prioritarias)
+    const classes: { [key: string]: boolean } = {
+      'bg-red-100': this.isCurrentTimeSlots[index], // Prioridad alta: siempre se aplica primero si es tiempo actual
+      'bg-green-300': this.isSlotSelected(reservation, rowDescription),
+      'cursor-not-allowed':
+        this.isPastTimes[index] || this.isCurrentTimeSlots[index],
+      'cursor-pointer':
+        !this.isPastTimes[index] && !this.isCurrentTimeSlots[index],
+      'text-green-700 bg-green-100':
+        reservation.description === 'Disponible' &&
+        !this.isCurrentTimeSlots[index] && // No aplica si es tiempo actual
+        !this.isPastTimes[index],
+      'text-red-600 ':
+        reservation.description === 'No disponible' &&
+        !this.isCurrentTimeSlots[index], // No aplica si es tiempo actual
+      'bg-gray-100': this.isPastTimes[index] && !this.isCurrentTimeSlots[index], // No aplica si es tiempo actual
+      'hover:bg-none':
+        this.isPastTimes[index] || this.isCurrentTimeSlots[index],
+    };
+
+    // Comprobar si ya hay un fondo gris o rojo
+    const hasGrayOrRedBackground =
+      classes['bg-gray-100'] || classes['bg-red-100'];
+
+    // Agregar la clase dinámica solo si no hay fondo gris o rojo
+    if (
+      !hasGrayOrRedBackground &&
+      reservation.description !== 'Disponible' &&
+      reservation.description !== 'No disponible'
+    ) {
+      const dynamicColorClass = this.getColorForName(reservation.description);
+      classes[dynamicColorClass] = true; // Agregar clase dinámica si no hay fondo gris o rojo
+    }
+
+    return classes;
   }
 }
