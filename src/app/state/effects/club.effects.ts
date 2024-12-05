@@ -7,6 +7,9 @@ import {
   getClubUserByNameOrId,
   getClubUserByNameOrIdFailure,
   getClubUserByNameOrIdSuccess,
+  updateReservationAdmin,
+  updateReservationAdminFailure,
+  updateReservationAdminSuccess,
 } from '../actions/club.actions';
 import { catchError, map, of, switchMap, withLatestFrom } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
@@ -33,14 +36,9 @@ export class ClubEffects {
   createReservationAdmin$ = createEffect(() =>
     this.actions$.pipe(
       ofType(createReservationAdmin),
-      switchMap((action) =>
+      switchMap(({ createReservationAdminDto }) =>
         this.reservationService
-          .createReservationAdmin(
-            action.selecteDates,
-            action.userId,
-            action.lightUser,
-            action.courts
-          )
+          .createReservationAdmin(createReservationAdminDto)
           .pipe(
             // Si la creación de la reserva es exitosa, solo lanzamos `createReservationAdminSuccess`
             map(() => createReservationAdminSuccess()),
@@ -58,6 +56,32 @@ export class ClubEffects {
         loadReservationsAdmin({ date: selectDatePicked }), // Cargamos las reservas
         closeModal({ modalId: 'createReservationFromTableModal' }), // Cerramos el modal
       ])
+    )
+  );
+
+  updateReservation$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateReservationAdmin),
+      switchMap(({ updateReservationAdminDto, selectedDate }) =>
+        this.reservationService
+          .updateReservationAdmin(updateReservationAdminDto)
+          .pipe(
+            map(() => updateReservationAdminSuccess({ selectedDate })), // Pasa selectedDate al éxito
+            catchError(
+              (error) => of(updateReservationAdminFailure({ error })) // Maneja errores
+            )
+          )
+      )
+    )
+  );
+
+  afterUpdateReservationSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateReservationAdminSuccess),
+      map(({ selectedDate }) => {
+        // Usa selectedDate para cargar reservas después del éxito
+        return loadReservationsAdmin({ date: selectedDate });
+      })
     )
   );
 

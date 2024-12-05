@@ -32,6 +32,7 @@ import { isModalOpen } from 'src/app/state/selectors/modals.selectors';
 import { openModal } from 'src/app/state/actions/modals.actions';
 import Swal from 'sweetalert2';
 import { UserListReturn } from 'src/app/models/UserListReturn.model';
+import { CreateReservationAdmin } from 'src/app/models/createReservationAdmin.model';
 
 @Component({
   selector: 'app-create-reservation-from-table-modal',
@@ -146,14 +147,14 @@ export class CreateReservationFromTableModalComponent
 
     const courtsId = this.data.reservationInfo.courtId;
 
-    this.store.dispatch(
-      createReservationAdmin({
-        selecteDates: hour,
-        userId: this.userReturn?.userId ?? '',
-        lightUser: this.userReturn?.lightUser ?? null,
-        courts: courtsId ? [courtsId.toString()] : null,
-      })
-    );
+    const createReservationAdminDto: CreateReservationAdmin = {
+      selectedSlots: hour,
+      userId: this.userReturn?.userId ?? '',
+      lightUser: this.userReturn?.lightUser ?? null,
+      courts: courtsId ? [courtsId.toString()] : null,
+    };
+
+    this.store.dispatch(createReservationAdmin({ createReservationAdminDto }));
   }
 
   closeModal() {

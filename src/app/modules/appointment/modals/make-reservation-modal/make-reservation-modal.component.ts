@@ -51,6 +51,7 @@ import {
 } from 'src/app/state/selectors/club.selectors';
 import { selectCourts } from 'src/app/state/selectors/clubConfiguration.selectors';
 import { CourtDetail } from 'src/app/models/CourtDetail.model';
+import { CreateReservationAdmin } from 'src/app/models/createReservationAdmin.model';
 
 @Component({
   selector: 'app-make-reservation-modal',
@@ -386,13 +387,14 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
 
       dialogRef.afterClosed().subscribe((result) => {
         if (result) {
+          const createReservationAdminDto: CreateReservationAdmin = {
+            selectedSlots: this.selectedSlots,
+            userId: result.userId,
+            lightUser: result.lightUser,
+            courts: this.selectedCourt,
+          };
           this.store.dispatch(
-            createReservationAdmin({
-              selecteDates: this.selectedSlots,
-              userId: result.userId,
-              lightUser: result.lightUser,
-              courts: this.selectedCourt,
-            })
+            createReservationAdmin({ createReservationAdminDto })
           );
         }
       });
@@ -412,14 +414,11 @@ export class MakeReservationModalComponent implements OnInit, OnDestroy {
   }
 
   onCourtSelected(court: string) {
-    console.log(this.selectedCourt);
-
     if (this.selectedCourt.includes(court)) {
       this.selectedCourt = this.selectedCourt.filter((c) => c !== court);
     } else {
       this.selectedCourt = [...this.selectedCourt, court];
     }
-    console.log(this.selectedCourt);
   }
 
   private handleReservationSuccess(): void {

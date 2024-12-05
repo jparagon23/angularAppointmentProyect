@@ -184,16 +184,9 @@ export class UserInformationPageComponent implements OnInit {
       }
       if (this.originalUser.profileImage !== this.userEditable.profileImage) {
         updatedData.profileImage = this.userEditable.profileImage;
-        console.log(
-          'Foto de perfil actualizada',
-          updatedData.profileImage,
-          this.userEditable.profileImage
-        );
       }
 
       if (Object.keys(updatedData).length > 0) {
-        console.log(updatedData.profileImage);
-
         this.store.dispatch(updateUser({ user: updatedData }));
       } else {
         this.isEditing = false;
@@ -244,6 +237,5 @@ export class UserInformationPageComponent implements OnInit {
   onDeletePhoto() {
     this.userEditable.profileImage = null;
     this.showMenu = false;
-    console.log('Foto de perfil eliminada');
   }
 }

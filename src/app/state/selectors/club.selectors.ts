@@ -1,4 +1,4 @@
-import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { createSelector, createFeatureSelector, select } from '@ngrx/store';
 import { ClubState } from '../reducers/club.reducers';
 
 export const selectClubState = createFeatureSelector<ClubState>('club');
@@ -41,4 +41,19 @@ export const selectCreateReservationAdminSuccess = createSelector(
 export const selectSelectedClubDate = createSelector(
   selectClubState,
   (state: ClubState) => state.selectedClubDate
+);
+
+export const selectUpdateReservationLoader = createSelector(
+  selectClubState,
+  (state: ClubState) => state.updateReservationLoading
+);
+
+export const selectUpdateReservationSuccess = createSelector(
+  selectClubState,
+  (state: ClubState) => state.updateReservationSuccess
+);
+
+export const selectUpdateReservationFailure = createSelector(
+  selectClubState,
+  (state: ClubState) => state.updateReservationFailure
 );

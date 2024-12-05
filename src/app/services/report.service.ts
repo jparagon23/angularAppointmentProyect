@@ -44,8 +44,6 @@ export class ReportService {
     initialDate: string,
     endDate: string
   ): Observable<ClubReportDTO> {
-    console.log('Cargando reportes para:');
-
     const params = {
       initialDate: initialDate,
       endDate: endDate,

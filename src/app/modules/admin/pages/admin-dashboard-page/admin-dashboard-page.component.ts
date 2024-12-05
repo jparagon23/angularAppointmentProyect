@@ -34,7 +34,19 @@ import { CreateReservationFromTableModalComponent } from '../../modals/create-re
 
 import { parse, isBefore, isAfter } from 'date-fns';
 import { loadCourts } from 'src/app/state/actions/clubConfiguration.actions';
-import { selectedClubDate } from 'src/app/state/actions/club.actions';
+import {
+  selectedClubDate,
+  updateReservationAdmin,
+} from 'src/app/state/actions/club.actions';
+import { selectCourts } from 'src/app/state/selectors/clubConfiguration.selectors';
+import { CourtDetail } from 'src/app/models/CourtDetail.model';
+import { UpdateReservationDto } from 'src/app/models/UpdateReservationDto.model';
+import Swal from 'sweetalert2';
+import {
+  selectUpdateReservationFailure,
+  selectUpdateReservationLoader,
+  selectUpdateReservationSuccess,
+} from 'src/app/state/selectors/club.selectors';
 
 @Component({
   selector: 'app-admin-dashboard-page',
@@ -42,6 +54,7 @@ import { selectedClubDate } from 'src/app/state/actions/club.actions';
 })
 export class AdminDashboardPageComponent implements OnInit, OnDestroy {
   selectedDate: string = this.initializeSelectedDate();
+  courts$: Observable<any[]> = this.store.select(selectCourts);
   reservations$: Observable<ClubReservations | null> = new Observable();
   clubReservationLoading$: Observable<boolean> = new Observable();
   user: User | undefined;
@@ -65,6 +78,139 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
   private availableColors: string[] = ['bg-yellow-100 text-black'];
 
   private nameColorMap: { [key: string]: string } = {};
+
+  draggedReservation: { reservation: Reservation; hour: string } | null = null;
+
+  getCourtByName(name: string, courts: CourtDetail[]): CourtDetail | null {
+    return courts.find((court) => court.name === name) || null;
+  }
+
+  onDragStart(event: DragEvent, reservation: Reservation, hour: string) {
+    event.dataTransfer?.setData('text/plain', JSON.stringify(reservation));
+    this.draggedReservation = { reservation, hour };
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+  }
+
+  onDrop(
+    event: DragEvent,
+    targetHourDescription: string,
+    targetCourtName: string
+  ) {
+    event.preventDefault();
+    if (!this.draggedReservation) return;
+
+    const { reservation, hour } = this.draggedReservation;
+
+    if (!reservation.id || !reservation.id.startsWith('I')) {
+      Swal.fire({
+        title: 'No se pudo realizar la operación',
+        text: 'Solo puedes modificar reservas de una hora',
+        icon: 'error',
+      });
+      this.draggedReservation = null;
+      return;
+    }
+
+    this.courts$.pipe(take(1)).subscribe((courts: CourtDetail[]) => {
+      const targetCourt = this.getCourtByName(targetCourtName, courts);
+
+      if (!targetCourt) {
+        console.error(
+          `No se encontró una cancha con el nombre: ${targetCourtName}`
+        );
+        this.draggedReservation = null;
+        return;
+      }
+
+      if (
+        hour !== targetHourDescription ||
+        reservation.courtId !== targetCourt.id
+      ) {
+        // Lógica para mover la reserva
+        this.moveReservation(
+          reservation,
+          targetHourDescription,
+          targetCourt.id.toString()
+        );
+      }
+    });
+
+    this.draggedReservation = null;
+  }
+
+  moveReservation(reservation: any, targetHour: string, targetCourt: string) {
+    const formattedHour = targetHour.length < 5 ? `0${targetHour}` : targetHour;
+    const combinedDateTime = `${this.selectedDate}T${formattedHour}:00`;
+
+    const createReservationAdminDto: UpdateReservationDto = {
+      reservationIdToUpdate: reservation.id,
+      appointmentTime: [combinedDateTime],
+      courtsId: [targetCourt],
+    };
+
+    // Despachar acción para mover la reserva
+    this.store.dispatch(
+      updateReservationAdmin({
+        updateReservationAdminDto: createReservationAdminDto,
+        selectedDate: this.selectedDate,
+      })
+    );
+
+    this.store.select(selectUpdateReservationLoader).subscribe({
+      next: (loading) => {
+        if (loading) {
+          Swal.fire({
+            title: 'Modificando la reserva...',
+            text: 'Por favor, espera mientras procesamos tu solicitud.',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+        }
+      },
+    });
+
+    this.store
+      .select(selectUpdateReservationSuccess)
+      .pipe(
+        filter((success) => success),
+        take(1)
+      )
+      .subscribe({
+        next: () => {
+          Swal.close();
+          Swal.fire({
+            title: 'Reserva actualizada',
+            text: 'La reserva fue actualizada exitosamente.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false,
+          });
+        },
+      });
+
+    this.store
+      .select(selectUpdateReservationFailure)
+      .pipe(
+        filter((failure) => failure),
+        take(1)
+      )
+      .subscribe({
+        next: () => {
+          Swal.close();
+          Swal.fire({
+            title: 'No se pudo realizar la operación',
+            text: 'Ocurrió un error al actualizar la reserva.',
+            icon: 'error',
+          });
+          console.error('Error moviendo la reserva:');
+        },
+      });
+  }
 
   ngOnInit(): void {
     this.currentTime = new Date();
@@ -94,7 +240,6 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
             this.selectedDate = this.initializeSelectedDate();
             this.loadReservations();
 
-            // Suscripción a las reservas y asignación de valores a `isPastTimes` y `isCurrentTimeSlots`
             this.reservations$
               .pipe(takeUntil(this.destroy$))
               .subscribe((reservations) => {
@@ -372,26 +517,29 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
   }
 
   getReservationClass(
-    reservation: any,
+    reservation: Reservation,
     index: number,
     rowDescription: string
   ): { [key: string]: boolean } {
     // Definir las clases predeterminadas (más prioritarias)
     const classes: { [key: string]: boolean } = {
-      'bg-red-100': this.isCurrentTimeSlots[index], // Prioridad alta: siempre se aplica primero si es tiempo actual
+      'bg-red-100': this.isCurrentTimeSlots[index],
       'bg-green-300': this.isSlotSelected(reservation, rowDescription),
       'cursor-not-allowed':
-        this.isPastTimes[index] || this.isCurrentTimeSlots[index],
-      'cursor-pointer':
-        !this.isPastTimes[index] && !this.isCurrentTimeSlots[index],
+        (this.isPastTimes[index] && !this.isCurrentTimeSlots[index]) ||
+        reservation.description === 'No disponible',
+      'cursor-pointer': !(
+        (this.isPastTimes[index] && !this.isCurrentTimeSlots[index]) ||
+        reservation.description === 'No disponible'
+      ),
       'text-green-700 bg-green-100':
         reservation.description === 'Disponible' &&
-        !this.isCurrentTimeSlots[index] && // No aplica si es tiempo actual
+        !this.isCurrentTimeSlots[index] &&
         !this.isPastTimes[index],
       'text-red-600 ':
         reservation.description === 'No disponible' &&
-        !this.isCurrentTimeSlots[index], // No aplica si es tiempo actual
-      'bg-gray-100': this.isPastTimes[index] && !this.isCurrentTimeSlots[index], // No aplica si es tiempo actual
+        !this.isCurrentTimeSlots[index],
+      'bg-gray-100': this.isPastTimes[index] && !this.isCurrentTimeSlots[index],
       'hover:bg-none':
         this.isPastTimes[index] || this.isCurrentTimeSlots[index],
     };
@@ -407,7 +555,7 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
       reservation.description !== 'No disponible'
     ) {
       const dynamicColorClass = this.getColorForName(reservation.description);
-      classes[dynamicColorClass] = true; // Agregar clase dinámica si no hay fondo gris o rojo
+      classes[dynamicColorClass] = true;
     }
 
     return classes;
