@@ -15,6 +15,8 @@ import { ClubAvailability } from '../models/ClubAvalability.model';
 import { AvailableSlotsResponse } from '../models/AvailableSlotInfo.model';
 import { CancellationCause } from '../models/CancellationCause.model';
 import { CancellationClubCauses } from '../models/CancellationClubCauses.model';
+import { CreateReservationAdmin } from '../models/createReservationAdmin.model';
+import { UpdateReservationDto } from '../models/UpdateReservationDto.model';
 
 @Injectable({
   providedIn: 'root',
@@ -94,17 +96,14 @@ export class ReservationService {
   }
 
   createReservationAdmin(
-    selectedSlots: string[],
-    userId: string,
-    lightUser: LightUser | null,
-    court: string[] | null
+    createReservationAdminDto: CreateReservationAdmin
   ): Observable<ReservationConfirmation> {
-    const url = `${environment.API_URL}/reservation/${userId}`;
+    const url = `${environment.API_URL}/reservation/${createReservationAdminDto.userId}`;
     const body = {
-      appointmentTime: selectedSlots,
+      appointmentTime: createReservationAdminDto.selectedSlots,
       clubId: 1,
-      lightUser: lightUser,
-      courtsId: court,
+      lightUser: createReservationAdminDto.lightUser,
+      courtsId: createReservationAdminDto.courts,
     };
 
     return this.http.post<ReservationConfirmation>(url, body, {
@@ -159,6 +158,22 @@ export class ReservationService {
     const url = `${environment.API_URL}/configuration/club/${this.user.userAdminClub}/cancellation-causes/${causeId}`;
     const body = { description };
     return this.http.put<CancellationClubCauses>(url, body, {
+      headers: this.setHeaders(),
+    });
+  }
+
+  updateReservationAdmin(
+    updateReservation: UpdateReservationDto
+  ): Observable<ReservationConfirmation> {
+    const url = `${environment.API_URL}/reservation/${updateReservation.reservationIdToUpdate}`;
+    const body = {
+      appointmentTime: updateReservation.appointmentTime,
+      clubId: 1,
+      lightUser: null,
+      courtsId: updateReservation.courtsId,
+    };
+
+    return this.http.put<ReservationConfirmation>(url, body, {
       headers: this.setHeaders(),
     });
   }

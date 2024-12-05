@@ -1,6 +1,9 @@
+import { update } from 'lodash';
 import { LightUser } from 'src/app/models/LightUser.model';
 import { createAction, props } from '@ngrx/store';
 import { ClubUser } from 'src/app/models/clubUsers.model';
+import { CreateReservationAdmin } from 'src/app/models/createReservationAdmin.model';
+import { UpdateReservationDto } from 'src/app/models/UpdateReservationDto.model';
 
 export const getClubUserByNameOrId = createAction(
   '[Admin Dashboard] Get User By Name Or Id',
@@ -20,10 +23,7 @@ export const getClubUserByNameOrIdFailure = createAction(
 export const createReservationAdmin = createAction(
   '[Admin Dashboard] Create Reservation',
   props<{
-    selecteDates: string[];
-    userId: string;
-    lightUser: LightUser | null;
-    courts: string[] | null;
+    createReservationAdminDto: CreateReservationAdmin;
   }>()
 );
 
@@ -45,4 +45,22 @@ export const resetClubUsers = createAction('[Club] Reset Club Users');
 export const selectedClubDate = createAction(
   '[Admin Dashboard] Selected Club Date',
   props<{ date: string }>()
+);
+
+export const updateReservationAdmin = createAction(
+  '[Admin Dashboard] Update Reservation',
+  props<{
+    updateReservationAdminDto: UpdateReservationDto;
+    selectedDate: string;
+  }>()
+);
+
+export const updateReservationAdminSuccess = createAction(
+  '[Admin Dashboard] Update Reservation Success',
+  props<{ selectedDate: string }>()
+);
+
+export const updateReservationAdminFailure = createAction(
+  '[Admin Dashboard] Update Reservation Failure',
+  props<{ error: any }>()
 );

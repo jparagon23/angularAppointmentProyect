@@ -59,7 +59,10 @@
               </td>
 
               <td
-                *ngFor="let reservation of row.reservations.slice(1)"
+                *ngFor="
+                  let reservation of row.reservations.slice(1);
+                  let y = index
+                "
                 class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base"
                 [ngClass]="
                   getReservationClass(
@@ -68,8 +71,10 @@
                     row.reservations[0].description
                   )
                 "
+                draggable="true"
                 (click)="
-                  isPastTimes[i] || isCurrentTimeSlots[i]
+                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
+                  reservation.description === 'No disponible'
                     ? null
                     : onReservationClick(
                         reservation,
@@ -77,12 +82,49 @@
                       )
                 "
                 (mousedown)="
-                  onMouseDown(reservation, row.reservations[0].description)
+                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
+                  reservation.description === 'No disponible'
+                    ? null
+                    : onMouseDown(reservation, row.reservations[0].description)
                 "
                 (mouseenter)="
-                  onMouseEnter(reservation, row.reservations[0].description)
+                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
+                  reservation.description === 'No disponible'
+                    ? null
+                    : onMouseEnter(reservation, row.reservations[0].description)
                 "
-                (mouseup)="onMouseUp()"
+                (mouseup)="
+                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
+                  reservation.description === 'No disponible'
+                    ? null
+                    : onMouseUp()
+                "
+                (dragstart)="
+                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
+                  reservation.description === 'No disponible'
+                    ? null
+                    : onDragStart(
+                        $event,
+                        reservation,
+                        row.reservations[0].description
+                      )
+                "
+                (dragover)="
+                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
+                  reservation.description === 'No disponible'
+                    ? null
+                    : onDragOver($event)
+                "
+                (drop)="
+                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
+                  reservation.description === 'No disponible'
+                    ? null
+                    : onDrop(
+                        $event,
+                        row.reservations[0].description,
+                        reservations.reservationHeaders[y + 1]
+                      )
+                "
               >
                 {{ reservation.description }}
               </td>
