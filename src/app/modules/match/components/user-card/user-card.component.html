@@ -1,0 +1,17 @@
+<div class="flex items-center space-x-6 p-4 bg-white rounded-lg shadow-md mb-6">
+  <!-- Foto de perfil -->
+  <img
+    [src]="user?.profileImage || 'https://via.placeholder.com/150'"
+    alt="{{ user?.name }}"
+    class="w-16 h-16 rounded-full object-cover border-2 border-gray-300"
+  />
+
+  <!-- Información del jugador -->
+  <div>
+    <p class="text-xl font-bold text-gray-900">
+      {{ user?.name + " " + user?.lastname }}
+    </p>
+    <p *ngIf="!winner" class="text-sm text-gray-500">Jugador {{ index }}</p>
+    <p *ngIf="winner" class="text-sm text-gray-500">Ganador!</p>
+  </div>
+</div>

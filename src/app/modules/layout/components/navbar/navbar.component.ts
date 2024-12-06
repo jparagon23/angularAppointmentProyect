@@ -18,6 +18,7 @@ import { Store } from '@ngrx/store';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { logout } from 'src/app/state/actions/auth.actions';
+import { PostMatchComponent } from 'src/app/modules/match/modals/post-match/post-match.component';
 
 interface ButtonConfig {
   label: string;
@@ -91,6 +92,14 @@ export class NavbarComponent implements OnInit {
 
   OpenDialog(): void {
     this.dialog.open(MakeReservationModalComponent, {
+      maxWidth: '95vw',
+      maxHeight: '95vh',
+      panelClass: 'custom-dialog-container',
+    });
+  }
+
+  openPostResult(): void {
+    this.dialog.open(PostMatchComponent, {
       maxWidth: '95vw',
       maxHeight: '95vh',
       panelClass: 'custom-dialog-container',
