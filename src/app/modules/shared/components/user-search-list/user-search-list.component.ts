@@ -2,6 +2,7 @@ import {
   Component,
   OnInit,
   OnDestroy,
+  Input,
   Output,
   EventEmitter,
 } from '@angular/core';
@@ -19,16 +20,16 @@ import {
   selectClubUsers,
   selectLoadingClubUsers,
 } from 'src/app/state/selectors/club.selectors';
-import { CreateLightUserModalComponent } from '../../modals/create-light-user-modal/create-light-user-modal.component';
+import { CreateLightUserModalComponent } from '../../../admin/modals/create-light-user-modal/create-light-user-modal.component';
 import { UserListReturn } from 'src/app/models/UserListReturn.model';
 
 @Component({
   selector: 'app-user-search-list',
   templateUrl: './user-search-list.component.html',
-  styleUrls: ['./user-search-list.component.css'],
 })
 export class UserSearchListComponent implements OnInit, OnDestroy {
   @Output() userReturn = new EventEmitter<UserListReturn | null>();
+  @Input() allowCreateUser = true;
 
   loadingUsers$ = this.store.select(selectLoadingClubUsers);
   filteredUsers$ = this.store.select(selectClubUsers);
@@ -37,6 +38,7 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
   selectedUser?: ClubUser;
   lightUser: LightUser | null = null;
   isnewUser = false;
+  queryCompleted = false; // Propiedad para rastrear si la consulta ha finalizado
 
   private readonly destroy$ = new Subject<void>();
 
@@ -53,20 +55,22 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
     this.userControl.valueChanges
       .pipe(
         debounceTime(500),
-        tap((searchTerm) => this.searchUserIfNeeded(searchTerm)),
+        tap((searchTerm) => {
+          this.queryCompleted = false; // Reiniciar el estado de la consulta
+          this.searchUserIfNeeded(searchTerm);
+        }),
         takeUntil(this.destroy$)
       )
       .subscribe();
+
+    this.filteredUsers$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.queryCompleted = true; // Marcar la consulta como completada
+    });
   }
 
   private searchUserIfNeeded(searchTerm: string | null): void {
-    if (typeof searchTerm === 'string') {
-      this.selectedUser = undefined;
-      this.userReturn.emit(null);
-
-      if (searchTerm && searchTerm.trim().length > 0) {
-        this.store.dispatch(getClubUserByNameOrId({ nameOrId: searchTerm }));
-      }
+    if (!this.selectedUser && searchTerm) {
+      this.store.dispatch(getClubUserByNameOrId({ nameOrId: searchTerm }));
     }
   }
 
@@ -75,6 +79,8 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
 
     this.userReturn.emit({
       userId: this.selectedUser?.userId?.toString() ?? '',
+      completeName: this.selectedUser?.completeName ?? '',
+      profileImage: this.selectedUser?.profileImage ?? '',
       lightUser: this.selectedUser?.userId ? null : this.lightUser,
     });
   }
@@ -105,6 +111,7 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
       userId: null,
       userIdentification: result.email,
       completeName: `${result.name} ${result.lastName}`,
+      profileImage: '',
     };
 
     this.selectedUser = newUser;
@@ -114,6 +121,8 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
     this.userReturn.emit({
       userId: this.selectedUser?.userId?.toString() ?? '',
       lightUser: this.selectedUser?.userId ? null : this.lightUser,
+      completeName: this.selectedUser?.completeName ?? '',
+      profileImage: '',
     });
   }
 

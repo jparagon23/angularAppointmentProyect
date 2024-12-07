@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MatchResultDto } from 'src/app/models/PostResult.model';
 import { User } from 'src/app/models/user.model';
+import { UserListReturn } from 'src/app/models/UserListReturn.model';
 import { publishMatchResult } from 'src/app/state/actions/event.actions';
 import { AppState } from 'src/app/state/app.state';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
@@ -22,16 +23,8 @@ export class PostMatchComponent implements OnInit {
   player2: { id: number; name: string; image: string } | null = null;
 
   // Lista de jugadores para seleccionar
-  playersList = [
-    { id: 1, name: 'Juan Aragon', image: 'https://via.placeholder.com/150' },
-    { id: 2, name: 'Marco Lopez', image: 'https://via.placeholder.com/150' },
-    { id: 3, name: 'Carlos Mejía', image: 'https://via.placeholder.com/150' },
-    { id: 4, name: 'Juan fdAdragon', image: 'https://via.placeholder.com/150' },
-    { id: 5, name: 'Juan dfdragon', image: 'https://via.placeholder.com/150' },
-  ];
 
   // Lista filtrada de jugadores según el término de búsqueda
-  filteredPlayers = this.playersList;
 
   // Variable para almacenar los resultados del set
   setResults: any;
@@ -47,17 +40,13 @@ export class PostMatchComponent implements OnInit {
     });
   }
 
-  // Método para manejar la búsqueda de jugadores
-  onSearch(): void {
-    const searchValue = this.searchTerm.toLowerCase();
-    this.filteredPlayers = this.playersList.filter((player) =>
-      player.name.toLowerCase().includes(searchValue)
-    );
-  }
-
   // Método para seleccionar un jugador
-  selectPlayer(player: any): void {
-    this.player2 = player;
+  onUserSelected(player: UserListReturn | null): void {
+    this.player2 = {
+      id: Number(player!.userId),
+      name: player!.completeName,
+      image: player!.profileImage,
+    };
   }
 
   handleResult(result: any): void {
@@ -104,5 +93,9 @@ export class PostMatchComponent implements OnInit {
 
   onDateChange(date: string): void {
     this.matchDate = date;
+  }
+
+  get canPublishResult(): boolean {
+    return !!this.player2 && !!this.setResults?.winner;
   }
 }

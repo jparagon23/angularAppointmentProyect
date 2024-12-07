@@ -1,12 +1,14 @@
 import { Component, Input } from '@angular/core';
-import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-user-card',
   templateUrl: './user-card.component.html',
 })
 export class UserCardComponent {
-  @Input() user: User | null = null;
-  @Input() index!: number;
+  @Input() user: { name: string; image: string; index: number } = {
+    name: '',
+    image: '',
+    index: 0,
+  };
   @Input() winner: boolean = false;
 }

@@ -25,7 +25,6 @@ import { RedirectEffects } from './state/effects/redirect.effects';
 import { RegisterEffects } from './state/effects/register.effects';
 import { ClubConfigurationEffects } from './state/effects/clubConfiguration.effects';
 import { ReportEffects } from './state/effects/report.effects';
-import { MatchModule } from './modules/match/match.module';
 import { EventEffects } from './state/effects/event.effects';
 
 registerLocaleData(localeEs, 'es');

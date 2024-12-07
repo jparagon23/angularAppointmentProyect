@@ -9,19 +9,25 @@
         <div class="flex flex-col space-y-2">
           <input
             type="number"
-            class="w-16 h-16 border-2 border-solid border-blue-500 text-center text-2xl text-gray-800 rounded-md"
+            class="w-16 h-16 border-2 border-solid border-[#35691a] text-center text-2xl text-gray-800 rounded-md"
             min="0"
             max="10"
+            maxlength="2"
             [(ngModel)]="setResult.player1"
+            placeholder="-"
             (change)="checkTiebreak(i)"
+            (input)="limitInput($event, 11)"
           />
           <input
             type="number"
-            class="w-16 h-16 border-2 border-solid border-blue-500 text-center text-2xl text-gray-800 rounded-md"
+            class="w-16 h-16 border-2 border-solid border-[#35691a] text-center text-2xl text-gray-800 rounded-md"
             min="0"
             max="10"
+            maxlength="2"
             [(ngModel)]="setResult.player2"
+            placeholder="-"
             (change)="checkTiebreak(i)"
+            (input)="limitInput($event, 11)"
           />
         </div>
       </div>
@@ -32,19 +38,25 @@
         <div class="flex flex-col space-y-2">
           <input
             type="number"
-            class="w-16 h-16 border-2 border-solid border-blue-500 text-center text-2xl text-gray-800 rounded-md"
+            class="w-16 h-16 border-2 border-solid border-[#35691a] text-center text-2xl text-gray-800 rounded-md"
             min="0"
             max="10"
+            maxlength="2"
             [(ngModel)]="setResult.tiebreakPlayer1"
+            placeholder="-"
             (change)="checkTiebreak(i)"
+            (input)="limitInput($event, 30)"
           />
           <input
             type="number"
-            class="w-16 h-16 border-2 border-solid border-blue-500 text-center text-2xl text-gray-800 rounded-md"
+            class="w-16 h-16 border-2 border-solid border-[#35691a] text-center text-2xl text-gray-800 rounded-md"
             min="0"
             max="10"
+            maxlength="2"
             [(ngModel)]="setResult.tiebreakPlayer2"
+            placeholder="-"
             (change)="checkTiebreak(i)"
+            (input)="limitInput($event, 30)"
           />
         </div>
       </div>

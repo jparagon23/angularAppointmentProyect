@@ -1,17 +1,30 @@
-<div class="flex items-center space-x-6 p-4 bg-white rounded-lg shadow-md mb-6">
+<div
+  class="flex items-center space-x-6 p-4 bg-white rounded-lg shadow-md mb-6 relative"
+>
+  <!-- Línea vertical verde a la izquierda -->
+  <div
+    class="absolute left-0 top-0 bottom-0 w-2 bg-[#35691a] rounded-l-lg"
+  ></div>
+
   <!-- Foto de perfil -->
-  <img
-    [src]="user?.profileImage || 'https://via.placeholder.com/150'"
-    alt="{{ user?.name }}"
-    class="w-16 h-16 rounded-full object-cover border-2 border-gray-300"
-  />
+  <div
+    class="w-16 h-16 rounded-full border-2 border-gray-300 bg-gray-200 flex items-center justify-center ml-4"
+  >
+    <img
+      *ngIf="user.image"
+      [src]="user.image"
+      alt="{{ user.name }}"
+      class="w-full h-full rounded-full object-cover"
+    />
+    <i *ngIf="!user.image" class="fas fa-user text-gray-500 text-2xl"></i>
+  </div>
 
   <!-- Información del jugador -->
-  <div>
-    <p class="text-xl font-bold text-gray-900">
-      {{ user?.name + " " + user?.lastname }}
+  <div class="ml-4">
+    <p class="text-xl font-bold text-gray-900">{{ user.name }}</p>
+    <p *ngIf="!winner" class="text-sm text-gray-500">
+      Jugador {{ user.index }}
     </p>
-    <p *ngIf="!winner" class="text-sm text-gray-500">Jugador {{ index }}</p>
     <p *ngIf="winner" class="text-sm text-gray-500">Ganador!</p>
   </div>
 </div>
