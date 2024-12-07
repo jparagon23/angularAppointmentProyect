@@ -10,7 +10,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
-import { debounceTime, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, takeUntil, tap, map } from 'rxjs/operators';
 
 import { AppState } from 'src/app/state/app.state';
 import { ClubUser } from 'src/app/models/clubUsers.model';
@@ -30,15 +30,19 @@ import { UserListReturn } from 'src/app/models/UserListReturn.model';
 export class UserSearchListComponent implements OnInit, OnDestroy {
   @Output() userReturn = new EventEmitter<UserListReturn | null>();
   @Input() allowCreateUser = true;
+  @Input() filterUserStatus = [2, 7]; // Default filter for roles 2 and 7.
 
   loadingUsers$ = this.store.select(selectLoadingClubUsers);
-  filteredUsers$ = this.store.select(selectClubUsers);
+  filteredUsers$ = this.store.select(selectClubUsers).pipe(
+    // Filter users based on the selected roles
+    map((users) => this.filterUsersByRole(users))
+  );
 
   userControl = new FormControl();
   selectedUser?: ClubUser;
   lightUser: LightUser | null = null;
   isnewUser = false;
-  queryCompleted = false; // Propiedad para rastrear si la consulta ha finalizado
+  queryCompleted = false; // Track query completion
 
   private readonly destroy$ = new Subject<void>();
 
@@ -56,7 +60,7 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
       .pipe(
         debounceTime(500),
         tap((searchTerm) => {
-          this.queryCompleted = false; // Reiniciar el estado de la consulta
+          this.queryCompleted = false;
           this.searchUserIfNeeded(searchTerm);
         }),
         takeUntil(this.destroy$)
@@ -64,7 +68,7 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.filteredUsers$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.queryCompleted = true; // Marcar la consulta como completada
+      this.queryCompleted = true; // Mark the query as completed
     });
   }
 
@@ -112,6 +116,7 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
       userIdentification: result.email,
       completeName: `${result.name} ${result.lastName}`,
       profileImage: '',
+      userStatus: 0,
     };
 
     this.selectedUser = newUser;
@@ -124,6 +129,18 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
       completeName: this.selectedUser?.completeName ?? '',
       profileImage: '',
     });
+  }
+
+  // New method to filter users based on roles
+  private filterUsersByRole(users: ClubUser[]): ClubUser[] {
+    // Only filter if filterUserStatus is not empty
+    if (this.filterUserStatus.length > 0) {
+      return users.filter((user) =>
+        this.filterUserStatus.includes(user.userStatus)
+      );
+    } else {
+      return users; // Return all users if no filter is applied
+    }
   }
 
   ngOnDestroy(): void {

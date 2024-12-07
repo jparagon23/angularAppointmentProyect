@@ -3,4 +3,5 @@ export interface ClubUser {
   userIdentification: string;
   completeName: string;
   profileImage: string;
+  userStatus: number;
 }
