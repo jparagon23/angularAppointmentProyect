@@ -2,15 +2,19 @@ import { createAction, props } from '@ngrx/store';
 import { MatchResultDto } from 'src/app/models/PostResult.model';
 
 export const publishMatchResult = createAction(
-  '[Match] Publish Match Result',
+  '[Post-score-modal] Publish Match Result',
   props<{ matchResult: MatchResultDto }>()
 );
 
 export const publishMatchResultSuccess = createAction(
-  '[Match] Publish Match Result Success'
+  '[Post-score-modal] Publish Match Result Success'
 );
 
 export const publishMatchResultFailure = createAction(
-  '[Match] Publish Match Result Failure',
+  '[Post-score-modal] Publish Match Result Failure',
   props<{ error: any }>()
+);
+
+export const resetPostScoreStatus = createAction(
+  '[Post-score-modal] Reset Post Score Status'
 );

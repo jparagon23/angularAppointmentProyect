@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { UserCardComponent } from './components/user-card/user-card.component';
 import { SetResultComponentComponent } from './components/set-result-component/set-result-component.component';
 import { SharedModule } from '../shared/shared.module';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -12,6 +13,6 @@ import { SharedModule } from '../shared/shared.module';
     UserCardComponent,
     SetResultComponentComponent,
   ],
-  imports: [CommonModule, FormsModule, SharedModule],
+  imports: [CommonModule, FormsModule, SharedModule, MatDialogModule],
 })
 export class MatchModule {}

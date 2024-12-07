@@ -3,6 +3,7 @@ import {
   publishMatchResult,
   publishMatchResultFailure,
   publishMatchResultSuccess,
+  resetPostScoreStatus,
 } from '../actions/event.actions';
 
 export interface EventState {
@@ -37,5 +38,11 @@ export const matchReducer = createReducer(
     publishMatchResultLoading: false,
     publishMatchResultFailure: true,
     error: error,
+  })),
+  on(resetPostScoreStatus, (state) => ({
+    ...state,
+    publishMatchResultLoading: false,
+    publishMatchResultSuccess: false,
+    publishMatchResultFailure: false,
   }))
 );

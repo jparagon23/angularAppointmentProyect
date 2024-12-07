@@ -31,6 +31,7 @@
         index: 1
       }"
       [winner]="winner === 'player1'"
+      (removeUser)="removePlayer($event)"
     ></app-user-card>
   </div>
 
@@ -69,6 +70,8 @@
           index: 2
         }"
         [winner]="winner === 'player2'"
+        (removeUser)="removePlayer($event)"
+        [allowDelete]="true"
       ></app-user-card>
     </div>
   </div>
@@ -81,6 +84,15 @@
       (click)="publishResult()"
     >
       Publicar Resultado
+    </button>
+  </div>
+
+  <div class="flex justify-center mt-4">
+    <button
+      class="px-8 py-3 sm:px-10 sm:py-4 rounded-lg shadow-lg text-lg sm:text-xl transition-all duration-300 text-white bg-red-600 hover:bg-red-700"
+      [mat-dialog-close]="true"
+    >
+      Cancelar
     </button>
   </div>
 </div>

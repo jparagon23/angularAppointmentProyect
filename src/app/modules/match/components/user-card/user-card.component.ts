@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-user-card',
@@ -11,4 +11,11 @@ export class UserCardComponent {
     index: 0,
   };
   @Input() winner: boolean = false;
+  @Input() allowDelete: boolean = false;
+
+  @Output() removeUser = new EventEmitter<number>();
+
+  onRemoveClick(): void {
+    this.removeUser.emit(this.user.index);
+  }
 }
