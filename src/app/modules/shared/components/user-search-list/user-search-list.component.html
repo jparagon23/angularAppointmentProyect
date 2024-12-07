@@ -1,7 +1,4 @@
 <div class="mb-4 sm:mb-6">
-  <label for="user" class="block text-gray-700 font-semibold mb-1 sm:text-sm"
-    >Usuario:</label
-  >
   <div class="flex items-center border border-gray-300 rounded-md p-2">
     <input
       id="user"
@@ -27,6 +24,7 @@
       <!-- Opción para crear usuario cuando la lista es vacía -->
       <mat-option
         *ngIf="
+          allowCreateUser &&
           (filteredUsers$ | async)?.length === 0 &&
           userControl.value &&
           !isnewUser &&
@@ -35,6 +33,19 @@
         (click)="openCreateUserModal()"
       >
         <em>Crear nuevo usuario</em>
+      </mat-option>
+
+      <mat-option
+        *ngIf="
+          !allowCreateUser &&
+          queryCompleted &&
+          (filteredUsers$ | async)?.length === 0 &&
+          userControl.value &&
+          !(loadingUsers$ | async)
+        "
+        disabled
+      >
+        <em>No se encontró usuario</em>
       </mat-option>
     </mat-autocomplete>
   </div>
