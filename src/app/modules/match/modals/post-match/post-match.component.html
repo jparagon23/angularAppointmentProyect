@@ -21,18 +21,38 @@
     ></app-date-selector>
   </div>
 
-  <!-- Sección del Jugador 1 -->
+  <!-- Sección de búsqueda y selección del Jugador 2 -->
   <div class="mb-6 sm:mb-8">
-    <!-- Foto de perfil -->
-    <app-user-card
-      [user]="{
-        name: (player1?.name || '') + ' ' + (player1?.lastname || ''),
-        image: player1?.profileImage || '',
-        index: 1
-      }"
-      [winner]="winner === 'player1'"
-      (removeUser)="removePlayer($event)"
-    ></app-user-card>
+    <div *ngIf="!player1" class="p-6 bg-white rounded-lg shadow-md">
+      <label
+        for="search-player"
+        class="block text-lg sm:text-xl font-medium text-gray-700 mb-3"
+      >
+        Buscar Jugador 1
+      </label>
+
+      <div class="mb-4 sm:mb-6">
+        <app-user-search-list
+          (userReturn)="onUserSelectedP1($event)"
+          [allowCreateUser]="false"
+          [filterUserStatus]="[2]"
+        ></app-user-search-list>
+      </div>
+    </div>
+
+    <!-- Mostrar tarjeta del Jugador 2 cuando se selecciona -->
+    <div *ngIf="player1" class="mt-6 sm:mt-8">
+      <app-user-card
+        [user]="{
+          name: player1.name || '',
+          image: player1.image || '',
+          index: 1
+        }"
+        [winner]="winner === 'player1'"
+        [allowDelete]="user?.role === CLUB_ADMIN_ROLE"
+        (removeUser)="removePlayer($event)"
+      ></app-user-card>
+    </div>
   </div>
 
   <!-- Sección de sets y games -->
@@ -54,7 +74,7 @@
 
       <div class="mb-4 sm:mb-6">
         <app-user-search-list
-          (userReturn)="onUserSelected($event)"
+          (userReturn)="onUserSelectedP2($event)"
           [allowCreateUser]="false"
           [filterUserStatus]="[2]"
         ></app-user-search-list>

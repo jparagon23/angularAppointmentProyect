@@ -1,3 +1,4 @@
+import { CLUB_ADMIN_ROLE } from 'src/app/modules/shared/constants/Constants.constants';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
@@ -12,6 +13,7 @@ import { AppState } from 'src/app/state/app.state';
 import { selectPostScoreStatus } from 'src/app/state/selectors/event.selectors';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import Swal from 'sweetalert2';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-post-match',
@@ -26,76 +28,95 @@ export class PostMatchComponent implements OnInit, OnDestroy {
   user$ = this.store.select(selectUser);
   status$ = this.store.select(selectPostScoreStatus);
 
-  player1: User | null = null;
+  player1: { id: number; name: string; image: string } | null = null;
   player2: { id: number; name: string; image: string } | null = null;
 
-  // Lista de jugadores para seleccionar
+  user: User | null = null;
 
-  // Lista filtrada de jugadores según el término de búsqueda
-
-  // Variable para almacenar los resultados del set
   setResults: any;
+  CLUB_ADMIN_ROLE = CLUB_ADMIN_ROLE;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private store: Store<AppState>,
-    public dialogRef: MatDialogRef<PostMatchComponent>,
-    private readonly dialog: MatDialog
+    public dialogRef: MatDialogRef<PostMatchComponent>
   ) {}
 
   ngOnInit(): void {
     this.matchDate = new Date().toISOString().split('T')[0];
-    this.user$.subscribe((user) => {
+    this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user) {
-        this.player1 = user;
+        this.user = user;
+        this.player1 = this.player1 = {
+          id: Number(user!.id),
+          name: user!.name.concat(' ', user!.lastname),
+          image: user!.profileImage ?? '',
+        };
       }
     });
 
-    this.status$.subscribe(({ loading, success, failure }) => {
-      if (loading) {
-        Swal.fire({
-          title: 'Publicando resultado...',
-          text: 'Por favor espera',
-          allowOutsideClick: false,
-          didOpen: () => {
-            Swal.showLoading();
-          },
-        });
-      } else if (success) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Resultado publicado!',
-          text: 'El resultado se publicó correctamente.',
-        }).then(() => this.dialogRef.close()); // Cerrar modal tras éxito
-      } else if (failure) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error al publicar el resultado',
-          text: 'Hubo un problema al publicar el resultado. Por favor, inténtalo de nuevo.',
-        });
-      }
-    });
+    this.status$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ loading, success, failure }) => {
+        if (loading) {
+          Swal.fire({
+            title: 'Publicando resultado...',
+            text: 'Por favor espera',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+        } else if (success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Resultado publicado!',
+            text: 'El resultado se publicó correctamente.',
+          }).then(() => this.dialogRef.close()); // Cerrar modal tras éxito
+        } else if (failure) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al publicar el resultado',
+            text: 'Hubo un problema al publicar el resultado. Por favor, inténtalo de nuevo.',
+          });
+        }
+      });
   }
 
   ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
     this.store.dispatch(resetPostScoreStatus());
   }
 
-  removePlayer(userIndex: number): void {
-    console.log(`Eliminar usuario con índice: ${userIndex}`);
-    if (userIndex == 1) {
-      this.player1 = null;
-    }
-    if (userIndex == 2) {
-      this.player2 = null;
-    }
+  removePlayer(playerIndex: number): void {
+    if (playerIndex === 1) this.player1 = null;
+    if (playerIndex === 2) this.player2 = null;
   }
 
   // Método para seleccionar un jugador
-  onUserSelected(player: UserListReturn | null): void {
+  onUserSelectedP2(player: UserListReturn | null): void {
+    if (!player) {
+      this.player2 = null;
+      return;
+    }
     this.player2 = {
-      id: Number(player!.userId),
-      name: player!.completeName,
-      image: player!.profileImage,
+      id: Number(player.userId),
+      name: player.completeName,
+      image: player.profileImage,
+    };
+  }
+
+  onUserSelectedP1(player: UserListReturn | null): void {
+    if (!player) {
+      this.player1 = null;
+      return;
+    }
+    this.player1 = {
+      id: Number(player.userId),
+      name: player.completeName,
+      image: player.profileImage,
     };
   }
 
@@ -118,6 +139,11 @@ export class PostMatchComponent implements OnInit, OnDestroy {
   }
 
   publishResult(): void {
+    if (!this.matchDate || isNaN(new Date(this.matchDate).getTime())) {
+      Swal.fire('Error', 'Fecha inválida', 'error');
+      return;
+    }
+
     this.updateWinnerIds();
     console.log('Publicando resultados...');
     const winnerId =
@@ -146,6 +172,6 @@ export class PostMatchComponent implements OnInit, OnDestroy {
   }
 
   get canPublishResult(): boolean {
-    return !!this.player2 && !!this.setResults?.winner;
+    return !!this.player1 && !!this.player2 && !!this.setResults?.winner;
   }
 }
