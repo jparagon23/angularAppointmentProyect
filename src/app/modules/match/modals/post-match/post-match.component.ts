@@ -122,8 +122,11 @@ export class PostMatchComponent implements OnInit, OnDestroy {
 
   handleResult(result: any): void {
     this.setResults = result;
-    this.setResults.winner ? (this.winner = this.setResults.winner) : null;
+    this.setResults.winner
+      ? (this.winner = this.setResults.winner)
+      : (this.winner = null);
     console.log('Resultados recibidos:', this.setResults);
+    console.log('Ganador:', this.winner);
   }
 
   updateWinnerIds(): void {
