@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
+  getUserMatches,
+  getUserMathcesFailure,
+  getUserMathcesSuccess,
   publishMatchResult,
   publishMatchResultFailure,
   publishMatchResultSuccess,
@@ -22,6 +25,25 @@ export class EventEffects {
         this.eventService.publishMatchResult(matchResult).pipe(
           map(() => publishMatchResultSuccess()),
           catchError((error) => of(publishMatchResultFailure({ error })))
+        )
+      )
+    )
+  );
+
+  loadUserMatchesAfterPostMatchResult$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(publishMatchResultSuccess),
+      map(() => getUserMatches())
+    )
+  );
+
+  getUserMatchesResult$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getUserMatches),
+      switchMap(() =>
+        this.eventService.getUserMatches().pipe(
+          map((matches) => getUserMathcesSuccess({ matches })),
+          catchError((error) => of(getUserMathcesFailure({ error })))
         )
       )
     )

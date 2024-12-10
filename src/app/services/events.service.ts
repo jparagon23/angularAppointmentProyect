@@ -2,12 +2,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
 import { UserReservationResponse } from '../models/UserReservations.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { TokenService } from './token.service';
 import { Store } from '@ngrx/store';
 import { selectUser } from '../state/selectors/users.selectors';
 import { MatchResultDto } from '../models/PostResult.model';
 import { environment } from 'src/environments/environment';
+import { UserMatch } from '../models/events/UserMatch.model';
 
 @Injectable({
   providedIn: 'root',
@@ -47,6 +48,13 @@ export class EventsService {
   publishMatchResult(matchResult: MatchResultDto) {
     const url = `${environment.API_URL}/event/post-match-result`;
     return this.http.post(url, matchResult, {
+      headers: this.setHeaders(),
+    });
+  }
+
+  getUserMatches(): Observable<UserMatch[]> {
+    const url = `${environment.API_URL}/event/match/user/${this.userId}`;
+    return this.http.get<UserMatch[]>(url, {
       headers: this.setHeaders(),
     });
   }

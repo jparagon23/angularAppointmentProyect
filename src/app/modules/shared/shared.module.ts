@@ -22,6 +22,7 @@ import { UserSearchListComponent } from './components/user-search-list/user-sear
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatchResultCardComponent } from './components/match-result-card/match-result-card.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     TimePipe,
     CapitalizeFirstWordPipe,
     UserSearchListComponent,
+    MatchResultCardComponent,
   ],
 
   imports: [
@@ -65,6 +67,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     DateSelectorComponent,
     CapitalizeFirstWordPipe,
     UserSearchListComponent,
+    MatchResultCardComponent,
   ],
 })
 export class SharedModule {}

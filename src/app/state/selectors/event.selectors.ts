@@ -1,4 +1,4 @@
-import { createSelector } from '@ngrx/store';
+import { createSelector, select } from '@ngrx/store';
 import { AppState } from '../app.state';
 import { EventState } from '../reducers/event.reducers';
 
@@ -10,5 +10,15 @@ export const selectPostScoreStatus = createSelector(
     loading: state.publishMatchResultLoading,
     success: state.publishMatchResultSuccess,
     failure: state.publishMatchResultFailure,
+  })
+);
+
+export const selectGetUserMatchesStatus = createSelector(
+  selectEventsFeature,
+  (state: EventState) => ({
+    loading: state.getUserMatchesLoading,
+    success: state.getUserMatchesSuccess,
+    failure: state.getUserMatchesFailure,
+    userMatch: state.userMatches,
   })
 );
