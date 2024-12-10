@@ -106,8 +106,8 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
 
     if (!reservation.id || !reservation.id.startsWith('I')) {
       Swal.fire({
-        title: 'Error',
-        text: 'Solo puedes mover reservas de una hora',
+        title: 'No se pudo realizar la operación',
+        text: 'Solo puedes modificar reservas de una hora',
         icon: 'error',
       });
       this.draggedReservation = null;
@@ -163,7 +163,7 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
       next: (loading) => {
         if (loading) {
           Swal.fire({
-            title: 'Moviendo reserva...',
+            title: 'Modificando la reserva...',
             text: 'Por favor, espera mientras procesamos tu solicitud.',
             allowOutsideClick: false,
             didOpen: () => {
@@ -184,8 +184,8 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
         next: () => {
           Swal.close();
           Swal.fire({
-            title: 'Reserva movida',
-            text: 'La reserva fue movida exitosamente.',
+            title: 'Reserva actualizada',
+            text: 'La reserva fue actualizada exitosamente.',
             icon: 'success',
             timer: 2000,
             showConfirmButton: false,
@@ -203,8 +203,8 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
         next: () => {
           Swal.close();
           Swal.fire({
-            title: 'Error',
-            text: 'Ocurrió un error al mover la reserva.',
+            title: 'No se pudo realizar la operación',
+            text: 'Ocurrió un error al actualizar la reserva.',
             icon: 'error',
           });
           console.error('Error moviendo la reserva:');
