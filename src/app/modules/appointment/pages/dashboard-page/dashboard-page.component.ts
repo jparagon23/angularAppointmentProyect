@@ -15,6 +15,10 @@ import {
 } from 'src/app/state/actions/reservations.actions';
 import Swal from 'sweetalert2';
 import { loadCourts } from 'src/app/state/actions/clubConfiguration.actions';
+import { selectGetUserMatchesStatus } from 'src/app/state/selectors/event.selectors';
+import { loadUser } from 'src/app/state/actions/users.actions';
+import { getUserMatches } from 'src/app/state/actions/event.actions';
+import { UserMatch } from 'src/app/models/events/UserMatch.model';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -38,9 +42,14 @@ export class DashboardPageComponent implements OnInit {
     selectCancelReservationLoading
   );
 
+  selectGetUserMatchesStatus$ = this.store.select(selectGetUserMatchesStatus);
+
   private isLoading = false;
 
   private readonly subscriptions = new Subscription();
+  sliceLimit = 4;
+  initialLimit = 4;
+  increment = 6;
 
   constructor(private readonly store: Store<any>) {}
   ngOnInit(): void {
@@ -51,6 +60,8 @@ export class DashboardPageComponent implements OnInit {
     this.handleCancelReservationSuccess();
     this.handleCancelReservationFailure();
     this.trackLoadingState();
+
+    this.store.dispatch(getUserMatches());
   }
 
   private handleCancelReservationSuccess(): void {
@@ -110,5 +121,15 @@ export class DashboardPageComponent implements OnInit {
   private hideLoadingSpinner(): void {
     if (!this.isLoading) return;
     this.isLoading = false;
+  }
+  toggleResults(event: Event, matchesData: UserMatch[]): void {
+    event.preventDefault(); // Evita el comportamiento por defecto del enlace
+    if (this.sliceLimit < matchesData.length) {
+      // Mostrar más resultados
+      this.sliceLimit = matchesData.length;
+    } else {
+      // Volver al límite inicial
+      this.sliceLimit = this.initialLimit;
+    }
   }
 }

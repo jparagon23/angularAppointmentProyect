@@ -19,7 +19,6 @@ import { CancelReservationModalComponent } from './modals/cancel-reservation-mod
 import { CancellationCausesConfigComponent } from './components/cancellation-causes-config/cancellation-causes-config.component';
 import { CreateLightUserModalComponent } from './modals/create-light-user-modal/create-light-user-modal.component';
 import { UserNameMakeReservationModalComponent } from './modals/user-name-make-reservation-modal/user-name-make-reservation-modal.component';
-import { UserSearchListComponent } from './component/user-search-list/user-search-list.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ClubReportsComponent } from './pages/club-reports/club-reports.component';
 
@@ -38,7 +37,6 @@ import { ClubReportsComponent } from './pages/club-reports/club-reports.componen
     CancellationCausesConfigComponent,
     CreateLightUserModalComponent,
     UserNameMakeReservationModalComponent,
-    UserSearchListComponent,
     ClubReportsComponent,
   ],
   imports: [
