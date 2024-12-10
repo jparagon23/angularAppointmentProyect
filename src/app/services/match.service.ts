@@ -13,7 +13,7 @@ import { UserMatch } from '../models/events/UserMatch.model';
 @Injectable({
   providedIn: 'root',
 })
-export class EventsService {
+export class MatchService {
   private userId: number | undefined;
   private headers: HttpHeaders | undefined;
   private user!: User;
@@ -46,14 +46,14 @@ export class EventsService {
   }
 
   publishMatchResult(matchResult: MatchResultDto) {
-    const url = `${environment.API_URL}/event/post-match-result`;
+    const url = `${environment.API_URL}/match`;
     return this.http.post(url, matchResult, {
       headers: this.setHeaders(),
     });
   }
 
   getUserMatches(): Observable<UserMatch[]> {
-    const url = `${environment.API_URL}/event/match/user/${this.userId}`;
+    const url = `${environment.API_URL}/match/user/${this.userId}`;
     return this.http.get<UserMatch[]>(url, {
       headers: this.setHeaders(),
     });

@@ -9,20 +9,20 @@ import {
   publishMatchResultSuccess,
 } from '../actions/event.actions';
 import { catchError, map, of, switchMap } from 'rxjs';
-import { EventsService } from 'src/app/services/events.service';
+import { MatchService } from 'src/app/services/match.service';
 
 @Injectable()
 export class EventEffects {
   constructor(
     private readonly actions$: Actions,
-    private readonly eventService: EventsService
+    private readonly matchService: MatchService
   ) {}
 
   publishMatchResult$ = createEffect(() =>
     this.actions$.pipe(
       ofType(publishMatchResult),
       switchMap(({ matchResult }) =>
-        this.eventService.publishMatchResult(matchResult).pipe(
+        this.matchService.publishMatchResult(matchResult).pipe(
           map(() => publishMatchResultSuccess()),
           catchError((error) => of(publishMatchResultFailure({ error })))
         )
@@ -41,7 +41,7 @@ export class EventEffects {
     this.actions$.pipe(
       ofType(getUserMatches),
       switchMap(() =>
-        this.eventService.getUserMatches().pipe(
+        this.matchService.getUserMatches().pipe(
           map((matches) => getUserMathcesSuccess({ matches })),
           catchError((error) => of(getUserMathcesFailure({ error })))
         )
