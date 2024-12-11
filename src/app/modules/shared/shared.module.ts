@@ -23,6 +23,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatchResultCardComponent } from './components/match-result-card/match-result-card.component';
+import { StatusTranslatePipe } from './pipes/status-translate.pipe';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { MatchResultCardComponent } from './components/match-result-card/match-r
     CapitalizeFirstWordPipe,
     UserSearchListComponent,
     MatchResultCardComponent,
+    StatusTranslatePipe,
   ],
 
   imports: [
@@ -68,6 +70,7 @@ import { MatchResultCardComponent } from './components/match-result-card/match-r
     CapitalizeFirstWordPipe,
     UserSearchListComponent,
     MatchResultCardComponent,
+    StatusTranslatePipe,
   ],
 })
 export class SharedModule {}
