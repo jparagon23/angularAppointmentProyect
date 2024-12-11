@@ -1,9 +1,13 @@
 <ng-container *ngIf="user$ | async as user">
   <nav class="bg-green-700 border-gray-200 px-4 py-3 shadow-md">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-      <div class="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto">
+      <div
+        class="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto"
+      >
         <!-- Logo -->
-        <div class="flex justify-center sm:justify-start w-full sm:w-auto mb-2 sm:mb-0">
+        <div
+          class="flex justify-center sm:justify-start w-full sm:w-auto mb-2 sm:mb-0"
+        >
           <a routerLink="/app">
             <img
               loading="lazy"
@@ -16,7 +20,9 @@
         </div>
 
         <!-- Botones principales para móviles y desktop -->
-        <div class="flex  m:flex-row justify-center sm:justify-end w-full sm:w-auto sm:space-x-4 sm:space-y-0">
+        <div
+          class="flex m:flex-row justify-center sm:justify-end w-full sm:w-auto sm:space-x-4 sm:space-y-0"
+        >
           <app-button
             typeBtn="button"
             color="navbar"
@@ -34,24 +40,19 @@
           >
             Publicar resultado
           </app-button>
-        </div>
 
-
-
-        <!-- Botón de menú hamburguesa para móviles -->
-        <div class="sm:hidden mt-2">
-          <button
-            type="button"
-            class="text-white"
-            (click)="isOpenMobileMenu = !isOpenMobileMenu"
-          >
-            <fa-icon [icon]="faBars"></fa-icon>
-          </button>
+          <!-- Botón de menú hamburguesa para móviles -->
+          <div class="sm:hidden mt-2">
+            <button
+              type="button"
+              class="text-white"
+              (click)="isOpenMobileMenu = !isOpenMobileMenu"
+            >
+              <fa-icon [icon]="faBars"></fa-icon>
+            </button>
+          </div>
         </div>
       </div>
-      </div>
-
-
 
       <!-- Opciones visibles en desktop -->
       <div
@@ -77,7 +78,11 @@
 
         <div class="flex items-center space-x-4 relative">
           <!-- Campana de notificaciones -->
-          <div cdkOverlayOrigin #notificationOverlay="cdkOverlayOrigin" class="relative">
+          <div
+            cdkOverlayOrigin
+            #notificationOverlay="cdkOverlayOrigin"
+            class="relative"
+          >
             <button
               type="button"
               class="text-white flex items-center justify-center"
@@ -95,7 +100,6 @@
             </span>
           </div>
 
-
           <!-- Botón de usuario -->
           <app-button
             typeBtn="button"
@@ -108,7 +112,6 @@
             <fa-icon [icon]="faUser" class="h-5 w-5"></fa-icon>
           </app-button>
         </div>
-
       </div>
     </div>
 
@@ -143,16 +146,15 @@
         <fa-icon [icon]="faUser"></fa-icon>
       </app-button>
 
-        <app-button
-          type="button"
-          color="navbar"
-          (click)="isOpenNotifications = !isOpenNotifications"
-          cdkOverlayOrigin
-          #notificationOverlay="cdkOverlayOrigin"
-        >
-          <fa-icon [icon]="faBell" class="h-5 w-5"></fa-icon>
-        </app-button>
-
+      <app-button
+        type="button"
+        color="navbar"
+        (click)="isOpenNotifications = !isOpenNotifications"
+        cdkOverlayOrigin
+        #notificationOverlay="cdkOverlayOrigin"
+      >
+        <fa-icon [icon]="faBell" class="h-5 w-5"></fa-icon>
+      </app-button>
 
       <div></div>
     </div>
@@ -231,7 +233,9 @@
           (click)="markAsRead(notification.id)"
         >
           <p class="text-sm text-gray-800">{{ notification.message }}</p>
-          <span class="text-xs text-gray-500">{{ notification.timestamp }}</span>
+          <span class="text-xs text-gray-500">{{
+            notification.timestamp
+          }}</span>
         </li>
       </ul>
     </div>
