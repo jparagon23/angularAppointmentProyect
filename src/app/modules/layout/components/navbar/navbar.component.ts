@@ -41,6 +41,14 @@ export class NavbarComponent implements OnInit {
   isOpenOverlayAvatar = false;
   isOpenMobileMenu = false;
 
+  isOpenNotifications = false; // Controla el estado del menú desplegable
+  notificationCount = 5; // Número de notificaciones sin leer
+  notifications = [
+    { id: 1, message: 'Nueva reserva confirmada', timestamp: 'Hace 1 hora' },
+    { id: 2, message: 'Actualización de torneo', timestamp: 'Hace 3 horas' },
+    { id: 3, message: 'Pago recibido', timestamp: 'Hace 6 horas' },
+  ]; // Lista de notificaciones
+
   user$: Observable<User> = new Observable<User>();
 
   // Define button configurations
@@ -134,5 +142,23 @@ export class NavbarComponent implements OnInit {
         this.router.navigate(['home/user/user-information']);
       }
     });
+  }
+
+  markAsRead(notificationId: number) {
+    // Marca una notificación como leída
+    this.notifications = this.notifications.filter(
+      (n) => n.id !== notificationId
+    );
+    this.notificationCount = this.notifications.length;
+  }
+
+  markAllAsRead() {
+    // Marca todas las notificaciones como leídas
+    this.notifications = [];
+    this.notificationCount = 0;
+  }
+  closeNotifications() {
+    // Cierra el menú de notificaciones
+    this.isOpenNotifications = false;
   }
 }
