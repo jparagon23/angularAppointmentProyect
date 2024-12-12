@@ -24,6 +24,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatchResultCardComponent } from './components/match-result-card/match-result-card.component';
 import { StatusTranslatePipe } from './pipes/status-translate.pipe';
+import { MatchConfirmationModalComponent } from './match-confirmation-modal/match-confirmation-modal.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { StatusTranslatePipe } from './pipes/status-translate.pipe';
     UserSearchListComponent,
     MatchResultCardComponent,
     StatusTranslatePipe,
+    MatchConfirmationModalComponent,
   ],
 
   imports: [

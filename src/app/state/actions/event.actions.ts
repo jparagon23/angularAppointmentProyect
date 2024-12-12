@@ -30,3 +30,35 @@ export const getUserMathcesFailure = createAction(
   '[dashboard] Get User Matches Failure',
   props<{ error: any }>()
 );
+
+export const confirmMatchResult = createAction(
+  '[Post-score-modal] Confirm Match Result',
+  props<{ matchId: number }>()
+);
+
+export const confirmMatchResultSuccess = createAction(
+  '[Post-score-modal] Confirm Match Result Success'
+);
+
+export const confirmMatchResultFailure = createAction(
+  '[Post-score-modal] Confirm Match Result Failure',
+  props<{ error: any }>()
+);
+
+export const rejectMatchResult = createAction(
+  '[Post-score-modal] Reject Match Result',
+  props<{ matchId: number }>()
+);
+
+export const rejectMatchResultSuccess = createAction(
+  '[Post-score-modal] Reject Match Result Success'
+);
+
+export const rejectMatchResultFailure = createAction(
+  '[Post-score-modal] Reject Match Result Failure',
+  props<{ error: any }>()
+);
+
+export const resetMatchResultState = createAction(
+  '[Post-score-modal] Reset Match Result State'
+);

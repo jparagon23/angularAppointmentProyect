@@ -148,7 +148,7 @@ export class PostMatchComponent implements OnInit, OnDestroy {
     }
 
     this.updateWinnerIds();
-    console.log('Publicando resultados...');
+
     const winnerId =
       this.setResults.winner === 'player1'
         ? this.player1?.id ?? 0
@@ -166,7 +166,6 @@ export class PostMatchComponent implements OnInit, OnDestroy {
       groupId: null,
     };
 
-    console.log('Datos a publicar:', json);
     this.store.dispatch(publishMatchResult({ matchResult: json }));
   }
 

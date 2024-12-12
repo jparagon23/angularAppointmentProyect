@@ -5,13 +5,28 @@
   <div class="flex justify-between items-center">
     <div class="flex items-center space-x-2">
       <span class="text-sm font-bold text-cyan-600 uppercase">Tennis</span>
-      <span class="text-base text-gray-500">{{
-        matchData.matchDate | timeFormat : "medium"
-      }}</span>
+      <span class="text-base text-gray-500">
+        {{ matchData.matchDate | timeFormat : "medium" }}
+      </span>
     </div>
-    <span class="text-sm font-medium text-gray-700">{{
-      matchData.status | statusTranslate
-    }}</span>
+    <span class="text-sm font-medium text-gray-700">
+      <!-- Si userCanConfirm es true, mostramos los botones de aceptar y rechazar -->
+      <ng-container *ngIf="userCanConfirm; else statusTemplate">
+        <div class="flex gap-2">
+          <button (click)="onAccept()" class="text-green-500">
+            <i class="fas fa-check-circle text-2xl"></i>
+            <!-- Icono de aceptación -->
+          </button>
+          <button (click)="onReject()" class="text-red-500">
+            <i class="fas fa-times-circle text-2xl"></i>
+            <!-- Icono de rechazo -->
+          </button>
+        </div>
+      </ng-container>
+      <ng-template #statusTemplate>
+        {{ matchData.status | statusTranslate }}
+      </ng-template>
+    </span>
   </div>
 
   <!-- Players -->
@@ -24,9 +39,9 @@
           alt="Colombia"
           class="w-6 h-6"
         />
-        <span class="text-base font-semibold text-gray-800">{{
-          matchData.winnerName
-        }}</span>
+        <span class="text-base font-semibold text-gray-800">
+          {{ matchData.winner.name }}
+        </span>
       </div>
       <div class="flex gap-4 text-gray-800 text-lg">
         <div class="relative">
@@ -68,9 +83,9 @@
           alt="Colombia"
           class="w-6 h-6"
         />
-        <span class="text-base font-semibold text-gray-800">{{
-          matchData.looserName
-        }}</span>
+        <span class="text-base font-semibold text-gray-800">
+          {{ matchData.looser.name }}
+        </span>
       </div>
       <div class="flex gap-4 text-gray-800 text-lg">
         <div class="relative">

@@ -16,9 +16,19 @@ import { filter, Observable } from 'rxjs';
 import { User } from 'src/app/models/user.model';
 import { Store } from '@ngrx/store';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 import { logout } from 'src/app/state/actions/auth.actions';
 import { PostMatchComponent } from 'src/app/modules/match/modals/post-match/post-match.component';
+import { NotificationItem } from 'src/app/models/notification/NotificationItem.model';
+import { MatchConfirmationModalComponent } from 'src/app/modules/shared/match-confirmation-modal/match-confirmation-modal.component';
+import {
+  loadUserNotifications,
+  markNotificationAsRead,
+} from 'src/app/state/actions/notification.actions';
+import {
+  selectNotificationStatus,
+  selectUserNotifications,
+} from 'src/app/state/selectors/notification.selectors';
 
 interface ButtonConfig {
   label: string;
@@ -42,12 +52,11 @@ export class NavbarComponent implements OnInit {
   isOpenMobileMenu = false;
 
   isOpenNotifications = false; // Controla el estado del menú desplegable
-  notificationCount = 5; // Número de notificaciones sin leer
-  notifications = [
-    { id: 1, message: 'Nueva reserva confirmada', timestamp: 'Hace 1 hora' },
-    { id: 2, message: 'Actualización de torneo', timestamp: 'Hace 3 horas' },
-    { id: 3, message: 'Pago recibido', timestamp: 'Hace 6 horas' },
-  ]; // Lista de notificaciones
+  notifications$: Observable<NotificationItem[]> = this.store.select(
+    selectUserNotifications
+  );
+
+  notifications: NotificationItem[] = [];
 
   user$: Observable<User> = new Observable<User>();
 
@@ -71,6 +80,10 @@ export class NavbarComponent implements OnInit {
       if (user) {
         this.initializeButtons(user.role);
       }
+    });
+
+    this.notifications$.subscribe((notifications) => {
+      this.notifications = notifications;
     });
   }
 
@@ -145,20 +158,31 @@ export class NavbarComponent implements OnInit {
   }
 
   markAsRead(notificationId: number) {
-    // Marca una notificación como leída
-    this.notifications = this.notifications.filter(
-      (n) => n.id !== notificationId
-    );
-    this.notificationCount = this.notifications.length;
+    console.log('Marcar como leída la notificación con ID:', notificationId);
   }
 
   markAllAsRead() {
-    // Marca todas las notificaciones como leídas
-    this.notifications = [];
-    this.notificationCount = 0;
+    console.log('Marcar todas las notificaciones como leídas');
   }
   closeNotifications() {
     // Cierra el menú de notificaciones
     this.isOpenNotifications = false;
+  }
+
+  openNotificationModal(notification: NotificationItem) {
+    this.store.dispatch(
+      markNotificationAsRead({ notificationId: notification.id })
+    );
+    if (notification.actionUrl !== null) {
+      this.dialog.open(MatchConfirmationModalComponent, {
+        data: notification,
+      });
+    }
+  }
+
+  getUnreadNotificationsCount(): number {
+    return this.notifications.filter(
+      (notification) => notification.status !== 'READ'
+    ).length;
   }
 }

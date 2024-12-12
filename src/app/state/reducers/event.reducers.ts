@@ -1,11 +1,18 @@
 import { createReducer, on } from '@ngrx/store';
 import {
+  confirmMatchResult,
+  confirmMatchResultFailure,
+  confirmMatchResultSuccess,
   getUserMatches,
   getUserMathcesFailure,
   getUserMathcesSuccess,
   publishMatchResult,
   publishMatchResultFailure,
   publishMatchResultSuccess,
+  rejectMatchResult,
+  rejectMatchResultFailure,
+  rejectMatchResultSuccess,
+  resetMatchResultState,
   resetPostScoreStatus,
 } from '../actions/event.actions';
 import { UserMatch } from 'src/app/models/events/UserMatch.model';
@@ -21,6 +28,14 @@ export interface EventState {
   getUserMatchesFailure: boolean;
   userMatches: UserMatch[];
 
+  MatchResultActionLoading: boolean;
+
+  confirmMatchResultSuccess: boolean;
+  confirmMatchResultFailure: boolean;
+
+  rejectMatchResultSuccess: boolean;
+  rejectMatchResultFailure: boolean;
+
   //
 }
 
@@ -33,13 +48,18 @@ export const initialState: EventState = {
   getUserMatchesSuccess: false,
   getUserMatchesFailure: false,
   userMatches: [],
+  MatchResultActionLoading: false,
+  confirmMatchResultSuccess: false,
+  confirmMatchResultFailure: false,
+  rejectMatchResultSuccess: false,
+  rejectMatchResultFailure: false,
 };
 
 export const matchReducer = createReducer(
   initialState,
   on(publishMatchResult, (state) => ({
     ...state,
-    publishMatchResult: true,
+    publishMatchResultLoading: true,
   })),
   on(publishMatchResultSuccess, (state) => ({
     ...state,
@@ -73,5 +93,39 @@ export const matchReducer = createReducer(
     getUserMatchesLoading: false,
     getUserMatchesFailure: true,
     error: error,
+  })),
+  on(confirmMatchResult, rejectMatchResult, (state) => ({
+    ...state,
+    MatchResultActionLoading: true,
+  })),
+  on(confirmMatchResultSuccess, (state) => ({
+    ...state,
+    MatchResultActionLoading: false,
+    confirmMatchResultSuccess: true,
+  })),
+  on(confirmMatchResultFailure, (state, { error }) => ({
+    ...state,
+    MatchResultActionLoading: false,
+    confirmMatchResultFailure: true,
+    error: error,
+  })),
+  on(rejectMatchResultSuccess, (state) => ({
+    ...state,
+    MatchResultActionLoading: false,
+    rejectMatchResultSuccess: true,
+  })),
+  on(rejectMatchResultFailure, (state, { error }) => ({
+    ...state,
+    MatchResultActionLoading: false,
+    rejectMatchResultFailure: true,
+    error: error,
+  })),
+  on(resetMatchResultState, (state) => ({
+    ...state,
+    MatchResultActionLoading: false,
+    confirmMatchResultSuccess: false,
+    confirmMatchResultFailure: false,
+    rejectMatchResultSuccess: false,
+    rejectMatchResultFailure: false,
   }))
 );

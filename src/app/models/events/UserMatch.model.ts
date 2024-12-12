@@ -1,3 +1,8 @@
+export interface User {
+  id: number;
+  name: string;
+}
+
 export interface Set {
   setNumber: number;
   winnerGames: number;
@@ -11,7 +16,8 @@ export interface UserMatch {
   groupName: string | null;
   matchDate: string;
   status: string;
-  winnerName: string;
-  looserName: string;
+  winner: User;
+  looser: User;
   sets: Set[];
+  pendingConfirmationUsers: number[] | null;
 }

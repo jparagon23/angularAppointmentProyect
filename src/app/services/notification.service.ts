@@ -1,18 +1,18 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
-import { Observable } from 'rxjs';
 import { TokenService } from './token.service';
 import { Store } from '@ngrx/store';
+import { AppState } from '../state/app.state';
 import { selectUser } from '../state/selectors/users.selectors';
-import { MatchResultDto } from '../models/PostResult.model';
 import { environment } from 'src/environments/environment';
-import { UserMatch } from '../models/events/UserMatch.model';
+import { NotificationItem } from '../models/notification/NotificationItem.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MatchService {
+export class NotificationService {
   private userId: number | undefined;
   private headers: HttpHeaders | undefined;
   private user!: User;
@@ -20,10 +20,12 @@ export class MatchService {
   constructor(
     private readonly http: HttpClient,
     private readonly tokenService: TokenService,
-    private readonly store: Store<any>
+    private readonly store: Store<AppState>
   ) {
     // Subscribe to userId once, avoid multiple subscriptions
     this.store.select(selectUser).subscribe((user) => {
+      console.log('selecting the user', user);
+
       this.userId = user?.id;
     });
 
@@ -42,22 +44,17 @@ export class MatchService {
     return this.headers;
   }
 
-  publishMatchResult(matchResult: MatchResultDto) {
-    const url = `${environment.API_URL}/match`;
-    return this.http.post(url, matchResult, {
+  getUserNotifications(): Observable<NotificationItem[]> {
+    console.log('userId', this.userId);
+
+    const url = `${environment.API_URL}/notifications/panel/user/${this.userId}`;
+    return this.http.get<NotificationItem[]>(url, {
       headers: this.setHeaders(),
     });
   }
 
-  getUserMatches(): Observable<UserMatch[]> {
-    const url = `${environment.API_URL}/match/user/${this.userId}`;
-    return this.http.get<UserMatch[]>(url, {
-      headers: this.setHeaders(),
-    });
-  }
-
-  matchConfirmationAction(matchId: number, action: string) {
-    const url = `${environment.API_URL}/match/${matchId}/${action}`;
+  markNotificationAsRead(notificationId: number) {
+    const url = `${environment.API_URL}/notifications/${notificationId}/read`;
     return this.http.patch(
       url,
       {},

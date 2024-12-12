@@ -9,22 +9,19 @@ import {
   selectListReservations,
   selectReservationLoading,
 } from 'src/app/state/selectors/reservetions.selectors';
-import {
-  loadReservations,
-  resetCancelReservationState,
-} from 'src/app/state/actions/reservations.actions';
+import { resetCancelReservationState } from 'src/app/state/actions/reservations.actions';
 import Swal from 'sweetalert2';
-import { loadCourts } from 'src/app/state/actions/clubConfiguration.actions';
 import { selectGetUserMatchesStatus } from 'src/app/state/selectors/event.selectors';
-import { loadUser } from 'src/app/state/actions/users.actions';
-import { getUserMatches } from 'src/app/state/actions/event.actions';
 import { UserMatch } from 'src/app/models/events/UserMatch.model';
+import { selectUser } from 'src/app/state/selectors/users.selectors';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-dashboard-page',
   templateUrl: './dashboard-page.component.html',
 })
 export class DashboardPageComponent implements OnInit {
+  user$: Observable<User | null> = this.store.select(selectUser);
   userReservations: ReservationDetail[] = [];
 
   userReservations$: Observable<ReservationDetail[]> = new Observable();
@@ -47,21 +44,53 @@ export class DashboardPageComponent implements OnInit {
   private isLoading = false;
 
   private readonly subscriptions = new Subscription();
-  sliceLimit = 4;
-  initialLimit = 4;
-  increment = 6;
+  confirmedSliceLimit = 6;
+  pendingSliceLimit = 6;
+  initialLimit = 6;
+
+  // Variables para almacenar los partidos confirmados y pendientes
+  confirmedMatches: UserMatch[] = [];
+  pendingMatches: UserMatch[] = [];
 
   constructor(private readonly store: Store<any>) {}
+
   ngOnInit(): void {
     this.loadingReservations$ = this.store.select(selectReservationLoading);
     this.userReservations$ = this.store.select(selectListReservations);
-    this.store.dispatch(loadReservations());
 
     this.handleCancelReservationSuccess();
     this.handleCancelReservationFailure();
     this.trackLoadingState();
 
-    this.store.dispatch(getUserMatches());
+    // Filtrar los partidos confirmados y pendientes al obtener los datos de los partidos
+    this.subscriptions.add(
+      this.selectGetUserMatchesStatus$.subscribe((matchesData) => {
+        if (matchesData?.userMatch) {
+          // Suscribirse al userId$ para obtener el userId y luego filtrar los partidos
+          this.user$.subscribe((user) => {
+            if (user?.id !== undefined) {
+              this.filterMatches(matchesData.userMatch, user.id); // Pasar userId al filtro
+            }
+          });
+        }
+      })
+    );
+  }
+
+  // Función para filtrar los partidos por estado
+  private filterMatches(userMatches: UserMatch[], userId: number): void {
+    this.confirmedMatches = userMatches.filter(
+      (match) =>
+        match.status === 'CONFIRMED' ||
+        (match.status === 'PENDING' &&
+          match.pendingConfirmationUsers &&
+          !match.pendingConfirmationUsers.includes(userId))
+    );
+    this.pendingMatches = userMatches.filter(
+      (match) =>
+        match.status === 'PENDING' &&
+        match.pendingConfirmationUsers?.includes(userId)
+    );
   }
 
   private handleCancelReservationSuccess(): void {
@@ -122,14 +151,21 @@ export class DashboardPageComponent implements OnInit {
     if (!this.isLoading) return;
     this.isLoading = false;
   }
-  toggleResults(event: Event, matchesData: UserMatch[]): void {
+  toggleResults(event: Event, section: 'confirmed' | 'pending'): void {
     event.preventDefault(); // Evita el comportamiento por defecto del enlace
-    if (this.sliceLimit < matchesData.length) {
-      // Mostrar más resultados
-      this.sliceLimit = matchesData.length;
-    } else {
-      // Volver al límite inicial
-      this.sliceLimit = this.initialLimit;
+
+    if (section === 'confirmed') {
+      // Mostrar más resultados en Partidos Confirmados
+      this.confirmedSliceLimit =
+        this.confirmedSliceLimit < this.confirmedMatches.length
+          ? this.confirmedMatches.length
+          : this.initialLimit;
+    } else if (section === 'pending') {
+      // Mostrar más resultados en Partidos Pendientes
+      this.pendingSliceLimit =
+        this.pendingSliceLimit < this.pendingMatches.length
+          ? this.pendingMatches.length
+          : this.initialLimit;
     }
   }
 }

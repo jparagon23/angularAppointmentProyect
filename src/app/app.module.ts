@@ -26,6 +26,7 @@ import { RegisterEffects } from './state/effects/register.effects';
 import { ClubConfigurationEffects } from './state/effects/clubConfiguration.effects';
 import { ReportEffects } from './state/effects/report.effects';
 import { EventEffects } from './state/effects/event.effects';
+import { NotificationEffect } from './state/effects/notification.effects';
 
 registerLocaleData(localeEs, 'es');
 
@@ -58,6 +59,7 @@ registerLocaleData(localeEs, 'es');
       ClubConfigurationEffects,
       ReportEffects,
       EventEffects,
+      NotificationEffect,
     ]),
     SharedModule,
   ],

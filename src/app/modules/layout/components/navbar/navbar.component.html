@@ -93,10 +93,10 @@
             </button>
             <!-- Indicador de notificaciones -->
             <span
-              *ngIf="notificationCount > 0"
+              *ngIf="getUnreadNotificationsCount() > 0"
               class="absolute top-[-8px] right-[-6px] bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center"
             >
-              {{ notificationCount }}
+              {{ getUnreadNotificationsCount() }}
             </span>
           </div>
 
@@ -209,35 +209,54 @@
     </div>
   </ng-template>
 
-  <ng-template
-    cdkConnectedOverlay
-    [cdkConnectedOverlayOrigin]="notificationOverlay"
-    [cdkConnectedOverlayOpen]="isOpenNotifications"
-    (overlayOutsideClick)="isOpenNotifications = !isOpenNotifications"
-  >
-    <div
-      class="z-50 my-4 w-full sm:w-60 text-base list-none bg-white rounded divide-y divide-gray-100 shadow"
+  <div class="relative">
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="notificationOverlay"
+      [cdkConnectedOverlayOpen]="isOpenNotifications"
+      (overlayOutsideClick)="isOpenNotifications = !isOpenNotifications"
     >
-      <div class="py-2 px-4 text-center relative">
-        <button
-          (click)="isOpenNotifications = !isOpenNotifications"
-          class="block text-sm text-gray-900 absolute right-3 top-3"
+      <!-- Panel de notificaciones -->
+      <div
+        class="z-50 my-4 w-full sm:w-80 text-base bg-white rounded-lg shadow-lg border border-gray-200"
+      >
+        <!-- Encabezado -->
+        <div
+          class="py-4 px-5 flex items-center justify-between border-b border-gray-100"
         >
-          <fa-icon [icon]="faClose"></fa-icon>
-        </button>
+          <h3 class="text-lg font-semibold text-gray-800">Notificaciones</h3>
+          <button
+            (click)="isOpenNotifications = !isOpenNotifications"
+            class="text-gray-500 hover:text-gray-800 transition"
+          >
+            <fa-icon [icon]="faClose" size="lg"></fa-icon>
+          </button>
+        </div>
+
+        <!-- Lista de notificaciones -->
+        <ul class="max-h-72 overflow-y-auto divide-y divide-gray-100">
+          <li
+            *ngFor="let notification of notifications"
+            (click)="markAsRead(notification.id)"
+            class="hover:bg-gray-50 transition"
+          >
+            <app-notification-item
+              [notification]="notification"
+              (notificationClick)="openNotificationModal(notification)"
+            ></app-notification-item>
+          </li>
+        </ul>
+
+        <!-- Pie del panel -->
+        <div class="py-3 px-5 bg-gray-50 text-center">
+          <button
+            (click)="markAllAsRead()"
+            class="text-sm text-blue-600 hover:text-blue-800 transition"
+          >
+            Marcar todas como leídas
+          </button>
+        </div>
       </div>
-      <ul class="max-h-64 overflow-y-auto">
-        <li
-          *ngFor="let notification of notifications"
-          class="py-2 px-4 hover:bg-gray-100 cursor-pointer"
-          (click)="markAsRead(notification.id)"
-        >
-          <p class="text-sm text-gray-800">{{ notification.message }}</p>
-          <span class="text-xs text-gray-500">{{
-            notification.timestamp
-          }}</span>
-        </li>
-      </ul>
-    </div>
-  </ng-template>
+    </ng-template>
+  </div>
 </ng-container>
