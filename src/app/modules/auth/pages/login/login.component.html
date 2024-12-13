@@ -1,31 +1,66 @@
-<div class="w-full h-screen bg-authBackGround bg-cover">
+<div
+  class="bg-white shadow-lg rounded-lg flex flex-col lg:flex-row items-center lg:items-stretch justify-center lg:justify-between w-full h-screen p-4 lg:p-8"
+>
+  <!-- Left Section -->
   <div
-    class="flex flex-col items-center justify-center h-screen px-4 py-6 mx-auto lg:py-0"
+    class="w-full lg:w-1/2 lg:px-8 flex flex-col items-center justify-center"
   >
-    <div
-      class="w-full bg-white rounded-lg shadow-md sm:max-w-xs md:max-w-sm lg:max-w-md dark:border dark:bg-gray-800 dark:border-gray-700"
-    >
-      <div class="p-4 space-y-4 sm:p-6">
-        <h1
-          class="text-lg font-bold text-center leading-tight tracking-tight text-gray-900 dark:text-white"
-        >
-          Inicio de sesión
-        </h1>
-        <div>
-          <app-login-form></app-login-form>
+    <div class="lg:max-w-[572px] mx-auto">
+      <div class="flex items-start justify-center mb-[64px] py-[16px]">
+        <img
+          src="../../../../../assets/svg/FOREHAPP.svg"
+          alt="ForehApp Logo"
+          class="h-[80px] w-[297px]"
+        />
+      </div>
+      <div class="w-full flex items-center justify-center mb-5">
+        <div class="font-bold text-gray-800 text-[40px] font-montserrat">
+          Bienvenido
         </div>
-        <p
-          class="text-xs text-center font-light text-black dark:text-white sm:text-sm"
-        >
-          ¿Aún no tienes una cuenta?
+      </div>
+      <p
+        class="text-gray-600 mb-[32px] text-center font-montserrat text-[16px]]"
+      >
+        Ingresa a tu cuenta o crea una nueva.
+      </p>
+      <div>
+        <app-login-form></app-login-form>
+      </div>
+
+      <div class="flex justify-center mt-5 font-montserrat text-[16px]">
+        <div>
+          Aun no tengo una cuenta.
           <a
             routerLink="/register"
-            class="font-medium text-green-700 hover:underline dark:text-green-500"
+            class="font-medium text-[#418622] hover:underline dark:text-green-500"
           >
-            Regístrate
+            Registrarme
           </a>
-        </p>
+        </div>
+      </div>
+
+      <div
+        class="text-gray-600 text-sm text-center mt-4 font-montserrat text-[16px]"
+      >
+        Al iniciar sesión o crear una cuenta, aceptas estar de acuerdo con
+        nuestros
+        <a href="#" class="text-[#418622] hover:underline"
+          >términos y condiciones</a
+        >
+        y nuestra
+        <a href="#" class="text-[#418622] hover:underline"
+          >política de privacidad</a
+        >.
       </div>
     </div>
+  </div>
+
+  <!-- Right Section -->
+  <div class="hidden lg:block lg:w-1/2">
+    <img
+      src="../../../../../assets/backgrounds/polvo-ladrillo.jpg"
+      alt="Tennis Court"
+      class="h-full w-[572px] object-cover max-h-screen rounded-2xl"
+    />
   </div>
 </div>

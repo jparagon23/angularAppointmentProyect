@@ -6,6 +6,11 @@ module.exports = {
   content: ["./src/**/*.{html,ts}"],
   theme: {
     extend: {
+      fontFamily: {
+        montserrat: ["Montserrat"],
+        lato: ["Lato"],
+        garamond: ["Garamond"],
+      },
       backgroundImage: {
         authBackGround: "url('../src/assets/backgrounds/tennis.png')",
       },

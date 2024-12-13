@@ -1,7 +1,7 @@
 <form
   [formGroup]="loginForm"
   novalidate
-  class="space-y-4"
+  class="space-y-4 font-montserrat"
   action="#"
   (ngSubmit)="doLogin()"
 >
@@ -11,7 +11,6 @@
       [name]="'Correo'"
       [description]="'Correo electrónico'"
       [type]="'email'"
-      [placeholder]="'Ingresa tu correo electrónico'"
       #emailInput
     ></app-input>
   </div>
@@ -21,12 +20,11 @@
       [control]="loginForm.controls['password']"
       [name]="'Contraseña'"
       [type]="'password'"
-      [placeholder]="'••••••••'"
     ></app-input>
 
-    <!-- Using async pipe for invalid credentials error -->
+    <!-- Mensaje de error para credenciales inválidas -->
     <div *ngIf="invalidCredentials$ | async">
-      <p class="text-red-700">
+      <p class="text-red-700 text-sm font-montserrat">
         El correo o la contraseña son incorrectos. Por favor, verifica e intenta
         de nuevo.
       </p>
@@ -47,24 +45,24 @@
       <div class="ml-3 text-sm">
         <label
           for="remember"
-          class="cursor-pointer text-gray-500 dark:text-gray-300"
+          class="cursor-pointer text-gray-500 dark:text-gray-300 font-montserrat"
           >Recordarme</label
         >
       </div>
     </div>
     <a
       routerLink="/forgot-password"
-      class="text-sm font-medium text-green-800 hover:underline dark:text-green-500"
+      class="text-sm font-medium text-[#418622] hover:underline dark:text-green-500 font-montserrat"
       >¿Olvidaste tu contraseña?</a
     >
   </div>
 
   <button
     type="submit"
-    class="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+    class="w-full text-white bg-[#418622] hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-montserrat font-bold rounded-3xl text-sm px-5 py-2.5 text-center"
     [disabled]="loadingLogin$ | async"
   >
-    <!-- Loader or button text based on loading state -->
+    <!-- Loader o texto del botón basado en el estado de carga -->
     <ng-container *ngIf="loadingLogin$ | async; else loginText">
       <svg
         class="animate-spin h-5 w-5 mx-auto text-white"
@@ -90,6 +88,7 @@
     <ng-template #loginText>Iniciar sesión</ng-template>
   </button>
 </form>
+
 <style>
   .checkbox-custom:checked {
     background-color: #418622;

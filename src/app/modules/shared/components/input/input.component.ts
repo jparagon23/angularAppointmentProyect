@@ -14,7 +14,7 @@ export class InputComponent {
   @Input() name!: string;
   @Input() description!: string;
   @Input() type!: string;
-  @Input() placeholder!: string;
+  @Input() placeholder: string = '';
   @Input() displayLabel: boolean = true;
   @Input() displayErrorMessage: boolean = true;
 
