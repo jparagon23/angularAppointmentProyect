@@ -21,14 +21,8 @@ import { logout } from 'src/app/state/actions/auth.actions';
 import { PostMatchComponent } from 'src/app/modules/match/modals/post-match/post-match.component';
 import { NotificationItem } from 'src/app/models/notification/NotificationItem.model';
 import { MatchConfirmationModalComponent } from 'src/app/modules/shared/match-confirmation-modal/match-confirmation-modal.component';
-import {
-  loadUserNotifications,
-  markNotificationAsRead,
-} from 'src/app/state/actions/notification.actions';
-import {
-  selectNotificationStatus,
-  selectUserNotifications,
-} from 'src/app/state/selectors/notification.selectors';
+import { markNotificationAsRead } from 'src/app/state/actions/notification.actions';
+import { selectUserNotifications } from 'src/app/state/selectors/notification.selectors';
 
 interface ButtonConfig {
   label: string;

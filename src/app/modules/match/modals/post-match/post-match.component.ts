@@ -148,7 +148,6 @@ export class PostMatchComponent implements OnInit, OnDestroy {
     }
 
     this.updateWinnerIds();
-
     const winnerId =
       this.setResults.winner === 'player1'
         ? this.player1?.id ?? 0
