@@ -3,6 +3,9 @@ import {
   confirmMatchResult,
   confirmMatchResultFailure,
   confirmMatchResultSuccess,
+  deleteMatchResult,
+  deleteMatchResultFailure,
+  deleteMatchResultSuccess,
   getUserMatches,
   getUserMathcesFailure,
   getUserMathcesSuccess,
@@ -36,6 +39,9 @@ export interface EventState {
   rejectMatchResultSuccess: boolean;
   rejectMatchResultFailure: boolean;
 
+  deleteMatchResultSuccess: boolean;
+  deleteMatchResultFailure: boolean;
+
   //
 }
 
@@ -53,6 +59,8 @@ export const initialState: EventState = {
   confirmMatchResultFailure: false,
   rejectMatchResultSuccess: false,
   rejectMatchResultFailure: false,
+  deleteMatchResultSuccess: false,
+  deleteMatchResultFailure: false,
 };
 
 export const matchReducer = createReducer(
@@ -127,5 +135,22 @@ export const matchReducer = createReducer(
     confirmMatchResultFailure: false,
     rejectMatchResultSuccess: false,
     rejectMatchResultFailure: false,
+    deleteMatchResultSuccess: false,
+    deleteMatchResultFailure: false,
+  })),
+  on(deleteMatchResult, (state) => ({
+    ...state,
+    MatchResultActionLoading: true,
+  })),
+  on(deleteMatchResultSuccess, (state) => ({
+    ...state,
+    MatchResultActionLoading: false,
+    deleteMatchResultSuccess: true,
+  })),
+  on(deleteMatchResultFailure, (state, { error }) => ({
+    ...state,
+    MatchResultActionLoading: false,
+    deleteMatchResultFailure: true,
+    error: error,
   }))
 );

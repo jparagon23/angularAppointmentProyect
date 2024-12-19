@@ -19,23 +19,24 @@ export class ButtonComponent {
     | 'navbar' = 'primary';
   faSpinner = faSpinner;
 
+  // Mapa de colores actualizado con bg-[#418622] para success
   mapColors = {
     success: {
-      'bg-success-700': true,
-      'hover:bg-success-800': true,
-      'focus:ring-success-300': true,
+      'bg-[#418622]': true, // Color específico para success
+      'hover:bg-[#35691a]': true, // Hover más oscuro
+      'focus:ring-green-300': true,
       'text-white': true,
     },
     primary: {
-      'bg-primary-700': true,
-      'hover:bg-primary-800': true,
-      'focus:ring-primary-300': true,
+      'bg-blue-700': true,
+      'hover:bg-blue-800': true,
+      'focus:ring-blue-300': true,
       'text-white': true,
     },
     danger: {
-      'bg-danger-700': true,
-      'hover:bg-danger-800': true,
-      'focus:ring-danger-300': true,
+      'bg-red-700': true,
+      'hover:bg-red-800': true,
+      'focus:ring-red-300': true,
       'text-white': true,
     },
     light: {
@@ -52,33 +53,28 @@ export class ButtonComponent {
     },
     navbar: {
       'bg-green-700': true,
-      'text-white': true,
       'hover:bg-green-900': true,
       'focus:ring-primary-300': true,
+      'text-white': true,
     },
     continue: {
-      'bg-[#418622]': true,
-      'hover:bg-[#35691a]': true,
+      'bg-[#418622]': true, // Color específico para continue
+      'hover:bg-[#35691a]': true, // Hover más oscuro
       'focus:ring-primary-300': true,
       'text-white': true,
     },
   };
 
-  constructor() {}
-
+  // Método para determinar las clases dinámicas
   get colors() {
     if (this.disabled) {
       return {
-        'bg-gray-400': true, // or any other color for disabled state
+        'bg-gray-400': true,
         'cursor-not-allowed': true,
         'text-white': true,
       };
     }
 
-    const selectedColors = this.mapColors[this.color];
-    if (selectedColors) {
-      return selectedColors;
-    }
-    return {};
+    return this.mapColors[this.color] || {};
   }
 }

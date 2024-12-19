@@ -62,3 +62,17 @@ export const rejectMatchResultFailure = createAction(
 export const resetMatchResultState = createAction(
   '[Post-score-modal] Reset Match Result State'
 );
+
+export const deleteMatchResult = createAction(
+  '[Match-result-card] Delete Match Result',
+  props<{ matchId: number }>()
+);
+
+export const deleteMatchResultSuccess = createAction(
+  '[Match-result-card] Delete Match Result Success'
+);
+
+export const deleteMatchResultFailure = createAction(
+  '[Match-result-card] Delete Match Result Failure',
+  props<{ error: any }>()
+);

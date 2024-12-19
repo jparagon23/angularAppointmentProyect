@@ -66,4 +66,11 @@ export class MatchService {
       }
     );
   }
+
+  deleteMatchResult(matchId: number) {
+    const url = `${environment.API_URL}/match/${matchId}`;
+    return this.http.delete(url, {
+      headers: this.setHeaders(),
+    });
+  }
 }

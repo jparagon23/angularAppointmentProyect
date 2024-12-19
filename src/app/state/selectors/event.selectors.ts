@@ -37,5 +37,7 @@ export const selectMatchResultActionStatus = createSelector(
     confirmFailure: state.confirmMatchResultFailure,
     rejectSuccess: state.rejectMatchResultSuccess,
     rejectFailure: state.rejectMatchResultFailure,
+    deleteSuccess: state.deleteMatchResultSuccess,
+    deleteFailure: state.deleteMatchResultFailure,
   })
 );

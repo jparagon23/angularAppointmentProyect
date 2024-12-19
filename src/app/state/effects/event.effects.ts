@@ -4,6 +4,9 @@ import {
   confirmMatchResult,
   confirmMatchResultFailure,
   confirmMatchResultSuccess,
+  deleteMatchResult,
+  deleteMatchResultFailure,
+  deleteMatchResultSuccess,
   getUserMatches,
   getUserMathcesFailure,
   getUserMathcesSuccess,
@@ -82,15 +85,35 @@ export class EventEffects {
 
   loadMatchesAfterMatchResultAction$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(confirmMatchResultSuccess, rejectMatchResultSuccess),
+      ofType(
+        confirmMatchResultSuccess,
+        rejectMatchResultSuccess,
+        deleteMatchResultSuccess
+      ),
       map(() => getUserMatches())
     )
   );
 
   reloadNotifictionAfterMatchAction$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(confirmMatchResultSuccess, rejectMatchResultSuccess),
+      ofType(
+        confirmMatchResultSuccess,
+        rejectMatchResultSuccess,
+        deleteMatchResultSuccess
+      ),
       map(() => loadUserNotifications())
+    )
+  );
+
+  deleteMatchResult$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(deleteMatchResult),
+      switchMap(({ matchId }) =>
+        this.matchService.deleteMatchResult(matchId).pipe(
+          map(() => deleteMatchResultSuccess()),
+          catchError((error) => of(deleteMatchResultFailure({ error })))
+        )
+      )
     )
   );
 }
