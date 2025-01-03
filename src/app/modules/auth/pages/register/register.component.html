@@ -1,59 +1,31 @@
-<div
-  class="bg-white shadow-lg rounded-lg flex flex-col lg:flex-row items-center lg:items-stretch justify-center lg:justify-between w-full h-screen p-4 sm:p-2 lg:p-8"
->
-  <!-- Left Section -->
-  <div
-    class="w-full lg:w-1/2 lg:px-8 flex flex-col items-center justify-center overflow-y-auto"
-  >
-    <div
-      class="mx-auto w-full lg:w-4/5 lg-max-height-container p-4 overflow-y-auto"
-    >
-      <!-- Logo -->
-      <div
-        class="flex items-start justify-center mb-[64px] py-[16px] lg:pt-[32px]"
-      >
-        <img
-          src="../../../../../assets/svg/FOREHAPP.svg"
-          alt="ForehApp Logo"
-          class="h-auto max-h-[80px] w-auto max-w-[297px] object-contain"
-        />
-      </div>
-      <!-- Title -->
-      <div class="w-full flex items-center justify-center mb-5">
-        <div class="font-bold text-gray-800 text-[40px] font-montserrat">
-          Bienvenido
-        </div>
-      </div>
-      <!-- Description -->
-      <p
-        class="text-gray-600 mb-[32px] text-center font-montserrat text-[16px]"
-      >
-        Ingresa el correo con el que deseas registrarte
-      </p>
-      <!-- Registration Form -->
-      <div>
-        <app-register-form></app-register-form>
-      </div>
-      <div class="flex justify-center mt-5 font-montserrat text-[16px]">
-        <div>
-          Ya tengo una cuenta.
-          <a
-            routerLink="/login"
-            class="font-medium text-[#418622] hover:underline dark:text-green-500"
-          >
-            Iniciar Sesión
-          </a>
-        </div>
+<div>
+  <div left-section>
+    <div class="flex items-start justify-center mb-[64px] py-[16px]">
+      <img
+        src="../../../../../assets/svg/FOREHAPP.svg"
+        alt="ForehApp Logo"
+        class="h-auto max-h-[80px] w-auto max-w-[297px] object-contain"
+      />
+    </div>
+    <div class="w-full flex items-center justify-center mb-5">
+      <div class="font-bold text-gray-800 text-[40px] font-montserrat">
+        Bienvenido
       </div>
     </div>
-  </div>
-
-  <!-- Right Section -->
-  <div class="hidden lg:block lg:w-1/2">
-    <img
-      src="../../../../../assets/backgrounds/polvo-ladrillo.jpg"
-      alt="Tennis Court"
-      class="h-full w-[572px] object-cover max-h-screen rounded-2xl"
-    />
+    <p class="text-gray-600 mb-[32px] text-center font-montserrat text-[16px]">
+      Ingresa el correo con el que deseas registrarte
+    </p>
+    <app-register-form></app-register-form>
+    <div class="flex justify-center mt-5 font-montserrat text-[16px]">
+      <div>
+        Ya tengo una cuenta.
+        <a
+          routerLink="/login"
+          class="font-medium text-[#418622] hover:underline dark:text-green-500"
+        >
+          Iniciar Sesión
+        </a>
+      </div>
+    </div>
   </div>
 </div>

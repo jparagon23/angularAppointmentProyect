@@ -1,66 +1,44 @@
-<div
-  class="bg-white shadow-lg rounded-lg flex flex-col lg:flex-row items-center lg:items-stretch justify-center lg:justify-between w-full h-screen p-4 lg:p-8"
->
-  <!-- Left Section -->
-  <div
-    class="w-full lg:w-1/2 lg:px-8 flex flex-col items-center justify-center"
-  >
-    <div class="lg:max-w-[572px] mx-auto">
-      <div class="flex items-start justify-center mb-[64px] py-[16px]">
-        <img
-          src="../../../../../assets/svg/FOREHAPP.svg"
-          alt="ForehApp Logo"
-          class="h-[80px] w-[297px]"
-        />
-      </div>
-      <div class="w-full flex items-center justify-center mb-5">
-        <div class="font-bold text-gray-800 text-[40px] font-montserrat">
-          Bienvenido
-        </div>
-      </div>
-      <p
-        class="text-gray-600 mb-[32px] text-center font-montserrat text-[16px]]"
-      >
-        Ingresa a tu cuenta o crea una nueva.
-      </p>
-      <div>
-        <app-login-form></app-login-form>
-      </div>
-
-      <div class="flex justify-center mt-5 font-montserrat text-[16px]">
-        <div>
-          Aun no tengo una cuenta.
-          <a
-            routerLink="/register"
-            class="font-medium text-[#418622] hover:underline dark:text-green-500"
-          >
-            Registrarme
-          </a>
-        </div>
-      </div>
-
-      <div
-        class="text-gray-600 text-sm text-center mt-4 font-montserrat text-[16px]"
-      >
-        Al iniciar sesión o crear una cuenta, aceptas estar de acuerdo con
-        nuestros
-        <a href="#" class="text-[#418622] hover:underline"
-          >términos y condiciones</a
-        >
-        y nuestra
-        <a href="#" class="text-[#418622] hover:underline"
-          >política de privacidad</a
-        >.
+<div>
+  <div left-section>
+    <div class="flex items-start justify-center mb-[64px] py-[16px]">
+      <img
+        src="../../../../../assets/svg/FOREHAPP.svg"
+        alt="ForehApp Logo"
+        class="h-auto max-h-[80px] w-auto max-w-[297px] object-contain"
+      />
+    </div>
+    <div class="w-full flex items-center justify-center mb-5">
+      <div class="font-bold text-gray-800 text-[40px] font-montserrat">
+        Bienvenido
       </div>
     </div>
-  </div>
-
-  <!-- Right Section -->
-  <div class="hidden lg:block lg:w-1/2">
-    <img
-      src="../../../../../assets/backgrounds/polvo-ladrillo.jpg"
-      alt="Tennis Court"
-      class="h-full w-[572px] object-cover max-h-screen rounded-2xl"
-    />
+    <p class="text-gray-600 mb-[32px] text-center font-montserrat text-[16px]">
+      Ingresa a tu cuenta o crea una nueva.
+    </p>
+    <app-login-form></app-login-form>
+    <div class="flex justify-center mt-5 font-montserrat text-[16px]">
+      <div>
+        Aun no tengo una cuenta.
+        <a
+          routerLink="/register"
+          class="font-medium text-[#418622] hover:underline dark:text-green-500"
+        >
+          Registrarme
+        </a>
+      </div>
+    </div>
+    <div
+      class="text-gray-600 text-sm text-center mt-4 font-montserrat text-[16px]"
+    >
+      Al iniciar sesión o crear una cuenta, aceptas estar de acuerdo con
+      nuestros
+      <a href="#" class="text-[#418622] hover:underline"
+        >términos y condiciones</a
+      >
+      y nuestra
+      <a href="#" class="text-[#418622] hover:underline"
+        >política de privacidad</a
+      >.
+    </div>
   </div>
 </div>
