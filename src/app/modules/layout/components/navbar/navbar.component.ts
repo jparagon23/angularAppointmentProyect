@@ -20,9 +20,10 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
 import { logout } from 'src/app/state/actions/auth.actions';
 import { PostMatchComponent } from 'src/app/modules/match/modals/post-match/post-match.component';
 import { NotificationItem } from 'src/app/models/notification/NotificationItem.model';
-import { MatchConfirmationModalComponent } from 'src/app/modules/shared/match-confirmation-modal/match-confirmation-modal.component';
+import { MatchConfirmationModalComponent } from 'src/app/modules/match/modals/match-confirmation-modal/match-confirmation-modal.component';
 import { markNotificationAsRead } from 'src/app/state/actions/notification.actions';
 import { selectUserNotifications } from 'src/app/state/selectors/notification.selectors';
+import { MatchActionModalComponent } from 'src/app/modules/match/modals/match-action-modal/match-action-modal.component';
 
 interface ButtonConfig {
   label: string;
@@ -167,8 +168,19 @@ export class NavbarComponent implements OnInit {
     this.store.dispatch(
       markNotificationAsRead({ notificationId: notification.id })
     );
-    if (notification.actionUrl !== null) {
+    if (
+      notification.actionUrl !== null &&
+      notification.type === 'MATCH_CONFIRMATION'
+    ) {
       this.dialog.open(MatchConfirmationModalComponent, {
+        data: notification,
+      });
+    } else if (
+      notification.actionUrl !== null &&
+      (notification.type === 'MATCH_CONFIRMED' ||
+        notification.type === 'MATCH_REJECTED')
+    ) {
+      this.dialog.open(MatchActionModalComponent, {
         data: notification,
       });
     }

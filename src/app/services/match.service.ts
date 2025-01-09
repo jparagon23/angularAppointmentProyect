@@ -73,4 +73,11 @@ export class MatchService {
       headers: this.setHeaders(),
     });
   }
+
+  getMatchById(matchId: number): Observable<UserMatch> {
+    const url = `${environment.API_URL}/match/${matchId}`;
+    return this.http.get<UserMatch>(url, {
+      headers: this.setHeaders(),
+    });
+  }
 }

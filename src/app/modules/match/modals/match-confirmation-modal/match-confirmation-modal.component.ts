@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { UserMatch } from 'src/app/models/events/UserMatch.model';
 import { NotificationItem } from 'src/app/models/notification/NotificationItem.model';
 import { User } from 'src/app/models/user.model';
-import { MatchService } from 'src/app/services/match.service';
 import {
   confirmMatchResult,
   rejectMatchResult,

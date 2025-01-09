@@ -20,7 +20,7 @@ import { selectMatchResultActionStatus } from 'src/app/state/selectors/event.sel
 })
 export class MatchResultCardComponent implements OnInit, OnDestroy {
   @Input() matchData!: UserMatch;
-  @Input() userCanConfirm: boolean = false; // Nueva propiedad para verificar si puede confirmar
+  @Input() userCanConfirm: boolean = false;
 
   canDelete: boolean = false;
 

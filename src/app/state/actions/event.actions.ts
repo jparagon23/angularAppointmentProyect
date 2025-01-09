@@ -76,3 +76,8 @@ export const deleteMatchResultFailure = createAction(
   '[Match-result-card] Delete Match Result Failure',
   props<{ error: any }>()
 );
+
+export const getMatchById = createAction(
+  '[Match-action-modal] Get Match By Id',
+  props<{ matchId: string }>()
+);
