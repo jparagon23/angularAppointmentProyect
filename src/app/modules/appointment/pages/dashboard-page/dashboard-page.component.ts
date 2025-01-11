@@ -154,9 +154,6 @@ export class DashboardPageComponent implements OnInit {
   toggleResults(event: Event, section: 'confirmed' | 'pending'): void {
     event.preventDefault(); // Evita el comportamiento por defecto del enlace
 
-    console.log(' pre confirmedSlice', this.confirmedSliceLimit);
-    console.log(' pre confirmedMatches', this.confirmedMatches.length);
-
     if (section === 'confirmed') {
       // Mostrar más resultados en Partidos Confirmados
       this.confirmedSliceLimit =

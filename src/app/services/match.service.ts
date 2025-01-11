@@ -80,4 +80,11 @@ export class MatchService {
       headers: this.setHeaders(),
     });
   }
+
+  getUserMatchesStats(): Observable<any> {
+    const url = `${environment.API_URL}/match/statistics/${this.userId}`;
+    return this.http.get<any>(url, {
+      headers: this.setHeaders(),
+    });
+  }
 }

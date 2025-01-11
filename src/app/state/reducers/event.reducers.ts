@@ -7,6 +7,9 @@ import {
   deleteMatchResultFailure,
   deleteMatchResultSuccess,
   getUserMatches,
+  getUserMatchesStats,
+  getUserMatchesStatsFailure,
+  getUserMatchesStatsSuccess,
   getUserMathcesFailure,
   getUserMathcesSuccess,
   publishMatchResult,
@@ -17,8 +20,10 @@ import {
   rejectMatchResultSuccess,
   resetMatchResultState,
   resetPostScoreStatus,
+  resetUserMatchesStatsState,
 } from '../actions/event.actions';
 import { UserMatch } from 'src/app/models/events/UserMatch.model';
+import { UserMatchesStats } from 'src/app/models/events/UserMatchesStats.model';
 
 export interface EventState {
   publishMatchResultLoading: boolean;
@@ -42,6 +47,11 @@ export interface EventState {
   deleteMatchResultSuccess: boolean;
   deleteMatchResultFailure: boolean;
 
+  getUserMatchesStatsLoading: boolean;
+  getUserMatchesStatsSuccess: boolean;
+  getUserMatchesStatsFailure: boolean;
+  userMatchesStats?: UserMatchesStats;
+
   //
 }
 
@@ -61,6 +71,10 @@ export const initialState: EventState = {
   rejectMatchResultFailure: false,
   deleteMatchResultSuccess: false,
   deleteMatchResultFailure: false,
+  getUserMatchesStatsLoading: false,
+  getUserMatchesStatsSuccess: false,
+  getUserMatchesStatsFailure: false,
+  userMatchesStats: undefined,
 };
 
 export const matchReducer = createReducer(
@@ -152,5 +166,27 @@ export const matchReducer = createReducer(
     MatchResultActionLoading: false,
     deleteMatchResultFailure: true,
     error: error,
+  })),
+  on(getUserMatchesStats, (state) => ({
+    ...state,
+    getUserMatchesStatsLoading: true,
+  })),
+  on(getUserMatchesStatsSuccess, (state, stats) => ({
+    ...state,
+    getUserMatchesStatsLoading: false,
+    getUserMatchesStatsSuccess: true,
+    userMatchesStats: stats.stats,
+  })),
+  on(getUserMatchesStatsFailure, (state, { error }) => ({
+    ...state,
+    getUserMatchesStatsLoading: false,
+    getUserMatchesStatsFailure: true,
+    error: error,
+  })),
+  on(resetUserMatchesStatsState, (state) => ({
+    ...state,
+    getUserMatchesStatsLoading: false,
+    getUserMatchesStatsSuccess: false,
+    getUserMatchesStatsFailure: false,
   }))
 );

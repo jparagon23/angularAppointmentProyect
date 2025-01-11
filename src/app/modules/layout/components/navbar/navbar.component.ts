@@ -133,6 +133,10 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  redirectToMatchPage() {
+    this.router.navigate(['home/user/matches']);
+  }
+
   redirectToConfigurationComponent() {
     this.router.navigate(['home/admin/configuration']);
   }

@@ -7,6 +7,9 @@ import { SetResultComponentComponent } from './components/set-result-component/s
 import { SharedModule } from '../shared/shared.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatchActionModalComponent } from './modals/match-action-modal/match-action-modal.component';
+import { MatchesPageComponent } from './pages/matches-page/matches-page.component';
+import { MatchesInfoPageComponent } from './pages/matches-info-page/matches-info-page.component';
+import { MatchesStatsPageComponent } from './pages/matches-stats-page/matches-stats-page.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +17,9 @@ import { MatchActionModalComponent } from './modals/match-action-modal/match-act
     UserCardComponent,
     SetResultComponentComponent,
     MatchActionModalComponent,
+    MatchesPageComponent,
+    MatchesInfoPageComponent,
+    MatchesStatsPageComponent,
   ],
   imports: [CommonModule, FormsModule, SharedModule, MatDialogModule],
 })

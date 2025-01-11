@@ -41,3 +41,13 @@ export const selectMatchResultActionStatus = createSelector(
     deleteFailure: state.deleteMatchResultFailure,
   })
 );
+
+export const selectUserMatchState = createSelector(
+  selectEventsFeature,
+  (state: EventState) => ({
+    loading: state.getUserMatchesStatsLoading,
+    success: state.getUserMatchesStatsSuccess,
+    failure: state.getUserMatchesStatsFailure,
+    userMatchesStats: state.userMatchesStats,
+  })
+);

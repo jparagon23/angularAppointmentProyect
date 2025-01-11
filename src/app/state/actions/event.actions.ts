@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { UserMatch } from 'src/app/models/events/UserMatch.model';
+import { UserMatchesStats } from 'src/app/models/events/UserMatchesStats.model';
 import { MatchResultDto } from 'src/app/models/PostResult.model';
 
 export const publishMatchResult = createAction(
@@ -80,4 +81,23 @@ export const deleteMatchResultFailure = createAction(
 export const getMatchById = createAction(
   '[Match-action-modal] Get Match By Id',
   props<{ matchId: string }>()
+);
+
+///USER MATCHES STATS
+export const getUserMatchesStats = createAction(
+  '[matches-stats-page] Get User Matches Stats'
+);
+
+export const getUserMatchesStatsSuccess = createAction(
+  '[matches-stats-page] Get User Matches Stats Success',
+  props<{ stats: UserMatchesStats }>()
+);
+
+export const getUserMatchesStatsFailure = createAction(
+  '[matches-stats-page] Get User Matches Stats Failure',
+  props<{ error: any }>()
+);
+
+export const resetUserMatchesStatsState = createAction(
+  '[matches-stats-page] Reset User Matches Stats State'
 );

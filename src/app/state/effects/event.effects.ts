@@ -8,6 +8,9 @@ import {
   deleteMatchResultFailure,
   deleteMatchResultSuccess,
   getUserMatches,
+  getUserMatchesStats,
+  getUserMatchesStatsFailure,
+  getUserMatchesStatsSuccess,
   getUserMathcesFailure,
   getUserMathcesSuccess,
   publishMatchResult,
@@ -112,6 +115,18 @@ export class EventEffects {
         this.matchService.deleteMatchResult(matchId).pipe(
           map(() => deleteMatchResultSuccess()),
           catchError((error) => of(deleteMatchResultFailure({ error })))
+        )
+      )
+    )
+  );
+
+  getUserMatchesStats$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getUserMatchesStats),
+      switchMap(() =>
+        this.matchService.getUserMatchesStats().pipe(
+          map((stats) => getUserMatchesStatsSuccess({ stats })),
+          catchError((error) => of(getUserMatchesStatsFailure({ error })))
         )
       )
     )

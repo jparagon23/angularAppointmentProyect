@@ -1,0 +1,13 @@
+<div class="mb-5" *ngIf="selectGetUserMatchesStatus$ | async as matchesData">
+  <div class="flex flex-wrap justify-start gap-4">
+    <div
+      class="w-full sm:w-[200px] md:w-[450px]"
+      *ngFor="let match of matchesData.userMatch"
+    >
+      <app-match-result-card
+        [matchData]="match"
+        [userCanConfirm]="false"
+      ></app-match-result-card>
+    </div>
+  </div>
+</div>
