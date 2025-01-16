@@ -28,7 +28,9 @@ export class MatchResultCardComponent implements OnInit, OnDestroy {
 
   matchActions$ = this.store.select(selectMatchResultActionStatus);
 
-  private destroy$ = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
+
+  userId!: number;
 
   constructor(private readonly store: Store<AppState>) {}
 
@@ -42,8 +44,11 @@ export class MatchResultCardComponent implements OnInit, OnDestroy {
         this.canDelete = !this.matchData.pendingConfirmationUsers.includes(
           user.id
         );
+        this.userId = user.id;
+        console.log('userId', this.userId);
       } else {
         this.canDelete = false;
+        this.userId = user?.id ?? 0;
       }
     });
 
