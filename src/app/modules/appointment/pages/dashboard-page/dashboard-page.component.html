@@ -72,7 +72,7 @@
         <!-- Mostrar solo si hay más resultados que el límite de slice -->
         <div
           class="mt-4 flex justify-center"
-          *ngIf="confirmedMatches.length >= confirmedSliceLimit"
+          *ngIf="confirmedMatches.length > confirmedSliceLimit"
         >
           <a
             href="#"
