@@ -51,6 +51,7 @@ export interface EventState {
   getUserMatchesStatsSuccess: boolean;
   getUserMatchesStatsFailure: boolean;
   userMatchesStats?: UserMatchesStats;
+  lastUpdatedStats?: number;
 
   //
 }
@@ -75,6 +76,7 @@ export const initialState: EventState = {
   getUserMatchesStatsSuccess: false,
   getUserMatchesStatsFailure: false,
   userMatchesStats: undefined,
+  lastUpdatedStats: Date.now(),
 };
 
 export const matchReducer = createReducer(
@@ -176,6 +178,7 @@ export const matchReducer = createReducer(
     getUserMatchesStatsLoading: false,
     getUserMatchesStatsSuccess: true,
     userMatchesStats: stats.stats,
+    lastUpdatedStats: Date.now(),
   })),
   on(getUserMatchesStatsFailure, (state, { error }) => ({
     ...state,

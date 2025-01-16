@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
 import { UserMatchesStats } from 'src/app/models/events/UserMatchesStats.model';
 import {
   getUserMatchesStats,
@@ -32,8 +32,28 @@ export class MatchesStatsPageComponent implements OnInit, OnDestroy {
   }
 
   private loadUserStats(): void {
+    const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutos en milisegundos
+
     this.showLoader();
-    this.store.dispatch(getUserMatchesStats());
+
+    this.store
+      .select(selectUserMatchState)
+      .pipe(take(1))
+      .subscribe((state) => {
+        const now = Date.now();
+
+        // Verificar si los datos deben ser refrescados
+        if (
+          !state.userMatchesStats || // No hay datos
+          !state.lastUpdated || // No se ha registrado actualización
+          now - state.lastUpdated > REFRESH_INTERVAL // Los datos están desactualizados
+        ) {
+          this.store.dispatch(getUserMatchesStats());
+        } else {
+          this.updateStats(state.userMatchesStats);
+          this.dismissLoader();
+        }
+      });
 
     this.store
       .select(selectUserMatchState)

@@ -2,6 +2,7 @@ import { createSelector, select } from '@ngrx/store';
 import { AppState } from '../app.state';
 import { EventState } from '../reducers/event.reducers';
 import { selectUser } from './users.selectors';
+import { last } from 'lodash';
 
 export const selectEventsFeature = (state: AppState) => state.events;
 
@@ -49,5 +50,6 @@ export const selectUserMatchState = createSelector(
     success: state.getUserMatchesStatsSuccess,
     failure: state.getUserMatchesStatsFailure,
     userMatchesStats: state.userMatchesStats,
+    lastUpdated: state.lastUpdatedStats,
   })
 );
