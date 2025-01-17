@@ -1,31 +1,17 @@
-<div>
-  <div left-section>
-    <div class="flex items-start justify-center mb-[64px] py-[16px]">
-      <img
-        src="../../../../../assets/svg/FOREHAPP.svg"
-        alt="ForehApp Logo"
-        class="h-auto max-h-[80px] w-auto max-w-[297px] object-contain"
-      />
+<div left-section class="w-full">
+  <div class="w-full flex items-center justify-center mb-5">
+    <div class="font-bold text-gray-800 text-[40px] font-montserrat">
+      Bienvenido
     </div>
-    <div class="w-full flex items-center justify-center mb-5">
-      <div class="font-bold text-gray-800 text-[40px] font-montserrat">
-        Bienvenido
-      </div>
-    </div>
-    <p class="text-gray-600 mb-[32px] text-center font-montserrat text-[16px]">
-      Ingresa el correo con el que deseas registrarte
-    </p>
-    <app-register-form></app-register-form>
-    <div class="flex justify-center mt-5 font-montserrat text-[16px]">
-      <div>
-        Ya tengo una cuenta.
-        <a
-          routerLink="/login"
-          class="font-medium text-[#418622] hover:underline "
-        >
-          Iniciar Sesión
-        </a>
-      </div>
+  </div>
+
+  <app-register-form></app-register-form>
+  <div class="flex justify-center mt-5 font-montserrat text-[16px]">
+    <div>
+      Ya tengo una cuenta.
+      <a routerLink="/login" class="font-medium text-[#418622] hover:underline">
+        Iniciar Sesión
+      </a>
     </div>
   </div>
 </div>

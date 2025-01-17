@@ -1,4 +1,7 @@
 <div *ngIf="!showRegisterForm" class="mt-0">
+  <p class="text-gray-600 mb-[32px] text-center font-montserrat text-[16px]">
+    Ingresa el correo con el que deseas registrarte
+  </p>
   <form
     [formGroup]="formUser"
     novalidate
@@ -27,6 +30,10 @@
 </div>
 
 <div *ngIf="showRegisterForm">
+  <p class="text-gray-600 mb-[32px] text-center font-montserrat text-[16px]">
+    Ingresa la información para registrarte
+  </p>
+
   <form
     [formGroup]="registerForm"
     novalidate
