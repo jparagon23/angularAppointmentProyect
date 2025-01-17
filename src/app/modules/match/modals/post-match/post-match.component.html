@@ -38,7 +38,7 @@
     ></app-date-selector>
   </div>
 
-  <!-- Sección de búsqueda y selección del Jugador 2 -->
+  <!-- Sección de búsqueda y selección del Jugador 1 -->
   <div class="mb-6 sm:mb-8">
     <div *ngIf="!player1" class="p-6 bg-white rounded-lg shadow-md">
       <label
@@ -57,7 +57,7 @@
       </div>
     </div>
 
-    <!-- Mostrar tarjeta del Jugador 2 cuando se selecciona -->
+    <!-- Mostrar tarjeta del Jugador 1 cuando se selecciona -->
     <div *ngIf="player1" class="mt-6 sm:mt-8">
       <app-user-card
         [user]="{
@@ -111,25 +111,29 @@
         [allowDelete]="true"
       ></app-user-card>
     </div>
-  </div>
 
-  <!-- Botón para publicar el resultado -->
-  <div class="flex justify-center mt-6 sm:mt-8">
-    <button
-      class="px-8 py-3 sm:px-10 sm:py-4 rounded-lg shadow-lg text-lg sm:text-xl transition-all duration-300 text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-      [disabled]="!canPublishResult"
-      (click)="publishResult()"
+    <!-- Botones con tamaños iguales -->
+    <div
+      class="flex flex-col sm:flex-row sm:justify-between mt-1 sm:mt-2 w-full"
     >
-      Publicar Resultado
-    </button>
-  </div>
+      <!-- Botón para publicar el resultado -->
+      <app-button
+        class="w-full sm:w-64 pt-4 sm:order-2 text-xl sm:text-2xl font-semibold"
+        color="success"
+        [disabled]="!canPublishResult"
+        (click)="publishResult()"
+      >
+        Publicar Resultado
+      </app-button>
 
-  <div class="flex justify-center mt-4">
-    <button
-      class="px-8 py-3 sm:px-10 sm:py-4 rounded-lg shadow-lg text-lg sm:text-xl transition-all duration-300 text-white bg-red-600 hover:bg-red-700"
-      [mat-dialog-close]="true"
-    >
-      Cancelar
-    </button>
+      <!-- Botón para cancelar -->
+      <app-button
+        class="w-full sm:w-64 pt-4 sm:order-1 text-xl sm:text-2xl font-semibold"
+        color="danger"
+        [mat-dialog-close]="true"
+      >
+        Cancelar
+      </app-button>
+    </div>
   </div>
 </div>
