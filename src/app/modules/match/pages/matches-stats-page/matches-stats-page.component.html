@@ -4,7 +4,7 @@
     <!-- Estadísticas de Partidos -->
     <div class="bg-indigo-100 p-6 rounded-lg shadow">
       <div class="text-2xl font-bold text-indigo-600 mb-3 text-center">
-        Estadísticas de Partidos
+        Estadísticas de partidos
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <!-- Tarjeta: Total de Partidos -->
@@ -15,7 +15,7 @@
             <div class="text-3xl font-bold text-blue-600">
               {{ userStats?.matches?.totalPlayed }}
             </div>
-            <div class="text-gray-600 text-lg">Total de Partidos Jugados</div>
+            <div class="text-gray-600 text-lg">Total de partidos jugados</div>
           </div>
         </div>
 
@@ -26,7 +26,7 @@
             <div class="text-3xl font-bold text-green-600">
               {{ userStats?.matches?.won }}
             </div>
-            <div class="text-gray-600 text-lg">Partidos Ganados</div>
+            <div class="text-gray-600 text-lg">Partidos ganados</div>
           </div>
 
           <!-- Fila 2: Partidos Perdidos -->
@@ -34,7 +34,7 @@
             <div class="text-3xl font-bold text-red-600">
               {{ userStats?.matches?.lost }}
             </div>
-            <div class="text-gray-600 text-lg">Partidos Perdidos</div>
+            <div class="text-gray-600 text-lg">Partidos perdidos</div>
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@
         <div class="text-3xl font-bold text-yellow-600">
           {{ userStats?.matches?.winPercentage }}%
         </div>
-        <div class="text-gray-600 text-lg">Porcentaje de Partidos Ganados</div>
+        <div class="text-gray-600 text-lg">Porcentaje de partidos ganados</div>
       </div>
     </div>
 
@@ -62,7 +62,7 @@
             <div class="text-3xl font-bold text-blue-600">
               {{ userStats?.sets?.totalPlayed }}
             </div>
-            <div class="text-gray-600 text-lg">Total de Sets Jugados</div>
+            <div class="text-gray-600 text-lg">Total de sets jugados</div>
           </div>
         </div>
 
@@ -73,7 +73,7 @@
             <div class="text-3xl font-bold text-green-600">
               {{ userStats?.sets?.won }}
             </div>
-            <div class="text-gray-600 text-lg">Sets Ganados</div>
+            <div class="text-gray-600 text-lg">Sets ganados</div>
           </div>
 
           <!-- Fila 2: Sets Perdidos -->
@@ -81,7 +81,7 @@
             <div class="text-3xl font-bold text-red-600">
               {{ userStats?.sets?.lost }}
             </div>
-            <div class="text-gray-600 text-lg">Sets Perdidos</div>
+            <div class="text-gray-600 text-lg">Sets perdidos</div>
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@
         <div class="text-3xl font-bold text-yellow-600">
           {{ userStats?.sets?.winPercentage }}%
         </div>
-        <div class="text-gray-600 text-lg">Porcentaje de Sets Ganados</div>
+        <div class="text-gray-600 text-lg">Porcentaje de sets ganados</div>
       </div>
     </div>
   </div>
@@ -101,7 +101,7 @@
     <!-- Rival Más Frecuente -->
     <div class="bg-purple-100 p-6 rounded-lg shadow">
       <div class="text-2xl font-bold text-purple-600 mb-3 text-center">
-        Rival Más Frecuente
+        Rival más frecuente
       </div>
       <div class="text-center">
         <div class="text-xl font-bold text-gray-800">
@@ -114,7 +114,7 @@
           <div class="text-xl font-bold text-gray-800">
             {{ userStats?.frequentRivals?.mostFrequent?.totalMatches }}
           </div>
-          <div class="text-gray-600">Total de Partidos</div>
+          <div class="text-gray-600">Total de partidos</div>
         </div>
         <div class="text-center">
           <div class="text-lg font-bold text-green-600">
@@ -134,7 +134,7 @@
     <!-- Rival Más Ganado -->
     <div class="bg-green-100 p-6 rounded-lg shadow">
       <div class="text-2xl font-bold text-green-600 mb-3 text-center">
-        Rival al que más le has Ganado
+        Rival al que más le has ganado
       </div>
       <div class="text-center">
         <div class="text-xl font-bold text-gray-800">
@@ -146,14 +146,14 @@
         <div class="text-lg font-bold text-green-600">
           {{ userStats?.frequentRivals?.mostWonAgainst?.total }}
         </div>
-        <div class="text-gray-600">Partidos Ganados</div>
+        <div class="text-gray-600">Partidos ganados</div>
       </div>
     </div>
 
     <!-- Rival Más Perdido -->
     <div class="bg-red-100 p-6 rounded-lg shadow">
       <div class="text-2xl font-bold text-red-600 mb-3 text-center">
-        Rival contra el que más has Perdido
+        Rival contra el que más has perdido
       </div>
       <div class="text-center">
         <div class="text-xl font-bold text-gray-800">
@@ -165,7 +165,7 @@
         <div class="text-lg font-bold text-red-600">
           {{ userStats?.frequentRivals?.mostLostAgainst?.total }}
         </div>
-        <div class="text-gray-600">Partidos Perdidos</div>
+        <div class="text-gray-600">Partidos perdidos</div>
       </div>
     </div>
   </div>
