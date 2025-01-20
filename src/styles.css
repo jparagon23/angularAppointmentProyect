@@ -41,3 +41,10 @@ body {
   overflow-y: scroll;
   width: 100%;
 }
+
+/* Sobrescribe los estilos de los botones en SweetAlert2 */
+
+.swal2-cancel {
+  background-color: #e53e3e; /* color de fondo personalizado */
+  color: white; /* color del texto */
+}

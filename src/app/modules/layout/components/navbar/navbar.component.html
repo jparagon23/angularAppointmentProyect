@@ -1,10 +1,13 @@
 <ng-container *ngIf="user$ | async as user">
   <nav class="bg-green-700 border-gray-200 px-4 py-3 shadow-md">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-      <!-- Sección izquierda: Logo y menú principal -->
-      <div class="flex items-center justify-between w-full sm:w-auto">
+      <div
+        class="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto"
+      >
         <!-- Logo -->
-        <a routerLink="/app">
+        <div
+          class="flex justify-center sm:justify-start w-full sm:w-auto mb-2 sm:mb-0"
+        >
           <img
             loading="lazy"
             class="mr-4"
@@ -12,11 +15,12 @@
             alt="logo"
             style="height: 44px"
           />
-        </a>
+        </div>
 
         <!-- Botones principales para móviles y desktop -->
-        <div class="flex items-center space-x-4">
-          <!-- Siempre visible: Inicio -->
+        <div
+          class="flex m:flex-row justify-center sm:justify-end w-full sm:w-auto sm:space-x-4 sm:space-y-0"
+        >
           <app-button
             typeBtn="button"
             color="navbar"
@@ -24,21 +28,41 @@
           >
             Inicio
           </app-button>
-          <!-- Siempre visible: Crear Reserva -->
-          <app-button typeBtn="button" color="navbar" (click)="OpenDialog()">
+
+          <app-button
+            typeBtn="button"
+            color="navbar"
+            (click)="redirectToMatchPage()"
+          >
+            Partidos
+          </app-button>
+
+          <app-button
+            *ngIf="false"
+            typeBtn="button"
+            color="navbar"
+            (click)="OpenDialog()"
+          >
             Crear Reserva
           </app-button>
-        </div>
-
-        <!-- Botón de menú hamburguesa para móviles -->
-        <div class="sm:hidden">
-          <button
-            type="button"
-            class="text-white ml-4"
-            (click)="isOpenMobileMenu = !isOpenMobileMenu"
+          <app-button
+            typeBtn="button"
+            color="navbar"
+            (click)="openPostResult()"
           >
-            <fa-icon [icon]="faBars"></fa-icon>
-          </button>
+            Publicar resultado
+          </app-button>
+
+          <!-- Botón de menú hamburguesa para móviles -->
+          <div class="sm:hidden mt-2">
+            <button
+              type="button"
+              class="text-white"
+              (click)="isOpenMobileMenu = !isOpenMobileMenu"
+            >
+              <fa-icon [icon]="faBars"></fa-icon>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -64,8 +88,31 @@
           </app-button>
         </div>
 
-        <!-- Botón de usuario en desktop -->
-        <div class="flex space-x-2">
+        <div class="flex items-center space-x-4 relative">
+          <!-- Campana de notificaciones -->
+          <div
+            cdkOverlayOrigin
+            #notificationOverlay="cdkOverlayOrigin"
+            class="relative"
+          >
+            <button
+              type="button"
+              class="text-white flex items-center justify-center"
+              aria-label="Notificaciones"
+              (click)="isOpenNotifications = !isOpenNotifications"
+            >
+              <fa-icon [icon]="faBell" class="h-5 w-5"></fa-icon>
+            </button>
+            <!-- Indicador de notificaciones -->
+            <span
+              *ngIf="getUnreadNotificationsCount() > 0"
+              class="absolute top-[-8px] right-[-6px] bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center"
+            >
+              {{ getUnreadNotificationsCount() }}
+            </span>
+          </div>
+
+          <!-- Botón de usuario -->
           <app-button
             typeBtn="button"
             color="navbar"
@@ -74,7 +121,7 @@
             cdkOverlayOrigin
             #menuOverlay="cdkOverlayOrigin"
           >
-            <fa-icon [icon]="faUser"></fa-icon>
+            <fa-icon [icon]="faUser" class="h-5 w-5"></fa-icon>
           </app-button>
         </div>
       </div>
@@ -85,7 +132,6 @@
       *ngIf="isOpenMobileMenu"
       class="flex flex-col sm:hidden space-y-2 mt-3"
     >
-      <!-- Opciones adicionales -->
       <app-button
         typeBtn="button"
         color="navbar"
@@ -111,8 +157,22 @@
       >
         <fa-icon [icon]="faUser"></fa-icon>
       </app-button>
+
+      <app-button
+        type="button"
+        color="navbar"
+        (click)="isOpenNotifications = !isOpenNotifications"
+        cdkOverlayOrigin
+        #notificationOverlay="cdkOverlayOrigin"
+      >
+        <fa-icon [icon]="faBell" class="h-5 w-5"></fa-icon>
+      </app-button>
+
+      <div></div>
     </div>
   </nav>
+
+  <!-- Menú de usuario -->
   <ng-template
     cdkConnectedOverlay
     [cdkConnectedOverlayOrigin]="menuOverlay"
@@ -160,4 +220,55 @@
       </ul>
     </div>
   </ng-template>
+
+  <div class="relative">
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="notificationOverlay"
+      [cdkConnectedOverlayOpen]="isOpenNotifications"
+      (overlayOutsideClick)="isOpenNotifications = !isOpenNotifications"
+    >
+      <!-- Panel de notificaciones -->
+      <div
+        class="z-50 my-4 w-full sm:w-80 text-base bg-white rounded-lg shadow-lg border border-gray-200"
+      >
+        <!-- Encabezado -->
+        <div
+          class="py-4 px-5 flex items-center justify-between border-b border-gray-100"
+        >
+          <h3 class="text-lg font-semibold text-gray-800">Notificaciones</h3>
+          <button
+            (click)="isOpenNotifications = !isOpenNotifications"
+            class="text-gray-500 hover:text-gray-800 transition"
+          >
+            <fa-icon [icon]="faClose" size="lg"></fa-icon>
+          </button>
+        </div>
+
+        <!-- Lista de notificaciones -->
+        <ul class="max-h-72 overflow-y-auto divide-y divide-gray-100">
+          <li
+            *ngFor="let notification of notifications"
+            (click)="markAsRead(notification.id)"
+            class="hover:bg-gray-50 transition"
+          >
+            <app-notification-item
+              [notification]="notification"
+              (notificationClick)="openNotificationModal(notification)"
+            ></app-notification-item>
+          </li>
+        </ul>
+
+        <!-- Pie del panel -->
+        <div class="py-3 px-5 bg-gray-50 text-center">
+          <button
+            (click)="markAllAsRead()"
+            class="text-sm text-blue-600 hover:text-blue-800 transition"
+          >
+            Marcar todas como leídas
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
 </ng-container>

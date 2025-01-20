@@ -1,0 +1,139 @@
+<style>
+  ::ng-deep .mat-mdc-dialog-surface {
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+  }
+
+  ::ng-deep .mat-mdc-dialog-content {
+    height: 100%; /* Ocupar todo el espacio disponible */
+    max-height: calc(100vh - 64px); /* Ajuste para no exceder el modal */
+    overflow-y: auto; /* Habilitar scroll vertical si es necesario */
+    padding: 0; /* Opcional: elimina paddings */
+  }
+</style>
+
+<div
+  mat-dialog-content
+  class="container mx-auto p-8 bg-gray-50 rounded-xl shadow-xl max-w-4xl overflow-x-hidden overflow-y-auto"
+>
+  <!-- Título de la sección -->
+  <div
+    class="text-3xl sm:text-4xl font-semibold text-center text-gray-800 mb-6 sm:mb-10"
+  >
+    Publicar Resultado
+  </div>
+
+  <div class="mb-6 sm:mb-8">
+    <label
+      for="match-date"
+      class="block text-lg sm:text-xl font-medium text-gray-700 mb-3"
+    >
+      Fecha del Partido
+    </label>
+    <app-date-selector
+      [initialDate]="matchDate"
+      [minDate]="'1900-01-01'"
+      [maxDate]="'2100-12-31'"
+      (dateSelected)="onDateChange($event)"
+    ></app-date-selector>
+  </div>
+
+  <!-- Sección de búsqueda y selección del Jugador 1 -->
+  <div class="mb-6 sm:mb-8">
+    <div *ngIf="!player1" class="p-6 bg-white rounded-lg shadow-md">
+      <label
+        for="search-player"
+        class="block text-lg sm:text-xl font-medium text-gray-700 mb-3"
+      >
+        Buscar Jugador 1
+      </label>
+
+      <div class="mb-4 sm:mb-6">
+        <app-user-search-list
+          (userReturn)="onUserSelectedP1($event)"
+          [allowCreateUser]="false"
+          [filterUserStatus]="[2]"
+        ></app-user-search-list>
+      </div>
+    </div>
+
+    <!-- Mostrar tarjeta del Jugador 1 cuando se selecciona -->
+    <div *ngIf="player1" class="mt-6 sm:mt-8">
+      <app-user-card
+        [user]="{
+          name: player1.name || '',
+          image: player1.image || '',
+          index: 1
+        }"
+        [winner]="winner === 'player1'"
+        [allowDelete]="user?.role === CLUB_ADMIN_ROLE"
+        (removeUser)="removePlayer($event)"
+      ></app-user-card>
+    </div>
+  </div>
+
+  <!-- Sección de sets y games -->
+  <div class="flex justify-center mb-6 sm:mb-8">
+    <app-set-result-component
+      (resultEmitter)="handleResult($event)"
+    ></app-set-result-component>
+  </div>
+
+  <!-- Sección de búsqueda y selección del Jugador 2 -->
+  <div class="mb-6 sm:mb-8">
+    <div *ngIf="!player2" class="p-6 bg-white rounded-lg shadow-md">
+      <label
+        for="search-player"
+        class="block text-lg sm:text-xl font-medium text-gray-700 mb-3"
+      >
+        Buscar Jugador 2
+      </label>
+
+      <div class="mb-4 sm:mb-6">
+        <app-user-search-list
+          (userReturn)="onUserSelectedP2($event)"
+          [allowCreateUser]="false"
+          [filterUserStatus]="[2]"
+        ></app-user-search-list>
+      </div>
+    </div>
+
+    <!-- Mostrar tarjeta del Jugador 2 cuando se selecciona -->
+    <div *ngIf="player2" class="mt-6 sm:mt-8">
+      <app-user-card
+        [user]="{
+          name: player2.name || '',
+          image: player2.image || '',
+          index: 2
+        }"
+        [winner]="winner === 'player2'"
+        (removeUser)="removePlayer($event)"
+        [allowDelete]="true"
+      ></app-user-card>
+    </div>
+
+    <!-- Botones con tamaños iguales -->
+    <div
+      class="flex flex-col sm:flex-row sm:justify-between mt-1 sm:mt-2 w-full"
+    >
+      <!-- Botón para publicar el resultado -->
+      <app-button
+        class="w-full sm:w-64 pt-4 sm:order-2 text-xl sm:text-2xl font-semibold"
+        color="success"
+        [disabled]="!canPublishResult"
+        (click)="publishResult()"
+      >
+        Publicar Resultado
+      </app-button>
+
+      <!-- Botón para cancelar -->
+      <app-button
+        class="w-full sm:w-64 pt-4 sm:order-1 text-xl sm:text-2xl font-semibold"
+        color="danger"
+        [mat-dialog-close]="true"
+      >
+        Cancelar
+      </app-button>
+    </div>
+  </div>
+</div>

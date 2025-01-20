@@ -1,0 +1,38 @@
+<!-- Modal Content -->
+<div class="py-6 px-8 bg-white rounded-lg shadow-lg max-w-3xl w-full">
+  <!-- Título del Modal -->
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4">
+    Resultado por Confirmar
+  </h2>
+
+  <!-- Mensaje -->
+  <p class="text-sm text-gray-600 mb-6">
+    Este partido fue publicado por <strong>{{ getUserWhoPosted() }}</strong
+    >. Si no se confirma o rechaza en un plazo de 3 días, el resultado se
+    autoconfirmará.
+  </p>
+
+  <!-- Tarjeta del resultado -->
+  <div class="mb-6">
+    <app-match-result-card [matchData]="selectedMatch!"></app-match-result-card>
+  </div>
+
+  <!-- Botones de Acción -->
+  <div class="flex justify-between space-x-4">
+    <!-- Botón para Confirmar -->
+    <button
+      class="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none"
+      (click)="confirmMatch()"
+    >
+      Confirmar Resultado
+    </button>
+
+    <!-- Botón para Rechazar -->
+    <button
+      class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none"
+      (click)="rejectMatch()"
+    >
+      Rechazar Resultado
+    </button>
+  </div>
+</div>

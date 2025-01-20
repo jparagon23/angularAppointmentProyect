@@ -165,6 +165,7 @@
             id="birthday"
             type="date"
             [(ngModel)]="userEditable.birthdate"
+            [ngModelOptions]="{ updateOn: 'blur' }"
             name="birthday"
             class="border rounded p-2 w-full"
           />

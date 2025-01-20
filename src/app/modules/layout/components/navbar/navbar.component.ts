@@ -16,8 +16,14 @@ import { filter, Observable } from 'rxjs';
 import { User } from 'src/app/models/user.model';
 import { Store } from '@ngrx/store';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
-import { distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 import { logout } from 'src/app/state/actions/auth.actions';
+import { PostMatchComponent } from 'src/app/modules/match/modals/post-match/post-match.component';
+import { NotificationItem } from 'src/app/models/notification/NotificationItem.model';
+import { MatchConfirmationModalComponent } from 'src/app/modules/match/modals/match-confirmation-modal/match-confirmation-modal.component';
+import { markNotificationAsRead } from 'src/app/state/actions/notification.actions';
+import { selectUserNotifications } from 'src/app/state/selectors/notification.selectors';
+import { MatchActionModalComponent } from 'src/app/modules/match/modals/match-action-modal/match-action-modal.component';
 
 interface ButtonConfig {
   label: string;
@@ -39,6 +45,13 @@ export class NavbarComponent implements OnInit {
 
   isOpenOverlayAvatar = false;
   isOpenMobileMenu = false;
+
+  isOpenNotifications = false; // Controla el estado del menú desplegable
+  notifications$: Observable<NotificationItem[]> = this.store.select(
+    selectUserNotifications
+  );
+
+  notifications: NotificationItem[] = [];
 
   user$: Observable<User> = new Observable<User>();
 
@@ -62,6 +75,10 @@ export class NavbarComponent implements OnInit {
       if (user) {
         this.initializeButtons(user.role);
       }
+    });
+
+    this.notifications$.subscribe((notifications) => {
+      this.notifications = notifications;
     });
   }
 
@@ -97,6 +114,14 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  openPostResult(): void {
+    this.dialog.open(PostMatchComponent, {
+      maxWidth: '95vw',
+      maxHeight: '95vh',
+      panelClass: 'custom-dialog-container',
+    });
+  }
+
   redirectToDashboard() {
     this.user$.subscribe((user) => {
       if (user.role === 2) {
@@ -106,6 +131,10 @@ export class NavbarComponent implements OnInit {
         this.router.navigate(['home/user']);
       }
     });
+  }
+
+  redirectToMatchPage() {
+    this.router.navigate(['home/user/matches']);
   }
 
   redirectToConfigurationComponent() {
@@ -125,5 +154,45 @@ export class NavbarComponent implements OnInit {
         this.router.navigate(['home/user/user-information']);
       }
     });
+  }
+
+  markAsRead(notificationId: number) {
+    console.log('Marcar como leída la notificación con ID:', notificationId);
+  }
+
+  markAllAsRead() {
+    console.log('Marcar todas las notificaciones como leídas');
+  }
+  closeNotifications() {
+    // Cierra el menú de notificaciones
+    this.isOpenNotifications = false;
+  }
+
+  openNotificationModal(notification: NotificationItem) {
+    this.store.dispatch(
+      markNotificationAsRead({ notificationId: notification.id })
+    );
+    if (
+      notification.actionUrl !== null &&
+      notification.type === 'MATCH_CONFIRMATION'
+    ) {
+      this.dialog.open(MatchConfirmationModalComponent, {
+        data: notification,
+      });
+    } else if (
+      notification.actionUrl !== null &&
+      (notification.type === 'MATCH_CONFIRMED' ||
+        notification.type === 'MATCH_REJECTED')
+    ) {
+      this.dialog.open(MatchActionModalComponent, {
+        data: notification,
+      });
+    }
+  }
+
+  getUnreadNotificationsCount(): number {
+    return this.notifications.filter(
+      (notification) => notification.status !== 'READ'
+    ).length;
   }
 }

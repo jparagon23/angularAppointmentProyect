@@ -1,31 +1,37 @@
-<div class="w-full h-screen bg-authBackGround bg-cover">
-  <div
-    class="flex flex-col items-center justify-center h-screen px-4 py-6 mx-auto lg:py-0"
-  >
-    <div
-      class="w-full bg-white rounded-lg shadow-md sm:max-w-xs md:max-w-sm lg:max-w-md dark:border dark:bg-gray-800 dark:border-gray-700"
-    >
-      <div class="p-4 space-y-4 sm:p-6">
-        <h1
-          class="text-lg font-bold text-center leading-tight tracking-tight text-gray-900 dark:text-white"
-        >
-          Inicio de sesión
-        </h1>
-        <div>
-          <app-login-form></app-login-form>
-        </div>
-        <p
-          class="text-xs text-center font-light text-black dark:text-white sm:text-sm"
-        >
-          ¿Aún no tienes una cuenta?
-          <a
-            routerLink="/register"
-            class="font-medium text-green-700 hover:underline dark:text-green-500"
-          >
-            Regístrate
-          </a>
-        </p>
+<div>
+  <div left-section>
+    <div class="w-full flex items-center justify-center mb-5">
+      <div class="font-bold text-gray-800 text-[40px] font-montserrat">
+        Bienvenido
       </div>
+    </div>
+    <p class="text-gray-600 mb-[32px] text-center font-montserrat text-[16px]">
+      Ingresa a tu cuenta o crea una nueva.
+    </p>
+    <app-login-form></app-login-form>
+    <div class="flex justify-center mt-5 font-montserrat text-[16px]">
+      <div>
+        Aun no tengo una cuenta.
+        <a
+          routerLink="/register"
+          class="font-medium text-[#418622] hover:underline"
+        >
+          Registrarme
+        </a>
+      </div>
+    </div>
+    <div
+      class="text-gray-600 text-sm text-center mt-4 font-montserrat text-[16px]"
+    >
+      Al iniciar sesión o crear una cuenta, aceptas estar de acuerdo con
+      nuestros
+      <a href="#" class="text-[#418622] hover:underline"
+        >términos y condiciones</a
+      >
+      y nuestra
+      <a href="#" class="text-[#418622] hover:underline"
+        >política de privacidad</a
+      >.
     </div>
   </div>
 </div>

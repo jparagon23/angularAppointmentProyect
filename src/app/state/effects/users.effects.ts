@@ -12,6 +12,9 @@ import {
 } from '../actions/users.actions';
 import { UserService } from 'src/app/services/user.service';
 import { loginSuccess } from '../actions/auth.actions';
+import { loadUserNotifications } from '../actions/notification.actions';
+import { getUserMatches } from '../actions/event.actions';
+import { loadReservations } from '../actions/reservations.actions';
 
 @Injectable()
 export class ProfileEffects {
@@ -43,6 +46,17 @@ export class ProfileEffects {
     this.actions$.pipe(
       ofType(loginSuccess),
       map(() => loadUser())
+    )
+  );
+
+  loadUserDependencies$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadUserSuccess), // Escucha la acción loadUserSuccess
+      switchMap(() => [
+        loadUserNotifications(), // Despacha loadUserNotifications
+        getUserMatches(), // Despacha getUserMatches
+        loadReservations(),
+      ])
     )
   );
 

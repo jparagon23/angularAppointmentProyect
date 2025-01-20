@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -25,6 +25,8 @@ import { RedirectEffects } from './state/effects/redirect.effects';
 import { RegisterEffects } from './state/effects/register.effects';
 import { ClubConfigurationEffects } from './state/effects/clubConfiguration.effects';
 import { ReportEffects } from './state/effects/report.effects';
+import { EventEffects } from './state/effects/event.effects';
+import { NotificationEffect } from './state/effects/notification.effects';
 
 registerLocaleData(localeEs, 'es');
 
@@ -37,6 +39,7 @@ registerLocaleData(localeEs, 'es');
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatInputModule,
+    FormsModule,
     StoreModule.forRoot(ROOT_REDUCERS),
     BrowserAnimationsModule,
     StoreDevtoolsModule.instrument({
@@ -55,6 +58,8 @@ registerLocaleData(localeEs, 'es');
       RegisterEffects,
       ClubConfigurationEffects,
       ReportEffects,
+      EventEffects,
+      NotificationEffect,
     ]),
     SharedModule,
   ],

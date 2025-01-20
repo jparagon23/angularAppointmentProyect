@@ -1,0 +1,143 @@
+<div
+  class="mx-auto bg-white border border-gray-200 rounded-lg shadow-md p-6 flex flex-col gap-4"
+>
+  <!-- Header -->
+  <div class="flex justify-between items-center">
+    <!-- Contenedor a la izquierda para el título y la fecha -->
+    <div class="flex items-center space-x-2">
+      <span class="text-sm font-bold text-cyan-600 uppercase">Tennis</span>
+      <span class="text-base text-gray-500">
+        {{ matchData.matchDate | timeFormat : "medium" }}
+      </span>
+    </div>
+
+    <!-- Contenedor a la derecha para el estado y el icono de basura -->
+    <div class="flex items-center space-x-3">
+      <!-- Si userCanConfirm es true, mostramos los botones de aceptar y rechazar -->
+      <ng-container *ngIf="userCanConfirm; else statusTemplate">
+        <div class="flex gap-2">
+          <button (click)="onAccept()" class="text-green-500">
+            <i class="fas fa-check-circle text-2xl"></i>
+          </button>
+          <button (click)="onReject()" class="text-red-500">
+            <i class="fas fa-times-circle text-2xl"></i>
+          </button>
+        </div>
+      </ng-container>
+
+      <ng-template #statusTemplate>
+        <span class="text-sm font-medium text-gray-700">
+          {{ matchData.status | statusTranslate }}
+        </span>
+      </ng-template>
+
+      <!-- Icono de basura en rojo -->
+      <button *ngIf="canDelete" (click)="onDelete()" class="text-red-500">
+        <i class="fas fa-trash text-lg"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Players -->
+  <div class="flex flex-col">
+    <!-- Player 1 -->
+    <div class="flex justify-between items-center py-2">
+      <div class="flex items-center gap-3">
+        <img
+          src="https://flagcdn.com/w40/co.png"
+          alt="Colombia"
+          class="w-6 h-6"
+        />
+        <span
+          class="text-base font-semibold"
+          [ngClass]="{
+            'text-black': matchData.winner.id === userId,
+            'text-gray-400': matchData.winner.id !== userId
+          }"
+        >
+          {{ matchData.winner.name }}
+        </span>
+      </div>
+      <div class="flex gap-4 text-gray-800 text-lg">
+        <div class="relative">
+          <span
+            *ngIf="matchData.sets[0]?.winnerTieBreak !== 0"
+            class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
+          >
+            {{ matchData.sets[0]?.winnerTieBreak }}
+          </span>
+          <span>{{ matchData.sets[0]?.winnerGames ?? "-" }}</span>
+        </div>
+        <div class="relative">
+          <span
+            *ngIf="matchData.sets[1]?.winnerTieBreak !== 0"
+            class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
+          >
+            {{ matchData.sets[1]?.winnerTieBreak }}
+          </span>
+          <span>{{ matchData.sets[1]?.winnerGames ?? "-" }}</span>
+        </div>
+        <div class="relative">
+          <span
+            *ngIf="matchData.sets[2]?.winnerTieBreak !== 0"
+            class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
+          >
+            {{ matchData.sets[2]?.winnerTieBreak }}
+          </span>
+          <span>{{ matchData.sets[2]?.winnerGames ?? "-" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="h-px bg-gray-200"></div>
+    <!-- Player 2 -->
+    <div class="flex justify-between items-center py-2">
+      <div class="flex items-center gap-3">
+        <img
+          src="https://flagcdn.com/w40/co.png"
+          alt="Colombia"
+          class="w-6 h-6"
+        />
+        <span
+          class="text-base font-semibold"
+          [ngClass]="{
+            'text-black': matchData.looser.id === userId,
+            'text-gray-400': matchData.looser.id !== userId
+          }"
+        >
+          {{ matchData.looser.name }}
+        </span>
+      </div>
+      <div class="flex gap-4 text-gray-800 text-lg">
+        <div class="relative">
+          <span
+            *ngIf="matchData.sets[0]?.loserTieBreak !== 0"
+            class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
+          >
+            {{ matchData.sets[0]?.loserTieBreak }}
+          </span>
+          <span>{{ matchData.sets[0]?.loserGames ?? "-" }}</span>
+        </div>
+        <div class="relative">
+          <span
+            *ngIf="matchData.sets[1]?.loserTieBreak !== 0"
+            class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
+          >
+            {{ matchData.sets[1]?.loserTieBreak }}
+          </span>
+          <span>{{ matchData.sets[1]?.loserGames ?? "-" }}</span>
+        </div>
+        <div class="relative">
+          <span
+            *ngIf="matchData.sets[2]?.loserTieBreak !== 0"
+            class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
+          >
+            {{ matchData.sets[2]?.loserTieBreak }}
+          </span>
+          <span>{{ matchData.sets[2]?.loserGames ?? "-" }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

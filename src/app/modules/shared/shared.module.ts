@@ -18,6 +18,13 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { TimePipe } from './pipes/time.pipe';
 import { CapitalizeFirstWordPipe } from './pipes/capitalize-first-word.pipe';
+import { UserSearchListComponent } from './components/user-search-list/user-search-list.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatchResultCardComponent } from './components/match-result-card/match-result-card.component';
+import { StatusTranslatePipe } from './pipes/status-translate.pipe';
+import { MatchConfirmationModalComponent } from '../match/modals/match-confirmation-modal/match-confirmation-modal.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +40,10 @@ import { CapitalizeFirstWordPipe } from './pipes/capitalize-first-word.pipe';
     DateSelectorComponent,
     TimePipe,
     CapitalizeFirstWordPipe,
+    UserSearchListComponent,
+    MatchResultCardComponent,
+    StatusTranslatePipe,
+    MatchConfirmationModalComponent,
   ],
 
   imports: [
@@ -44,6 +55,10 @@ import { CapitalizeFirstWordPipe } from './pipes/capitalize-first-word.pipe';
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatAutocompleteModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    MatDialogModule,
   ],
   exports: [
     ButtonComponent,
@@ -55,6 +70,9 @@ import { CapitalizeFirstWordPipe } from './pipes/capitalize-first-word.pipe';
     LoaderComponent,
     DateSelectorComponent,
     CapitalizeFirstWordPipe,
+    UserSearchListComponent,
+    MatchResultCardComponent,
+    StatusTranslatePipe,
   ],
 })
 export class SharedModule {}

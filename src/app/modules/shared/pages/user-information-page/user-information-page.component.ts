@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { cloneDeep, update } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { Observable, Subscription } from 'rxjs';
 import { filter, distinctUntilChanged } from 'rxjs/operators';
 import {
@@ -8,7 +8,6 @@ import {
   InitialSignUpData,
 } from 'src/app/models/InitialSignUpData.interface';
 import { User } from 'src/app/models/user.model';
-import { UserState } from 'src/app/models/user.state';
 import { loadInitialSignUpData } from 'src/app/state/actions/register.actions';
 import {
   resertUpdateUserStatus,
@@ -49,7 +48,7 @@ export class UserInformationPageComponent implements OnInit {
   selectedFile: File | undefined;
   showMenu = false;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private readonly store: Store<AppState>) {
     this.user$ = this.store.select(selectUser);
     this.initialData$ = this.store.select(selectInitialSignUpData).pipe(
       filter((data) => data !== null),
@@ -163,6 +162,7 @@ export class UserInformationPageComponent implements OnInit {
 
       if (this.originalUser.birthdate !== this.userEditable.birthdate) {
         updatedData.birthdate = this.userEditable.birthdate;
+        console.log('birthdate', updatedData.birthdate);
       }
       if (
         JSON.stringify(this.originalUser.userPhones) !==

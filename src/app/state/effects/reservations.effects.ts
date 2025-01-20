@@ -46,7 +46,6 @@ import {
 } from '../actions/reservations.actions';
 import { Store } from '@ngrx/store';
 import { selectDatePicked } from '../selectors/reservetions.selectors';
-import { selectUser } from '../selectors/users.selectors';
 import { AvailableSlotsResponse } from 'src/app/models/AvailableSlotInfo.model';
 
 @Injectable()

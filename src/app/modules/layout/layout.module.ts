@@ -12,6 +12,8 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { AppointmentModule } from '../appointment/appointment.module';
+import { MatchModule } from '../match/match.module';
+import { NotificationItemComponent } from '../shared/components/notificartion-card/notification-item.component';
 
 @NgModule({
   declarations: [LayoutComponent, NavbarComponent],
@@ -24,6 +26,8 @@ import { AppointmentModule } from '../appointment/appointment.module';
     MatDialogModule,
     MatButtonModule,
     AppointmentModule,
+    MatchModule,
+    NotificationItemComponent,
   ],
 })
 export class LayoutModule {}
