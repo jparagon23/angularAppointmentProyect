@@ -1,4 +1,9 @@
-<div *ngIf="!(reservationCreatedLoader$ | async); else loading">
+<div
+  *ngIf="
+    !(reservationCreatedLoader$ | async) && !(reservationCreated$ | async);
+    else loading
+  "
+>
   <div
     class="bg-white rounded-lg shadow-lg p-4 w-full max-w-full sm:p-6 sm:max-w-md"
   >

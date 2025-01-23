@@ -5,7 +5,6 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { ConfirmationModalComponent } from 'src/app/modules/appointment/modals/confirmation-modal/confirmation-modal.component';
 import { ModalService } from 'src/app/services/modal.service';
 import {
   cancelReservationAdmin,
@@ -95,7 +94,9 @@ export class ReservationInfoModalComponent {
   }
 
   closeModal() {
-    this.store.dispatch(resetCancelReservationAdminState());
     this.reservationInfoModal.close(true);
+    this.reservationInfoModal.afterClosed().subscribe(() => {
+      this.store.dispatch(resetCancelReservationAdminState());
+    });
   }
 }

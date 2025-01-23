@@ -1,5 +1,4 @@
 import { LightUser } from 'src/app/models/LightUser.model';
-// import { ClubUser } from './../../../../models/clubUsers.model';
 import {
   Component,
   Inject,
@@ -13,7 +12,6 @@ import { takeUntil } from 'rxjs/operators';
 import { ClubUser } from 'src/app/models/clubUsers.model';
 import {
   MAT_DIALOG_DATA,
-  MatDialog,
   MatDialogRef,
   MatDialogState,
 } from '@angular/material/dialog';
@@ -63,8 +61,7 @@ export class CreateReservationFromTableModalComponent
       };
     },
     private readonly store: Store<AppState>,
-    private readonly dialogRef: MatDialogRef<CreateReservationFromTableModalComponent>,
-    private readonly dialog: MatDialog
+    private readonly dialogRef: MatDialogRef<CreateReservationFromTableModalComponent>
   ) {}
 
   ngOnInit() {
@@ -74,6 +71,7 @@ export class CreateReservationFromTableModalComponent
     this.subscribeToModalState();
     this.subscribeToErrorState();
   }
+
   clearSelectors() {
     this.store.dispatch(resetReservationCreated());
     this.store.dispatch(resetClubUsers());
@@ -158,8 +156,10 @@ export class CreateReservationFromTableModalComponent
   }
 
   closeModal() {
-    this.store.dispatch(resetReservationCreated());
     this.dialogRef.close();
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.store.dispatch(resetReservationCreated());
+    });
   }
 
   ngOnDestroy() {
