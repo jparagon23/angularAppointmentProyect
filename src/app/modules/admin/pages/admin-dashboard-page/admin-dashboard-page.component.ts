@@ -327,8 +327,8 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
 
     if (reservation.id === '-1') {
       this.dialog.open(CreateReservationFromTableModalComponent, {
-        maxWidth: '50vw',
-        maxHeight: '50vh',
+        maxWidth: '70vw',
+        maxHeight: '70vh',
         data: { reservationInfo },
       });
       return;
@@ -446,8 +446,8 @@ export class AdminDashboardPageComponent implements OnInit, OnDestroy {
       };
 
       this.dialog.open(CreateReservationFromTableModalComponent, {
-        maxWidth: '50vw',
-        maxHeight: '50vh',
+        maxWidth: '70vw',
+        maxHeight: '70vh',
         data: { reservationInfo },
       });
     }
