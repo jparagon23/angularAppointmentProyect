@@ -191,6 +191,9 @@
             {{ user?.name }} {{ user?.lastname }}
           </div>
           <div class="text-sm text-gray-500">{{ user?.email }}</div>
+          <div *ngIf="user.ratingType == 2" class="text-sm text-gray-500">
+            Rating: {{ user?.rating }}
+          </div>
         </div>
       </div>
       <ul class="py-1">

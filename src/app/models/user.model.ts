@@ -20,6 +20,8 @@ export interface User {
   role: number;
   userAdminClub: number;
   profileImage: string | null;
+  rating: number;
+  ratingType: number;
 }
 
 export interface UserData {
