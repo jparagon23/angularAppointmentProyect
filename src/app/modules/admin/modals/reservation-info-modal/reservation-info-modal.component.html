@@ -1,4 +1,10 @@
-<div *ngIf="!(cancelReservationAdminLoading$ | async); else loading">
+<div
+  *ngIf="
+    !(cancelReservationAdminLoading$ | async) &&
+      !(cancelReservationAdminSuccess$ | async);
+    else loading
+  "
+>
   <div class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content p-4 shadow-lg" style="border-radius: 12px">
