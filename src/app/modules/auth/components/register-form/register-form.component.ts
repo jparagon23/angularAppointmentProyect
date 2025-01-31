@@ -44,26 +44,6 @@ export class RegisterFormComponent implements OnInit {
     name: ['', [Validators.required]],
     lastname: ['', [Validators.required]],
     birthdate: ['', [Validators.required, this.birthdateValidator.bind(this)]],
-    documentTypeId: ['', [Validators.required]],
-    document: [
-      '',
-      [
-        Validators.required,
-        Validators.pattern(/^\d+$/),
-        Validators.minLength(6),
-        Validators.maxLength(10),
-      ],
-    ],
-    phoneTypeId: ['', [Validators.required]],
-    phone: [
-      '',
-      [
-        Validators.required,
-        Validators.pattern(/^\d+$/),
-        Validators.minLength(10),
-        Validators.maxLength(10),
-      ],
-    ],
     gender: ['', [Validators.required]],
     email: [
       '',
@@ -195,36 +175,21 @@ export class RegisterFormComponent implements OnInit {
       return;
     }
 
-    const documentTypeIdControl = this.registerForm.get('documentTypeId');
-    const phoneTypeIdControl = this.registerForm.get('phoneTypeId');
-    const phoneControl = this.registerForm.get('phone');
     const categoryControl = this.registerForm.get('categoryId');
 
-    if (
-      documentTypeIdControl?.value != null &&
-      phoneTypeIdControl?.value != null &&
-      phoneControl?.value != null &&
-      categoryControl?.value != null
-    ) {
+    if (categoryControl?.value != null) {
       const formData = {
         ...this.registerForm.value,
-        documentTypeId: +documentTypeIdControl.value,
+        // documentTypeId: +documentTypeIdControl.value,
         allowNotification: this.registerForm.get('allowNotification')!.value
           ? 'T'
           : 'F',
-        phones: [
-          {
-            phoneTypeId: +phoneTypeIdControl.value,
-            number: phoneControl.value,
-          },
-        ],
         categoryId: this.registerForm.get('categoryId')!.value,
         userClub: !this.lightForm ? 1 : undefined, // Only add userClub if lightForm is false
       };
 
       // Remove fields not needed
       delete formData.confirmationPassword;
-      delete formData.phoneTypeId;
 
       // Select the appropriate service and response handling based on lightForm
       if (!this.lightForm) {

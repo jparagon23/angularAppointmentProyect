@@ -84,56 +84,6 @@
       </div>
     </div>
 
-    <!-- Document Type and Document fields (mobile-first) -->
-    <div class="space-y-4 md:space-y-0 md:flex md:space-x-4">
-      <div class="w-full">
-        <app-select
-          [control]="registerForm.controls['documentTypeId']"
-          [name]="'tipoDeDocumento'"
-          [options]="
-            initialData && initialData.documentTypes
-              ? initialData.documentTypes
-              : []
-          "
-          class="w-full"
-        ></app-select>
-      </div>
-      <div class="w-full">
-        <app-input
-          [control]="registerForm.controls['document']"
-          [name]="'documento'"
-          [type]="'text'"
-          [placeholder]="'Ingresa tu número de documento'"
-          class="w-full"
-        ></app-input>
-      </div>
-    </div>
-
-    <!-- Phone Type and Phone fields (mobile-first) -->
-    <div class="space-y-4 md:space-y-0 md:flex md:space-x-4">
-      <div class="w-full">
-        <app-select
-          [control]="registerForm.controls['phoneTypeId']"
-          [name]="'tipoDeTelefono'"
-          [description]="'Tipo de teléfono'"
-          [options]="
-            initialData && initialData.phoneTypes ? initialData.phoneTypes : []
-          "
-          class="w-full"
-        ></app-select>
-      </div>
-      <div class="w-full">
-        <app-input
-          [control]="registerForm.controls['phone']"
-          [name]="'telefono'"
-          [description]="'Teléfono'"
-          [type]="'text'"
-          [placeholder]="'Ingresa tu número telefónico'"
-          class="w-full"
-        ></app-input>
-      </div>
-    </div>
-
     <!-- Email field -->
     <div class="w-full" *ngIf="!lightForm">
       <app-input
