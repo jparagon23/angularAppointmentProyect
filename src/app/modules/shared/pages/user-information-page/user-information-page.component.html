@@ -31,22 +31,6 @@
         <strong>Fecha de nacimiento:</strong>
         {{ user.birthdate | date : "dd/MM/yyyy" }}
       </p>
-      <p>
-        <strong>Tipo de identificación:</strong>
-        <span *ngIf="initialData">
-          {{
-            getIdentificationTypeDescription(
-              user?.documentType,
-              initialData.documentTypes
-            ) | capitalizeFirstWord
-          }}
-        </span>
-      </p>
-      <p><strong>Número de identificación:</strong> {{ user.document }}</p>
-      <p>
-        <strong>Teléfono:</strong>
-        {{ user.userPhones[0].phoneNumber }}
-      </p>
       <p><strong>Género:</strong> {{ getGenderDescription(user.gender) }}</p>
       <p>
         <strong>Habilitar notificaciones:</strong>
@@ -171,83 +155,7 @@
           />
         </div>
 
-        <div class="mb-4">
-          <label for="idType" class="block font-semibold"
-            >Tipo de Identificación</label
-          >
-          <select
-            id="idType"
-            [(ngModel)]="userEditable.documentType"
-            name="idType"
-            class="border rounded p-2 w-full bg-gray-100"
-            disabled
-          >
-            <!-- Muestra los tipos de documento del initialSignUpData -->
-            <option
-              *ngFor="let documentType of initialData.documentTypes"
-              [value]="documentType.id"
-              [selected]="documentType.id === userEditable.documentType"
-            >
-              {{ documentType.description | titlecase }}
-            </option>
-          </select>
-        </div>
-
         <!-- Campo número de identificación en modo lectura -->
-        <div class="mb-4">
-          <label for="idNumber" class="block font-semibold"
-            >Número de identificación</label
-          >
-          <input
-            id="idNumber"
-            type="text"
-            [(ngModel)]="userEditable.document"
-            name="idNumber"
-            class="border rounded p-2 w-full bg-gray-100"
-            disabled
-          />
-        </div>
-
-        <div class="mb-4">
-          <label for="phoneType" class="block font-semibold"
-            >Tipo de teléfono</label
-          >
-          <select
-            id="phoneType"
-            *ngIf="
-              userEditable.userPhones && userEditable.userPhones.length > 0
-            "
-            [(ngModel)]="userEditable.userPhones[0].phoneType"
-            name="phoneType"
-            class="border rounded p-2 w-full"
-          >
-            <!-- Muestra los tipos de teléfono del initialSignUpData -->
-            <option
-              *ngFor="let phoneType of initialData.phoneTypes"
-              [value]="phoneType.id"
-              [selected]="phoneType.id === userEditable.userPhones[0].phoneType"
-            >
-              {{ phoneType.description }}
-            </option>
-          </select>
-        </div>
-
-        <div class="mb-4">
-          <label for="phoneNumber" class="block font-semibold"
-            >Número de Teléfono</label
-          >
-          <input
-            id="phoneNumber"
-            type="text"
-            *ngIf="
-              userEditable.userPhones && userEditable.userPhones.length > 0
-            "
-            [(ngModel)]="userEditable.userPhones[0].phoneNumber"
-            name="phoneNumber"
-            class="border rounded p-2 w-full"
-            maxlength="10"
-          />
-        </div>
 
         <div class="mb-4">
           <label for="gender" class="block font-semibold">Género</label>
