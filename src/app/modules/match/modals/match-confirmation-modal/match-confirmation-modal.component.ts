@@ -89,8 +89,8 @@ export class MatchConfirmationModalComponent implements OnInit, OnDestroy {
 
   getUserWhoPosted() {
     if (this.selectedMatch?.winner.id === this.user?.id) {
-      this.userWhoPostedMatch = this.selectedMatch?.looser.name ?? '';
-    } else if (this.selectedMatch?.looser.id === this.user?.id) {
+      this.userWhoPostedMatch = this.selectedMatch?.loser.name ?? '';
+    } else if (this.selectedMatch?.loser.id === this.user?.id) {
       this.userWhoPostedMatch = this.selectedMatch?.winner.name ?? '';
     }
     return this.userWhoPostedMatch;

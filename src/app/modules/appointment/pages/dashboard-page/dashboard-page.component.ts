@@ -1,5 +1,5 @@
-import { Observable, Subscription } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Observable, Subscription, combineLatest, Subject } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReservationDetail } from 'src/app/models/UserReservations.model';
 import { Store } from '@ngrx/store';
 import {
@@ -15,76 +15,67 @@ import { selectGetUserMatchesStatus } from 'src/app/state/selectors/event.select
 import { UserMatch } from 'src/app/models/events/UserMatch.model';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { User } from 'src/app/models/user.model';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard-page',
   templateUrl: './dashboard-page.component.html',
 })
-export class DashboardPageComponent implements OnInit {
+export class DashboardPageComponent implements OnInit, OnDestroy {
   user$: Observable<User | null> = this.store.select(selectUser);
-  userReservations: ReservationDetail[] = [];
-
-  userReservations$: Observable<ReservationDetail[]> = new Observable();
-
-  loadingReservations$: Observable<boolean> = new Observable();
-
+  userReservations$: Observable<ReservationDetail[]> = this.store.select(
+    selectListReservations
+  );
+  loadingReservations$: Observable<boolean> = this.store.select(
+    selectReservationLoading
+  );
   cancelReservationSuccess$: Observable<boolean> = this.store.select(
     selectCancelReservationSuccess
   );
   cancelReservationFailure$: Observable<boolean> = this.store.select(
     selectCancelReservationFailure
   );
-
   cancelReservationLoader$: Observable<boolean> = this.store.select(
     selectCancelReservationLoading
   );
-
   selectGetUserMatchesStatus$ = this.store.select(selectGetUserMatchesStatus);
 
-  private isLoading = false;
+  matchType: 'SINGLES' | 'DOUBLES' = 'SINGLES';
+  confirmedMatches: UserMatch[] = [];
+  pendingMatches: UserMatch[] = [];
 
-  private readonly subscriptions = new Subscription();
   confirmedSliceLimit = 6;
   pendingSliceLimit = 6;
   initialLimit = 6;
 
-  // Variables para almacenar los partidos confirmados y pendientes
-  confirmedMatches: UserMatch[] = [];
-  pendingMatches: UserMatch[] = [];
+  private isLoading = false;
+  private readonly destroy$ = new Subject<void>();
 
   constructor(private readonly store: Store<any>) {}
 
   ngOnInit(): void {
-    this.loadingReservations$ = this.store.select(selectReservationLoading);
-    this.userReservations$ = this.store.select(selectListReservations);
-
     this.handleCancelReservationSuccess();
     this.handleCancelReservationFailure();
     this.trackLoadingState();
 
-    // Filtrar los partidos confirmados y pendientes al obtener los datos de los partidos
-    this.subscriptions.add(
-      this.selectGetUserMatchesStatus$.subscribe((matchesData) => {
-        if (matchesData?.userMatch) {
-          // Suscribirse al userId$ para obtener el userId y luego filtrar los partidos
-          this.user$.subscribe((user) => {
-            if (user?.id !== undefined) {
-              this.filterMatches(matchesData.userMatch, user.id); // Pasar userId al filtro
-            }
-          });
+    // Manejo de los partidos confirmados y pendientes sin suscripciones anidadas
+    combineLatest([this.user$, this.selectGetUserMatchesStatus$])
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(([user, matchesData]) => {
+        if (user?.id && matchesData?.userMatch) {
+          this.filterMatches(matchesData.userMatch, user.id);
         }
-      })
-    );
+      });
   }
 
-  // Función para filtrar los partidos por estado
   private filterMatches(userMatches: UserMatch[], userId: number): void {
     this.confirmedMatches = userMatches.filter(
       (match) =>
-        match.status === 'CONFIRMED' ||
+        (match.status === 'CONFIRMED' && match.matchType === this.matchType) ||
         (match.status === 'PENDING' &&
           match.pendingConfirmationUsers &&
-          !match.pendingConfirmationUsers.includes(userId))
+          !match.pendingConfirmationUsers.includes(userId) &&
+          match.matchType === this.matchType)
     );
     this.pendingMatches = userMatches.filter(
       (match) =>
@@ -94,8 +85,9 @@ export class DashboardPageComponent implements OnInit {
   }
 
   private handleCancelReservationSuccess(): void {
-    this.subscriptions.add(
-      this.cancelReservationSuccess$.subscribe((success) => {
+    this.cancelReservationSuccess$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((success) => {
         if (success) {
           Swal.fire({
             icon: 'success',
@@ -107,13 +99,13 @@ export class DashboardPageComponent implements OnInit {
             this.store.dispatch(resetCancelReservationState());
           });
         }
-      })
-    );
+      });
   }
 
   private handleCancelReservationFailure(): void {
-    this.subscriptions.add(
-      this.cancelReservationFailure$.subscribe((failure) => {
+    this.cancelReservationFailure$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((failure) => {
         if (failure) {
           Swal.fire({
             icon: 'error',
@@ -125,16 +117,15 @@ export class DashboardPageComponent implements OnInit {
             this.store.dispatch(resetCancelReservationState());
           });
         }
-      })
-    );
+      });
   }
 
   private trackLoadingState(): void {
-    this.subscriptions.add(
-      this.cancelReservationLoader$.subscribe((loading) => {
+    this.cancelReservationLoader$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((loading) => {
         loading ? this.showLoadingSpinner() : this.hideLoadingSpinner();
-      })
-    );
+      });
   }
 
   private showLoadingSpinner(): void {
@@ -151,23 +142,42 @@ export class DashboardPageComponent implements OnInit {
     if (!this.isLoading) return;
     this.isLoading = false;
   }
+
   toggleResults(event: Event, section: 'confirmed' | 'pending'): void {
-    event.preventDefault(); // Evita el comportamiento por defecto del enlace
+    event.preventDefault();
 
     if (section === 'confirmed') {
-      // Mostrar más resultados en Partidos Confirmados
       this.confirmedSliceLimit =
         this.confirmedSliceLimit < this.confirmedMatches.length
           ? this.confirmedMatches.length
           : this.initialLimit;
-    } else if (section === 'pending') {
-      // Mostrar más resultados en Partidos Pendientes
+    } else {
       this.pendingSliceLimit =
         this.pendingSliceLimit <= this.pendingMatches.length
           ? this.pendingMatches.length
           : this.initialLimit;
     }
-    console.log('confirmedSlice', this.confirmedSliceLimit);
-    console.log(this.confirmedMatches.length);
+  }
+
+  selectMatchTab(tab: 'SINGLES' | 'DOUBLES'): void {
+    this.matchType = tab;
+
+    // Refiltrar los partidos al cambiar de pestaña
+    this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+      if (user?.id) {
+        this.selectGetUserMatchesStatus$
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((matchesData) => {
+            if (matchesData?.userMatch) {
+              this.filterMatches(matchesData.userMatch, user.id);
+            }
+          });
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

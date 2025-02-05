@@ -123,8 +123,8 @@ export class EventEffects {
   getUserMatchesStats$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getUserMatchesStats),
-      switchMap(() =>
-        this.matchService.getUserMatchesStats().pipe(
+      switchMap(({ matchType }) =>
+        this.matchService.getUserMatchesStats(matchType).pipe(
           map((stats) => getUserMatchesStatsSuccess({ stats })),
           catchError((error) => of(getUserMatchesStatsFailure({ error })))
         )

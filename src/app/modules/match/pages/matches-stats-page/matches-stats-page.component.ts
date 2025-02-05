@@ -1,4 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
@@ -15,14 +22,23 @@ import Swal from 'sweetalert2';
   selector: 'app-matches-stats-page',
   templateUrl: './matches-stats-page.component.html',
 })
-export class MatchesStatsPageComponent implements OnInit, OnDestroy {
+export class MatchesStatsPageComponent implements OnInit, OnDestroy, OnChanges {
   userStats?: UserMatchesStats;
   private readonly destroy$ = new Subject<void>();
+  @Input() matchType: 'SINGLES' | 'DOUBLES' = 'SINGLES';
+  matchTypeQuery: string = '';
 
   constructor(private readonly store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.loadUserStats();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['matchType'] && !changes['matchType'].firstChange) {
+      this.store.dispatch(resetUserMatchesStatsState()); // Limpia el estado antes de recargar
+      this.loadUserStats();
+    }
   }
 
   ngOnDestroy(): void {
@@ -41,17 +57,18 @@ export class MatchesStatsPageComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .subscribe((state) => {
         const now = Date.now();
+        const isOutdated =
+          !state.lastUpdated || now - state.lastUpdated > REFRESH_INTERVAL;
 
-        // Verificar si los datos deben ser refrescados
         if (
-          !state.userMatchesStats || // No hay datos
-          !state.lastUpdated || // No se ha registrado actualización
-          now - state.lastUpdated > REFRESH_INTERVAL // Los datos están desactualizados
+          !state.userMatchesStats ||
+          isOutdated ||
+          this.matchType !== this.matchTypeQuery
         ) {
-          this.store.dispatch(getUserMatchesStats());
-        } else {
-          this.updateStats(state.userMatchesStats);
-          this.dismissLoader();
+          this.matchTypeQuery = this.matchType;
+          this.store.dispatch(
+            getUserMatchesStats({ matchType: this.matchType })
+          );
         }
       });
 
@@ -89,7 +106,6 @@ export class MatchesStatsPageComponent implements OnInit, OnDestroy {
   private updateStats(stats?: UserMatchesStats): void {
     if (!stats) return;
 
-    // Actualiza solo si hay cambios en los datos
     if (JSON.stringify(this.userStats) !== JSON.stringify(stats)) {
       this.userStats = stats;
       console.log('Estadísticas actualizadas:', this.userStats);

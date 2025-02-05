@@ -12,6 +12,7 @@ export class UserCardComponent {
   };
   @Input() winner: boolean = false;
   @Input() allowDelete: boolean = false;
+  @Input() doubles: boolean = false;
 
   @Output() removeUser = new EventEmitter<number>();
 
