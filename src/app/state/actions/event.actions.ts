@@ -85,7 +85,8 @@ export const getMatchById = createAction(
 
 ///USER MATCHES STATS
 export const getUserMatchesStats = createAction(
-  '[matches-stats-page] Get User Matches Stats'
+  '[matches-stats-page] Get User Matches Stats',
+  props<{ matchType: string }>()
 );
 
 export const getUserMatchesStatsSuccess = createAction(

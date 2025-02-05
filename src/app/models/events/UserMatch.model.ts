@@ -14,10 +14,13 @@ export interface Set {
 export interface UserMatch {
   matchId: number;
   groupName: string | null;
+  matchType: string;
   matchDate: string;
   status: string;
   winner: User;
-  looser: User;
+  winner2: User;
+  loser: User;
+  loser2: User;
   sets: Set[];
   pendingConfirmationUsers: number[] | null;
 }

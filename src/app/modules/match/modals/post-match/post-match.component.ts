@@ -30,11 +30,14 @@ export class PostMatchComponent implements OnInit, OnDestroy {
 
   player1: { id: number; name: string; image: string } | null = null;
   player2: { id: number; name: string; image: string } | null = null;
+  player3: { id: number; name: string; image: string } | null = null;
+  player4: { id: number; name: string; image: string } | null = null;
 
   user: User | null = null;
 
   setResults: any;
   CLUB_ADMIN_ROLE = CLUB_ADMIN_ROLE;
+  matchType: 'SINGLES' | 'DOUBLES' = 'SINGLES';
 
   private destroy$ = new Subject<void>();
 
@@ -93,6 +96,8 @@ export class PostMatchComponent implements OnInit, OnDestroy {
   removePlayer(playerIndex: number): void {
     if (playerIndex === 1) this.player1 = null;
     if (playerIndex === 2) this.player2 = null;
+    if (playerIndex === 3) this.player3 = null;
+    if (playerIndex === 4) this.player4 = null;
   }
 
   // Método para seleccionar un jugador
@@ -120,6 +125,30 @@ export class PostMatchComponent implements OnInit, OnDestroy {
     };
   }
 
+  onUserSelectedP3(player: UserListReturn | null): void {
+    if (!player) {
+      this.player3 = null;
+      return;
+    }
+    this.player3 = {
+      id: Number(player.userId),
+      name: player.completeName,
+      image: player.profileImage,
+    };
+  }
+
+  onUserSelectedP4(player: UserListReturn | null): void {
+    if (!player) {
+      this.player4 = null;
+      return;
+    }
+    this.player4 = {
+      id: Number(player.userId),
+      name: player.completeName,
+      image: player.profileImage,
+    };
+  }
+
   handleResult(result: any): void {
     this.setResults = result;
     this.setResults.winner
@@ -135,8 +164,14 @@ export class PostMatchComponent implements OnInit, OnDestroy {
     this.setResults.sets.forEach((set: any) => {
       if (set.winnerId === 'player1') {
         set.winnerId = this.player1?.id ?? 0;
+        if (this.matchType === 'DOUBLES') {
+          set.winnerId2 = this.player3?.id ?? 0;
+        }
       } else if (set.winnerId === 'player2') {
         set.winnerId = this.player2?.id;
+        if (this.matchType === 'DOUBLES') {
+          set.winnerId2 = this.player4?.id ?? 0;
+        }
       }
     });
   }
@@ -157,9 +192,26 @@ export class PostMatchComponent implements OnInit, OnDestroy {
         ? this.player1?.id ?? 0
         : this.player2?.id ?? 0;
 
+    let winner2Id = null;
+    let loser2Id = null;
+
+    if (this.matchType === 'DOUBLES') {
+      winner2Id =
+        this.setResults.winner === 'player1'
+          ? this.player3?.id ?? 0
+          : this.player4?.id ?? 0;
+      loser2Id =
+        this.setResults.winner === 'player2'
+          ? this.player3?.id ?? 0
+          : this.player4?.id ?? 0;
+    }
+
     const json: MatchResultDto = {
       winnerId: winnerId ?? 0,
       loserId: loserId ?? 0,
+      winner2Id: winner2Id ?? null,
+      loser2Id: loser2Id ?? null,
+      matchType: this.matchType,
       matchDate: this.matchDate,
       sets: this.setResults.sets,
       groupId: null,
@@ -174,5 +226,13 @@ export class PostMatchComponent implements OnInit, OnDestroy {
 
   get canPublishResult(): boolean {
     return !!this.player1 && !!this.player2 && !!this.setResults?.winner;
+  }
+
+  selectMatchType(type: 'SINGLES' | 'DOUBLES'): void {
+    this.matchType = type;
+    // Restablecer los jugadores seleccionados si cambia el tipo de partido
+    if (type === 'SINGLES') {
+      // this.player3 = this.player4 = null;
+    }
   }
 }

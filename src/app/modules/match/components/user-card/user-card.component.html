@@ -22,8 +22,11 @@
   <!-- Información del jugador -->
   <div class="text-center sm:text-left flex-1">
     <p class="text-lg sm:text-xl font-bold text-gray-900">{{ user.name }}</p>
-    <p *ngIf="!winner" class="text-sm sm:text-base text-gray-500">
+    <p *ngIf="!winner && !doubles" class="text-sm sm:text-base text-gray-500">
       Jugador {{ user.index }}
+    </p>
+    <p *ngIf="!winner && doubles" class="text-sm sm:text-base text-gray-500">
+      Equipo {{ user.index === 1 || user.index === 3 ? 1 : 2 }}
     </p>
     <p *ngIf="winner" class="text-lg sm:text-xl text-[#35691a]">Ganador!</p>
   </div>

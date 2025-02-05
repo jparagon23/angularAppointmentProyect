@@ -9,7 +9,10 @@ export interface SetDto {
 
 export interface MatchResultDto {
   groupId: number | null;
+  matchType: string;
   winnerId: number;
+  winner2Id: number | null;
+  loser2Id: number | null;
   loserId: number;
   matchDate: string;
   sets: SetDto[];

@@ -1,7 +1,32 @@
 <div class="w-full">
   <!-- Título principal -->
-  <div class="text-2xl md:text-4xl font-bold border-b-4 border-gray-300 mb-5">
-    Partidos
+  <div class="flex">
+    <div class="text-2xl md:text-4xl font-bold border-b-4 border-gray-300 mb-5">
+      Partidos
+    </div>
+
+    <div class="tabs flex justify-center mb-6">
+      <button
+        [ngClass]="{
+          'bg-blue-600 text-white': matchType === 'SINGLES',
+          'bg-gray-200 text-gray-600': matchType !== 'SINGLES'
+        }"
+        class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
+        (click)="selectMatchTab('SINGLES')"
+      >
+        Sencillos
+      </button>
+      <button
+        [ngClass]="{
+          'bg-blue-600 text-white': matchType === 'DOUBLES',
+          'bg-gray-200 text-gray-600': matchType !== 'DOUBLES'
+        }"
+        class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
+        (click)="selectMatchTab('DOUBLES')"
+      >
+        Dobles
+      </button>
+    </div>
   </div>
 
   <!-- Sección de pestañas para la navegación -->
@@ -31,11 +56,11 @@
   <div class="tab-content">
     <!-- Tab de Canchas -->
     <div *ngIf="selectedTab === 'matches'">
-      <app-matches-info-page></app-matches-info-page>
+      <app-matches-info-page [matchType]="matchType"></app-matches-info-page>
     </div>
     <!-- Tab de Disponibilidad -->
     <div *ngIf="selectedTab === 'stats'">
-      <app-matches-stats-page></app-matches-stats-page>
+      <app-matches-stats-page [matchType]="matchType"></app-matches-stats-page>
     </div>
   </div>
 </div>

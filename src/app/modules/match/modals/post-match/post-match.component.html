@@ -23,6 +23,29 @@
     Publicar Resultado
   </div>
 
+  <div class="tabs flex justify-center mb-6">
+    <button
+      [ngClass]="{
+        'bg-blue-600 text-white': matchType === 'SINGLES',
+        'bg-gray-200 text-gray-600': matchType !== 'SINGLES'
+      }"
+      class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
+      (click)="selectMatchType('SINGLES')"
+    >
+      Sencillos
+    </button>
+    <button
+      [ngClass]="{
+        'bg-blue-600 text-white': matchType === 'DOUBLES',
+        'bg-gray-200 text-gray-600': matchType !== 'DOUBLES'
+      }"
+      class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
+      (click)="selectMatchType('DOUBLES')"
+    >
+      Dobles
+    </button>
+  </div>
+
   <div class="mb-6 sm:mb-8">
     <label
       for="match-date"
@@ -39,101 +62,175 @@
   </div>
 
   <!-- Sección de búsqueda y selección del Jugador 1 -->
-  <div class="mb-6 sm:mb-8">
-    <div *ngIf="!player1" class="p-6 bg-white rounded-lg shadow-md">
-      <label
-        for="search-player"
-        class="block text-lg sm:text-xl font-medium text-gray-700 mb-3"
-      >
-        Buscar Jugador 1
-      </label>
+  <div>
+    <div class="mb-6 sm:mb-8">
+      <div *ngIf="!player1" class="p-6 bg-white rounded-lg shadow-md">
+        <label
+          for="search-player"
+          class="block text-lg sm:text-xl font-medium text-gray-700 mb-3"
+        >
+          Añadir jugador
+        </label>
 
-      <div class="mb-4 sm:mb-6">
-        <app-user-search-list
-          (userReturn)="onUserSelectedP1($event)"
-          [allowCreateUser]="false"
-          [filterUserStatus]="[2]"
-        ></app-user-search-list>
+        <div class="mb-4 sm:mb-6">
+          <app-user-search-list
+            (userReturn)="onUserSelectedP1($event)"
+            [allowCreateUser]="false"
+            [filterUserStatus]="[2]"
+          ></app-user-search-list>
+        </div>
+      </div>
+
+      <!-- Mostrar tarjeta del Jugador 1 cuando se selecciona -->
+      <div *ngIf="player1" class="mt-6 sm:mt-8">
+        <app-user-card
+          [user]="{
+            name: player1.name || '',
+            image: player1.image || '',
+            index: 1
+          }"
+          [winner]="winner === 'player1'"
+          [allowDelete]="user?.role === CLUB_ADMIN_ROLE"
+          (removeUser)="removePlayer($event)"
+          [doubles]="matchType === 'DOUBLES'"
+        ></app-user-card>
       </div>
     </div>
 
-    <!-- Mostrar tarjeta del Jugador 1 cuando se selecciona -->
-    <div *ngIf="player1" class="mt-6 sm:mt-8">
-      <app-user-card
-        [user]="{
-          name: player1.name || '',
-          image: player1.image || '',
-          index: 1
-        }"
-        [winner]="winner === 'player1'"
-        [allowDelete]="user?.role === CLUB_ADMIN_ROLE"
-        (removeUser)="removePlayer($event)"
-      ></app-user-card>
-    </div>
-  </div>
+    <div *ngIf="matchType === 'DOUBLES'">
+      <div *ngIf="!player3" class="p-6 bg-white rounded-lg shadow-md">
+        <label
+          for="search-player"
+          class="block text-lg sm:text-xl font-medium text-gray-700 mb-3"
+        >
+          Añadir jugador
+        </label>
 
-  <!-- Sección de sets y games -->
-  <div class="flex justify-center mb-6 sm:mb-8">
-    <app-set-result-component
-      (resultEmitter)="handleResult($event)"
-    ></app-set-result-component>
-  </div>
+        <div class="mb-4 sm:mb-6">
+          <app-user-search-list
+            (userReturn)="onUserSelectedP3($event)"
+            [allowCreateUser]="false"
+            [filterUserStatus]="[2]"
+          ></app-user-search-list>
+        </div>
+      </div>
 
-  <!-- Sección de búsqueda y selección del Jugador 2 -->
-  <div class="mb-6 sm:mb-8">
-    <div *ngIf="!player2" class="p-6 bg-white rounded-lg shadow-md">
-      <label
-        for="search-player"
-        class="block text-lg sm:text-xl font-medium text-gray-700 mb-3"
-      >
-        Buscar Jugador 2
-      </label>
-
-      <div class="mb-4 sm:mb-6">
-        <app-user-search-list
-          (userReturn)="onUserSelectedP2($event)"
-          [allowCreateUser]="false"
-          [filterUserStatus]="[2]"
-        ></app-user-search-list>
+      <!-- Mostrar tarjeta del Jugador 2 cuando se selecciona -->
+      <div *ngIf="player3" class="mt-6 sm:mt-8">
+        <app-user-card
+          [user]="{
+            name: player3.name || '',
+            image: player3.image || '',
+            index: 3
+          }"
+          [winner]="winner === 'player3'"
+          (removeUser)="removePlayer($event)"
+          [allowDelete]="true"
+          [doubles]="matchType === 'DOUBLES'"
+        ></app-user-card>
       </div>
     </div>
 
-    <!-- Mostrar tarjeta del Jugador 2 cuando se selecciona -->
-    <div *ngIf="player2" class="mt-6 sm:mt-8">
-      <app-user-card
-        [user]="{
-          name: player2.name || '',
-          image: player2.image || '',
-          index: 2
-        }"
-        [winner]="winner === 'player2'"
-        (removeUser)="removePlayer($event)"
-        [allowDelete]="true"
-      ></app-user-card>
+    <!-- Sección de sets y games -->
+    <div class="flex justify-center my-6 sm:mb-8">
+      <app-set-result-component
+        (resultEmitter)="handleResult($event)"
+      ></app-set-result-component>
     </div>
 
-    <!-- Botones con tamaños iguales -->
-    <div
-      class="flex flex-col sm:flex-row sm:justify-between mt-1 sm:mt-2 w-full"
-    >
-      <!-- Botón para publicar el resultado -->
-      <app-button
-        class="w-full sm:w-64 pt-4 sm:order-2 text-xl sm:text-2xl font-semibold"
-        color="success"
-        [disabled]="!canPublishResult"
-        (click)="publishResult()"
-      >
-        Publicar Resultado
-      </app-button>
+    <!-- Sección de búsqueda y selección del Jugador 2 -->
+    <div class="mb-6 sm:mb-8">
+      <div>
+        <div *ngIf="!player2" class="p-6 bg-white rounded-lg shadow-md">
+          <label
+            for="search-player"
+            class="block text-lg sm:text-xl font-medium text-gray-700 mb-3"
+          >
+            Añadir jugador
+          </label>
 
-      <!-- Botón para cancelar -->
-      <app-button
-        class="w-full sm:w-64 pt-4 sm:order-1 text-xl sm:text-2xl font-semibold"
-        color="danger"
-        [mat-dialog-close]="true"
+          <div class="mb-4 sm:mb-6">
+            <app-user-search-list
+              (userReturn)="onUserSelectedP2($event)"
+              [allowCreateUser]="false"
+              [filterUserStatus]="[2]"
+            ></app-user-search-list>
+          </div>
+        </div>
+
+        <!-- Mostrar tarjeta del Jugador 2 cuando se selecciona -->
+        <div *ngIf="player2" class="mt-6 sm:mt-8">
+          <app-user-card
+            [user]="{
+              name: player2.name || '',
+              image: player2.image || '',
+              index: 2
+            }"
+            [winner]="winner === 'player2'"
+            (removeUser)="removePlayer($event)"
+            [allowDelete]="true"
+            [doubles]="matchType === 'DOUBLES'"
+          ></app-user-card>
+        </div>
+      </div>
+
+      <div *ngIf="matchType === 'DOUBLES'">
+        <div *ngIf="!player4" class="p-6 bg-white rounded-lg shadow-md">
+          <label
+            for="search-player"
+            class="block text-lg sm:text-xl font-medium text-gray-700 mb-3"
+          >
+            Añadir jugador
+          </label>
+
+          <div class="mb-4 sm:mb-6">
+            <app-user-search-list
+              (userReturn)="onUserSelectedP4($event)"
+              [allowCreateUser]="false"
+              [filterUserStatus]="[2]"
+            ></app-user-search-list>
+          </div>
+        </div>
+
+        <!-- Mostrar tarjeta del Jugador 2 cuando se selecciona -->
+        <div *ngIf="player4" class="mt-6 sm:mt-8">
+          <app-user-card
+            [user]="{
+              name: player4.name || '',
+              image: player4.image || '',
+              index: 4
+            }"
+            [winner]="winner === 'player4'"
+            (removeUser)="removePlayer($event)"
+            [allowDelete]="true"
+            [doubles]="matchType === 'DOUBLES'"
+          ></app-user-card>
+        </div>
+      </div>
+
+      <!-- Botones con tamaños iguales -->
+      <div
+        class="flex flex-col sm:flex-row sm:justify-between mt-1 sm:mt-2 w-full"
       >
-        Cancelar
-      </app-button>
+        <!-- Botón para publicar el resultado -->
+        <app-button
+          class="w-full sm:w-64 pt-4 sm:order-2 text-xl sm:text-2xl font-semibold"
+          color="success"
+          [disabled]="!canPublishResult"
+          (click)="publishResult()"
+        >
+          Publicar Resultado
+        </app-button>
+
+        <!-- Botón para cancelar -->
+        <app-button
+          class="w-full sm:w-64 pt-4 sm:order-1 text-xl sm:text-2xl font-semibold"
+          color="danger"
+          [mat-dialog-close]="true"
+        >
+          Cancelar
+        </app-button>
+      </div>
     </div>
   </div>
 </div>

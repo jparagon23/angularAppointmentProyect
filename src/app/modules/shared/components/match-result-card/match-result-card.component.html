@@ -41,22 +41,41 @@
   <!-- Players -->
   <div class="flex flex-col">
     <!-- Player 1 -->
+
     <div class="flex justify-between items-center py-2">
-      <div class="flex items-center gap-3">
-        <img
-          src="https://flagcdn.com/w40/co.png"
-          alt="Colombia"
-          class="w-6 h-6"
-        />
-        <span
-          class="text-base font-semibold"
-          [ngClass]="{
-            'text-black': matchData.winner.id === userId,
-            'text-gray-400': matchData.winner.id !== userId
-          }"
-        >
-          {{ matchData.winner.name }}
-        </span>
+      <div class="space-y-2">
+        <div class="flex items-center gap-3">
+          <img
+            src="https://flagcdn.com/w40/co.png"
+            alt="Colombia"
+            class="w-6 h-6"
+          />
+          <span
+            class="text-base font-semibold"
+            [ngClass]="{
+              'text-black': matchData.winner.id === userId,
+              'text-gray-400': matchData.winner.id !== userId
+            }"
+          >
+            {{ matchData.winner.name }}
+          </span>
+        </div>
+        <div class="flex items-center gap-3" *ngIf="matchData.winner2">
+          <img
+            src="https://flagcdn.com/w40/co.png"
+            alt="Colombia"
+            class="w-6 h-6"
+          />
+          <span
+            class="text-base font-semibold"
+            [ngClass]="{
+              'text-black': matchData.winner2.id === userId,
+              'text-gray-400': matchData.winner2.id !== userId
+            }"
+          >
+            {{ matchData.winner2.name }}
+          </span>
+        </div>
       </div>
       <div class="flex gap-4 text-gray-800 text-lg">
         <div class="relative">
@@ -93,21 +112,39 @@
     <div class="h-px bg-gray-200"></div>
     <!-- Player 2 -->
     <div class="flex justify-between items-center py-2">
-      <div class="flex items-center gap-3">
-        <img
-          src="https://flagcdn.com/w40/co.png"
-          alt="Colombia"
-          class="w-6 h-6"
-        />
-        <span
-          class="text-base font-semibold"
-          [ngClass]="{
-            'text-black': matchData.looser.id === userId,
-            'text-gray-400': matchData.looser.id !== userId
-          }"
-        >
-          {{ matchData.looser.name }}
-        </span>
+      <div class="space-y-2">
+        <div class="flex items-center gap-3">
+          <img
+            src="https://flagcdn.com/w40/co.png"
+            alt="Colombia"
+            class="w-6 h-6"
+          />
+          <span
+            class="text-base font-semibold"
+            [ngClass]="{
+              'text-black': matchData.loser.id === userId,
+              'text-gray-400': matchData.loser.id !== userId
+            }"
+          >
+            {{ matchData.loser.name }}
+          </span>
+        </div>
+        <div class="flex items-center gap-3" *ngIf="matchData.loser2">
+          <img
+            src="https://flagcdn.com/w40/co.png"
+            alt="Colombia"
+            class="w-6 h-6"
+          />
+          <span
+            class="text-base font-semibold"
+            [ngClass]="{
+              'text-black': matchData.loser2.id === userId,
+              'text-gray-400': matchData.loser2.id !== userId
+            }"
+          >
+            {{ matchData.loser2.name }}
+          </span>
+        </div>
       </div>
       <div class="flex gap-4 text-gray-800 text-lg">
         <div class="relative">
