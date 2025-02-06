@@ -123,7 +123,7 @@
             image: player3.image || '',
             index: 3
           }"
-          [winner]="winner === 'player3'"
+          [winner]="winner === 'player1'"
           (removeUser)="removePlayer($event)"
           [allowDelete]="true"
           [doubles]="matchType === 'DOUBLES'"
@@ -200,7 +200,7 @@
               image: player4.image || '',
               index: 4
             }"
-            [winner]="winner === 'player4'"
+            [winner]="winner === 'player2'"
             (removeUser)="removePlayer($event)"
             [allowDelete]="true"
             [doubles]="matchType === 'DOUBLES'"
