@@ -56,7 +56,7 @@
     <app-date-selector
       [initialDate]="matchDate"
       [minDate]="'1900-01-01'"
-      [maxDate]="'2100-12-31'"
+      [maxDate]="formattedToday"
       (dateSelected)="onDateChange($event)"
     ></app-date-selector>
   </div>

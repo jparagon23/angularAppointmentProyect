@@ -14,6 +14,7 @@ import { selectPostScoreStatus } from 'src/app/state/selectors/event.selectors';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import Swal from 'sweetalert2';
 import { Subject, takeUntil } from 'rxjs';
+import { format, toZonedTime } from 'date-fns-tz';
 
 @Component({
   selector: 'app-post-match',
@@ -38,6 +39,13 @@ export class PostMatchComponent implements OnInit, OnDestroy {
   setResults: any;
   CLUB_ADMIN_ROLE = CLUB_ADMIN_ROLE;
   matchType: 'SINGLES' | 'DOUBLES' = 'SINGLES';
+
+  today = new Date();
+  bogotaTimeZone = 'America/Bogota';
+  zonedDate = toZonedTime(this.today, this.bogotaTimeZone);
+  formattedToday = format(this.zonedDate, 'yyyy-MM-dd', {
+    timeZone: this.bogotaTimeZone,
+  });
 
   private destroy$ = new Subject<void>();
 
