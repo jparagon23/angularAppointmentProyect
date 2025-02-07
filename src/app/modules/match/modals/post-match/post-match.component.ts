@@ -55,7 +55,7 @@ export class PostMatchComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.matchDate = new Date().toISOString().split('T')[0];
+    this.matchDate = this.formattedToday;
     this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user) {
         this.user = user;
