@@ -25,6 +25,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatchResultCardComponent } from './components/match-result-card/match-result-card.component';
 import { StatusTranslatePipe } from './pipes/status-translate.pipe';
 import { MatchConfirmationModalComponent } from '../match/modals/match-confirmation-modal/match-confirmation-modal.component';
+import { RankingTableComponent } from './components/ranking-table/ranking-table.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { MatchConfirmationModalComponent } from '../match/modals/match-confirmat
     MatchResultCardComponent,
     StatusTranslatePipe,
     MatchConfirmationModalComponent,
+    RankingTableComponent,
   ],
 
   imports: [
@@ -73,6 +75,7 @@ import { MatchConfirmationModalComponent } from '../match/modals/match-confirmat
     UserSearchListComponent,
     MatchResultCardComponent,
     StatusTranslatePipe,
+    RankingTableComponent,
   ],
 })
 export class SharedModule {}

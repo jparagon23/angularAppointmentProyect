@@ -11,7 +11,10 @@ import {
 } from 'src/app/state/selectors/reservetions.selectors';
 import { resetCancelReservationState } from 'src/app/state/actions/reservations.actions';
 import Swal from 'sweetalert2';
-import { selectGetUserMatchesStatus } from 'src/app/state/selectors/event.selectors';
+import {
+  selectGetUserMatchesStatus,
+  selectRankingState,
+} from 'src/app/state/selectors/event.selectors';
 import { UserMatch } from 'src/app/models/events/UserMatch.model';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { User } from 'src/app/models/user.model';
@@ -39,6 +42,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     selectCancelReservationLoading
   );
   selectGetUserMatchesStatus$ = this.store.select(selectGetUserMatchesStatus);
+
+  selectGeneralRankingStatus$ = this.store.select(selectRankingState);
 
   matchType: 'SINGLES' | 'DOUBLES' = 'SINGLES';
   confirmedMatches: UserMatch[] = [];

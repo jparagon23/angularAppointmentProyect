@@ -53,3 +53,13 @@ export const selectUserMatchState = createSelector(
     lastUpdated: state.lastUpdatedStats,
   })
 );
+
+export const selectRankingState = createSelector(
+  selectEventsFeature,
+  (state: EventState) => ({
+    loading: state.getRankingLoading,
+    success: state.getRankingSuccess,
+    failure: state.getRankingFailure,
+    ranking: state.ranking,
+  })
+);

@@ -13,7 +13,7 @@ import {
 import { UserService } from 'src/app/services/user.service';
 import { loginSuccess } from '../actions/auth.actions';
 import { loadUserNotifications } from '../actions/notification.actions';
-import { getUserMatches } from '../actions/event.actions';
+import { getRanking, getUserMatches } from '../actions/event.actions';
 import { loadReservations } from '../actions/reservations.actions';
 
 @Injectable()
@@ -55,6 +55,7 @@ export class ProfileEffects {
       switchMap(() => [
         loadUserNotifications(), // Despacha loadUserNotifications
         getUserMatches(), // Despacha getUserMatches
+        getRanking(),
         loadReservations(),
       ])
     )
