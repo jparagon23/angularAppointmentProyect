@@ -24,8 +24,6 @@ export class NotificationService {
   ) {
     // Subscribe to userId once, avoid multiple subscriptions
     this.store.select(selectUser).subscribe((user) => {
-      console.log('selecting the user', user);
-
       this.userId = user?.id;
     });
 
@@ -45,8 +43,6 @@ export class NotificationService {
   }
 
   getUserNotifications(): Observable<NotificationItem[]> {
-    console.log('userId', this.userId);
-
     const url = `${environment.API_URL}/notifications/panel/user/${this.userId}`;
     return this.http.get<NotificationItem[]>(url, {
       headers: this.setHeaders(),

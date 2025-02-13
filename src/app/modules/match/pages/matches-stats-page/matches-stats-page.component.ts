@@ -108,7 +108,6 @@ export class MatchesStatsPageComponent implements OnInit, OnDestroy, OnChanges {
 
     if (JSON.stringify(this.userStats) !== JSON.stringify(stats)) {
       this.userStats = stats;
-      console.log('Estadísticas actualizadas:', this.userStats);
     }
   }
 

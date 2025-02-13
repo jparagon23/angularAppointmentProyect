@@ -101,8 +101,6 @@ export class SetResultComponentComponent {
     loserTieBreak: number | null;
     winnerId: string;
   }[] {
-    console.log('this.result', this.setResults);
-
     const result = this.setResults
       .filter((set) => set.player1 !== null && set.player2 !== null)
       .map((set) => {

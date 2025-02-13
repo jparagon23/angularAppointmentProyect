@@ -162,7 +162,6 @@ export class UserInformationPageComponent implements OnInit {
 
       if (this.originalUser.birthdate !== this.userEditable.birthdate) {
         updatedData.birthdate = this.userEditable.birthdate;
-        console.log('birthdate', updatedData.birthdate);
       }
       if (
         JSON.stringify(this.originalUser.userPhones) !==

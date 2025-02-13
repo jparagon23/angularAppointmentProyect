@@ -45,7 +45,6 @@ export class MatchResultCardComponent implements OnInit, OnDestroy {
           user.id
         );
         this.userId = user.id;
-        console.log('userId', this.userId);
       } else {
         this.canDelete = false;
         this.userId = user?.id ?? 0;

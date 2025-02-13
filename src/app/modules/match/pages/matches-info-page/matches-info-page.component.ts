@@ -22,14 +22,12 @@ export class MatchesInfoPageComponent implements OnChanges {
   }
 
   private updateMatches(): void {
-    console.log('Updating matches for matchType:', this.matchType);
     this.selectGetUserMatchesStatus$.subscribe((matchesData) => {
       if (matchesData.userMatch) {
         // Filtrar los partidos según el tipo de partido (SINGLES o DOUBLES)
         this.matches = matchesData.userMatch.filter(
           (match) => match.matchType === this.matchType
         );
-        console.log('Filtered matches:', this.matches);
       }
     });
   }
