@@ -19,27 +19,16 @@
         >
           Últimos resultados
         </div>
-        <div class="tabs flex justify-center mb-6">
-          <button
-            [ngClass]="{
-              'bg-blue-600 text-white': matchType === 'SINGLES',
-              'bg-gray-200 text-gray-600': matchType !== 'SINGLES'
-            }"
-            class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
-            (click)="selectMatchTab('SINGLES')"
-          >
-            Sencillos
-          </button>
-          <button
-            [ngClass]="{
-              'bg-blue-600 text-white': matchType === 'DOUBLES',
-              'bg-gray-200 text-gray-600': matchType !== 'DOUBLES'
-            }"
-            class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
-            (click)="selectMatchTab('DOUBLES')"
-          >
-            Dobles
-          </button>
+
+        <div>
+          <app-tab-selector
+            [tabs]="[
+              { label: 'Sencillos', value: 'SINGLES' },
+              { label: 'Dobles', value: 'DOUBLES' }
+            ]"
+            [selectedTab]="matchType"
+            (tabChange)="selectMatchTab($event)"
+          ></app-tab-selector>
         </div>
       </div>
       <!-- Condición para verificar si no hay partidos -->

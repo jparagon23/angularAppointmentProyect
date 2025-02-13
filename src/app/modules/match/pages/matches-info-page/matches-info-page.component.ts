@@ -7,7 +7,7 @@ import { selectGetUserMatchesStatus } from 'src/app/state/selectors/event.select
   templateUrl: './matches-info-page.component.html',
 })
 export class MatchesInfoPageComponent implements OnChanges {
-  @Input() matchType: 'SINGLES' | 'DOUBLES' = 'SINGLES';
+  @Input() matchType: string = 'SINGLES';
   matches: any[] = [];
 
   selectGetUserMatchesStatus$ = this.store.select(selectGetUserMatchesStatus);

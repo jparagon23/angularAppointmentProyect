@@ -45,7 +45,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   selectGeneralRankingStatus$ = this.store.select(selectRankingState);
 
-  matchType: 'SINGLES' | 'DOUBLES' = 'SINGLES';
+  matchType: string = 'SINGLES';
   confirmedMatches: UserMatch[] = [];
   pendingMatches: UserMatch[] = [];
 
@@ -164,7 +164,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  selectMatchTab(tab: 'SINGLES' | 'DOUBLES'): void {
+  selectMatchTab(tab: string): void {
     this.matchType = tab;
 
     // Refiltrar los partidos al cambiar de pestaña

@@ -25,7 +25,7 @@ import Swal from 'sweetalert2';
 export class MatchesStatsPageComponent implements OnInit, OnDestroy, OnChanges {
   userStats?: UserMatchesStats;
   private readonly destroy$ = new Subject<void>();
-  @Input() matchType: 'SINGLES' | 'DOUBLES' = 'SINGLES';
+  @Input() matchType: string = 'SINGLES';
   matchTypeQuery: string = '';
 
   constructor(private readonly store: Store<AppState>) {}

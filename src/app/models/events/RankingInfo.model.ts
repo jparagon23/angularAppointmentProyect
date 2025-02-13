@@ -4,4 +4,5 @@ export interface RankingInfo {
   userName: string;
   userLastname: string;
   rating: number;
+  userId: number;
 }

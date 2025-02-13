@@ -1,6 +1,6 @@
 <div class="flex flex-col h-screen">
-  <app-navbar></app-navbar>
-  <div class="w-full lg:grow lg:px-20 lg:py-10">
+  <app-navbar class="fixed top-0 left-0 w-full z-10"></app-navbar>
+  <div class="w-full lg:grow lg:px-20 lg:py-10 mt-16">
     <ng-container *ngIf="user$ | async as user; else loading">
       <router-outlet></router-outlet>
     </ng-container>

@@ -5,14 +5,14 @@ import { Component, OnChanges } from '@angular/core';
   templateUrl: './matches-page.component.html',
 })
 export class MatchesPageComponent {
-  selectedTab: 'matches' | 'stats' = 'matches';
-  matchType: 'SINGLES' | 'DOUBLES' = 'SINGLES';
+  selectedTab: string = 'matches';
+  matchType: string = 'SINGLES';
 
-  selectTab(tab: 'matches' | 'stats'): void {
+  selectTab(tab: string): void {
     this.selectedTab = tab;
   }
 
-  selectMatchTab(tab: 'SINGLES' | 'DOUBLES'): void {
+  selectMatchTab(tab: string): void {
     this.matchType = tab;
   }
 }
