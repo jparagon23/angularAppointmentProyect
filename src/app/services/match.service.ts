@@ -87,4 +87,11 @@ export class MatchService {
       headers: this.setHeaders(),
     });
   }
+
+  getAdminPostedMatches(): Observable<UserMatch[]> {
+    const url = `${environment.API_URL}/match/postedMatches/${this.userId}`;
+    return this.http.get<UserMatch[]>(url, {
+      headers: this.setHeaders(),
+    });
+  }
 }

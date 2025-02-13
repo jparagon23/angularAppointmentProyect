@@ -21,6 +21,8 @@ import { CreateLightUserModalComponent } from './modals/create-light-user-modal/
 import { UserNameMakeReservationModalComponent } from './modals/user-name-make-reservation-modal/user-name-make-reservation-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ClubReportsComponent } from './pages/club-reports/club-reports.component';
+import { AppointmentModule } from '../appointment/appointment.module';
+import { MatchModule } from '../match/match.module';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,8 @@ import { ClubReportsComponent } from './pages/club-reports/club-reports.componen
     ReactiveFormsModule,
     MatProgressSpinnerModule,
     MatDialogModule,
+    AppointmentModule,
+    MatchModule,
   ],
 })
 export class AdminModule {}

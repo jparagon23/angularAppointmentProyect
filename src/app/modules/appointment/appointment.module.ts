@@ -15,6 +15,8 @@ import { AvailableSlotCardComponent } from './components/available-slot-card/ava
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ReservationCalendarComponent } from './components/reservation-calendar/reservation-calendar.component';
+import { MatchModule } from '../match/match.module';
 
 @NgModule({
   declarations: [
@@ -23,6 +25,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     DashboardPageComponent,
     ConfirmationModalComponent,
     AvailableSlotCardComponent,
+    ReservationCalendarComponent,
   ],
   imports: [
     CommonModule,
@@ -35,7 +38,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatInputModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
+    MatchModule,
   ],
-  exports: [MakeReservationModalComponent, ReservationCardComponent],
+  exports: [
+    MakeReservationModalComponent,
+    ReservationCardComponent,
+    ReservationCalendarComponent,
+  ],
 })
 export class AppointmentModule {}

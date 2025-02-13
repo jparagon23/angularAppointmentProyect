@@ -1,0 +1,31 @@
+<div class="my-5" *ngIf="matchToShow.length > 0">
+  <div class="text-xl font-semibold text-gray-800 mb-4">
+    {{ title }}
+  </div>
+  <div class="flex flex-wrap justify-start gap-4">
+    <div
+      class="w-full sm:w-[200px] md:w-[450px]"
+      *ngFor="let matchData of matchToShow | slice : 0 : pendingSliceLimit"
+    >
+      <app-match-result-card
+        [matchData]="matchData"
+        [userCanConfirm]="canConfirm"
+      ></app-match-result-card>
+    </div>
+  </div>
+
+  <!-- Mostrar solo si hay más resultados que el límite de slice -->
+  <div class="mt-4 flex justify-center" *ngIf="matchToShow.length > sliceLimit">
+    <a
+      href="#"
+      class="text-cyan-600 hover:text-cyan-800 font-semibold"
+      (click)="toggleResults($event)"
+    >
+      {{
+        pendingSliceLimit <= matchToShow.length
+          ? "Ver más resultados"
+          : "Ver menos resultados"
+      }}
+    </a>
+  </div>
+</div>
