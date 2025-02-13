@@ -252,7 +252,7 @@
         <ul class="max-h-72 overflow-y-auto divide-y divide-gray-100">
           <li
             *ngFor="let notification of notifications"
-            (click)="markAsRead(notification.id)"
+            (click)="markAsRead(notification)"
             class="hover:bg-gray-50 transition"
           >
             <app-notification-item

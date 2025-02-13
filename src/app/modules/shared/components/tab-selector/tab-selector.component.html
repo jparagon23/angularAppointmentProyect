@@ -1,4 +1,4 @@
-<div class="tabs flex justify-center mb-6">
+<div class="tabs flex flex-wrap gap-2">
   <button
     *ngFor="let tab of tabs"
     [ngClass]="{
@@ -7,7 +7,7 @@
       'bg-white text-[#418622] border-2 border-[#418622]':
         selectedTab !== tab.value
     }"
-    class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
+    class="tab-btn px-4 py-2 rounded-md transition-all duration-200 hover:bg-[#2e6418] hover:text-white"
     (click)="selectTab(tab.value)"
   >
     {{ tab.label }}

@@ -9,9 +9,11 @@
     <app-ranking-table [ratings]="ratings.ranking"></app-ranking-table>
   </div>
 
-  <app-result-short-section
-    [matchToShow]="matches"
-    [title]="'Partidos publicados'"
-    [canConfirm]="false"
-  ></app-result-short-section>
+  <div class="w-full my-5 md:w-2/3 md:my-0">
+    <app-result-short-section
+      [matchToShow]="matches"
+      [title]="'Partidos publicados'"
+      [canConfirm]="false"
+    ></app-result-short-section>
+  </div>
 </div>
