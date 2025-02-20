@@ -1,174 +1,19 @@
-<div class="flex flex-col items-start border-b-4 border-gray-300 mb-5">
-  <div class="text-xl font-bold mb-3 md:text-4xl">Reservas del club</div>
-  <div>
-    <app-date-selector
-      [initialDate]="selectedDate"
-      [minDate]="'1900-01-01'"
-      [maxDate]="'2100-12-31'"
-      (dateSelected)="onDateChange($event)"
-    ></app-date-selector>
-  </div>
-</div>
-
-<div *ngIf="clubReservationLoading$ | async; else content">
-  <app-loader [message]="'Cargando reservas'"></app-loader>
-</div>
-
-<ng-template #content>
-  <div *ngIf="reservations$ | async as reservations; else loading">
-    <div *ngIf="reservations.reservationsData.length > 0; else noReservations">
-      <div
-        class="overflow-x-auto overflow-y-auto max-h-64 sm:max-h-80 md:max-h-96 lg:max-h-[32rem] xl:max-h-[45rem] 2xl:max-h-[55rem]"
-      >
-        <table class="table-auto border-collapse border border-gray-300 w-full">
-          <thead>
-            <tr>
-              <th
-                *ngFor="
-                  let header of reservations.reservationHeaders;
-                  let i = index
-                "
-                class="border bg-white px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base sticky-header"
-                [ngClass]="{ 'sticky-header-column': i === 0 }"
-              >
-                {{ header }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let row of reservations.reservationsData; let i = index"
-              class="hover:bg-gray-100"
-              [ngClass]="{
-                'bg-gray-100': isPastTimes[i],
-                'bg-red-100': isCurrentTimeSlots[i],
-                'bg-white': !isPastTimes[i] && !isCurrentTimeSlots[i],
-                'text-gray-500': isPastTimes[i] && !isCurrentTimeSlots[i]
-              }"
-            >
-              <td
-                class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base sticky-column"
-                [ngClass]="{
-                  'bg-gray-100': isPastTimes[i],
-                  'bg-red-100': isCurrentTimeSlots[i],
-                  'bg-white': !isPastTimes[i] && !isCurrentTimeSlots[i],
-                  'text-gray-500': isPastTimes[i] && isCurrentTimeSlots[i]
-                }"
-              >
-                {{ row.reservations[0].description }}
-              </td>
-
-              <td
-                *ngFor="
-                  let reservation of row.reservations.slice(1);
-                  let y = index
-                "
-                class="border px-2 py-1 text-center text-sm md:px-4 md:py-2 md:text-base"
-                [ngClass]="
-                  getReservationClass(
-                    reservation,
-                    i,
-                    row.reservations[0].description
-                  )
-                "
-                draggable="true"
-                (click)="
-                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
-                  reservation.description === 'No disponible'
-                    ? null
-                    : onReservationClick(
-                        reservation,
-                        row.reservations[0].description || ''
-                      )
-                "
-                (mousedown)="
-                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
-                  reservation.description === 'No disponible'
-                    ? null
-                    : onMouseDown(reservation, row.reservations[0].description)
-                "
-                (mouseenter)="
-                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
-                  reservation.description === 'No disponible'
-                    ? null
-                    : onMouseEnter(reservation, row.reservations[0].description)
-                "
-                (mouseup)="
-                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
-                  reservation.description === 'No disponible'
-                    ? null
-                    : onMouseUp()
-                "
-                (dragstart)="
-                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
-                  reservation.description === 'No disponible'
-                    ? null
-                    : onDragStart(
-                        $event,
-                        reservation,
-                        row.reservations[0].description
-                      )
-                "
-                (dragover)="
-                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
-                  reservation.description === 'No disponible'
-                    ? null
-                    : onDragOver($event)
-                "
-                (drop)="
-                  (isPastTimes[i] && !isCurrentTimeSlots[i]) ||
-                  reservation.description === 'No disponible'
-                    ? null
-                    : onDrop(
-                        $event,
-                        row.reservations[0].description,
-                        reservations.reservationHeaders[y + 1]
-                      )
-                "
-              >
-                {{ reservation.description }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+<div class="block md:flex md:flex-row-reverse">
+  <div
+    class="w-full my-5 md:w-1/3 md:my-0"
+    *ngIf="selectGeneralRankingStatus$ | async as ratings"
+  >
+    <div class="text-2xl md:text-4xl font-bold border-b-4 border-gray-300 mb-5">
+      Ranking general
     </div>
-    <ng-template #noReservations>
-      <div class="text-center text-gray-500">
-        No hay reservas pendientes por el día de hoy.
-      </div>
-    </ng-template>
+    <app-ranking-table [ratings]="ratings.ranking"></app-ranking-table>
   </div>
 
-  <ng-template #loading>
-    <app-loader [message]="'Cargando reservas'"></app-loader>
-  </ng-template>
-
-  <div *ngIf="error" class="text-center text-red-500">
-    Error al cargar las reservas. Por favor, inténtelo de nuevo más tarde.
+  <div class="w-full my-5 md:w-2/3 md:my-0">
+    <app-result-short-section
+      [matchToShow]="matches"
+      [title]="'Partidos publicados'"
+      [canConfirm]="false"
+    ></app-result-short-section>
   </div>
-</ng-template>
-
-<style>
-  th.sticky-header {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-
-  td.sticky-column {
-    position: sticky;
-    left: 0;
-    z-index: 5;
-  }
-
-  td.sticky-header-column {
-    position: sticky;
-    left: 0;
-    top: 0;
-    z-index: 15; /* Mayor para la intersección de primera fila y columna */
-  }
-  td.bg-green-300 {
-    background-color: #d4f5d4; /* Color de selección */
-  }
-</style>
+</div>

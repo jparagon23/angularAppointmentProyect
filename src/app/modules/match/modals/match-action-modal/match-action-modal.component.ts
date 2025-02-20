@@ -29,7 +29,6 @@ export class MatchActionModalComponent {
 
   ngOnInit(): void {
     this.matchId = this.getMatchId(this.data);
-    console.log(this.matchId);
 
     // Obtener el match y asignarlo
     this.userMatches$.subscribe((matches) => {

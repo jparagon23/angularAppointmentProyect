@@ -7,7 +7,7 @@ import { selectGetUserMatchesStatus } from 'src/app/state/selectors/event.select
   templateUrl: './matches-info-page.component.html',
 })
 export class MatchesInfoPageComponent implements OnChanges {
-  @Input() matchType: 'SINGLES' | 'DOUBLES' = 'SINGLES';
+  @Input() matchType: string = 'SINGLES';
   matches: any[] = [];
 
   selectGetUserMatchesStatus$ = this.store.select(selectGetUserMatchesStatus);
@@ -22,14 +22,12 @@ export class MatchesInfoPageComponent implements OnChanges {
   }
 
   private updateMatches(): void {
-    console.log('Updating matches for matchType:', this.matchType);
     this.selectGetUserMatchesStatus$.subscribe((matchesData) => {
       if (matchesData.userMatch) {
         // Filtrar los partidos según el tipo de partido (SINGLES o DOUBLES)
         this.matches = matchesData.userMatch.filter(
           (match) => match.matchType === this.matchType
         );
-        console.log('Filtered matches:', this.matches);
       }
     });
   }

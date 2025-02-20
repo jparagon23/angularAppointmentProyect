@@ -1,155 +1,100 @@
-<div>
-  <div class="mb-5" *ngIf="selectGetUserMatchesStatus$ | async as matchesData">
-    <div class="flex">
-      <div
-        class="text-2xl md:text-4xl font-bold border-b-4 border-gray-300 mb-5"
-      >
-        Últimos resultados
-      </div>
-      <div class="tabs flex justify-center mb-6">
-        <button
-          [ngClass]="{
-            'bg-blue-600 text-white': matchType === 'SINGLES',
-            'bg-gray-200 text-gray-600': matchType !== 'SINGLES'
-          }"
-          class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
-          (click)="selectMatchTab('SINGLES')"
-        >
-          Sencillos
-        </button>
-        <button
-          [ngClass]="{
-            'bg-blue-600 text-white': matchType === 'DOUBLES',
-            'bg-gray-200 text-gray-600': matchType !== 'DOUBLES'
-          }"
-          class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
-          (click)="selectMatchTab('DOUBLES')"
-        >
-          Dobles
-        </button>
-      </div>
+<div class="block md:flex md:flex-row-reverse">
+  <!-- RANKING -->
+  <div
+    class="w-full my-5 md:w-1/3 md:my-0"
+    *ngIf="selectGeneralRankingStatus$ | async as ratings"
+  >
+    <div class="text-2xl md:text-4xl font-bold border-b-4 border-gray-300 mb-5">
+      Ranking general
     </div>
-    <!-- Condición para verificar si no hay partidos -->
-    <div
-      *ngIf="confirmedMatches.length === 0 && pendingMatches.length === 0"
-      class="text-center text-gray-500 mt-5 md:mt-10"
-    >
-      No has publicado resultados
-    </div>
-
-    <div *ngIf="confirmedMatches.length > 0 || pendingMatches.length > 0">
-      <div *ngIf="pendingMatches.length > 0">
-        <div class="text-xl font-semibold text-gray-800 mb-4">
-          Partidos Pendientes por confirmar
-        </div>
-        <div class="flex flex-wrap justify-start gap-4">
-          <div
-            class="w-full sm:w-[200px] md:w-[450px]"
-            *ngFor="
-              let matchData of pendingMatches | slice : 0 : pendingSliceLimit
-            "
-          >
-            <app-match-result-card
-              [matchData]="matchData"
-              [userCanConfirm]="true"
-            ></app-match-result-card>
-          </div>
-        </div>
-
-        <!-- Mostrar solo si hay más resultados que el límite de slice -->
-        <div
-          class="mt-4 flex justify-center"
-          *ngIf="pendingMatches.length > pendingSliceLimit"
-        >
-          <a
-            href="#"
-            class="text-cyan-600 hover:text-cyan-800 font-semibold"
-            (click)="toggleResults($event, 'pending')"
-          >
-            {{
-              pendingSliceLimit < pendingMatches.length
-                ? "Ver más resultados"
-                : "Ver menos resultados"
-            }}
-          </a>
-        </div>
-      </div>
-
-      <!-- Sección de Partidos Confirmados -->
-      <div class="my-6">
-        <div class="text-xl font-semibold text-gray-800 mb-4">
-          Partidos Publicados
-        </div>
-        <div class="flex flex-wrap justify-start gap-4">
-          <div
-            class="w-full sm:w-auto md:w-[450px]"
-            *ngFor="
-              let matchData of confirmedMatches
-                | slice : 0 : confirmedSliceLimit
-            "
-          >
-            <app-match-result-card
-              [matchData]="matchData"
-            ></app-match-result-card>
-          </div>
-        </div>
-
-        <!-- Mostrar solo si hay más resultados que el límite de slice -->
-        <div
-          class="mt-4 flex justify-center"
-          *ngIf="confirmedMatches.length > confirmedSliceLimit"
-        >
-          <a
-            href="#"
-            class="text-cyan-600 hover:text-cyan-800 font-semibold"
-            (click)="toggleResults($event, 'confirmed')"
-          >
-            {{
-              confirmedSliceLimit < confirmedMatches.length
-                ? "Ver más resultados"
-                : "Ver menos resultados"
-            }}
-          </a>
-        </div>
-      </div>
-    </div>
+    <app-ranking-table [ratings]="ratings.ranking"></app-ranking-table>
   </div>
+  <!--  -->
+  <!-- PARTIDOS -->
+  <div class="w-full flex md:w-2/3">
+    <div
+      class="w-full mb-5"
+      *ngIf="selectGetUserMatchesStatus$ | async as matchesData"
+    >
+      <div>
+        <div
+          class="text-2xl md:text-4xl font-bold border-b-4 border-gray-300 mb-5"
+        >
+          Últimos resultados
+        </div>
 
-  <ng-container *ngIf="userReservations$ | async as reservations">
-    <ng-container *ngIf="reservations.length > 0">
-      <!-- Título fijo -->
+        <div class="flex items-center gap-2">
+          <div class="text-xl text-[#418622]">Mostrar:</div>
+          <app-tab-selector
+            [tabs]="[
+              { label: 'Sencillos', value: 'SINGLES' },
+              { label: 'Dobles', value: 'DOUBLES' }
+            ]"
+            [selectedTab]="matchType"
+            (tabChange)="selectMatchTab($event)"
+          ></app-tab-selector>
+        </div>
+      </div>
+      <!-- Condición para verificar si no hay partidos -->
       <div
-        class="text-2xl md:text-4xl font-bold border-b-4 border-gray-300 mb-5"
+        *ngIf="confirmedMatches.length === 0 && pendingMatches.length === 0"
+        class="text-center text-gray-500 mt-5 md:mt-10"
       >
-        Tus reservas
+        No has publicado resultados
       </div>
 
-      <!-- Si está cargando, muestra el loader, si no, muestra las reservas -->
-      <ng-container
-        *ngIf="loadingReservations$ | async; else reservationsContent"
-      >
-        <!-- Loader personalizado con Tailwind -->
-        <div class="flex justify-center items-center h-32 md:h-64">
-          <div
-            class="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-t-4 border-blue-500 border-solid"
-          ></div>
-        </div>
-      </ng-container>
+      <div *ngIf="confirmedMatches.length > 0 || pendingMatches.length > 0">
+        <app-result-short-section
+          [matchToShow]="pendingMatches"
+          [title]="'Partidos Pendientes por confirmar'"
+          [canConfirm]="true"
+        ></app-result-short-section>
 
-      <!-- Contenido de las reservas -->
-      <ng-template #reservationsContent>
-        <!-- Ajuste para que las tarjetas se acomoden dinámicamente en pantallas grandes -->
-        <div class="flex flex-wrap justify-start gap-4">
-          <div
-            *ngFor="let reservation of reservations"
-            class="w-full sm:w-auto md:w-[500px]"
-          >
-            <app-reservation-card
-              [reservation]="reservation"
-            ></app-reservation-card>
-          </div>
+        <!-- Sección de Partidos Confirmados -->
+
+        <app-result-short-section
+          [matchToShow]="confirmedMatches"
+          [title]="'Partidos Publicados'"
+        ></app-result-short-section>
+      </div>
+    </div>
+
+    <ng-container *ngIf="userReservations$ | async as reservations">
+      <ng-container *ngIf="reservations.length > 0">
+        <!-- Título fijo -->
+        <div
+          class="text-2xl md:text-4xl font-bold border-b-4 border-gray-300 mb-5"
+        >
+          Tus reservas
         </div>
-      </ng-template>
+
+        <!-- Si está cargando, muestra el loader, si no, muestra las reservas -->
+        <ng-container
+          *ngIf="loadingReservations$ | async; else reservationsContent"
+        >
+          <!-- Loader personalizado con Tailwind -->
+          <div class="flex justify-center items-center h-32 md:h-64">
+            <div
+              class="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-t-4 border-blue-500 border-solid"
+            ></div>
+          </div>
+        </ng-container>
+
+        <!-- Contenido de las reservas -->
+        <ng-template #reservationsContent>
+          <!-- Ajuste para que las tarjetas se acomoden dinámicamente en pantallas grandes -->
+          <div class="flex flex-wrap justify-start gap-4">
+            <div
+              *ngFor="let reservation of reservations"
+              class="w-full sm:w-auto md:w-[500px]"
+            >
+              <app-reservation-card
+                [reservation]="reservation"
+              ></app-reservation-card>
+            </div>
+          </div>
+        </ng-template>
+      </ng-container>
     </ng-container>
-  </ng-container>
+  </div>
 </div>

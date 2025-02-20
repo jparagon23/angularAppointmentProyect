@@ -10,6 +10,7 @@ import { MatchActionModalComponent } from './modals/match-action-modal/match-act
 import { MatchesPageComponent } from './pages/matches-page/matches-page.component';
 import { MatchesInfoPageComponent } from './pages/matches-info-page/matches-info-page.component';
 import { MatchesStatsPageComponent } from './pages/matches-stats-page/matches-stats-page.component';
+import { ResultShortSectionComponent } from './components/result-short-section/result-short-section.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,9 @@ import { MatchesStatsPageComponent } from './pages/matches-stats-page/matches-st
     MatchesPageComponent,
     MatchesInfoPageComponent,
     MatchesStatsPageComponent,
+    ResultShortSectionComponent,
   ],
   imports: [CommonModule, FormsModule, SharedModule, MatDialogModule],
+  exports: [ResultShortSectionComponent],
 })
 export class MatchModule {}

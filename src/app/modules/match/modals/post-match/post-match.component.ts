@@ -55,7 +55,7 @@ export class PostMatchComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.matchDate = new Date().toISOString().split('T')[0];
+    this.matchDate = this.formattedToday;
     this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user) {
         this.user = user;
@@ -162,8 +162,6 @@ export class PostMatchComponent implements OnInit, OnDestroy {
     this.setResults.winner
       ? (this.winner = this.setResults.winner)
       : (this.winner = null);
-    console.log('Resultados recibidos:', this.setResults);
-    console.log('Ganador:', this.winner);
   }
 
   updateWinnerIds(): void {

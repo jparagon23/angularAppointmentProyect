@@ -1,62 +1,45 @@
 <div class="w-full">
   <!-- Título principal -->
-  <div class="flex">
+  <div class="mt-4">
     <div class="text-2xl md:text-4xl font-bold border-b-4 border-gray-300 mb-5">
       Partidos
     </div>
 
-    <div class="tabs flex justify-center mb-6">
-      <button
-        [ngClass]="{
-          'bg-blue-600 text-white': matchType === 'SINGLES',
-          'bg-gray-200 text-gray-600': matchType !== 'SINGLES'
-        }"
-        class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
-        (click)="selectMatchTab('SINGLES')"
-      >
-        Sencillos
-      </button>
-      <button
-        [ngClass]="{
-          'bg-blue-600 text-white': matchType === 'DOUBLES',
-          'bg-gray-200 text-gray-600': matchType !== 'DOUBLES'
-        }"
-        class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
-        (click)="selectMatchTab('DOUBLES')"
-      >
-        Dobles
-      </button>
+    <div>
+      <div class="flex items-center gap-2">
+        <div class="text-xl text-[#418622]">Mostrar:</div>
+        <app-tab-selector
+          [tabs]="[
+            { label: 'Sencillos', value: 'SINGLES' },
+            { label: 'Dobles', value: 'DOUBLES' }
+          ]"
+          [selectedTab]="matchType"
+          (tabChange)="selectMatchTab($event)"
+        ></app-tab-selector>
+      </div>
     </div>
   </div>
 
   <!-- Sección de pestañas para la navegación -->
-  <div class="tabs flex justify-center mb-6">
-    <button
-      [ngClass]="{
-        'bg-blue-600 text-white': selectedTab === 'matches',
-        'bg-gray-200 text-gray-600': selectedTab !== 'matches'
-      }"
-      class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
-      (click)="selectTab('matches')"
-    >
-      Resultados
-    </button>
-    <button
-      [ngClass]="{
-        'bg-blue-600 text-white': selectedTab === 'stats',
-        'bg-gray-200 text-gray-600': selectedTab !== 'stats'
-      }"
-      class="tab-btn px-4 py-2 mx-2 rounded-md focus:outline-none"
-      (click)="selectTab('stats')"
-    >
-      Estadisticas
-    </button>
+
+  <div class="w-full flex justify-center items-center mb-3">
+    <app-tab-selector
+      [tabs]="[
+        { label: 'Resultados', value: 'matches' },
+        { label: 'Estadísticas', value: 'stats' }
+      ]"
+      [selectedTab]="selectedTab"
+      (tabChange)="selectTab($event)"
+    ></app-tab-selector>
   </div>
 
   <div class="tab-content">
     <!-- Tab de Canchas -->
     <div *ngIf="selectedTab === 'matches'">
-      <app-matches-info-page [matchType]="matchType"></app-matches-info-page>
+      <app-matches-info-page
+        hes-info-page
+        [matchType]="matchType"
+      ></app-matches-info-page>
     </div>
     <!-- Tab de Disponibilidad -->
     <div *ngIf="selectedTab === 'stats'">

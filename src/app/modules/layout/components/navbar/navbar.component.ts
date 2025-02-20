@@ -156,12 +156,17 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  markAsRead(notificationId: number) {
-    console.log('Marcar como leída la notificación con ID:', notificationId);
+  markAsRead(notification: NotificationItem) {
+    this.store.dispatch(
+      markNotificationAsRead({ notificationId: notification.id })
+    );
   }
 
   markAllAsRead() {
-    console.log('Marcar todas las notificaciones como leídas');
+    this.notifications.forEach((notification) => {
+      if (notification.status !== 'READ') return;
+      this.markAsRead(notification);
+    });
   }
   closeNotifications() {
     // Cierra el menú de notificaciones
@@ -169,13 +174,12 @@ export class NavbarComponent implements OnInit {
   }
 
   openNotificationModal(notification: NotificationItem) {
-    this.store.dispatch(
-      markNotificationAsRead({ notificationId: notification.id })
-    );
     if (
       notification.actionUrl !== null &&
       notification.type === 'MATCH_CONFIRMATION'
     ) {
+      this.markAsRead(notification);
+
       this.dialog.open(MatchConfirmationModalComponent, {
         data: notification,
       });
@@ -184,6 +188,8 @@ export class NavbarComponent implements OnInit {
       (notification.type === 'MATCH_CONFIRMED' ||
         notification.type === 'MATCH_REJECTED')
     ) {
+      this.markAsRead(notification);
+
       this.dialog.open(MatchActionModalComponent, {
         data: notification,
       });

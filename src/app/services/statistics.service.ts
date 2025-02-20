@@ -3,16 +3,15 @@ import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
 import { TokenService } from './token.service';
 import { Store } from '@ngrx/store';
-import { AppState } from '../state/app.state';
 import { selectUser } from '../state/selectors/users.selectors';
 import { environment } from 'src/environments/environment';
-import { NotificationItem } from '../models/notification/NotificationItem.model';
 import { Observable } from 'rxjs';
+import { RankingInfo } from '../models/events/RankingInfo.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class NotificationService {
+export class StatisticsService {
   private userId: number | undefined;
   private headers: HttpHeaders | undefined;
   private user!: User;
@@ -20,7 +19,7 @@ export class NotificationService {
   constructor(
     private readonly http: HttpClient,
     private readonly tokenService: TokenService,
-    private readonly store: Store<AppState>
+    private readonly store: Store<any>
   ) {
     // Subscribe to userId once, avoid multiple subscriptions
     this.store.select(selectUser).subscribe((user) => {
@@ -42,21 +41,10 @@ export class NotificationService {
     return this.headers;
   }
 
-  getUserNotifications(): Observable<NotificationItem[]> {
-    const url = `${environment.API_URL}/notifications/panel/user/${this.userId}`;
-    return this.http.get<NotificationItem[]>(url, {
+  getGeneralRanking(): Observable<RankingInfo[]> {
+    const url = `${environment.API_URL}/statistics/getGeneralRanking/${this.userId}`;
+    return this.http.get<RankingInfo[]>(url, {
       headers: this.setHeaders(),
     });
-  }
-
-  markNotificationAsRead(notificationId: number) {
-    const url = `${environment.API_URL}/notifications/${notificationId}/read`;
-    return this.http.patch(
-      url,
-      {},
-      {
-        headers: this.setHeaders(),
-      }
-    );
   }
 }

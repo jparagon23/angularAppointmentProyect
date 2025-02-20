@@ -6,6 +6,9 @@ import {
   deleteMatchResult,
   deleteMatchResultFailure,
   deleteMatchResultSuccess,
+  getRanking,
+  getRankingFailure,
+  getRankingSuccess,
   getUserMatches,
   getUserMatchesStats,
   getUserMatchesStatsFailure,
@@ -24,6 +27,7 @@ import {
 } from '../actions/event.actions';
 import { UserMatch } from 'src/app/models/events/UserMatch.model';
 import { UserMatchesStats } from 'src/app/models/events/UserMatchesStats.model';
+import { RankingInfo } from 'src/app/models/events/RankingInfo.model';
 
 export interface EventState {
   publishMatchResultLoading: boolean;
@@ -53,6 +57,11 @@ export interface EventState {
   userMatchesStats?: UserMatchesStats;
   lastUpdatedStats?: number;
 
+  getRankingLoading: boolean;
+  getRankingSuccess: boolean;
+  getRankingFailure: boolean;
+  ranking: RankingInfo[];
+
   //
 }
 
@@ -77,6 +86,11 @@ export const initialState: EventState = {
   getUserMatchesStatsFailure: false,
   userMatchesStats: undefined,
   lastUpdatedStats: Date.now(),
+
+  getRankingLoading: false,
+  getRankingSuccess: false,
+  getRankingFailure: false,
+  ranking: [],
 };
 
 export const matchReducer = createReducer(
@@ -191,5 +205,21 @@ export const matchReducer = createReducer(
     getUserMatchesStatsLoading: false,
     getUserMatchesStatsSuccess: false,
     getUserMatchesStatsFailure: false,
+  })),
+  on(getRanking, (state) => ({
+    ...state,
+    getRankingLoading: true,
+  })),
+  on(getRankingSuccess, (state, ranking) => ({
+    ...state,
+    getRankingLoading: false,
+    getRankingSuccess: true,
+    ranking: ranking.ranking,
+  })),
+  on(getRankingFailure, (state, { error }) => ({
+    ...state,
+    getRankingLoading: false,
+    getRankingFailure: true,
+    error: error,
   }))
 );

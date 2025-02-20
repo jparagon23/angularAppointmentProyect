@@ -7,6 +7,9 @@ import {
   deleteMatchResult,
   deleteMatchResultFailure,
   deleteMatchResultSuccess,
+  getRanking,
+  getRankingFailure,
+  getRankingSuccess,
   getUserMatches,
   getUserMatchesStats,
   getUserMatchesStatsFailure,
@@ -23,12 +26,14 @@ import {
 import { catchError, map, of, switchMap } from 'rxjs';
 import { MatchService } from 'src/app/services/match.service';
 import { loadUserNotifications } from '../actions/notification.actions';
+import { StatisticsService } from 'src/app/services/statistics.service';
 
 @Injectable()
 export class EventEffects {
   constructor(
     private readonly actions$: Actions,
-    private readonly matchService: MatchService
+    private readonly matchService: MatchService,
+    private readonly statisticsService: StatisticsService
   ) {}
 
   publishMatchResult$ = createEffect(() =>
@@ -127,6 +132,18 @@ export class EventEffects {
         this.matchService.getUserMatchesStats(matchType).pipe(
           map((stats) => getUserMatchesStatsSuccess({ stats })),
           catchError((error) => of(getUserMatchesStatsFailure({ error })))
+        )
+      )
+    )
+  );
+
+  getRanking$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getRanking),
+      switchMap(() =>
+        this.statisticsService.getGeneralRanking().pipe(
+          map((ranking) => getRankingSuccess({ ranking })),
+          catchError((error) => of(getRankingFailure({ error })))
         )
       )
     )
