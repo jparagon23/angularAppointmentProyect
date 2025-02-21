@@ -63,3 +63,13 @@ export const selectRankingState = createSelector(
     ranking: state.ranking,
   })
 );
+
+export const selectAdminPostedMatchesState = createSelector(
+  selectEventsFeature,
+  (state: EventState) => ({
+    loading: state.adminPostedMatchesLoading,
+    success: state.adminPostedMatchesSuccess,
+    failure: state.adminPostedMatchesFailure,
+    adminPostedMatches: state.adminPostedMatches,
+  })
+);

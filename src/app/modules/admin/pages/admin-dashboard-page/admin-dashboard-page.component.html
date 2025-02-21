@@ -9,9 +9,13 @@
     <app-ranking-table [ratings]="ratings.ranking"></app-ranking-table>
   </div>
 
-  <div class="w-full my-5 md:w-2/3 md:my-0">
+  <div
+    class="w-full my-5 md:w-2/3 md:my-0"
+    *ngIf="adminPostedMatchesState$ | async as state"
+  >
     <app-result-short-section
-      [matchToShow]="matches"
+      [matchToShow]="state.adminPostedMatches"
+      [isLoading]="state.loading"
       [title]="'Partidos publicados'"
       [canConfirm]="false"
     ></app-result-short-section>

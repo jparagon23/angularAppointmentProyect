@@ -16,6 +16,9 @@ import {
   getUserMatchesStatsSuccess,
   getUserMathcesFailure,
   getUserMathcesSuccess,
+  loadAdminPostedMatches,
+  loadAdminPostedMatchesFailure,
+  loadAdminPostedMatchesSuccess,
   publishMatchResult,
   publishMatchResultFailure,
   publishMatchResultSuccess,
@@ -23,17 +26,22 @@ import {
   rejectMatchResultFailure,
   rejectMatchResultSuccess,
 } from '../actions/event.actions';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { catchError, filter, map, of, switchMap, withLatestFrom } from 'rxjs';
 import { MatchService } from 'src/app/services/match.service';
 import { loadUserNotifications } from '../actions/notification.actions';
 import { StatisticsService } from 'src/app/services/statistics.service';
+import { select, Store } from '@ngrx/store';
+import { selectAdminPostedMatchesState } from '../selectors/event.selectors';
+import { selectUser } from '../selectors/users.selectors';
+import { CLUB_ADMIN_ROLE } from 'src/app/modules/shared/constants/Constants.constants';
 
 @Injectable()
 export class EventEffects {
   constructor(
     private readonly actions$: Actions,
     private readonly matchService: MatchService,
-    private readonly statisticsService: StatisticsService
+    private readonly statisticsService: StatisticsService,
+    private readonly store: Store<any>
   ) {}
 
   publishMatchResult$ = createEffect(() =>
@@ -146,6 +154,28 @@ export class EventEffects {
           catchError((error) => of(getRankingFailure({ error })))
         )
       )
+    )
+  );
+
+  loadPostedAdminMatches = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadAdminPostedMatches),
+      withLatestFrom(this.store.pipe(select(selectAdminPostedMatchesState))),
+      switchMap(() => {
+        return this.matchService.getAdminPostedMatches().pipe(
+          map((matches) => loadAdminPostedMatchesSuccess({ matches })),
+          catchError((error) => of(loadAdminPostedMatchesFailure({ error })))
+        );
+      })
+    )
+  );
+
+  loadPostedAdminMatchesAfterPostingAResult$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(publishMatchResultSuccess),
+      withLatestFrom(this.store.select(selectUser)),
+      filter(([_, user]) => user?.role === CLUB_ADMIN_ROLE),
+      map(() => loadAdminPostedMatches())
     )
   );
 }
