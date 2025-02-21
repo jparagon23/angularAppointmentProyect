@@ -4,12 +4,13 @@ import { UserMatch } from 'src/app/models/events/UserMatch.model';
 @Component({
   selector: 'app-result-short-section',
   templateUrl: './result-short-section.component.html',
-  styleUrls: ['./result-short-section.component.css'],
 })
 export class ResultShortSectionComponent {
   @Input() matchToShow: UserMatch[] = [];
   @Input() title: string = '';
   @Input() canConfirm: boolean = false;
+  @Input() isLoading: boolean = false;
+
   sliceLimit = 6;
   pendingSliceLimit = 6;
   initialLimit = 6;

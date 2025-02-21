@@ -1,6 +1,8 @@
+<app-loader *ngIf="isLoading"></app-loader>
+
 <div
   class="w-full bg-white shadow-lg rounded-lg overflow-hidden"
-  *ngIf="user$ | async as user"
+  *ngIf="!isLoading && (user$ | async) as user"
 >
   <table class="w-full">
     <thead class="bg-[#418622]">

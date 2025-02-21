@@ -17,6 +17,8 @@ export class MatchService {
   private headers: HttpHeaders | undefined;
   private user!: User;
 
+  private cachedMatches: UserMatch[] | null = null; // Cache variable
+
   constructor(
     private readonly http: HttpClient,
     private readonly tokenService: TokenService,

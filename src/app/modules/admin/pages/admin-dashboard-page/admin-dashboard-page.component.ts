@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-
-import { MatchService } from 'src/app/services/match.service';
 import { UserMatch } from 'src/app/models/events/UserMatch.model';
 import { Store } from '@ngrx/store';
-import { selectRankingState } from 'src/app/state/selectors/event.selectors';
+import {
+  selectAdminPostedMatchesState,
+  selectRankingState,
+} from 'src/app/state/selectors/event.selectors';
+import { loadAdminPostedMatches } from 'src/app/state/actions/event.actions';
+import { first, take } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard-page',
@@ -12,14 +15,18 @@ import { selectRankingState } from 'src/app/state/selectors/event.selectors';
 export class AdminDashboardPageComponent implements OnInit {
   matches: UserMatch[] = [];
   selectGeneralRankingStatus$ = this.store.select(selectRankingState);
-  ngOnInit(): void {
-    this.matchService.getAdminPostedMatches().subscribe((matches) => {
-      this.matches = matches;
-    });
-  }
+  adminPostedMatchesState$ = this.store.select(selectAdminPostedMatchesState);
 
-  constructor(
-    private readonly matchService: MatchService,
-    private readonly store: Store<any>
-  ) {}
+  constructor(private readonly store: Store<any>) {}
+
+  ngOnInit(): void {
+    this.adminPostedMatchesState$
+      .pipe(
+        first(
+          ({ adminPostedMatches }) =>
+            !adminPostedMatches || adminPostedMatches.length === 0
+        )
+      )
+      .subscribe(() => this.store.dispatch(loadAdminPostedMatches()));
+  }
 }
