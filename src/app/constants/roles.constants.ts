@@ -1,0 +1,3 @@
+export const CONS = 'CONS';
+export const ADMIN = 'ADMIN';
+// ...otras constantes de roles si es necesario...

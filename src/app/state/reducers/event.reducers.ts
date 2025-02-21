@@ -15,6 +15,9 @@ import {
   getUserMatchesStatsSuccess,
   getUserMathcesFailure,
   getUserMathcesSuccess,
+  loadAdminPostedMatches,
+  loadAdminPostedMatchesFailure,
+  loadAdminPostedMatchesSuccess,
   publishMatchResult,
   publishMatchResultFailure,
   publishMatchResultSuccess,
@@ -62,6 +65,11 @@ export interface EventState {
   getRankingFailure: boolean;
   ranking: RankingInfo[];
 
+  adminPostedMatches: UserMatch[];
+  adminPostedMatchesLoading: boolean;
+  adminPostedMatchesSuccess: boolean;
+  adminPostedMatchesFailure: boolean;
+
   //
 }
 
@@ -91,6 +99,11 @@ export const initialState: EventState = {
   getRankingSuccess: false,
   getRankingFailure: false,
   ranking: [],
+
+  adminPostedMatches: [],
+  adminPostedMatchesLoading: false,
+  adminPostedMatchesSuccess: false,
+  adminPostedMatchesFailure: false,
 };
 
 export const matchReducer = createReducer(
@@ -220,6 +233,25 @@ export const matchReducer = createReducer(
     ...state,
     getRankingLoading: false,
     getRankingFailure: true,
+    error: error,
+  })),
+  on(loadAdminPostedMatches, (state) => ({
+    ...state,
+    adminPostedMatchesLoading: true,
+  })),
+  on(
+    loadAdminPostedMatchesSuccess,
+    (state: EventState, { matches }: { matches: UserMatch[] }) => ({
+      ...state,
+      adminPostedMatchesLoading: false,
+      adminPostedMatchesSuccess: true,
+      adminPostedMatches: matches,
+    })
+  ),
+  on(loadAdminPostedMatchesFailure, (state, { error }) => ({
+    ...state,
+    adminPostedMatchesLoading: false,
+    adminPostedMatchesFailure: true,
     error: error,
   }))
 );

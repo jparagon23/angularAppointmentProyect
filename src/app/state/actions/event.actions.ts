@@ -113,3 +113,20 @@ export const getRankingFailure = createAction(
   '[dashboard] Get Ranking Failure',
   props<{ error: any }>()
 );
+
+// Acción para solicitar los partidos (inicio de la carga)
+export const loadAdminPostedMatches = createAction(
+  '[admin-dashboard] Load Posted Matches'
+);
+
+// Acción para cargar los partidos exitosamente
+export const loadAdminPostedMatchesSuccess = createAction(
+  '[admin-dashboard] Load Posted MatchesSuccess',
+  props<{ matches: UserMatch[] }>()
+);
+
+// Acción en caso de error al cargar los partidos
+export const loadAdminPostedMatchesFailure = createAction(
+  '[admin-dashboard] Load Posted Matches Failure',
+  props<{ error: any }>()
+);
