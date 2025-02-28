@@ -8,9 +8,14 @@ export const selectUserProfileFeature = (state: AppState) =>
 export const selectUserProfileStatus = createSelector(
   selectUserProfileFeature,
   (state: UserProfileState) => ({
-    loading: state.loadingUserProfile,
-    success: state.userProfileSuccess,
-    failure: state.userProfileFailuere,
+    loadingUserProfile: state.loadingUserProfile,
+    userProfileSuccess: state.userProfileSuccess,
+    userProfileFailure: state.userProfileFailure,
     userProfile: state.userProfile,
+
+    loadingUserMatches: state.loadingUserMatches,
+    userMatchesSuccess: state.userMatchesSuccess,
+    userMatchesFailuere: state.userMatchesFailure,
+    userMatches: state.userMatches,
   })
 );

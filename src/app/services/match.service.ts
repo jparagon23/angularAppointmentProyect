@@ -51,8 +51,14 @@ export class MatchService {
     });
   }
 
-  getUserMatches(): Observable<UserMatch[]> {
-    const url = `${environment.API_URL}/match/user/${this.userId}`;
+  getUserMatches(userId?: number): Observable<UserMatch[]> {
+    const id = userId ?? this.userId;
+
+    if (id === undefined) {
+      throw new Error('User ID is not defined');
+    }
+
+    const url = `${environment.API_URL}/match/user/${id}`;
     return this.http.get<UserMatch[]>(url, {
       headers: this.setHeaders(),
     });

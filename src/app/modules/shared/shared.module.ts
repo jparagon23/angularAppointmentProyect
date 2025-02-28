@@ -27,8 +27,6 @@ import { StatusTranslatePipe } from './pipes/status-translate.pipe';
 import { MatchConfirmationModalComponent } from '../match/modals/match-confirmation-modal/match-confirmation-modal.component';
 import { RankingTableComponent } from './components/ranking-table/ranking-table.component';
 import { TabSelectorComponent } from './components/tab-selector/tab-selector.component';
-import { MatchModule } from '../match/match.module';
-import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +48,6 @@ import { UserProfileComponent } from './pages/user-profile/user-profile.componen
     MatchConfirmationModalComponent,
     RankingTableComponent,
     TabSelectorComponent,
-    UserProfileComponent,
   ],
 
   imports: [

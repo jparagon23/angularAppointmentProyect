@@ -68,11 +68,31 @@
   <div class="tab-content">
     <!-- Tab de Canchas -->
     <div *ngIf="selectedTab === 'matches'">
-      <div>hola</div>
+      <div class="mb-5" *ngIf="userProfile.userMatches; else noMatches">
+        <div class="flex flex-wrap justify-start gap-4">
+          <div
+            class="w-full sm:w-[200px] md:w-[450px]"
+            *ngFor="let match of userProfile.userMatches"
+          >
+            <app-match-result-card
+              [matchData]="match"
+              [userCanConfirm]="false"
+            ></app-match-result-card>
+          </div>
+        </div>
+      </div>
+      <ng-template #noMatches>
+        <div class="text-center text-gray-500">
+          <p>
+            Aún no has publicado un partido. ¡Anímate a publicar el primero
+            desde la opción 'Publicar Resultado'!
+          </p>
+        </div>
+      </ng-template>
     </div>
     <!-- Tab de Disponibilidad -->
     <div *ngIf="selectedTab === 'stats'">
-      <div>pues</div>
+      <!-- <app-matches-stats-page [matchType]="matchType"></app-matches-stats-page> -->
     </div>
   </div>
 </div>

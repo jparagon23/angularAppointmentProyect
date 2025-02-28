@@ -20,7 +20,7 @@ export const loadUserProfileFailure = createAction(
 
 export const loadUserProfileMatches = createAction(
   '[user-Profile-view] Load Profile Matches',
-  props<{ id: string }>()
+  props<{ id: number }>()
 );
 
 export const loadUserProfileMatchesSuccess = createAction(

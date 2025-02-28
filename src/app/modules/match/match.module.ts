@@ -11,6 +11,7 @@ import { MatchesPageComponent } from './pages/matches-page/matches-page.componen
 import { MatchesInfoPageComponent } from './pages/matches-info-page/matches-info-page.component';
 import { MatchesStatsPageComponent } from './pages/matches-stats-page/matches-stats-page.component';
 import { ResultShortSectionComponent } from './components/result-short-section/result-short-section.component';
+import { MatchResultCardComponent } from '../shared/components/match-result-card/match-result-card.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,10 @@ import { ResultShortSectionComponent } from './components/result-short-section/r
     ResultShortSectionComponent,
   ],
   imports: [CommonModule, FormsModule, SharedModule, MatDialogModule],
-  exports: [ResultShortSectionComponent],
+  exports: [
+    ResultShortSectionComponent,
+    MatchResultCardComponent,
+    MatchesInfoPageComponent,
+  ],
 })
 export class MatchModule {}

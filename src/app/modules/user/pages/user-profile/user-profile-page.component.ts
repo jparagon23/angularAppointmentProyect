@@ -2,12 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/state/app.state';
-import { loadUserProfile } from 'src/app/state/user-profile/user-profile.actions';
+import {
+  loadUserProfile,
+  loadUserProfileMatches,
+} from 'src/app/state/user-profile/user-profile.actions';
 import { selectUserProfileStatus } from 'src/app/state/user-profile/user-profile.selectors';
 
 @Component({
   selector: 'app-user-profile',
-  templateUrl: './user-profile.component.html',
+  templateUrl: './user-profile-page.component.html',
 })
 export class UserProfileComponent implements OnInit {
   selectedTab: string = 'matches';
@@ -26,6 +29,7 @@ export class UserProfileComponent implements OnInit {
       console.log('the user id is : ' + this.userId);
 
       this.store.dispatch(loadUserProfile({ id: this.userId }));
+      this.store.dispatch(loadUserProfileMatches({ id: this.userId }));
     });
   }
 
