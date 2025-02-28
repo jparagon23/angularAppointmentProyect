@@ -5,6 +5,7 @@ import { CourtsPageComponent } from './components/court-config-component/courts-
 import { ClubConfigurationPageComponent } from './pages/club-configuration-page/club-configuration-page.component';
 import { UserInformationPageComponent } from '../shared/pages/user-information-page/user-information-page.component';
 import { ClubReportsComponent } from './pages/club-reports/club-reports.component';
+import { UserProfileComponent } from '../shared/pages/user-profile/user-profile.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,10 @@ const routes: Routes = [
   {
     path: 'reports',
     component: ClubReportsComponent,
+  },
+  {
+    path: 'profile/:id',
+    component: UserProfileComponent,
   },
 ];
 
