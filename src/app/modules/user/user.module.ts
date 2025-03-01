@@ -8,5 +8,6 @@ import { MatchModule } from '../match/match.module';
   declarations: [UserProfileComponent],
   imports: [CommonModule, SharedModule, MatchModule],
   providers: [DatePipe],
+
 })
 export class UserModule {}
