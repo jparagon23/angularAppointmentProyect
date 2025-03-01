@@ -119,7 +119,7 @@
     <div *ngIf="selectedTab === 'matches'">
       <!-- Tab de Canchas -->
       <app-result-short-section
-        [matchToShow]="userProfile.userMatches"
+        [matchToShow]="confirmedMatches"
         [isLoading]="userProfile.loadingUserMatches"
         [canConfirm]="false"
         [showWhenEmpty]="true"
