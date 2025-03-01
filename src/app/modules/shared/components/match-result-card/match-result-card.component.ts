@@ -10,9 +10,10 @@ import {
 } from 'src/app/state/actions/event.actions';
 import Swal from 'sweetalert2';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
-import { Observable, Subject, Subscription, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { AppState } from 'src/app/state/app.state';
 import { selectMatchResultActionStatus } from 'src/app/state/selectors/event.selectors';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-match-result-card',
@@ -32,7 +33,11 @@ export class MatchResultCardComponent implements OnInit, OnDestroy {
 
   userId!: number;
 
-  constructor(private readonly store: Store<AppState>) {}
+  constructor(
+    private readonly store: Store<AppState>,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
@@ -141,5 +146,14 @@ export class MatchResultCardComponent implements OnInit, OnDestroy {
         );
       }
     });
+  }
+
+  onUserClick(userId: number): void {
+    // Detectamos si la URL actual tiene "admin" o "user"
+    const path = this.route.snapshot.url.map((segment) => segment.path);
+    const basePath = path.includes('admin') ? 'admin' : 'user';
+
+    // Redirigir dinámicamente
+    this.router.navigateByUrl(`/home/${basePath}/profile/${userId}`);
   }
 }

@@ -24,6 +24,6 @@ import { ResultShortSectionComponent } from './components/result-short-section/r
     ResultShortSectionComponent,
   ],
   imports: [CommonModule, FormsModule, SharedModule, MatDialogModule],
-  exports: [ResultShortSectionComponent],
+  exports: [ResultShortSectionComponent, MatchesInfoPageComponent],
 })
 export class MatchModule {}

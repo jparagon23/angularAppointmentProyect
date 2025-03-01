@@ -1,6 +1,14 @@
 <!-- Loader while data is loading -->
 <app-loader *ngIf="isLoading"></app-loader>
 
+<!-- Mostrar mensaje si no hay partidos y la carga ha terminado -->
+<div
+  class="text-center text-gray-600 text-lg my-5"
+  *ngIf="!isLoading && matchToShow.length === 0"
+>
+  Por el momento no hay partidos para mostrar.
+</div>
+
 <!-- Main content when data is loaded -->
 <div class="my-5" *ngIf="!isLoading && matchToShow.length > 0">
   <div class="text-xl font-semibold text-gray-800 mb-4">
@@ -8,7 +16,7 @@
   </div>
   <div class="flex flex-wrap justify-start gap-4">
     <div
-      class="w-full sm:w-[200px] md:w-[450px]"
+      class="w-full sm:w-[200px] md:w-[350px]"
       *ngFor="let matchData of matchToShow | slice : 0 : pendingSliceLimit"
     >
       <app-match-result-card

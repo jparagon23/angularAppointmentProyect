@@ -6,7 +6,7 @@ import { selectUser } from '../state/selectors/users.selectors';
 import { User } from '../models/user.model';
 import { ClubUser } from '../models/clubUsers.model';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -43,5 +43,12 @@ export class UserService {
   updateUser(user: Partial<User>): Observable<User> {
     const url = `${environment.API_URL}/user/${this.user.id}`;
     return this.http.put<User>(url, user, { headers: this.setHeaders() });
+  }
+
+  getUserById(id: number): Observable<User> {
+    const url = `${environment.API_URL}/user/${id}`;
+    return this.http
+      .get<{ data: User[] }>(url, { headers: this.setHeaders() })
+      .pipe(map((response) => response.data?.[0]));
   }
 }

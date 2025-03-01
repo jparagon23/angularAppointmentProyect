@@ -148,10 +148,10 @@ export class NavbarComponent implements OnInit {
   redirectToUserInformation() {
     this.user$.subscribe((user) => {
       if (user.role === 2) {
-        this.router.navigate(['home/admin/user-information']);
+        this.router.navigate(['home/admin/profile/' + user.id]);
       }
       if (user.role === 1) {
-        this.router.navigate(['home/user/user-information']);
+        this.router.navigate(['home/user/profile/' + user.id]);
       }
     });
   }
