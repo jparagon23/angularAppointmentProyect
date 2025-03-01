@@ -17,6 +17,10 @@ import {
   notificationReducer,
   NotificationState,
 } from './reducers/notification.reducers';
+import {
+  userProfileReducer,
+  UserProfileState,
+} from './user-profile/user-profile.reducers';
 
 export interface AppState {
   user: UserState;
@@ -29,6 +33,7 @@ export interface AppState {
   report: ReportState;
   events: EventState;
   notifications: NotificationState;
+  userProfileView: UserProfileState;
 }
 
 export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
@@ -42,4 +47,5 @@ export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
   report: reportReducer,
   events: matchReducer,
   notifications: notificationReducer,
+  userProfileView: userProfileReducer,
 };

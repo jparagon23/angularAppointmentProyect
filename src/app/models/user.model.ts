@@ -22,6 +22,8 @@ export interface User {
   profileImage: string | null;
   rating: number;
   ratingType: number;
+  userRanking: number;
+  lastMatchedConfirmed: string;
 }
 
 export interface UserData {

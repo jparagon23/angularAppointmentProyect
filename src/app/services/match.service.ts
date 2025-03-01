@@ -51,8 +51,14 @@ export class MatchService {
     });
   }
 
-  getUserMatches(): Observable<UserMatch[]> {
-    const url = `${environment.API_URL}/match/user/${this.userId}`;
+  getUserMatches(userId?: number): Observable<UserMatch[]> {
+    const id = userId ?? this.userId;
+
+    if (id === undefined) {
+      throw new Error('User ID is not defined');
+    }
+
+    const url = `${environment.API_URL}/match/user/${id}`;
     return this.http.get<UserMatch[]>(url, {
       headers: this.setHeaders(),
     });
@@ -83,8 +89,9 @@ export class MatchService {
     });
   }
 
-  getUserMatchesStats(matchType: string): Observable<any> {
-    const url = `${environment.API_URL}/match/statistics/${this.userId}/${matchType}`;
+  getUserMatchesStats(matchType: string, userId?: number): Observable<any> {
+    const id = userId ?? this.userId;
+    const url = `${environment.API_URL}/match/statistics/${id}/${matchType}`;
     return this.http.get<any>(url, {
       headers: this.setHeaders(),
     });

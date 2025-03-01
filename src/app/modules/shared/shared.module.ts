@@ -27,6 +27,7 @@ import { StatusTranslatePipe } from './pipes/status-translate.pipe';
 import { MatchConfirmationModalComponent } from '../match/modals/match-confirmation-modal/match-confirmation-modal.component';
 import { RankingTableComponent } from './components/ranking-table/ranking-table.component';
 import { TabSelectorComponent } from './components/tab-selector/tab-selector.component';
+import { StatsBoardComponent } from './components/stats-board/stats-board.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { TabSelectorComponent } from './components/tab-selector/tab-selector.com
     MatchConfirmationModalComponent,
     RankingTableComponent,
     TabSelectorComponent,
+    StatsBoardComponent,
   ],
 
   imports: [
@@ -79,6 +81,7 @@ import { TabSelectorComponent } from './components/tab-selector/tab-selector.com
     StatusTranslatePipe,
     RankingTableComponent,
     TabSelectorComponent,
+    StatsBoardComponent,
   ],
 })
 export class SharedModule {}
