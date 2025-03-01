@@ -137,10 +137,6 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['home/user/matches']);
   }
 
-  redirectTPerfil() {
-    this.router.navigate(['home/admin/profile/1']);
-  }
-
   redirectToConfigurationComponent() {
     this.router.navigate(['home/admin/configuration']);
   }

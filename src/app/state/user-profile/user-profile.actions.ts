@@ -35,7 +35,7 @@ export const loadUserProfileMatchesFailure = createAction(
 
 export const loadUserProfileStats = createAction(
   '[user-Profile-view] Load Profile Stats',
-  props<{ id: string }>()
+  props<{ id: number; matchType: string }>()
 );
 
 export const loadUserProfileStatsSuccess = createAction(
@@ -46,4 +46,8 @@ export const loadUserProfileStatsSuccess = createAction(
 export const loadUserProfileStatsFailure = createAction(
   '[user-Profile-view] Load Profile Stats Failure',
   props<{ error: any }>()
+);
+
+export const resetUserProfileState = createAction(
+  '[user-Profile-view] Reset Profile State'
 );

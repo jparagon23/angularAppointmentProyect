@@ -28,6 +28,7 @@ import { ReportEffects } from './state/effects/report.effects';
 import { EventEffects } from './state/effects/event.effects';
 import { NotificationEffect } from './state/effects/notification.effects';
 import { UserProfileEffects } from './state/user-profile/user-profile.effects';
+import { UserModule } from './modules/user/user.module';
 
 registerLocaleData(localeEs, 'es');
 
@@ -64,6 +65,7 @@ registerLocaleData(localeEs, 'es');
       UserProfileEffects,
     ]),
     SharedModule,
+    UserModule,
   ],
   providers: [
     {

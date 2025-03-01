@@ -10,6 +10,9 @@ import {
   loadUserProfileMatches,
   loadUserProfileMatchesFailure,
   loadUserProfileMatchesSuccess,
+  loadUserProfileStats,
+  loadUserProfileStatsFailure,
+  loadUserProfileStatsSuccess,
   loadUserProfileSuccess,
 } from './user-profile.actions';
 import { catchError, map, of, switchMap } from 'rxjs';
@@ -37,13 +40,25 @@ export class UserProfileEffects {
     )
   );
 
-  loadUserProfileMatches = createEffect(() =>
+  loadUserProfileMatches$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadUserProfileMatches),
       switchMap(({ id }) =>
         this.matchService.getUserMatches(id).pipe(
           map((matches) => loadUserProfileMatchesSuccess({ matches })),
           catchError((error) => of(loadUserProfileMatchesFailure({ error })))
+        )
+      )
+    )
+  );
+
+  LoadUserProfileStats$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadUserProfileStats),
+      switchMap(({ id, matchType }) =>
+        this.matchService.getUserMatchesStats(matchType, id).pipe(
+          map((stats) => loadUserProfileStatsSuccess({ stats })),
+          catchError((error) => of(loadUserProfileStatsFailure({ error })))
         )
       )
     )

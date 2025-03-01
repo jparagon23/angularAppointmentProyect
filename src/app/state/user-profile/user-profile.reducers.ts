@@ -8,7 +8,11 @@ import {
   loadUserProfileMatches,
   loadUserProfileMatchesFailure,
   loadUserProfileMatchesSuccess,
+  loadUserProfileStats,
+  loadUserProfileStatsFailure,
+  loadUserProfileStatsSuccess,
   loadUserProfileSuccess,
+  resetUserProfileState,
 } from './user-profile.actions';
 
 export interface UserProfileState {
@@ -16,16 +20,18 @@ export interface UserProfileState {
   loadingUserProfile: boolean;
   userProfileSuccess: boolean;
   userProfileFailure: boolean;
-
   error: any;
+
   userMatches: UserMatch[];
   loadingUserMatches: boolean;
   userMatchesSuccess: boolean;
   userMatchesFailure: boolean;
-
   errorUserMatches: any;
+
   userStats?: UserMatchesStats;
   loadingUserStats: boolean;
+  userStatsSuccess: boolean;
+  userStatsFailure: boolean;
   errorUserStats: any;
 }
 
@@ -40,10 +46,12 @@ export const initialState: UserProfileState = {
   loadingUserMatches: false,
   userMatchesSuccess: false,
   userMatchesFailure: false,
-
   errorUserMatches: undefined,
+
   userStats: undefined,
   loadingUserStats: false,
+  userStatsSuccess: false,
+  userStatsFailure: false,
   errorUserStats: undefined,
 };
 
@@ -80,5 +88,22 @@ export const userProfileReducer = createReducer(
     errorUserMatches: error,
     loadingUserMatches: false,
     userMatchesFailure: true,
-  }))
+  })),
+  on(loadUserProfileStats, (state: UserProfileState) => ({
+    ...state,
+    loadingUserStats: true,
+  })),
+  on(loadUserProfileStatsSuccess, (state: UserProfileState, { stats }) => ({
+    ...state,
+    userStats: stats,
+    loadingUserStats: false,
+    userStatsSuccess: true,
+  })),
+  on(loadUserProfileStatsFailure, (state: UserProfileState, { error }) => ({
+    ...state,
+    errorUserStats: error,
+    loadingUserStats: false,
+    userStatsFailure: true,
+  })),
+  on(resetUserProfileState, () => initialState)
 );

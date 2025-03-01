@@ -1,10 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {
+  Component,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { AppState } from 'src/app/state/app.state';
+import { selectUser } from 'src/app/state/selectors/users.selectors';
 import {
   loadUserProfile,
   loadUserProfileMatches,
+  loadUserProfileStats,
+  resetUserProfileState,
 } from 'src/app/state/user-profile/user-profile.actions';
 import { selectUserProfileStatus } from 'src/app/state/user-profile/user-profile.selectors';
 
@@ -12,28 +23,81 @@ import { selectUserProfileStatus } from 'src/app/state/user-profile/user-profile
   selector: 'app-user-profile',
   templateUrl: './user-profile-page.component.html',
 })
-export class UserProfileComponent implements OnInit {
+export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
   selectedTab: string = 'matches';
   userId!: number;
+  userApp$ = this.store.select(selectUser);
+  matchType: string = 'SINGLES';
+  showEditButton: boolean = false;
 
   userProfile$ = this.store.select(selectUserProfileStatus);
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly store: Store<AppState>
+    private readonly store: Store<AppState>,
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      this.userId = Number(params.get('id')); // Get the user ID from the route
-      console.log('the user id is : ' + this.userId);
+    this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      this.userId = Number(params.get('id'));
+      this.loadUserData();
 
-      this.store.dispatch(loadUserProfile({ id: this.userId }));
-      this.store.dispatch(loadUserProfileMatches({ id: this.userId }));
+      // Asegura que la página comience desde arriba
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
     });
+
+    // Comparar userApp con userId
+    this.userApp$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+      this.showEditButton = user?.id === this.userId;
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['matchType'] && !changes['matchType'].firstChange) {
+      this.store.dispatch(resetUserProfileState());
+      this.store.dispatch(
+        loadUserProfileStats({ id: this.userId, matchType: this.matchType })
+      );
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.store.dispatch(resetUserProfileState());
+  }
+
+  private loadUserData(): void {
+    this.store.dispatch(loadUserProfile({ id: this.userId }));
+    this.store.dispatch(loadUserProfileMatches({ id: this.userId }));
+    this.store.dispatch(
+      loadUserProfileStats({ id: this.userId, matchType: this.matchType })
+    );
   }
 
   selectTab(tab: string): void {
     this.selectedTab = tab;
+  }
+
+  selectMatchTab(tab: string): void {
+    this.matchType = tab;
+    this.store.dispatch(
+      loadUserProfileStats({ id: this.userId, matchType: this.matchType })
+    );
+  }
+
+  redirectToUserInformation(): void {
+    console.log('Redirecting to user information');
+
+    // Detectamos si la URL actual tiene "admin" o "user"
+    const path = this.route.snapshot.url.map((segment) => segment.path);
+    const basePath = path.includes('admin') ? 'admin' : 'user';
+
+    // Redirigir dinámicamente
+    this.router.navigateByUrl(`/home/${basePath}/user-information`);
   }
 }

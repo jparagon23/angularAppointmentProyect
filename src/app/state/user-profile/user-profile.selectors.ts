@@ -17,5 +17,10 @@ export const selectUserProfileStatus = createSelector(
     userMatchesSuccess: state.userMatchesSuccess,
     userMatchesFailuere: state.userMatchesFailure,
     userMatches: state.userMatches,
+
+    loadingUserStats: state.loadingUserStats,
+    userStatsSuccess: state.userStatsSuccess,
+    userStatsFailure: state.userStatsFailure,
+    userStats: state.userStats,
   })
 );

@@ -89,8 +89,9 @@ export class MatchService {
     });
   }
 
-  getUserMatchesStats(matchType: string): Observable<any> {
-    const url = `${environment.API_URL}/match/statistics/${this.userId}/${matchType}`;
+  getUserMatchesStats(matchType: string, userId?: number): Observable<any> {
+    const id = userId ?? this.userId;
+    const url = `${environment.API_URL}/match/statistics/${id}/${matchType}`;
     return this.http.get<any>(url, {
       headers: this.setHeaders(),
     });

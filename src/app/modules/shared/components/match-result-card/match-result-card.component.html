@@ -51,7 +51,8 @@
             class="w-6 h-6"
           />
           <span
-            class="text-base font-semibold"
+            class="text-base font-semibold cursor-pointer hover:underline"
+            (click)="onUserClick(matchData.winner.id)"
             [ngClass]="{
               'text-black': matchData.winner.id === userId,
               'text-gray-400': matchData.winner.id !== userId
@@ -67,7 +68,8 @@
             class="w-6 h-6"
           />
           <span
-            class="text-base font-semibold"
+            class="text-base font-semibold cursor-pointer hover:underline"
+            (click)="onUserClick(matchData.winner2.id)"
             [ngClass]="{
               'text-black': matchData.winner2.id === userId,
               'text-gray-400': matchData.winner2.id !== userId
@@ -120,7 +122,8 @@
             class="w-6 h-6"
           />
           <span
-            class="text-base font-semibold"
+            class="text-base font-semibold cursor-pointer hover:underline"
+            (click)="onUserClick(matchData.loser.id)"
             [ngClass]="{
               'text-black': matchData.loser.id === userId,
               'text-gray-400': matchData.loser.id !== userId
@@ -136,7 +139,8 @@
             class="w-6 h-6"
           />
           <span
-            class="text-base font-semibold"
+            class="text-base font-semibold cursor-pointer hover:underline"
+            (click)="onUserClick(matchData.loser2.id)"
             [ngClass]="{
               'text-black': matchData.loser2.id === userId,
               'text-gray-400': matchData.loser2.id !== userId

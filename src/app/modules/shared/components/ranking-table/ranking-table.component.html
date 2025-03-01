@@ -4,46 +4,56 @@
   class="w-full bg-white shadow-lg rounded-lg overflow-hidden"
   *ngIf="!isLoading && (user$ | async) as user"
 >
-  <table class="w-full">
-    <thead class="bg-[#418622]">
-      <tr class="text-center">
-        <th
-          class="px-6 py-3 text-xs font-medium text-white uppercase tracking-wider"
-        >
-          Posición
-        </th>
+  <!-- Contenedor para hacer scroll horizontal en móviles -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full w-full">
+      <thead class="bg-[#418622]">
+        <tr class="text-center text-white text-xs sm:text-sm">
+          <th
+            class="px-4 sm:px-6 py-2 sm:py-3 font-medium uppercase tracking-wider"
+          >
+            Posición
+          </th>
+          <th
+            class="px-4 sm:px-6 py-2 sm:py-3 font-medium uppercase tracking-wider"
+          >
+            Nombre
+          </th>
+          <th
+            class="px-4 sm:px-6 py-2 sm:py-3 font-medium uppercase tracking-wider"
+          >
+            Ranking
+          </th>
+        </tr>
+      </thead>
 
-        <th
-          class="px-6 py-3 text-xs font-medium text-white uppercase tracking-wider"
+      <tbody class="divide-y divide-gray-200 text-center">
+        <tr
+          *ngFor="let player of ratings"
+          [ngClass]="{ 'bg-yellow-200': player.userId === user.id }"
+          (click)="onRowClick(player.userId)"
+          class="cursor-pointer hover:bg-gray-100 active:bg-gray-200"
         >
-          Nombre
-        </th>
-        <th
-          class="px-6 py-3 text-xs font-medium text-white uppercase tracking-wider"
-        >
-          Ranking
-        </th>
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-200 text-center">
-      <tr
-        *ngFor="let player of ratings"
-        [ngClass]="{ 'bg-yellow-200': player.userId === user.id }"
-      >
-        <td
-          class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-        >
-          {{ player.position }}
-        </td>
+          <td
+            class="px-4 sm:px-6 py-2 sm:py-4 text-xs sm:text-sm font-medium text-gray-900"
+          >
+            {{ player.position }}
+          </td>
 
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-left">
-          {{ player.userName | titlecase }}
-          {{ player.userLastname | titlecase }}
-        </td>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          {{ player.rating.toFixed(2) }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
+          <td
+            class="px-4 sm:px-6 py-2 sm:py-4 text-xs sm:text-sm text-gray-500 text-left"
+          >
+            {{ player.userName | titlecase }}
+            {{ player.userLastname | titlecase }}
+          </td>
+
+          <td
+            class="px-4 sm:px-6 py-2 sm:py-4 text-xs sm:text-sm text-gray-500"
+          >
+            {{ player.rating.toFixed(2) }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
