@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import {
   Component,
   OnChanges,
@@ -29,6 +30,8 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
   userApp$ = this.store.select(selectUser);
   matchType: string = 'SINGLES';
   showEditButton: boolean = false;
+  initialDateParsed!: Date;
+  formattedLastMatchDate: string = '';
 
   userProfile$ = this.store.select(selectUserProfileStatus);
   private readonly destroy$ = new Subject<void>();
@@ -36,7 +39,8 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly store: Store<AppState>,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -54,6 +58,19 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
     this.userApp$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       this.showEditButton = user?.id === this.userId;
     });
+
+    // Suscribirse a userProfile$ y formatear la fecha
+    this.userProfile$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((userProfile) => {
+        const lastMatchDate = userProfile?.userProfile?.lastMatchedConfirmed;
+        if (lastMatchDate) {
+          const parsedDate = new Date(lastMatchDate);
+          this.formattedLastMatchDate =
+            this.datePipe.transform(parsedDate, 'MMMM yyyy', 'es-ES') ??
+            'Fecha no disponible';
+        }
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

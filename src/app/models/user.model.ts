@@ -23,6 +23,7 @@ export interface User {
   rating: number;
   ratingType: number;
   userRanking: number;
+  lastMatchedConfirmed: string;
 }
 
 export interface UserData {
