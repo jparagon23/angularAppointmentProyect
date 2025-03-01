@@ -82,9 +82,20 @@
       <div class="text-4xl md:text-5xl font-extrabold text-green-700 mt-1">
         {{ userProfile.userProfile?.rating }}
       </div>
-      <div class="text-gray-500 text-xs mt-1">
-        Desde
-        {{ formattedLastMatchDate | titlecase }}
+      <div>
+        <div
+          class="text-gray-500 text-xs mt-1"
+          *ngIf="userProfile.userProfile?.lastMatchedConfirmed"
+        >
+          Desde
+          {{ formattedLastMatchDate | titlecase }}
+        </div>
+        <div
+          class="text-gray-500 text-xs mt-1"
+          *ngIf="!userProfile.userProfile?.lastMatchedConfirmed"
+        >
+          Rating estimado
+        </div>
       </div>
     </div>
   </div>

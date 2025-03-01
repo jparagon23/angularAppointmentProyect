@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { UserMatch } from 'src/app/models/events/UserMatch.model';
 import { AppState } from 'src/app/state/app.state';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import {
@@ -32,6 +33,8 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
   showEditButton: boolean = false;
   initialDateParsed!: Date;
   formattedLastMatchDate: string = '';
+
+  userMatches: UserMatch[] = []; // Variable para almacenar los datos del perfil
 
   userProfile$ = this.store.select(selectUserProfileStatus);
   private readonly destroy$ = new Subject<void>();
@@ -70,6 +73,8 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
             this.datePipe.transform(parsedDate, 'MMMM yyyy', 'es-ES') ??
             'Fecha no disponible';
         }
+
+        this.userMatches = userProfile?.userMatches ?? [];
       });
   }
 
@@ -116,5 +121,12 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
 
     // Redirigir dinámicamente
     this.router.navigateByUrl(`/home/${basePath}/user-information`);
+  }
+
+  // ✅ Getter para los partidos confirmados
+  get confirmedMatches() {
+    return this.userMatches
+      ? this.userMatches.filter((match) => match.status === 'CONFIRMED') || []
+      : [];
   }
 }
