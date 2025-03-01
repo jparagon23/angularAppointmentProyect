@@ -4,7 +4,7 @@
 <!-- Mostrar mensaje si no hay partidos y la carga ha terminado -->
 <div
   class="text-center text-gray-600 text-lg my-5"
-  *ngIf="!isLoading && matchToShow.length === 0"
+  *ngIf="!isLoading && matchToShow.length === 0 && showWhenEmpty"
 >
   Por el momento no hay partidos para mostrar.
 </div>

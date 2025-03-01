@@ -10,6 +10,7 @@ export class ResultShortSectionComponent {
   @Input() title: string = '';
   @Input() canConfirm: boolean = false;
   @Input() isLoading: boolean = false;
+  @Input() showWhenEmpty: boolean = false;
 
   sliceLimit = 6;
   pendingSliceLimit = 6;
