@@ -7,6 +7,7 @@ import {
   faAngleDown,
   faUser,
   faBars,
+  faTimes,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { MatDialog } from '@angular/material/dialog';
@@ -16,7 +17,7 @@ import { filter, Observable } from 'rxjs';
 import { User } from 'src/app/models/user.model';
 import { Store } from '@ngrx/store';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
-import { distinctUntilChanged, map } from 'rxjs/operators';
+import { distinctUntilChanged, take } from 'rxjs/operators';
 import { logout } from 'src/app/state/actions/auth.actions';
 import { PostMatchComponent } from 'src/app/modules/match/modals/post-match/post-match.component';
 import { NotificationItem } from 'src/app/models/notification/NotificationItem.model';
@@ -42,6 +43,7 @@ export class NavbarComponent implements OnInit {
   faAngleDown = faAngleDown;
   faUser = faUser;
   faBars = faBars;
+  faTimes = faTimes;
 
   isOpenOverlayAvatar = false;
   isOpenMobileMenu = false;
@@ -145,13 +147,14 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['home/admin/reports']);
   }
 
-  redirectToUserInformation() {
-    this.user$.subscribe((user) => {
+  redirectToUserInformation(userId?: string) {
+    this.user$.pipe(take(1)).subscribe((user) => {
+      const id = Number(userId ?? user.id); // Si viene un userId, úsalo; si no, usa el del usuario actual y conviértelo a número
+
       if (user.role === 2) {
-        this.router.navigate(['home/admin/profile/' + user.id]);
-      }
-      if (user.role === 1) {
-        this.router.navigate(['home/user/profile/' + user.id]);
+        this.router.navigate(['home/admin/profile', id]);
+      } else if (user.role === 1) {
+        this.router.navigate(['home/user/profile', id]);
       }
     });
   }

@@ -1,13 +1,24 @@
-<div class="mb-4 sm:mb-6">
-  <div class="flex items-center border border-gray-300 rounded-md p-2">
-    <input
-      id="user"
-      type="text"
-      placeholder="Empieza a escribir"
-      class="outline-none flex-grow text-gray-700 text-sm sm:text-base"
-      [formControl]="userControl"
-      [matAutocomplete]="auto"
-    />
+<div class="h-full w-full">
+  <div class="flex items-center rounded-md p-2">
+    <div class="w-full">
+      <fa-icon
+        [icon]="faSearch"
+        class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+        *ngIf="showIcon"
+      ></fa-icon>
+
+      <input
+        id="user"
+        type="text"
+        [placeholder]="message"
+        [ngClass]="{
+          'pl-7': showIcon,
+          'outline-none border border-gray-300 rounded-md p-2 w-full text-gray-700 text-sm sm:text-base': true
+        }"
+        [formControl]="userControl"
+        [matAutocomplete]="auto"
+      />
+    </div>
 
     <mat-autocomplete
       #auto="matAutocomplete"

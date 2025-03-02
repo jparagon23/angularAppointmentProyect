@@ -30,20 +30,21 @@
           </app-button>
 
           <app-button
-            typeBtn="button"
-            color="navbar"
-            (click)="redirectToMatchPage()"
-          >
-            Partidos
-          </app-button>
-
-          <app-button
             *ngIf="false"
             typeBtn="button"
             color="navbar"
             (click)="OpenDialog()"
           >
             Crear Reserva
+          </app-button>
+
+          <app-button
+            typeBtn="button"
+            color="navbar"
+            class="hidden sm:flex"
+            (click)="redirectToMatchPage()"
+          >
+            Partidos
           </app-button>
           <app-button
             typeBtn="button"
@@ -52,6 +53,19 @@
           >
             Publicar resultado
           </app-button>
+
+          <div
+            class="relative flex items-center w-full sm:w-[500px] lg:w-[500px]"
+          >
+            <app-user-search-list
+              (userReturn)="redirectToUserInformation($event?.userId)"
+              [allowCreateUser]="false"
+              [filterUserStatus]="[2]"
+              [message]="'Buscar usuario'"
+              [showIcon]="true"
+              class="w-full"
+            ></app-user-search-list>
+          </div>
 
           <!-- Botón de menú hamburguesa para móviles -->
           <div class="sm:hidden mt-2">
@@ -132,6 +146,13 @@
       *ngIf="isOpenMobileMenu"
       class="flex flex-col sm:hidden space-y-2 mt-3"
     >
+      <app-button
+        typeBtn="button"
+        color="navbar"
+        (click)="redirectToMatchPage()"
+      >
+        Partidos
+      </app-button>
       <app-button
         typeBtn="button"
         color="navbar"
