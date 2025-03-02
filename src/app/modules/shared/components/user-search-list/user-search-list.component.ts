@@ -22,6 +22,7 @@ import {
 } from 'src/app/state/selectors/club.selectors';
 import { CreateLightUserModalComponent } from '../../../admin/modals/create-light-user-modal/create-light-user-modal.component';
 import { UserListReturn } from 'src/app/models/UserListReturn.model';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-user-search-list',
@@ -31,6 +32,9 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
   @Output() userReturn = new EventEmitter<UserListReturn | null>();
   @Input() allowCreateUser = true;
   @Input() filterUserStatus = [2, 7]; // Default filter for roles 2 and 7.
+  @Input() message: string = 'Empieza a escribir';
+  @Input() showIcon: boolean = false;
+  faSearch = faSearch;
 
   loadingUsers$ = this.store.select(selectLoadingClubUsers);
   filteredUsers$ = this.store.select(selectClubUsers).pipe(
@@ -87,6 +91,8 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
       profileImage: this.selectedUser?.profileImage ?? '',
       lightUser: this.selectedUser?.userId ? null : this.lightUser,
     });
+
+    this.userControl.setValue(''); // 🔹 Limpiar el input después de seleccionar un usuario
   }
 
   displayUserName(user?: ClubUser): string {
