@@ -44,8 +44,17 @@ export class StatsBoardComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['userStats']) {
+    if (changes['userStats'] && changes['userStats'].currentValue) {
       console.log('ngOnChanges:', changes['userStats'].currentValue);
+      this.matchHistory = this.userStats?.matchHistory ?? [];
+
+      if (this.chart) {
+        this.chart.destroy(); // Destruir el gráfico anterior antes de crear uno nuevo
+      }
+
+      setTimeout(() => {
+        this.createChart();
+      }, 0);
     }
   }
 
