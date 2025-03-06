@@ -127,8 +127,6 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   redirectToUserInformation(): void {
-    console.log('Redirecting to user information');
-
     // Detectamos si la URL actual tiene "admin" o "user"
     const path = this.route.snapshot.url.map((segment) => segment.path);
     const basePath = path.includes('admin') ? 'admin' : 'user';

@@ -1,5 +1,8 @@
 import { createAction, props } from '@ngrx/store';
-import { RankingInfo } from 'src/app/models/events/RankingInfo.model';
+import {
+  GeneralRanking,
+  RankingInfo,
+} from 'src/app/models/events/RankingInfo.model';
 import { UserMatch } from 'src/app/models/events/UserMatch.model';
 import { UserMatchesStats } from 'src/app/models/events/UserMatchesStats.model';
 import { MatchResultDto } from 'src/app/models/PostResult.model';
@@ -107,7 +110,7 @@ export const resetUserMatchesStatsState = createAction(
 export const getRanking = createAction('[dashboard] Get Ranking');
 export const getRankingSuccess = createAction(
   '[dashboard] Get Ranking Success',
-  props<{ ranking: RankingInfo[] }>()
+  props<{ ranking: GeneralRanking }>()
 );
 export const getRankingFailure = createAction(
   '[dashboard] Get Ranking Failure',

@@ -6,3 +6,8 @@ export interface RankingInfo {
   rating: number;
   userId: number;
 }
+
+export interface GeneralRanking {
+  singleRanking: RankingInfo[];
+  doublesRanking: RankingInfo[];
+}

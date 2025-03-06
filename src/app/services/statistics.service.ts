@@ -6,7 +6,10 @@ import { Store } from '@ngrx/store';
 import { selectUser } from '../state/selectors/users.selectors';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
-import { RankingInfo } from '../models/events/RankingInfo.model';
+import {
+  GeneralRanking,
+  RankingInfo,
+} from '../models/events/RankingInfo.model';
 
 @Injectable({
   providedIn: 'root',
@@ -41,9 +44,9 @@ export class StatisticsService {
     return this.headers;
   }
 
-  getGeneralRanking(): Observable<RankingInfo[]> {
+  getGeneralRanking(): Observable<GeneralRanking> {
     const url = `${environment.API_URL}/statistics/getGeneralRanking/${this.userId}`;
-    return this.http.get<RankingInfo[]>(url, {
+    return this.http.get<GeneralRanking>(url, {
       headers: this.setHeaders(),
     });
   }
