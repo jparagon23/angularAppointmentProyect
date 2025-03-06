@@ -66,6 +66,7 @@ export class StatsBoardComponent implements OnChanges, AfterViewInit {
     // **💥 Destruir el gráfico existente si ya hay uno creado**
     if (this.chart) {
       this.chart.destroy();
+
     }
 
     const scatterData = this.matchHistory.map((match) => ({
@@ -126,6 +127,108 @@ export class StatsBoardComponent implements OnChanges, AfterViewInit {
               ) - 86400000, // Resta 1 día en ms
           },
 
+          y: {
+            title: { display: true, text: 'Rating' },
+            beginAtZero: false,
+            suggestedMin:
+              Math.min(
+                ...this.matchHistory.map((m) => m.userRating),
+                ...this.matchHistory.map((m) => m.rivalRating)
+              ) - 0.5,
+            suggestedMax:
+              Math.max(
+                ...this.matchHistory.map((m) => m.userRating),
+                ...this.matchHistory.map((m) => m.rivalRating)
+              ) + 0.5,
+            ticks: {
+              stepSize: 0.25,
+            },
+          },
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (tooltipItem: any) => {
+                const match = this.matchHistory[tooltipItem.dataIndex];
+                return match.won
+                  ? ` Victoria -  ${match.rivalName}(${match.rivalRating}) ${match.result}`
+                  : ` Derrota -  ${match.rivalName}(${match.rivalRating}) ${match.result}`;
+              },
+            },
+          },
+          title: {
+            display: true,
+            text: 'Historial de Partidos (🟢 = Victoria, 🔴 = Derrota, ━━━ = Rating Usuario)',
+            font: { size: 14 },
+          },
+        },
+      },
+    });
+  }
+
+  createChart(): void {
+    if (!this.chartRef?.nativeElement) {
+      console.error('Canvas not found!');
+      return;
+    }
+
+    const ctx = this.chartRef.nativeElement.getContext('2d');
+    if (!ctx) {
+      console.error('Canvas context not available!');
+      return;
+    }
+
+    const scatterData = this.matchHistory.map((match) => ({
+      x: new Date(match.date).getTime(),
+      y: match.rivalRating,
+      backgroundColor: match.won ? 'green' : 'red',
+    }));
+
+    const scatterColors = this.matchHistory.map((match) =>
+      match.won ? 'green' : 'red'
+    );
+
+    const lineData = this.matchHistory.map((match) => ({
+      x: new Date(match.date).getTime(),
+      y: match.userRating,
+    }));
+
+    this.chart = new Chart(ctx, {
+      type: 'scatter' as ChartType,
+      data: {
+        datasets: [
+          {
+            label: 'Rival Rating',
+            type: 'scatter',
+            data: scatterData,
+            pointBackgroundColor: scatterColors,
+            borderColor: 'black',
+            borderWidth: 1,
+            pointRadius: 6,
+          },
+          {
+            label: 'User Rating',
+            type: 'line',
+            data: lineData,
+            borderColor: 'blue',
+            borderWidth: 2,
+            fill: false,
+            tension: 0.3,
+            pointRadius: 0,
+            pointHoverRadius: 0,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          x: {
+            type: 'time',
+            time: { unit: 'month' }, // Agrupar por mes en el eje X
+            title: { display: true },
+          },
           y: {
             title: { display: true, text: 'Rating' },
             beginAtZero: false,
