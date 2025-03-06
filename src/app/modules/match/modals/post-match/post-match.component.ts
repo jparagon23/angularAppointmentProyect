@@ -234,11 +234,7 @@ export class PostMatchComponent implements OnInit, OnDestroy {
     return !!this.player1 && !!this.player2 && !!this.setResults?.winner;
   }
 
-  selectMatchType(type: 'SINGLES' | 'DOUBLES'): void {
-    this.matchType = type;
-    // Restablecer los jugadores seleccionados si cambia el tipo de partido
-    if (type === 'SINGLES') {
-      // this.player3 = this.player4 = null;
-    }
+  selectMatchType(type: string): void {
+    this.matchType = type as 'SINGLES' | 'DOUBLES';
   }
 }

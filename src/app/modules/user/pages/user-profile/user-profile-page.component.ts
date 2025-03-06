@@ -1,4 +1,5 @@
 import { DatePipe } from '@angular/common';
+import { es } from 'date-fns/locale';
 import {
   Component,
   OnChanges,
@@ -8,6 +9,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { format } from 'date-fns-tz';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UserMatch } from 'src/app/models/events/UserMatch.model';
@@ -33,6 +35,7 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
   showEditButton: boolean = false;
   initialDateParsed!: Date;
   formattedLastMatchDate: string = '';
+  formattedLastDoublesMatchDate: string = '';
 
   userMatches: UserMatch[] = []; // Variable para almacenar los datos del perfil
 
@@ -66,12 +69,23 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
     this.userProfile$
       .pipe(takeUntil(this.destroy$))
       .subscribe((userProfile) => {
-        const lastMatchDate = userProfile?.userProfile?.lastMatchedConfirmed;
+        const lastMatchDate = userProfile?.userProfile?.lastMatchConfirmed;
+        const lastDoubleMatchDate =
+          userProfile?.userProfile?.lastDoubleMatchConfirmed;
+
         if (lastMatchDate) {
           const parsedDate = new Date(lastMatchDate);
-          this.formattedLastMatchDate =
-            this.datePipe.transform(parsedDate, 'MMMM yyyy', 'es-ES') ??
-            'Fecha no disponible';
+          this.formattedLastMatchDate = format(parsedDate, 'MMMM yyyy', {
+            locale: es,
+            timeZone: 'America/Bogota',
+          });
+        }
+        if (lastDoubleMatchDate) {
+          const parsedDate = new Date(lastDoubleMatchDate);
+          this.formattedLastDoublesMatchDate = format(parsedDate, 'MMMM yyyy', {
+            locale: es,
+            timeZone: 'America/Bogota',
+          });
         }
 
         this.userMatches = userProfile?.userMatches ?? [];
