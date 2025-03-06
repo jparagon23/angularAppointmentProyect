@@ -63,6 +63,11 @@ export class StatsBoardComponent implements OnChanges, AfterViewInit {
       return;
     }
 
+    // **💥 Destruir el gráfico existente si ya hay uno creado**
+    if (this.chart) {
+      this.chart.destroy();
+    }
+
     const scatterData = this.matchHistory.map((match) => ({
       x: new Date(match.date).getTime(),
       y: match.rivalRating,
@@ -110,9 +115,17 @@ export class StatsBoardComponent implements OnChanges, AfterViewInit {
         scales: {
           x: {
             type: 'time',
-            time: { unit: 'month' }, // Agrupar por mes en el eje X
-            title: { display: true },
+            time: { unit: 'week' },
+            title: { display: false, text: 'Fecha' },
+            ticks: {
+              autoSkip: false,
+            },
+            min:
+              Math.min(
+                ...this.matchHistory.map((m) => new Date(m.date).getTime())
+              ) - 86400000, // Resta 1 día en ms
           },
+
           y: {
             title: { display: true, text: 'Rating' },
             beginAtZero: false,
