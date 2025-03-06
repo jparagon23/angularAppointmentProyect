@@ -39,7 +39,6 @@ export class StatsBoardComponent implements OnChanges, AfterViewInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['userStats']?.currentValue) {
-      console.log('ngOnChanges:', changes['userStats'].currentValue);
       this.matchHistory = this.userStats?.matchHistory ?? [];
 
       if (this.chart) {
