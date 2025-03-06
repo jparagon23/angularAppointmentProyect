@@ -50,6 +50,7 @@
                 #{{ userProfile.userProfile?.userRanking }}
               </span>
             </div>
+
             <div
               class="text-base md:text-lg text-gray-600 font-medium mt-1"
               *ngIf="!userProfile.userProfile?.userRanking"
@@ -73,28 +74,57 @@
     </div>
 
     <!-- Sección de rating -->
-    <div
-      class="bg-white p-4 md:p-5 mt-4 md:mt-0 rounded-xl shadow-md border border-gray-300 flex flex-col items-center text-center"
-    >
-      <div class="text-gray-500 text-xs md:text-sm uppercase tracking-widest">
-        Rating
-      </div>
-      <div class="text-4xl md:text-5xl font-extrabold text-green-700 mt-1">
-        {{ userProfile.userProfile?.rating }}
-      </div>
-      <div>
-        <div
-          class="text-gray-500 text-xs mt-1"
-          *ngIf="userProfile.userProfile?.lastMatchedConfirmed"
-        >
-          Desde
-          {{ formattedLastMatchDate | titlecase }}
+    <div class="flex space-x-2">
+      <div
+        class="bg-white p-4 md:p-5 mt-4 md:mt-0 rounded-xl shadow-md border border-gray-300 flex flex-col items-center text-center"
+      >
+        <div class="text-gray-500 text-xs md:text-sm uppercase tracking-widest">
+          Rating
         </div>
-        <div
-          class="text-gray-500 text-xs mt-1"
-          *ngIf="!userProfile.userProfile?.lastMatchedConfirmed"
-        >
-          Rating estimado
+        <div class="text-4xl md:text-5xl font-extrabold text-green-700 mt-1">
+          {{ userProfile.userProfile?.rating }}
+        </div>
+        <div>
+          <div
+            class="text-gray-500 text-xs mt-1"
+            *ngIf="userProfile.userProfile?.lastMatchConfirmed"
+          >
+            Desde
+            {{ formattedLastMatchDate | titlecase }}
+          </div>
+          <div
+            class="text-gray-500 text-xs mt-1"
+            *ngIf="!userProfile.userProfile?.lastMatchConfirmed"
+          >
+            Rating estimado
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="bg-white p-4 md:p-5 mt-4 md:mt-0 rounded-xl shadow-md border border-gray-300 flex flex-col items-center text-center"
+        *ngIf="userProfile.userProfile?.doublesRating"
+      >
+        <div class="text-gray-500 text-xs md:text-sm uppercase tracking-widest">
+          Rating dobles
+        </div>
+        <div class="text-4xl md:text-5xl font-extrabold text-green-700 mt-1">
+          {{ userProfile.userProfile?.doublesRating }}
+        </div>
+        <div>
+          <div
+            class="text-gray-500 text-xs mt-1"
+            *ngIf="userProfile.userProfile?.lastDoubleMatchConfirmed"
+          >
+            Desde
+            {{ formattedLastDoublesMatchDate | titlecase }}
+          </div>
+          <div
+            class="text-gray-500 text-xs mt-1"
+            *ngIf="!userProfile.userProfile?.lastDoubleMatchConfirmed"
+          >
+            Rating estimado
+          </div>
         </div>
       </div>
     </div>
