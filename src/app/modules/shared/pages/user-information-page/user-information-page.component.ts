@@ -63,7 +63,7 @@ export class UserInformationPageComponent implements OnInit {
     this.user$.pipe(filter((user) => user !== null)).subscribe((user) => {
       this.userEditable = cloneDeep({
         ...user,
-        allowNotification: user!.allowNotification === 'T',
+        allowNotification: user?.allowNotification === 'T',
       });
 
       this.originalUser = { ...user }; // Crea una copia del objeto user
@@ -222,7 +222,7 @@ export class UserInformationPageComponent implements OnInit {
 
   onPhotoSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
+    if (input.files?.[0]) {
       const file = input.files[0];
 
       const reader = new FileReader();

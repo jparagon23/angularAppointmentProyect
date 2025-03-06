@@ -1,3 +1,12 @@
+export interface MatchHistory {
+  date: string; // Asegura que venga como "YYYY-MM-DD" desde Java
+  rivalRating: number;
+  userRating: number;
+  won: boolean;
+  rivalName: string;
+  result: string;
+}
+
 export interface UserMatchesStats {
   matches: {
     totalPlayed: number;
@@ -27,4 +36,5 @@ export interface UserMatchesStats {
       total: number;
     };
   };
+  matchHistory: MatchHistory[]; // ✅ Agregado para coincidir con Java
 }
