@@ -11,6 +11,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-stats-board',
@@ -33,7 +34,7 @@ export class StatsBoardComponent implements OnChanges, AfterViewInit {
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.createChart();
-    }, 0); // Asegura que el canvas esté renderizado antes de crear el gráfico
+    }, 0);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -42,13 +43,25 @@ export class StatsBoardComponent implements OnChanges, AfterViewInit {
       this.matchHistory = this.userStats?.matchHistory ?? [];
 
       if (this.chart) {
-        this.chart.destroy(); // Destruir el gráfico anterior antes de crear uno nuevo
+        this.chart.destroy();
       }
+
+      this.showLoader();
 
       setTimeout(() => {
         this.createChart();
+        Swal.close();
       }, 0);
     }
+  }
+
+  private showLoader(): void {
+    Swal.fire({
+      title: 'Cargando...',
+      text: 'Por favor espera mientras se cargan los datos.',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
   }
 
   createChart(): void {
