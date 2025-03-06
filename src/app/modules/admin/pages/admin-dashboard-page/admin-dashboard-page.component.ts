@@ -14,6 +14,7 @@ import { first, take } from 'rxjs';
 })
 export class AdminDashboardPageComponent implements OnInit {
   matches: UserMatch[] = [];
+  rankingTab: string = 'SINGLES';
   selectGeneralRankingStatus$ = this.store.select(selectRankingState);
   adminPostedMatchesState$ = this.store.select(selectAdminPostedMatchesState);
 

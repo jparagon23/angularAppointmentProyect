@@ -46,6 +46,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   selectGeneralRankingStatus$ = this.store.select(selectRankingState);
 
   matchType: string = 'SINGLES';
+
+  rankingTab: string = 'SINGLES';
   confirmedMatches: UserMatch[] = [];
   pendingMatches: UserMatch[] = [];
 

@@ -30,7 +30,10 @@ import {
 } from '../actions/event.actions';
 import { UserMatch } from 'src/app/models/events/UserMatch.model';
 import { UserMatchesStats } from 'src/app/models/events/UserMatchesStats.model';
-import { RankingInfo } from 'src/app/models/events/RankingInfo.model';
+import {
+  GeneralRanking,
+  RankingInfo,
+} from 'src/app/models/events/RankingInfo.model';
 
 export interface EventState {
   publishMatchResultLoading: boolean;
@@ -63,7 +66,7 @@ export interface EventState {
   getRankingLoading: boolean;
   getRankingSuccess: boolean;
   getRankingFailure: boolean;
-  ranking: RankingInfo[];
+  ranking: GeneralRanking;
 
   adminPostedMatches: UserMatch[];
   adminPostedMatchesLoading: boolean;
@@ -98,7 +101,10 @@ export const initialState: EventState = {
   getRankingLoading: false,
   getRankingSuccess: false,
   getRankingFailure: false,
-  ranking: [],
+  ranking: {
+    singleRanking: [],
+    doublesRanking: [],
+  },
 
   adminPostedMatches: [],
   adminPostedMatchesLoading: false,

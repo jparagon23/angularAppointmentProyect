@@ -9,7 +9,7 @@ import { selectUser } from 'src/app/state/selectors/users.selectors';
   templateUrl: './ranking-table.component.html',
 })
 export class RankingTableComponent implements OnInit {
-  @Input() ratings: RankingInfo[] = [];
+  @Input() ratings?: RankingInfo[] = [];
 
   user$ = this.store.select(selectUser);
   isLoading = true;

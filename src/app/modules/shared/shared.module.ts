@@ -28,6 +28,7 @@ import { MatchConfirmationModalComponent } from '../match/modals/match-confirmat
 import { RankingTableComponent } from './components/ranking-table/ranking-table.component';
 import { TabSelectorComponent } from './components/tab-selector/tab-selector.component';
 import { StatsBoardComponent } from './components/stats-board/stats-board.component';
+import { GeneralRankingComponent } from './components/general-ranking/general-ranking.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { StatsBoardComponent } from './components/stats-board/stats-board.compon
     RankingTableComponent,
     TabSelectorComponent,
     StatsBoardComponent,
+    GeneralRankingComponent,
   ],
 
   imports: [
@@ -82,6 +84,7 @@ import { StatsBoardComponent } from './components/stats-board/stats-board.compon
     RankingTableComponent,
     TabSelectorComponent,
     StatsBoardComponent,
+    GeneralRankingComponent,
   ],
 })
 export class SharedModule {}
