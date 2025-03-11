@@ -26,7 +26,7 @@ export class LoaderComponent implements OnInit, OnDestroy {
         }
 
         this.message = this.shuffledMessages[this.index];
-      }, 5000); // Cambia cada 5 segundos
+      }, 7000); // Cambia cada 5 segundos
     }
   }
 
