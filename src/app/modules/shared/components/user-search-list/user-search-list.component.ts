@@ -9,8 +9,8 @@ import {
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs';
-import { debounceTime, takeUntil, tap, map } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { debounceTime, takeUntil, tap, map, distinctUntilChanged, filter } from 'rxjs/operators';
 
 import { AppState } from 'src/app/state/app.state';
 import { ClubUser } from 'src/app/models/clubUsers.model';
@@ -35,6 +35,8 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
   @Input() message: string = 'Empieza a escribir';
   @Input() showIcon: boolean = false;
   faSearch = faSearch;
+
+  private userCache = new Map<string, ClubUser[]>();
 
   loadingUsers$ = this.store.select(selectLoadingClubUsers);
   filteredUsers$ = this.store.select(selectClubUsers).pipe(
@@ -62,25 +64,40 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
   private setupUserSearch(): void {
     this.userControl.valueChanges
       .pipe(
-        debounceTime(500),
-        tap((searchTerm) => {
+        debounceTime(400), // Lower debounce time for faster response
+        distinctUntilChanged(), // Ignore repeated searches
+        filter(searchTerm => !!searchTerm && searchTerm.length >= 3), // Prevent short or empty searches
+        tap(searchTerm => {
           this.queryCompleted = false;
-          this.searchUserIfNeeded(searchTerm);
+          this.searchUserIfNeeded(searchTerm); // No need to check length again
         }),
         takeUntil(this.destroy$)
       )
       .subscribe();
-
-    this.filteredUsers$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.queryCompleted = true; // Mark the query as completed
-    });
+  
+      this.filteredUsers$.pipe(
+        tap(users => {
+          const searchTerm = this.userControl.value;
+          if (searchTerm) {
+            this.userCache.set(searchTerm, users);
+          }
+        }),
+        takeUntil(this.destroy$)
+      ).subscribe();
+      
   }
-
-  private searchUserIfNeeded(searchTerm: string | null): void {
-    if (!this.selectedUser && searchTerm) {
+  
+  private searchUserIfNeeded(searchTerm: string): void {
+    if (this.selectedUser) return;
+  
+    if (this.userCache.has(searchTerm)) {
+      this.filteredUsers$ = of(this.userCache.get(searchTerm)!);
+      this.queryCompleted = true;
+    } else {
       this.store.dispatch(getClubUserByNameOrId({ nameOrId: searchTerm }));
     }
-  }
+  } 
+
 
   onUserSelected(user: ClubUser): void {
     this.selectedUser = user;
