@@ -98,11 +98,9 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
           switchMap(() => this.store.select(selectClubUsers).pipe(take(1))) // Obtiene los usuarios después de la carga
         )
         .subscribe(users => {
-          console.log('✅ Usuarios recibidos:', users);
           this.filteredUsers$ = of(users);
           this.queryCompleted = true;
         }, error => {
-          console.log('❌ Error en la búsqueda');
           this.queryCompleted = true;
         });
     }
