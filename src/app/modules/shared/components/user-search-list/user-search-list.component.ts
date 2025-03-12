@@ -9,8 +9,8 @@ import {
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { Subject } from 'rxjs';
-import { debounceTime, takeUntil, tap, map } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { debounceTime, takeUntil, tap, map, distinctUntilChanged, filter, take, switchMap } from 'rxjs/operators';
 
 import { AppState } from 'src/app/state/app.state';
 import { ClubUser } from 'src/app/models/clubUsers.model';
@@ -36,6 +36,8 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
   @Input() showIcon: boolean = false;
   faSearch = faSearch;
 
+  private userCache = new Map<string, ClubUser[]>();
+
   loadingUsers$ = this.store.select(selectLoadingClubUsers);
   filteredUsers$ = this.store.select(selectClubUsers).pipe(
     // Filter users based on the selected roles
@@ -60,40 +62,70 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
   }
 
   private setupUserSearch(): void {
-    this.userControl.valueChanges
-      .pipe(
-        debounceTime(500),
-        tap((searchTerm) => {
-          this.queryCompleted = false;
-          this.searchUserIfNeeded(searchTerm);
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
-
-    this.filteredUsers$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      this.queryCompleted = true; // Mark the query as completed
-    });
+    this.userControl.valueChanges.pipe(
+      tap(() => {
+        this.selectedUser = undefined; // Limpia la selección previa
+        this.queryCompleted = false; // Reinicia el estado de carga
+      }),
+      debounceTime(400),
+      distinctUntilChanged(),
+      filter(searchTerm => !!searchTerm && searchTerm.length >= 3),
+      tap(searchTerm => {
+        this.queryCompleted = false; // Muestra "Cargando..." mientras busca
+        this.searchUserIfNeeded(searchTerm);
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();    
   }
-
-  private searchUserIfNeeded(searchTerm: string | null): void {
-    if (!this.selectedUser && searchTerm) {
+  
+  
+  private searchUserIfNeeded(searchTerm: string): void {
+    if (this.selectedUser) return;
+  
+    this.queryCompleted = false;
+  
+    if (this.userCache.has(searchTerm)) {
+      this.filteredUsers$ = of(this.userCache.get(searchTerm)!);
+      setTimeout(() => (this.queryCompleted = true), 500);
+    } else {
       this.store.dispatch(getClubUserByNameOrId({ nameOrId: searchTerm }));
+  
+      this.store
+        .select(selectLoadingClubUsers)
+        .pipe(
+          filter(loading => !loading), // 🔹 Espera a que termine la carga
+          take(1),
+          switchMap(() => this.store.select(selectClubUsers).pipe(take(1))) // Obtiene los usuarios después de la carga
+        )
+        .subscribe(users => {
+          this.filteredUsers$ = of(users);
+          this.queryCompleted = true;
+        }, error => {
+          this.queryCompleted = true;
+        });
     }
   }
+  
+  
+  
+  
+  
+
 
   onUserSelected(user: ClubUser): void {
     this.selectedUser = user;
-
+  
     this.userReturn.emit({
       userId: this.selectedUser?.userId?.toString() ?? '',
       completeName: this.selectedUser?.completeName ?? '',
       profileImage: this.selectedUser?.profileImage ?? '',
       lightUser: this.selectedUser?.userId ? null : this.lightUser,
     });
-
-    this.userControl.setValue(''); // 🔹 Limpiar el input después de seleccionar un usuario
+  
+    // 🔹 Resetear correctamente el FormControl
+    this.userControl.setValue('', { emitEvent: false }); // Evita disparar valueChanges innecesariamente
   }
+  
 
   displayUserName(user?: ClubUser): string {
     return user?.completeName ?? '';
