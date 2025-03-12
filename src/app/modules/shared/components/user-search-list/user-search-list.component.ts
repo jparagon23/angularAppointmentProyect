@@ -10,7 +10,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { of, Subject } from 'rxjs';
-import { debounceTime, takeUntil, tap, map, distinctUntilChanged, filter } from 'rxjs/operators';
+import { debounceTime, takeUntil, tap, map, distinctUntilChanged, filter, take, switchMap } from 'rxjs/operators';
 
 import { AppState } from 'src/app/state/app.state';
 import { ClubUser } from 'src/app/models/clubUsers.model';
@@ -62,55 +62,72 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
   }
 
   private setupUserSearch(): void {
-    this.userControl.valueChanges
-      .pipe(
-        debounceTime(400), // Lower debounce time for faster response
-        distinctUntilChanged(), // Ignore repeated searches
-        filter(searchTerm => !!searchTerm && searchTerm.length >= 3), // Prevent short or empty searches
-        tap(searchTerm => {
-          this.queryCompleted = false;
-          this.searchUserIfNeeded(searchTerm); // No need to check length again
-        }),
-        takeUntil(this.destroy$)
-      )
-      .subscribe();
-  
-      this.filteredUsers$.pipe(
-        tap(users => {
-          const searchTerm = this.userControl.value;
-          if (searchTerm) {
-            this.userCache.set(searchTerm, users);
-          }
-        }),
-        takeUntil(this.destroy$)
-      ).subscribe();
-      
+    this.userControl.valueChanges.pipe(
+      tap(() => {
+        this.selectedUser = undefined; // Limpia la selección previa
+        this.queryCompleted = false; // Reinicia el estado de carga
+      }),
+      debounceTime(400),
+      distinctUntilChanged(),
+      filter(searchTerm => !!searchTerm && searchTerm.length >= 3),
+      tap(searchTerm => {
+        this.queryCompleted = false; // Muestra "Cargando..." mientras busca
+        this.searchUserIfNeeded(searchTerm);
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();    
   }
+  
   
   private searchUserIfNeeded(searchTerm: string): void {
     if (this.selectedUser) return;
   
+    this.queryCompleted = false;
+  
     if (this.userCache.has(searchTerm)) {
       this.filteredUsers$ = of(this.userCache.get(searchTerm)!);
-      this.queryCompleted = true;
+      setTimeout(() => (this.queryCompleted = true), 500);
     } else {
       this.store.dispatch(getClubUserByNameOrId({ nameOrId: searchTerm }));
+  
+      this.store
+        .select(selectLoadingClubUsers)
+        .pipe(
+          filter(loading => !loading), // 🔹 Espera a que termine la carga
+          take(1),
+          switchMap(() => this.store.select(selectClubUsers).pipe(take(1))) // Obtiene los usuarios después de la carga
+        )
+        .subscribe(users => {
+          console.log('✅ Usuarios recibidos:', users);
+          this.filteredUsers$ = of(users);
+          this.queryCompleted = true;
+        }, error => {
+          console.log('❌ Error en la búsqueda');
+          this.queryCompleted = true;
+        });
     }
-  } 
+  }
+  
+  
+  
+  
+  
 
 
   onUserSelected(user: ClubUser): void {
     this.selectedUser = user;
-
+  
     this.userReturn.emit({
       userId: this.selectedUser?.userId?.toString() ?? '',
       completeName: this.selectedUser?.completeName ?? '',
       profileImage: this.selectedUser?.profileImage ?? '',
       lightUser: this.selectedUser?.userId ? null : this.lightUser,
     });
-
-    this.userControl.setValue(''); // 🔹 Limpiar el input después de seleccionar un usuario
+  
+    // 🔹 Resetear correctamente el FormControl
+    this.userControl.setValue('', { emitEvent: false }); // Evita disparar valueChanges innecesariamente
   }
+  
 
   displayUserName(user?: ClubUser): string {
     return user?.completeName ?? '';

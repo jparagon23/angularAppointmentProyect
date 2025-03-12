@@ -1,6 +1,6 @@
 <div class="h-full w-full">
   <div class="flex items-center rounded-md p-2">
-    <div class="w-full">
+    <div class="w-full relative">
       <fa-icon
         [icon]="faSearch"
         class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
@@ -21,43 +21,56 @@
     </div>
 
     <mat-autocomplete
-      #auto="matAutocomplete"
-      (optionSelected)="onUserSelected($event.option.value)"
-      [displayWith]="displayUserName"
-    >
+    #auto="matAutocomplete"
+    (optionSelected)="onUserSelected($event.option.value)"
+    [displayWith]="displayUserName"
+  >
+    <!-- 🟡 Mostrar "Cargando..." cuando la búsqueda está en curso -->
+    <ng-container *ngIf="!queryCompleted && userControl.value?.length >= 3">
+      <mat-option disabled>
+        <span class="text-gray-500">Cargando...</span>
+      </mat-option>
+    </ng-container>
+  
+    <!-- 🟢 Mostrar usuarios filtrados cuando la búsqueda haya terminado -->
+    <ng-container *ngIf="queryCompleted">
       <mat-option
         *ngFor="let user of filteredUsers$ | async; trackBy: trackByUserId"
         [value]="user"
       >
         {{ user.completeName }}
       </mat-option>
-
-      <!-- Opción para crear usuario cuando la lista es vacía -->
-      <mat-option
-        *ngIf="
-          allowCreateUser &&
-          (filteredUsers$ | async)?.length === 0 &&
-          userControl.value &&
-          !isnewUser &&
-          !(loadingUsers$ | async)
-        "
-        (click)="openCreateUserModal()"
-      >
+    </ng-container>
+  
+    <!-- 🔹 Opción para crear usuario cuando la lista es vacía -->
+    <ng-container
+      *ngIf="
+        allowCreateUser &&
+        queryCompleted &&
+        (filteredUsers$ | async)?.length === 0 &&
+        userControl.value &&
+        !isnewUser
+      "
+    >
+      <mat-option (click)="openCreateUserModal()">
         <em>Crear nuevo usuario</em>
       </mat-option>
-
-      <mat-option
-        *ngIf="
-          !allowCreateUser &&
-          queryCompleted &&
-          (filteredUsers$ | async)?.length === 0 &&
-          userControl.value &&
-          !(loadingUsers$ | async)
-        "
-        disabled
-      >
+    </ng-container>
+  
+    <!-- 🔸 Mensaje cuando no se encuentra usuario -->
+    <ng-container
+      *ngIf="
+        !allowCreateUser &&
+        queryCompleted &&
+        (filteredUsers$ | async)?.length === 0 &&
+        userControl.value
+      "
+    >
+      <mat-option disabled>
         <em>No se encontró usuario</em>
       </mat-option>
-    </mat-autocomplete>
+    </ng-container>
+  </mat-autocomplete>
+  
   </div>
 </div>
