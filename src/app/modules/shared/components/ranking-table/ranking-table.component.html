@@ -46,8 +46,8 @@
             <span *ngIf="player.position === 1">🏆</span>
             <span *ngIf="player.position === 2">🥈</span>
             <span *ngIf="player.position === 3">🥉</span>
-            {{ player.userName | titlecase }}
-            {{ player.userLastname | titlecase }}
+
+            {{ player.userName | nameShortFormat : player.userLastname }}
           </td>
 
           <td

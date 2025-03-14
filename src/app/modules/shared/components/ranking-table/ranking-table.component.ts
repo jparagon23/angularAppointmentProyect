@@ -39,4 +39,19 @@ export class RankingTableComponent implements OnInit {
     // Redirigir dinámicamente
     this.router.navigateByUrl(`/home/${basePath}/profile/${userId}`);
   }
+
+  getFormattedName(fullName: string, fullLastName: string): string {
+    if (!fullName || !fullLastName) return '';
+
+    const nameParts = fullName.split(' '); // Split first and second name
+    const firstName = nameParts[0]; // Extract first name
+    const secondNameInitial = nameParts[1] ? nameParts[1][0] + '.' : '';
+
+    const lastNameParts = fullLastName.split(' '); // Split last names
+    const firstLastName = lastNameParts[0]; // Extract only the first last name
+
+    return secondNameInitial
+      ? `${firstName} ${secondNameInitial} ${firstLastName}` // "Juan P. Pérez"
+      : `${firstName} ${firstLastName}`; // "Juan Pérez"
+  }
 }
