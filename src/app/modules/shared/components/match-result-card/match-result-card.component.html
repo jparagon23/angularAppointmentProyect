@@ -58,7 +58,11 @@
               'text-gray-400': matchData.winner.id !== userId
             }"
           >
-            {{ matchData.winner.name }}
+            {{
+              matchData.winner.name
+                | nameShortFormat : matchData.winner.lastname
+            }}
+            🏆
           </span>
         </div>
         <div class="flex items-center gap-3" *ngIf="matchData.winner2">
@@ -75,7 +79,11 @@
               'text-gray-400': matchData.winner2.id !== userId
             }"
           >
-            {{ matchData.winner2.name }}
+            {{
+              matchData.winner2.name
+                | nameShortFormat : matchData.winner2.lastname
+            }}
+            🏆
           </span>
         </div>
       </div>
@@ -129,7 +137,9 @@
               'text-gray-400': matchData.loser.id !== userId
             }"
           >
-            {{ matchData.loser.name }}
+            {{
+              matchData.loser.name | nameShortFormat : matchData.loser.lastname
+            }}
           </span>
         </div>
         <div class="flex items-center gap-3" *ngIf="matchData.loser2">
@@ -146,7 +156,10 @@
               'text-gray-400': matchData.loser2.id !== userId
             }"
           >
-            {{ matchData.loser2.name }}
+            {{
+              matchData.loser2.name
+                | nameShortFormat : matchData.loser2.lastname
+            }}
           </span>
         </div>
       </div>

@@ -29,6 +29,7 @@ import { RankingTableComponent } from './components/ranking-table/ranking-table.
 import { TabSelectorComponent } from './components/tab-selector/tab-selector.component';
 import { StatsBoardComponent } from './components/stats-board/stats-board.component';
 import { GeneralRankingComponent } from './components/general-ranking/general-ranking.component';
+import { NameShortFormatPipe } from './pipes/name-short-format.pipe';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { GeneralRankingComponent } from './components/general-ranking/general-ra
     TabSelectorComponent,
     StatsBoardComponent,
     GeneralRankingComponent,
+    NameShortFormatPipe,
   ],
 
   imports: [

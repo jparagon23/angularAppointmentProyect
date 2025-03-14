@@ -11,3 +11,21 @@ export class Functions {
       .join(' '); // Join words to form the final string
   }
 }
+
+export function getFormattedName(
+  fullName: string,
+  fullLastName: string
+): string {
+  if (!fullName || !fullLastName) return '';
+
+  const nameParts = fullName.split(' ');
+  const firstName = nameParts[0];
+  const secondNameInitial = nameParts[1] ? nameParts[1][0] + '.' : '';
+
+  const lastNameParts = fullLastName.split(' ');
+  const firstLastName = lastNameParts[0];
+
+  return secondNameInitial
+    ? `${firstName} ${secondNameInitial} ${firstLastName}`
+    : `${firstName} ${firstLastName}`;
+}
