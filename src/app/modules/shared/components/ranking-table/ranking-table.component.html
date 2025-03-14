@@ -41,8 +41,11 @@
           </td>
 
           <td
-            class="px-4 sm:px-6 py-2 sm:py-4 text-xs sm:text-sm text-gray-500 text-left"
+            class="px-4 sm:px-6 py-2 sm:py-4 text-xs sm:text-sm text-gray-500 text-left flex items-center gap-2"
           >
+            <span *ngIf="player.position === 1">🏆</span>
+            <span *ngIf="player.position === 2">🥈</span>
+            <span *ngIf="player.position === 3">🥉</span>
             {{ player.userName | titlecase }}
             {{ player.userLastname | titlecase }}
           </td>
