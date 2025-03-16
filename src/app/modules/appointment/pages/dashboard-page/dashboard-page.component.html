@@ -52,8 +52,8 @@
         <!-- Sección de Partidos Confirmados -->
 
         <app-result-short-section
-          [matchToShow]="confirmedMatches"
-          [title]="'Partidos Publicados'"
+          [matchToShow]="confirmedMatches.slice(0, 10)"
+          [title]="'Ultimos 10 partidos Publicados'"
         ></app-result-short-section>
       </div>
     </div>
