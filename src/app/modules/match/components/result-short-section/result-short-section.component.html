@@ -34,7 +34,7 @@
       (click)="toggleResults($event)"
     >
       {{
-        pendingSliceLimit <= matchToShow.length
+        pendingSliceLimit < matchToShow.length
           ? "Ver más resultados"
           : "Ver menos resultados"
       }}
