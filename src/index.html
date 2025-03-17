@@ -23,6 +23,9 @@
     <meta name="twitter:description" content="Publica resultados de tenis, analiza tu rendimiento y accede a un ranking global.">
     <meta name="twitter:image" content="https://forehapp.com/assets/img/placeholder.png"> <!-- Reemplazar con imagen real -->
 
+    <!-- Etiqueta Canonical (Evita duplicación de contenido en SEO) -->
+    <link rel="canonical" href="https://forehapp.com/">
+
     <!-- Ícono del sitio -->
     <link rel="icon" type="image/png" href="assets/svg/logoMin.svg">
 
@@ -36,20 +39,35 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- Agregado FontAwesome -->
 
     <!-- JSON-LD para SEO estructurado -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "SportsOrganization",
-        "name": "Forehapp",
-        "url": "https://forehapp.com",
-        "description": "Publica resultados de tenis, analiza tu rendimiento y compite en el ranking global de tenis.",
-        "sport": "Tennis",
-        "sameAs": [
-            "https://www.facebook.com/forehapp",
-            "https://www.instagram.com/forehapp",
-            "https://twitter.com/forehapp"
-        ]
-    }
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var domain = window.location.hostname;
+            
+            // Actualizar Open Graph URL dinámicamente
+            var metaOgUrl = document.querySelector('meta[property="og:url"]');
+            if (metaOgUrl) {
+                metaOgUrl.setAttribute("content", "https://" + domain + "/");
+            }
+
+            // JSON-LD dinámico para SEO
+            var jsonLdScript = document.createElement("script");
+            jsonLdScript.type = "application/ld+json";
+            jsonLdScript.textContent = JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "SportsOrganization",
+                "name": "Forehapp",
+                "url": "https://" + domain,
+                "description": "Publica resultados de tenis, analiza tu rendimiento y compite en el ranking global de tenis.",
+                "sport": "Tennis",
+                "sameAs": [
+                    "https://www.facebook.com/forehapp",
+                    "https://www.instagram.com/forehapp",
+                    "https://twitter.com/forehapp"
+                ]
+            });
+
+            document.head.appendChild(jsonLdScript);
+        });
     </script>
 </head>
 <body class="mat-typography">
