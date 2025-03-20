@@ -15,7 +15,10 @@
     </div>
 
     <!-- Paginación -->
-    <div class="flex justify-center mt-5 space-x-4">
+    <div
+      class="flex justify-center mt-5 space-x-4"
+      *ngIf="!(currentPage == 0 && matches.length < pageSize)"
+    >
       <button
         class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
         (click)="prevPage()"
