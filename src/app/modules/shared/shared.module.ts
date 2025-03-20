@@ -87,6 +87,7 @@ import { NameShortFormatPipe } from './pipes/name-short-format.pipe';
     TabSelectorComponent,
     StatsBoardComponent,
     GeneralRankingComponent,
+    NameShortFormatPipe,
   ],
 })
 export class SharedModule {}

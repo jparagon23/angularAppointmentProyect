@@ -6,7 +6,7 @@ import {
   selectRankingState,
 } from 'src/app/state/selectors/event.selectors';
 import { loadAdminPostedMatches } from 'src/app/state/actions/event.actions';
-import { first, take } from 'rxjs';
+import { first } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard-page',

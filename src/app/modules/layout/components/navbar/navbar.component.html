@@ -214,7 +214,7 @@
       <div class="py-3 px-4 flex items-center space-x-4">
         <div class="space-y-1">
           <div class="text-lg font-semibold text-gray-900">
-            {{ user?.name }} {{ user?.lastname }}
+            {{ user?.name || "" | nameShortFormat : user?.lastname || "" }}
           </div>
           <div class="text-sm text-gray-500">{{ user?.email }}</div>
           <div *ngIf="user.ratingType == 2" class="text-sm text-gray-500">
