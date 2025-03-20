@@ -29,6 +29,7 @@ import { EventEffects } from './state/effects/event.effects';
 import { NotificationEffect } from './state/effects/notification.effects';
 import { UserProfileEffects } from './state/user-profile/user-profile.effects';
 import { UserModule } from './modules/user/user.module';
+import { DashboardEffects } from './state/dashboard-state/dashboard.effects';
 
 registerLocaleData(localeEs, 'es');
 
@@ -63,6 +64,7 @@ registerLocaleData(localeEs, 'es');
       EventEffects,
       NotificationEffect,
       UserProfileEffects,
+      DashboardEffects,
     ]),
     SharedModule,
     UserModule,

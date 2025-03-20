@@ -43,8 +43,12 @@ export class UserProfileEffects {
     this.actions$.pipe(
       ofType(loadUserProfileMatches),
       switchMap(({ id }) =>
-        this.matchService.getUserMatches(id).pipe(
-          map((matches) => loadUserProfileMatchesSuccess({ matches })),
+        this.matchService.getUserMatches(id, 'ALL').pipe(
+          map((matches) =>
+            loadUserProfileMatchesSuccess({
+              matches: matches._embedded.matchResponseDTOList,
+            })
+          ),
           catchError((error) => of(loadUserProfileMatchesFailure({ error })))
         )
       )

@@ -15,6 +15,10 @@ import { loginSuccess } from '../actions/auth.actions';
 import { loadUserNotifications } from '../actions/notification.actions';
 import { getRanking, getUserMatches } from '../actions/event.actions';
 import { loadReservations } from '../actions/reservations.actions';
+import {
+  getLast10DoublesMatches,
+  getLast10SinglesMatches,
+} from '../dashboard-state/dashboard.actions';
 
 @Injectable()
 export class ProfileEffects {
@@ -54,7 +58,8 @@ export class ProfileEffects {
       ofType(loadUserSuccess), // Escucha la acción loadUserSuccess
       switchMap(() => [
         loadUserNotifications(), // Despacha loadUserNotifications
-        getUserMatches(), // Despacha getUserMatches
+        getLast10SinglesMatches(),
+        getLast10DoublesMatches(),
         getRanking(),
         loadReservations(),
       ])
@@ -62,8 +67,8 @@ export class ProfileEffects {
   );
 
   constructor(
-    private actions$: Actions,
-    private authService: AuthService,
-    private userService: UserService
+    private readonly actions$: Actions,
+    private readonly authService: AuthService,
+    private readonly userService: UserService
   ) {}
 }
