@@ -1,4 +1,3 @@
-import { faEye } from '@fortawesome/free-solid-svg-icons';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store'; // Importamos Store de NgRx
 import { User, UserMatch } from 'src/app/models/events/UserMatch.model';

@@ -1,12 +1,13 @@
 import { MatchService } from 'src/app/services/match.service';
-import { EventsService } from './../../../../services/events.service';
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { Observable, map } from 'rxjs';
-import { UserMatch } from 'src/app/models/events/UserMatch.model';
+import { Observable } from 'rxjs';
+import {
+  UserMatch,
+  UserMatchResponse,
+} from 'src/app/models/events/UserMatch.model';
 import { NotificationItem } from 'src/app/models/notification/NotificationItem.model';
-import { getMatchById } from 'src/app/state/actions/event.actions';
 import { AppState } from 'src/app/state/app.state';
 import { selectUserMatches } from 'src/app/state/selectors/event.selectors';
 
@@ -15,7 +16,8 @@ import { selectUserMatches } from 'src/app/state/selectors/event.selectors';
   templateUrl: './match-action-modal.component.html',
 })
 export class MatchActionModalComponent {
-  userMatches$: Observable<UserMatch[]> = this.store.select(selectUserMatches);
+  userMatches$: Observable<UserMatchResponse | undefined> =
+    this.store.select(selectUserMatches);
   matchId: string | null = null;
   matchData!: UserMatch;
   selectedMatch: UserMatch | undefined;
@@ -32,7 +34,7 @@ export class MatchActionModalComponent {
 
     // Obtener el match y asignarlo
     this.userMatches$.subscribe((matches) => {
-      const foundMatch = matches.find(
+      const foundMatch = matches?._embedded?.matchResponseDTOList?.find(
         (match) => match.matchId === Number(this.matchId)
       );
       if (foundMatch) {

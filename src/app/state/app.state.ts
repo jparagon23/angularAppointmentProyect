@@ -21,6 +21,10 @@ import {
   userProfileReducer,
   UserProfileState,
 } from './user-profile/user-profile.reducers';
+import {
+  dashboardReducer,
+  DashboardState,
+} from './dashboard-state/dashboard.reducers';
 
 export interface AppState {
   user: UserState;
@@ -34,6 +38,7 @@ export interface AppState {
   events: EventState;
   notifications: NotificationState;
   userProfileView: UserProfileState;
+  dashboard: DashboardState;
 }
 
 export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
@@ -48,4 +53,5 @@ export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
   events: matchReducer,
   notifications: notificationReducer,
   userProfileView: userProfileReducer,
+  dashboard: dashboardReducer,
 };

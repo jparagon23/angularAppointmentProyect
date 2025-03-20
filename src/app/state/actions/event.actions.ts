@@ -1,9 +1,9 @@
 import { createAction, props } from '@ngrx/store';
+import { GeneralRanking } from 'src/app/models/events/RankingInfo.model';
 import {
-  GeneralRanking,
-  RankingInfo,
-} from 'src/app/models/events/RankingInfo.model';
-import { UserMatch } from 'src/app/models/events/UserMatch.model';
+  UserMatch,
+  UserMatchResponse,
+} from 'src/app/models/events/UserMatch.model';
 import { UserMatchesStats } from 'src/app/models/events/UserMatchesStats.model';
 import { MatchResultDto } from 'src/app/models/PostResult.model';
 
@@ -25,13 +25,17 @@ export const resetPostScoreStatus = createAction(
   '[Post-score-modal] Reset Post Score Status'
 );
 
-export const getUserMatches = createAction('[dashboard] Get User Matches');
-
-export const getUserMathcesSuccess = createAction(
-  '[dashboard] Get User Matches Success',
-  props<{ matches: UserMatch[] }>()
+export const getUserMatches = createAction(
+  '[dashboard] Get User Matches',
+  props<{ matchtype: string; page: number; size: number }>()
 );
-export const getUserMathcesFailure = createAction(
+
+export const getUserMatchesSuccess = createAction(
+  '[dashboard] Get User Matches Success',
+  props<{ matches: UserMatchResponse }>() // Maneja la respuesta paginada
+);
+
+export const getUserMatchesFailure = createAction(
   '[dashboard] Get User Matches Failure',
   props<{ error: any }>()
 );

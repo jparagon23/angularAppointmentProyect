@@ -11,11 +11,11 @@ import {
   getRankingFailure,
   getRankingSuccess,
   getUserMatches,
+  getUserMatchesFailure,
   getUserMatchesStats,
   getUserMatchesStatsFailure,
   getUserMatchesStatsSuccess,
-  getUserMathcesFailure,
-  getUserMathcesSuccess,
+  getUserMatchesSuccess,
   loadAdminPostedMatches,
   loadAdminPostedMatchesFailure,
   loadAdminPostedMatchesSuccess,
@@ -26,7 +26,15 @@ import {
   rejectMatchResultFailure,
   rejectMatchResultSuccess,
 } from '../actions/event.actions';
-import { catchError, filter, map, of, switchMap, withLatestFrom } from 'rxjs';
+import {
+  catchError,
+  filter,
+  map,
+  mergeMap,
+  of,
+  switchMap,
+  withLatestFrom,
+} from 'rxjs';
 import { MatchService } from 'src/app/services/match.service';
 import { loadUserNotifications } from '../actions/notification.actions';
 import { StatisticsService } from 'src/app/services/statistics.service';
@@ -34,6 +42,10 @@ import { select, Store } from '@ngrx/store';
 import { selectAdminPostedMatchesState } from '../selectors/event.selectors';
 import { selectUser } from '../selectors/users.selectors';
 import { CLUB_ADMIN_ROLE } from 'src/app/modules/shared/constants/Constants.constants';
+import {
+  getLast10DoublesMatches,
+  getLast10SinglesMatches,
+} from '../dashboard-state/dashboard.actions';
 
 @Injectable()
 export class EventEffects {
@@ -59,17 +71,21 @@ export class EventEffects {
   loadUserMatchesAfterPostMatchResult$ = createEffect(() =>
     this.actions$.pipe(
       ofType(publishMatchResultSuccess),
-      map(() => getUserMatches())
+      mergeMap(() => [getLast10SinglesMatches(), getLast10DoublesMatches()])
     )
   );
 
   getUserMatchesResult$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getUserMatches),
-      switchMap(() =>
-        this.matchService.getUserMatches().pipe(
-          map((matches) => getUserMathcesSuccess({ matches })),
-          catchError((error) => of(getUserMathcesFailure({ error })))
+      switchMap(({ matchtype, page, size }) =>
+        this.matchService.getUserMatches(undefined, matchtype, page, size).pipe(
+          map((matches) =>
+            getUserMatchesSuccess({
+              matches: matches,
+            })
+          ),
+          catchError((error) => of(getUserMatchesFailure({ error })))
         )
       )
     )
@@ -106,7 +122,7 @@ export class EventEffects {
         rejectMatchResultSuccess,
         deleteMatchResultSuccess
       ),
-      map(() => getUserMatches())
+      mergeMap(() => [getLast10SinglesMatches(), getLast10DoublesMatches()])
     )
   );
 
