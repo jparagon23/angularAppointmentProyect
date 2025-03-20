@@ -2,7 +2,10 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { UserMatch } from 'src/app/models/events/UserMatch.model';
+import {
+  UserMatch,
+  UserMatchResponse,
+} from 'src/app/models/events/UserMatch.model';
 import { NotificationItem } from 'src/app/models/notification/NotificationItem.model';
 import { User } from 'src/app/models/user.model';
 import {
@@ -23,7 +26,8 @@ import Swal from 'sweetalert2';
   templateUrl: './match-confirmation-modal.component.html',
 })
 export class MatchConfirmationModalComponent implements OnInit, OnDestroy {
-  userMatches$: Observable<UserMatch[]> = this.store.select(selectUserMatches);
+  userMatches$: Observable<UserMatchResponse | undefined> =
+    this.store.select(selectUserMatches);
   matchId: string | null = null;
   selectedMatch: UserMatch | undefined;
 
@@ -53,7 +57,7 @@ export class MatchConfirmationModalComponent implements OnInit, OnDestroy {
 
     // Obtener el match y asignarlo
     this.userMatches$.subscribe((matches) => {
-      const foundMatch = matches.find(
+      const foundMatch = matches?._embedded.matchResponseDTOList.find(
         (match) => match.matchId === Number(this.matchId)
       );
       if (foundMatch) {

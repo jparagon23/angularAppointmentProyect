@@ -1,34 +1,70 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
+import { getUserMatches } from 'src/app/state/actions/event.actions';
 import { selectGetUserMatchesStatus } from 'src/app/state/selectors/event.selectors';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-matches-info-page',
   templateUrl: './matches-info-page.component.html',
 })
-export class MatchesInfoPageComponent implements OnChanges {
+export class MatchesInfoPageComponent implements OnChanges, OnInit {
   @Input() matchType: string = 'SINGLES';
-  matches: any[] = [];
+  matches$: Observable<any[]>;
+  currentPage: number = 0;
+  pageSize: number = 10;
 
-  selectGetUserMatchesStatus$ = this.store.select(selectGetUserMatchesStatus);
+  loading$: Observable<boolean>;
 
-  constructor(private readonly store: Store<any>) {}
+  constructor(private readonly store: Store<any>) {
+    this.loading$ = this.store.select(selectGetUserMatchesStatus).pipe(
+      map((state) => state.loading) // Obtiene el estado de carga
+    );
+
+    this.matches$ = this.store
+      .select(selectGetUserMatchesStatus)
+      .pipe(
+        map(
+          (matchesData) =>
+            matchesData.userMatch?._embedded.matchResponseDTOList?.filter(
+              (match) => match.matchType === this.matchType
+            ) || []
+        )
+      );
+  }
+
+  ngOnInit(): void {
+    this.loadMatches(0);
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['matchType']) {
-      // Aquí actualizamos los datos cada vez que el matchType cambia
-      this.updateMatches();
+    if (changes['matchType'] && !changes['matchType'].firstChange) {
+      this.loadMatches(0);
     }
   }
 
-  private updateMatches(): void {
-    this.selectGetUserMatchesStatus$.subscribe((matchesData) => {
-      if (matchesData.userMatch) {
-        // Filtrar los partidos según el tipo de partido (SINGLES o DOUBLES)
-        this.matches = matchesData.userMatch.filter(
-          (match) => match.matchType === this.matchType
-        );
-      }
-    });
+  private loadMatches(page: number): void {
+    this.store.dispatch(
+      getUserMatches({ matchtype: this.matchType, page: page, size: 10 })
+    );
+  }
+
+  nextPage(): void {
+    this.currentPage++;
+    this.loadMatches(this.currentPage);
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadMatches(this.currentPage);
+    }
   }
 }

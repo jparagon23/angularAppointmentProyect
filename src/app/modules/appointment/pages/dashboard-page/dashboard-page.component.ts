@@ -1,4 +1,4 @@
-import { Observable, Subscription, combineLatest, Subject } from 'rxjs';
+import { Observable, combineLatest, Subject } from 'rxjs';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReservationDetail } from 'src/app/models/UserReservations.model';
 import { Store } from '@ngrx/store';
@@ -11,14 +11,12 @@ import {
 } from 'src/app/state/selectors/reservetions.selectors';
 import { resetCancelReservationState } from 'src/app/state/actions/reservations.actions';
 import Swal from 'sweetalert2';
-import {
-  selectGetUserMatchesStatus,
-  selectRankingState,
-} from 'src/app/state/selectors/event.selectors';
+import { selectRankingState } from 'src/app/state/selectors/event.selectors';
 import { UserMatch } from 'src/app/models/events/UserMatch.model';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { User } from 'src/app/models/user.model';
 import { takeUntil } from 'rxjs/operators';
+import { selectDashboardState } from 'src/app/state/dashboard-state/dashboard.selectors';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -41,9 +39,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   cancelReservationLoader$: Observable<boolean> = this.store.select(
     selectCancelReservationLoading
   );
-  selectGetUserMatchesStatus$ = this.store.select(selectGetUserMatchesStatus);
 
   selectGeneralRankingStatus$ = this.store.select(selectRankingState);
+
+  selectDashboardState$ = this.store.select(selectDashboardState);
 
   matchType: string = 'SINGLES';
 
@@ -65,14 +64,29 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.handleCancelReservationFailure();
     this.trackLoadingState();
 
-    // Manejo de los partidos confirmados y pendientes sin suscripciones anidadas
-    combineLatest([this.user$, this.selectGetUserMatchesStatus$])
+    combineLatest([this.user$, this.selectDashboardState$])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([user, matchesData]) => {
-        if (user?.id && matchesData?.userMatch) {
-          this.filterMatches(matchesData.userMatch, user.id);
+      .subscribe(([user, dashboardState]) => {
+        if (user?.id) {
+          const userMatches =
+            this.matchType === 'SINGLES'
+              ? dashboardState.last10SinglesMatches
+              : dashboardState.last10DoublesMatches;
+
+          if (userMatches) {
+            this.filterMatches(userMatches, user.id);
+            this.filterPendingMatches(userMatches, user.id);
+          }
         }
       });
+  }
+
+  private filterPendingMatches(userMatches: UserMatch[], userId: number): void {
+    this.pendingMatches = userMatches.filter(
+      (match) =>
+        match.status === 'PENDING' &&
+        match.pendingConfirmationUsers?.includes(userId)
+    );
   }
 
   private filterMatches(userMatches: UserMatch[], userId: number): void {
@@ -83,11 +97,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
           match.pendingConfirmationUsers &&
           !match.pendingConfirmationUsers.includes(userId) &&
           match.matchType === this.matchType)
-    );
-    this.pendingMatches = userMatches.filter(
-      (match) =>
-        match.status === 'PENDING' &&
-        match.pendingConfirmationUsers?.includes(userId)
     );
   }
 
@@ -168,15 +177,18 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   selectMatchTab(tab: string): void {
     this.matchType = tab;
-
-    // Refiltrar los partidos al cambiar de pestaña
     this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user?.id) {
-        this.selectGetUserMatchesStatus$
+        this.selectDashboardState$
           .pipe(takeUntil(this.destroy$))
-          .subscribe((matchesData) => {
-            if (matchesData?.userMatch) {
-              this.filterMatches(matchesData.userMatch, user.id);
+          .subscribe((dashboardState) => {
+            const userMatches =
+              this.matchType === 'SINGLES'
+                ? dashboardState.last10SinglesMatches
+                : dashboardState.last10DoublesMatches;
+
+            if (userMatches) {
+              this.filterMatches(userMatches, user.id);
             }
           });
       }

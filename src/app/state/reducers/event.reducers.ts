@@ -10,11 +10,11 @@ import {
   getRankingFailure,
   getRankingSuccess,
   getUserMatches,
+  getUserMatchesFailure,
   getUserMatchesStats,
   getUserMatchesStatsFailure,
   getUserMatchesStatsSuccess,
-  getUserMathcesFailure,
-  getUserMathcesSuccess,
+  getUserMatchesSuccess,
   loadAdminPostedMatches,
   loadAdminPostedMatchesFailure,
   loadAdminPostedMatchesSuccess,
@@ -28,12 +28,12 @@ import {
   resetPostScoreStatus,
   resetUserMatchesStatsState,
 } from '../actions/event.actions';
-import { UserMatch } from 'src/app/models/events/UserMatch.model';
-import { UserMatchesStats } from 'src/app/models/events/UserMatchesStats.model';
 import {
-  GeneralRanking,
-  RankingInfo,
-} from 'src/app/models/events/RankingInfo.model';
+  UserMatch,
+  UserMatchResponse,
+} from 'src/app/models/events/UserMatch.model';
+import { UserMatchesStats } from 'src/app/models/events/UserMatchesStats.model';
+import { GeneralRanking } from 'src/app/models/events/RankingInfo.model';
 
 export interface EventState {
   publishMatchResultLoading: boolean;
@@ -44,7 +44,7 @@ export interface EventState {
   getUserMatchesLoading: boolean;
   getUserMatchesSuccess: boolean;
   getUserMatchesFailure: boolean;
-  userMatches: UserMatch[];
+  userMatches?: UserMatchResponse;
 
   MatchResultActionLoading: boolean;
 
@@ -84,7 +84,7 @@ export const initialState: EventState = {
   getUserMatchesLoading: false,
   getUserMatchesSuccess: false,
   getUserMatchesFailure: false,
-  userMatches: [],
+  userMatches: undefined,
   MatchResultActionLoading: false,
   confirmMatchResultSuccess: false,
   confirmMatchResultFailure: false,
@@ -139,13 +139,13 @@ export const matchReducer = createReducer(
     ...state,
     getUserMatchesLoading: true,
   })),
-  on(getUserMathcesSuccess, (state, matches) => ({
+  on(getUserMatchesSuccess, (state, { matches }) => ({
     ...state,
     getUserMatchesLoading: false,
     getUserMatchesSuccess: true,
-    userMatches: matches.matches,
+    userMatches: matches,
   })),
-  on(getUserMathcesFailure, (state, { error }) => ({
+  on(getUserMatchesFailure, (state, { error }) => ({
     ...state,
     getUserMatchesLoading: false,
     getUserMatchesFailure: true,

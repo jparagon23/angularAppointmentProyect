@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../models/user.model';
 import { Observable } from 'rxjs';
@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import { selectUser } from '../state/selectors/users.selectors';
 import { MatchResultDto } from '../models/PostResult.model';
 import { environment } from 'src/environments/environment';
-import { UserMatch } from '../models/events/UserMatch.model';
+import { UserMatch, UserMatchResponse } from '../models/events/UserMatch.model';
 
 @Injectable({
   providedIn: 'root',
@@ -51,16 +51,31 @@ export class MatchService {
     });
   }
 
-  getUserMatches(userId?: number): Observable<UserMatch[]> {
+  getUserMatches(
+    userId?: number,
+    matchType: string = 'SINGLES',
+    page: number = 0,
+    size: number = 10,
+    sortBy: string = 'match_date',
+    sortDir: string = 'desc'
+  ): Observable<UserMatchResponse> {
     const id = userId ?? this.userId;
 
     if (id === undefined) {
       throw new Error('User ID is not defined');
     }
 
+    const params = new HttpParams()
+      .set('matchType', matchType.toString())
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy)
+      .set('sortDir', sortDir);
+
     const url = `${environment.API_URL}/match/user/${id}`;
-    return this.http.get<UserMatch[]>(url, {
+    return this.http.get<any>(url, {
       headers: this.setHeaders(),
+      params,
     });
   }
 
