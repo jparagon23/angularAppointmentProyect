@@ -1,8 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import {
-  GeneralRanking,
-  RankingInfo,
-} from 'src/app/models/events/RankingInfo.model';
+import { GeneralRanking } from 'src/app/models/events/RankingInfo.model';
 import {
   UserMatch,
   UserMatchResponse,

@@ -33,10 +33,7 @@ import {
   UserMatchResponse,
 } from 'src/app/models/events/UserMatch.model';
 import { UserMatchesStats } from 'src/app/models/events/UserMatchesStats.model';
-import {
-  GeneralRanking,
-  RankingInfo,
-} from 'src/app/models/events/RankingInfo.model';
+import { GeneralRanking } from 'src/app/models/events/RankingInfo.model';
 
 export interface EventState {
   publishMatchResultLoading: boolean;
