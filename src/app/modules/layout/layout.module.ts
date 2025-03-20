@@ -28,6 +28,7 @@ import { NotificationItemComponent } from '../shared/components/notificartion-ca
     AppointmentModule,
     MatchModule,
     NotificationItemComponent,
+    SharedModule,
   ],
 })
 export class LayoutModule {}
