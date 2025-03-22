@@ -86,7 +86,12 @@
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
-            "assets": ["src/favicon.ico", "src/assets", "_redirects"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "_redirects",
+              "src/robots.txt"
+            ],
             "styles": [
               "@angular/material/prebuilt-themes/deeppurple-amber.css",
               "src/styles.css"
