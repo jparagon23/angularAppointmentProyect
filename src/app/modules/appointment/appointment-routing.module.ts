@@ -23,6 +23,11 @@ const routes: Routes = [
     path: 'profile/:id',
     component: UserProfileComponent,
   },
+  {
+    path: 'clubs',
+    loadChildren: () =>
+      import('../clubs/clubs.module').then((m) => m.ClubsModule),
+  },
 ];
 
 @NgModule({
