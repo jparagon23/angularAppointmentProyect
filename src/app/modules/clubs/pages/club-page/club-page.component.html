@@ -33,11 +33,23 @@
           </div>
 
           <!-- Botón "Unirse al Club" -->
-          <button
-            class="mt-3 bg-[#418622] hover:bg-[#356915] text-white px-5 py-2 rounded-full shadow-md font-bold transition duration-300 flex items-center gap-2"
-          >
-            🤝 Unirse al Club
-          </button>
+          <div>
+            <button
+              *ngIf="false"
+              class="mt-3 bg-[#418622] hover:bg-[#356915] text-white px-5 py-2 rounded-full shadow-md font-bold transition duration-300 flex items-center gap-2"
+            >
+              🤝 Unirse al Club
+            </button>
+          
+            <button
+              *ngIf="true"
+              class="mt-3 bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-full shadow-md font-bold transition duration-300 flex items-center gap-2"
+            >
+              ❌ Salir del Club
+            </button>
+          </div>
+          
+
         </div>
       </div>
     </div>
@@ -52,7 +64,16 @@
           300
         </div>
       </div>
+      <div class="bg-white p-4 md:p-5 mt-4 md:mt-0 rounded-xl shadow-md border border-gray-300 flex flex-col items-center text-center">
+        <div class="text-gray-500 text-xs md:text-sm uppercase tracking-widest">
+          Partidos jugados
+        </div>
+        <div class="text-3xl md:text-4xl font-extrabold text-green-700 mt-1">
+          400
+        </div>
+      </div>
     </div>
+
   </div>
 
   <!-- Separador -->

@@ -62,13 +62,25 @@
           </div>
 
           <!-- Botón Editar Perfil -->
-          <button
-            *ngIf="showEditButton"
-            (click)="redirectToUserInformation()"
-            class="mt-3 md:mt-4 flex items-center gap-2 px-4 md:px-5 py-2 border border-green-700 text-green-600 rounded-full hover:bg-green-600 hover:text-white transition shadow-md"
-          >
-            <i class="fas fa-edit"></i> Editar Perfil
-          </button>
+          <div>
+            <button
+              *ngIf="showEditButton"
+              (click)="redirectToUserInformation()"
+              class="mt-3 md:mt-4 flex items-center gap-2 px-4 md:px-5 py-2 border border-green-700 text-green-600 rounded-full hover:bg-green-600 hover:text-white transition shadow-md"
+            >
+              <i class="fas fa-edit"></i> Editar Perfil
+            </button>
+          
+            <button
+              *ngIf="!showEditButton"
+              (click)="openChallengeUser()"
+              class="mt-3 bg-gradient-to-r from-green-600 to-green-800 hover:from-green-700 hover:to-green-900 text-white px-6 py-3 rounded-full shadow-lg font-bold transition duration-300 flex items-center gap-3 transform hover:scale-105"
+            >
+              <i class="fas fa-bolt"></i> Retar al jugador
+            </button>
+          </div>
+          
+          
         </div>
       </div>
     </div>
