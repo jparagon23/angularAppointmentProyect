@@ -48,7 +48,7 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly store: Store<AppState>,
     private readonly router: Router,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -151,5 +151,4 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
       panelClass: 'custom-dialog-container',
     });
   }
-
 }
