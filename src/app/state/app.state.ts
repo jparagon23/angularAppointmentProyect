@@ -25,6 +25,10 @@ import {
   dashboardReducer,
   DashboardState,
 } from './dashboard-state/dashboard.reducers';
+import {
+  membershipReducer,
+  MembershipState,
+} from './membership/membership.reducers';
 
 export interface AppState {
   user: UserState;
@@ -39,6 +43,7 @@ export interface AppState {
   notifications: NotificationState;
   userProfileView: UserProfileState;
   dashboard: DashboardState;
+  membership: MembershipState;
 }
 
 export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
@@ -54,4 +59,5 @@ export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
   notifications: notificationReducer,
   userProfileView: userProfileReducer,
   dashboard: dashboardReducer,
+  membership: membershipReducer,
 };

@@ -1,24 +1,19 @@
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-  <app-club-card
-    logo="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnQ1Ck7996V7SxZI9ApQEPunJmGmscVUU6Jg&s"
-    name="Club de Tenis Campo verde"
-    city="Bogotá, Colombia"
-    [members]="120"
-  >
-  </app-club-card>
+<div *ngIf="selectMembershipClubs$ | async as selectMembershipClubs">
+  <ng-container>
+    <ng-container
+      *ngIf="selectMembershipClubs.loadingActiveClubs; else clubsList"
+    >
+      <div class="flex justify-center items-center h-64">
+        <app-loader></app-loader>
+      </div>
+    </ng-container>
+  </ng-container>
 
-  <app-club-card
-    name="Elite Tennis Club"
-    city="Medellín, Colombia"
-    [members]="85"
-  >
-  </app-club-card>
-
-  <app-club-card
-    logo="https://via.placeholder.com/100"
-    name="Grand Slam Tennis"
-    city="Cali, Colombia"
-    [members]="95"
-  >
-  </app-club-card>
+  <ng-template #clubsList>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div *ngFor="let club of selectMembershipClubs.activeClubs">
+        <app-club-card [clubInfo]="club"> </app-club-card>
+      </div>
+    </div>
+  </ng-template>
 </div>

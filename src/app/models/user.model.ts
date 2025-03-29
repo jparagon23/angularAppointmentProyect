@@ -27,8 +27,15 @@ export interface User {
   userRanking: number;
   lastMatchConfirmed: string;
   lastDoubleMatchConfirmed: string;
+  userClubMemberships: ClubMembership[];
 }
 
 export interface UserData {
   data: User[];
+}
+
+export interface ClubMembership {
+  clubId: number;
+  status: string;
+  registerDate: string;
 }

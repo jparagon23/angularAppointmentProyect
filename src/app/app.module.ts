@@ -31,6 +31,7 @@ import { UserProfileEffects } from './state/user-profile/user-profile.effects';
 import { UserModule } from './modules/user/user.module';
 import { DashboardEffects } from './state/dashboard-state/dashboard.effects';
 import { ClubsModule } from './modules/clubs/clubs.module';
+import { MembershipEffects } from './state/membership/membership.effects';
 
 registerLocaleData(localeEs, 'es');
 
@@ -66,6 +67,7 @@ registerLocaleData(localeEs, 'es');
       NotificationEffect,
       UserProfileEffects,
       DashboardEffects,
+      MembershipEffects,
     ]),
     SharedModule,
     UserModule,

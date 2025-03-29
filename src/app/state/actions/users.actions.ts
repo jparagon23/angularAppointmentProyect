@@ -16,6 +16,11 @@ export const updateUser = createAction(
   props<{ user: Partial<User> }>()
 );
 
+export const updateStoreUser = createAction(
+  '[Profile] Update Store User',
+  props<{ user: User }>()
+);
+
 export const updateUserSuccess = createAction(
   '[Profile] Update Profile Success',
   props<{ user: User }>()
