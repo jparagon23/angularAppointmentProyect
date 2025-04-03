@@ -5,10 +5,12 @@ import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 import { ClubInfo } from 'src/app/models/ClubInfo.model';
 import { ClubService } from 'src/app/services/club.service';
+import { updateStoreUser } from 'src/app/state/actions/users.actions';
 import {
-  updateStoreUser,
-  updateUser,
-} from 'src/app/state/actions/users.actions';
+  loadClubRanking,
+  loadLast10ClubMatches,
+} from 'src/app/state/club/club.actions';
+import { selectClubPageInfo } from 'src/app/state/club/club.selectors';
 import { selectDashboardState } from 'src/app/state/dashboard-state/dashboard.selectors';
 import { selectMembershipClubs } from 'src/app/state/membership/membership.selectors';
 import { selectRankingState } from 'src/app/state/selectors/event.selectors';
@@ -23,12 +25,15 @@ export class ClubPageComponent implements OnInit, OnDestroy {
   clubInfo!: ClubInfo;
   selectGeneralRankingStatus$ = this.store.select(selectRankingState);
   selectDashboardState$ = this.store.select(selectDashboardState);
+
+  selectClubPageInfo$ = this.store.select(selectClubPageInfo);
+
   selectUser$ = this.store.select(selectUser);
   selectMembershipClubs$ = this.store.select(selectMembershipClubs);
 
   isMember = false;
   pendingMemberRequest = false;
-  private destroy$ = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
 
   constructor(
     private readonly store: Store<any>,
@@ -42,6 +47,10 @@ export class ClubPageComponent implements OnInit, OnDestroy {
 
     if (clubId) {
       this.loadClubData(parseInt(clubId, 10));
+      this.store.dispatch(
+        loadLast10ClubMatches({ clubId: parseInt(clubId, 10) })
+      );
+      this.store.dispatch(loadClubRanking({ clubId: parseInt(clubId, 10) }));
     }
   }
 
@@ -70,9 +79,9 @@ export class ClubPageComponent implements OnInit, OnDestroy {
 
   private checkMembershipStatus(): void {
     this.selectUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      if (user && user.userClubMemberships) {
+      if (user?.userClubMemberships) {
         const membership = user.userClubMemberships.find(
-          (m) => m.clubId === this.clubInfo.id
+          (m) => m.club.id === this.clubInfo.id
         );
 
         this.pendingMemberRequest = membership?.status === 'PENDING';

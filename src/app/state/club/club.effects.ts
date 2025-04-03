@@ -7,10 +7,16 @@ import {
   getClubUserByNameOrId,
   getClubUserByNameOrIdFailure,
   getClubUserByNameOrIdSuccess,
+  loadClubRanking,
+  loadClubRankingFailure,
+  loadClubRankingSuccess,
+  loadLast10ClubMatches,
+  loadLast10ClubMatchesFailure,
+  loadLast10ClubMatchesSuccess,
   updateReservationAdmin,
   updateReservationAdminFailure,
   updateReservationAdminSuccess,
-} from '../actions/club.actions';
+} from './club.actions';
 import { catchError, map, of, switchMap, withLatestFrom } from 'rxjs';
 import { UserService } from 'src/app/services/user.service';
 import { ReservationService } from 'src/app/services/reservation.service';
@@ -18,6 +24,9 @@ import { loadReservationsAdmin } from '../actions/reservations.actions';
 import { selectDatePicked } from '../selectors/reservetions.selectors';
 import { Store } from '@ngrx/store';
 import { closeModal } from '../actions/modals.actions';
+import { ClubService } from 'src/app/services/club.service';
+import { MatchService } from 'src/app/services/match.service';
+import { StatisticsService } from 'src/app/services/statistics.service';
 
 @Injectable()
 export class ClubEffects {
@@ -44,6 +53,34 @@ export class ClubEffects {
             map(() => createReservationAdminSuccess()),
             catchError((error) => of(createReservationAdminFailure({ error })))
           )
+      )
+    )
+  );
+
+  loadLastClubMatches$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadLast10ClubMatches),
+      switchMap(({ clubId }) =>
+        this.matchService.getClubMatches(clubId, 'ALL', 'CONFIRMED').pipe(
+          map((matches) =>
+            loadLast10ClubMatchesSuccess({
+              matches: matches._embedded?.matchResponseDTOList ?? [],
+            })
+          ),
+          catchError((error) => of(loadLast10ClubMatchesFailure({ error })))
+        )
+      )
+    )
+  );
+
+  loadClubRanking$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadClubRanking),
+      switchMap(({ clubId }) =>
+        this.statisticsService.getClubRanking(clubId).pipe(
+          map((ranking) => loadClubRankingSuccess({ ranking })),
+          catchError((error) => of(loadClubRankingFailure({ error })))
+        )
       )
     )
   );
@@ -99,7 +136,10 @@ export class ClubEffects {
   constructor(
     private readonly actions$: Actions,
     private readonly userService: UserService,
+    private readonly clubService: ClubService,
     private readonly reservationService: ReservationService,
+    private readonly matchService: MatchService,
+    private readonly statisticsService: StatisticsService,
     private readonly store: Store<any>
   ) {}
 }

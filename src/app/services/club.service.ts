@@ -72,14 +72,14 @@ export class ClubService {
   }
 
   getActiveClubs(): Observable<ClubInfo[]> {
-    const url = `${environment.API_URL}/club/active`;
+    const url = `${environment.API_URL}/active-clubs`;
     return this.http.get<ClubInfo[]>(url, {
       headers: this.setHeaders(),
     });
   }
 
   getClubById(clubId: number): Observable<ClubInfo> {
-    const url = `${environment.API_URL}/club/${clubId}`;
+    const url = `${environment.API_URL}/club-info/${clubId}`;
     return this.http.get<ClubInfo>(url, {
       headers: this.setHeaders(),
     });

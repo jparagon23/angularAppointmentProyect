@@ -17,7 +17,7 @@ import { AuthEffects } from './state/effects/auth.effects';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
-import { ClubEffects } from './state/effects/club.effects';
+import { ClubEffects } from './state/club/club.effects';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { SharedModule } from './modules/shared/shared.module';

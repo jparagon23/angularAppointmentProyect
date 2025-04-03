@@ -85,6 +85,38 @@ export class MatchService {
     });
   }
 
+  getClubMatches(
+    clubId?: number,
+    matchType: string = 'SINGLES',
+    status?: string | null, // Opcional
+    page: number = 0,
+    size: number = 10,
+    sortBy: string = 'match_date',
+    sortDir: string = 'desc'
+  ): Observable<UserMatchResponse> {
+    if (clubId === undefined) {
+      throw new Error('User ID is not defined');
+    }
+
+    let params = new HttpParams()
+      .set('matchType', matchType.toString())
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy)
+      .set('sortDir', sortDir);
+
+    if (status) {
+      // Solo agregar si tiene valor
+      params = params.set('matchStatus', status);
+    }
+
+    const url = `${environment.API_URL}/match/club/${clubId}`;
+    return this.http.get<any>(url, {
+      headers: this.setHeaders(),
+      params,
+    });
+  }
+
   matchConfirmationAction(matchId: number, action: string) {
     const url = `${environment.API_URL}/match/${matchId}/${action}`;
     return this.http.patch(

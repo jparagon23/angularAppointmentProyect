@@ -1,49 +1,51 @@
 <app-loader *ngIf="loading$ | async"></app-loader>
 
 <div *ngIf="!(loading$ | async)">
-  <div class="mb-5" *ngIf="matches$ | async as matches; else noMatches">
-    <div class="flex flex-wrap justify-start gap-4">
-      <div
-        class="w-full sm:w-[200px] md:w-[450px]"
-        *ngFor="let match of matches"
-      >
-        <app-match-result-card
-          [matchData]="match"
-          [userCanConfirm]="false"
-        ></app-match-result-card>
+  <div class="mb-5" *ngIf="matches$ | async as matches">
+    <ng-container *ngIf="matches.length > 0; else noMatches">
+      <div class="flex flex-wrap justify-start gap-4">
+        <div
+          class="w-full sm:w-[200px] md:w-[450px]"
+          *ngFor="let match of matches"
+        >
+          <app-match-result-card
+            [matchData]="match"
+            [userCanConfirm]="false"
+          ></app-match-result-card>
+        </div>
       </div>
-    </div>
 
-    <!-- Paginación -->
-    <div
-      class="flex justify-center mt-5 space-x-4"
-      *ngIf="!(currentPage == 0 && matches.length < pageSize)"
-    >
-      <button
-        class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
-        (click)="prevPage()"
-        [disabled]="currentPage === 0"
+      <!-- Paginación -->
+      <div
+        class="flex justify-center mt-5 space-x-4"
+        *ngIf="!(currentPage == 0 && matches.length < pageSize)"
       >
-        Anterior
-      </button>
+        <button
+          class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+          (click)="prevPage()"
+          [disabled]="currentPage === 0"
+        >
+          Anterior
+        </button>
 
-      <span class="text-lg font-semibold">Página {{ currentPage + 1 }}</span>
+        <span class="text-lg font-semibold">Página {{ currentPage + 1 }}</span>
 
-      <button
-        class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
-        (click)="nextPage()"
-        [disabled]="matches.length < pageSize"
-      >
-        Siguiente
-      </button>
-    </div>
+        <button
+          class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+          (click)="nextPage()"
+          [disabled]="matches.length < pageSize"
+        >
+          Siguiente
+        </button>
+      </div>
+    </ng-container>
   </div>
 
   <ng-template #noMatches>
-    <div class="text-center text-gray-500">
-      <p>
+    <div class="text-center text-gray-500 py-6">
+      <p class="text-lg">
         Aún no has publicado un partido. ¡Anímate a publicar el primero desde la
-        opción 'Publicar Resultado'!
+        opción <span class="font-semibold">‘Publicar Resultado’</span>!
       </p>
     </div>
   </ng-template>

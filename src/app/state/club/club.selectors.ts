@@ -1,5 +1,5 @@
 import { createSelector, createFeatureSelector, select } from '@ngrx/store';
-import { ClubState } from '../reducers/club.reducers';
+import { ClubState } from './club.reducers';
 
 export const selectClubState = createFeatureSelector<ClubState>('club');
 
@@ -56,4 +56,14 @@ export const selectUpdateReservationSuccess = createSelector(
 export const selectUpdateReservationFailure = createSelector(
   selectClubState,
   (state: ClubState) => state.updateReservationFailure
+);
+
+export const selectClubPageInfo = createSelector(
+  selectClubState,
+  (state: ClubState) => ({
+    last10ClubMatches: state.lastClubMatches,
+    loadingClubMatches: state.loadingClubMatches,
+    clubRanking: state.clubRanking,
+    loadingClubRanking: state.loadingClubRanking,
+  })
 );

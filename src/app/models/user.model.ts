@@ -35,7 +35,11 @@ export interface UserData {
 }
 
 export interface ClubMembership {
-  clubId: number;
-  status: string;
-  registerDate: string;
+  club: {
+    id: number;
+    name: string;
+    allowMatchReporting: boolean;
+  };
+  status: 'APPROVED' | 'PENDING' | 'REJECTED'; // Ajusta según tus enums
+  registerDate: string; // ISO format
 }
