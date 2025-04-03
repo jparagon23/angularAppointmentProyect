@@ -10,4 +10,5 @@ export interface ClubInfo {
   clubLogo: string;
   members: string;
   matchesPlayed: string;
+  allowUserPublications: boolean;
 }

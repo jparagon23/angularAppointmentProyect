@@ -80,9 +80,9 @@ export class ClubPageComponent implements OnInit, OnDestroy {
   private checkMembershipStatus(): void {
     this.selectUser$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user?.userClubMemberships) {
-        const membership = user.userClubMemberships.find(
-          (m) => m.club.id === this.clubInfo.id
-        );
+        const membership = user.userClubMemberships.find((m) => {
+          return m.club.id === this.clubInfo.id;
+        });
 
         this.pendingMemberRequest = membership?.status === 'PENDING';
         this.isMember = membership?.status === 'APPROVED';
@@ -177,7 +177,15 @@ export class ClubPageComponent implements OnInit, OnDestroy {
           ...user,
           userClubMemberships: [
             ...user.userClubMemberships,
-            { clubId: this.clubInfo.id, status: 'PENDING', registerDate: '' },
+            {
+              club: {
+                id: this.clubInfo.id,
+                name: this.clubInfo.name,
+                allowMatchReporting: this.clubInfo.allowUserPublications,
+              },
+              status: 'PENDING',
+              registerDate: '',
+            },
           ],
         }
       : {
