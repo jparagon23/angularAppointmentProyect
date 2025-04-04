@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 import { ClubInfo } from 'src/app/models/ClubInfo.model';
+import { ClubMembership, User } from 'src/app/models/user.model';
 import { ClubService } from 'src/app/services/club.service';
 import { updateStoreUser } from 'src/app/state/actions/users.actions';
 import {
@@ -171,8 +172,8 @@ export class ClubPageComponent implements OnInit, OnDestroy {
   }
 
   // 🔹 Reusable user membership update
-  private updateUserMembership(user: any, isRegistering: boolean): void {
-    const updatedUser = isRegistering
+  private updateUserMembership(user: User, isRegistering: boolean): void {
+    const updatedUser: User = isRegistering
       ? {
           ...user,
           userClubMemberships: [
@@ -191,7 +192,7 @@ export class ClubPageComponent implements OnInit, OnDestroy {
       : {
           ...user,
           userClubMemberships: user.userClubMemberships.filter(
-            (m: { clubId: number }) => m.clubId !== this.clubInfo.id
+            (m: ClubMembership) => m.club.id !== this.clubInfo.id
           ),
         };
 
