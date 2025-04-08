@@ -26,7 +26,8 @@ export class MatchActionModalComponent {
     @Inject(MAT_DIALOG_DATA) public data: NotificationItem,
     private readonly store: Store<AppState>,
     public dialogRef: MatDialogRef<MatchActionModalComponent>, // Inyecta MatDialogRef
-    public matchService: MatchService
+    public matchService: MatchService,
+    
   ) {}
 
   ngOnInit(): void {
