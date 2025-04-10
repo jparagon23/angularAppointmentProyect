@@ -1,3 +1,5 @@
+import { ClubInfo } from '../ClubInfo.model';
+
 export interface User {
   id: number;
   name: string;
@@ -24,6 +26,7 @@ export interface UserMatch {
   loser2: User;
   sets: Set[];
   pendingConfirmationUsers: number[] | null;
+  club: ClubInfo;
 }
 
 export interface Pageable {
