@@ -7,11 +7,11 @@ export interface User {
 }
 
 export interface Set {
-  setNumber: number;
-  winnerGames: number;
-  loserGames: number;
-  winnerTieBreak: number;
-  loserTieBreak: number;
+  setNumber: number | undefined;
+  winnerGames: number | undefined;
+  loserGames: number | undefined;
+  winnerTieBreak: number | undefined;
+  loserTieBreak: number | undefined;
 }
 
 export interface UserMatch {
