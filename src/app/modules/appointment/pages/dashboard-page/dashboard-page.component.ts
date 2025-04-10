@@ -68,28 +68,37 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(([user, dashboardState]) => {
         if (user?.id) {
+          const singles = dashboardState.last10SinglesMatches ?? [];
+          const doubles = dashboardState.last10DoublesMatches ?? [];
           const userMatches =
             this.matchType === 'SINGLES'
-              ? dashboardState.last10SinglesMatches
-              : dashboardState.last10DoublesMatches;
+              ? singles
+              : doubles;
+          
+          const allUserMatches = [...singles, ...doubles];
 
           if (userMatches) {
             this.filterMatches(userMatches, user.id);
-            this.filterPendingMatches(userMatches, user.id);
+            this.filterPendingMatches(allUserMatches, user.id);
           }
         }
       });
   }
 
   private filterPendingMatches(userMatches: UserMatch[], userId: number): void {
+    console.log(userMatches);
+    
     this.pendingMatches = userMatches.filter(
       (match) =>
         match.status === 'PENDING' &&
         match.pendingConfirmationUsers?.includes(userId)
     );
+    
   }
 
   private filterMatches(userMatches: UserMatch[], userId: number): void {
+    console.log(userMatches);
+    
     this.confirmedMatches = userMatches.filter(
       (match) =>
         (match.status === 'CONFIRMED' && match.matchType === this.matchType) ||
@@ -98,6 +107,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
           !match.pendingConfirmationUsers.includes(userId) &&
           match.matchType === this.matchType)
     );
+    
   }
 
   private handleCancelReservationSuccess(): void {

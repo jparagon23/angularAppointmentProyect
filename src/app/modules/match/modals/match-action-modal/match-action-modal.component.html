@@ -16,9 +16,15 @@
     </ng-container>
   </h2>
 
-  <!-- Detalles adicionales del partido -->
+  <!-- Detalles adicionales del partido o loader -->
   <div class="mb-6">
-    <app-match-result-card [matchData]="selectedMatch!"></app-match-result-card>
+    <ng-container *ngIf="!isMatchLoading; else loadingMatch">
+      <app-match-result-card [matchData]="selectedMatch!"></app-match-result-card>
+    </ng-container>
+
+    <ng-template #loadingMatch>
+      <app-loader></app-loader>
+    </ng-template>
   </div>
 
   <!-- Botones de acción -->

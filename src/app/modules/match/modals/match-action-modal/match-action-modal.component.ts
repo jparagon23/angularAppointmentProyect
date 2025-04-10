@@ -22,11 +22,14 @@ export class MatchActionModalComponent {
   matchData!: UserMatch;
   selectedMatch: UserMatch | undefined;
 
+  isMatchLoading: boolean = false;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: NotificationItem,
     private readonly store: Store<AppState>,
     public dialogRef: MatDialogRef<MatchActionModalComponent>, // Inyecta MatDialogRef
-    public matchService: MatchService
+    public matchService: MatchService,
+    
   ) {}
 
   ngOnInit(): void {
@@ -37,16 +40,19 @@ export class MatchActionModalComponent {
       const foundMatch = matches?._embedded?.matchResponseDTOList?.find(
         (match) => match.matchId === Number(this.matchId)
       );
+    
       if (foundMatch) {
         this.selectedMatch = foundMatch;
+        this.isMatchLoading = false;
       } else {
-        this.matchService
-          .getMatchById(Number(this.matchId))
-          .subscribe((match) => {
-            this.selectedMatch = match;
-          });
+        this.isMatchLoading = true;
+        this.matchService.getMatchById(Number(this.matchId)).subscribe((match) => {
+          this.selectedMatch = match;
+          this.isMatchLoading = false;
+        });
       }
     });
+    
   }
 
   getMatchId(notification: { actionUrl: string }) {

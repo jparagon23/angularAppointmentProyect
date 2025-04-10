@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { MatchService } from 'src/app/services/match.service';
 import {
   UserMatch,
   UserMatchResponse,
@@ -40,6 +41,8 @@ export class MatchConfirmationModalComponent implements OnInit, OnDestroy {
   user: User | undefined;
 
   userWhoPostedMatch: string = '';
+  isMatchLoading: boolean = true;
+
 
   // Seleccionamos el estado de las acciones del resultado del partido desde el store
   MatchResultActionStatus$: Observable<any> = this.store.select(
@@ -49,6 +52,7 @@ export class MatchConfirmationModalComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: NotificationItem,
     private readonly store: Store<AppState>,
+    public matchService: MatchService,
     public dialogRef: MatDialogRef<MatchConfirmationModalComponent> // Inyecta MatDialogRef
   ) {}
 
@@ -60,12 +64,18 @@ export class MatchConfirmationModalComponent implements OnInit, OnDestroy {
       const foundMatch = matches?._embedded.matchResponseDTOList.find(
         (match) => match.matchId === Number(this.matchId)
       );
+    
       if (foundMatch) {
         this.selectedMatch = foundMatch;
+        this.isMatchLoading = false;
       } else {
-        console.error('Match not found');
+        this.isMatchLoading = true;
+        this.matchService.getMatchById(Number(this.matchId)).subscribe((match) => {
+          this.selectedMatch = match;
+          this.isMatchLoading = false;
+        });
       }
-    });
+    });    
 
     // Subscribirse a cambios en el estado de la acción de resultado del partido
     this.MatchResultActionStatus$.subscribe((status) => {
