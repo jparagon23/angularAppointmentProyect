@@ -10,10 +10,26 @@
   </ng-container>
 
   <ng-template #clubsList>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div *ngFor="let club of selectMembershipClubs.activeClubs">
-        <app-club-card [clubInfo]="club"> </app-club-card>
+    <ng-container
+      *ngIf="selectMembershipClubs.activeClubs.length > 0; else noClubs"
+    >
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div *ngFor="let club of selectMembershipClubs.activeClubs">
+          <app-club-card [clubInfo]="club"></app-club-card>
+        </div>
       </div>
-    </div>
+    </ng-container>
+
+    <ng-template #noClubs>
+      <div class="text-center text-gray-600 py-10">
+        <i class="fas fa-info-circle text-3xl text-[#418622] mb-4"></i>
+        <p class="text-lg font-medium">
+          No hay clubes activos disponibles en este momento.
+        </p>
+        <p class="text-sm text-gray-500 mt-2">
+          Vuelve a intentarlo más tarde o contacta a tu administrador.
+        </p>
+      </div>
+    </ng-template>
   </ng-template>
 </div>

@@ -7,6 +7,7 @@ import { selectUser } from '../state/selectors/users.selectors';
 import { User } from '../models/user.model';
 import { environment } from 'src/environments/environment';
 import { ClubInfo } from '../models/ClubInfo.model';
+import { MembershipDTO } from '../models/MembershipDTO.model';
 
 @Injectable({
   providedIn: 'root',
@@ -81,6 +82,30 @@ export class ClubService {
   getClubById(clubId: number): Observable<ClubInfo> {
     const url = `${environment.API_URL}/club-info/${clubId}`;
     return this.http.get<ClubInfo>(url, {
+      headers: this.setHeaders(),
+    });
+  }
+
+  membershipAction(
+    clubId: number,
+    userId: number,
+    action: 'approve' | 'reject'
+  ) {
+    const url = `${environment.API_URL}/club/${action}`;
+    const params = {
+      userId: userId.toString(),
+      clubId: clubId.toString(),
+    };
+    return this.http.post(url, null, {
+      headers: this.setHeaders(),
+      params,
+    });
+  }
+
+  getPendingMembershipRequests(): Observable<MembershipDTO[]> {
+    const clubId = this.user.userAdminClub;
+    const url = `${environment.API_URL}/club/${clubId}/pendingMembershipRequests`;
+    return this.http.get<MembershipDTO[]>(url, {
       headers: this.setHeaders(),
     });
   }
