@@ -7,6 +7,8 @@ import {
 } from 'src/app/state/selectors/event.selectors';
 import { loadAdminPostedMatches } from 'src/app/state/actions/event.actions';
 import { first } from 'rxjs';
+import { MembershipDTO } from 'src/app/models/MembershipDTO.model';
+import { ClubService } from 'src/app/services/club.service';
 
 @Component({
   selector: 'app-admin-dashboard-page',
@@ -18,7 +20,12 @@ export class AdminDashboardPageComponent implements OnInit {
   selectGeneralRankingStatus$ = this.store.select(selectRankingState);
   adminPostedMatchesState$ = this.store.select(selectAdminPostedMatchesState);
 
-  constructor(private readonly store: Store<any>) {}
+  memberships: MembershipDTO[] = [];
+
+  constructor(
+    private readonly store: Store<any>,
+    private readonly clubService: ClubService
+  ) {}
 
   ngOnInit(): void {
     this.adminPostedMatchesState$
@@ -29,5 +36,9 @@ export class AdminDashboardPageComponent implements OnInit {
         )
       )
       .subscribe(() => this.store.dispatch(loadAdminPostedMatches()));
+
+    this.clubService.getPendingMembershipRequests().subscribe((memberships) => {
+      this.memberships = memberships;
+    });
   }
 }

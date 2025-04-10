@@ -23,6 +23,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { ClubReportsComponent } from './pages/club-reports/club-reports.component';
 import { AppointmentModule } from '../appointment/appointment.module';
 import { MatchModule } from '../match/match.module';
+import { ClubsModule } from '../clubs/clubs.module';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { MatchModule } from '../match/match.module';
     MatDialogModule,
     AppointmentModule,
     MatchModule,
+    ClubsModule,
   ],
 })
 export class AdminModule {}

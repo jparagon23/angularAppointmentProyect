@@ -1,23 +1,37 @@
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-  <app-club-card
-    name="Club de Tenis Bogotá"
-    city="Bogotá, Colombia"
-    [members]="120"
-  >
-  </app-club-card>
 
-  <app-club-card
-    name="Elite Tennis Club"
-    city="Medellín, Colombia"
-    [members]="85"
-  >
-  </app-club-card>
+<div *ngIf="selectMembershipClubs$ | async as selectMembershipClubs">
+  <ng-container>
+    <ng-container
+      *ngIf="selectMembershipClubs.loadingActiveClubs; else clubsList"
+    >
+      <div class="flex justify-center items-center h-64">
+        <app-loader></app-loader>
+      </div>
+    </ng-container>
+  </ng-container>
 
-  <app-club-card
-    logo="https://via.placeholder.com/100"
-    name="Grand Slam Tennis"
-    city="Cali, Colombia"
-    [members]="95"
-  >
-  </app-club-card>
+  <ng-template #clubsList>
+    <ng-container
+      *ngIf="selectMembershipClubs.activeClubs.length > 0; else noClubs"
+    >
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div *ngFor="let club of selectMembershipClubs.activeClubs">
+          <app-club-card [clubInfo]="club"></app-club-card>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #noClubs>
+      <div class="text-center text-gray-600 py-10">
+        <i class="fas fa-info-circle text-3xl text-[#418622] mb-4"></i>
+        <p class="text-lg font-medium">
+          No hay clubes activos disponibles en este momento.
+        </p>
+        <p class="text-sm text-gray-500 mt-2">
+          Vuelve a intentarlo más tarde o contacta a tu administrador.
+        </p>
+      </div>
+    </ng-template>
+  </ng-template>
+
 </div>

@@ -42,13 +42,13 @@ import { UserNameMakeReservationModalComponent } from 'src/app/modules/admin/mod
 import {
   createReservationAdmin,
   resetReservationCreated,
-} from 'src/app/state/actions/club.actions';
+} from 'src/app/state/club/club.actions';
 import {
   loadingCreateReservation,
   reservationCreatedFailure,
   selectCreateReservationAdminSuccess,
   selectSelectedClubDate,
-} from 'src/app/state/selectors/club.selectors';
+} from 'src/app/state/club/club.selectors';
 import { selectCourts } from 'src/app/state/selectors/clubConfiguration.selectors';
 import { CourtDetail } from 'src/app/models/CourtDetail.model';
 import { CreateReservationAdmin } from 'src/app/models/createReservationAdmin.model';

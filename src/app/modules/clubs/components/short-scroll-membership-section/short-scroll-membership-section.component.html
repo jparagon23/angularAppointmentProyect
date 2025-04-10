@@ -1,0 +1,16 @@
+<div *ngIf="memberships.length > 0" class="w-full py-8">
+  <div class="text-xl font-bold text-gray-800 mb-6">
+    {{ title }}
+  </div>
+
+  <div
+    class="flex gap-6 overflow-x-auto overflow-y-hidden px-2 scroll-smooth snap-x snap-mandatory py-4"
+  >
+    <app-membership-card
+      *ngFor="let membership of memberships"
+      [membership]="membership"
+      (actionDone)="onMembershipAction($event)"
+      class="snap-start shrink-0"
+    ></app-membership-card>
+  </div>
+</div>

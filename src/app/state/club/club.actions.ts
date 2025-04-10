@@ -4,6 +4,8 @@ import { createAction, props } from '@ngrx/store';
 import { ClubUser } from 'src/app/models/clubUsers.model';
 import { CreateReservationAdmin } from 'src/app/models/createReservationAdmin.model';
 import { UpdateReservationDto } from 'src/app/models/UpdateReservationDto.model';
+import { UserMatch } from 'src/app/models/events/UserMatch.model';
+import { GeneralRanking } from 'src/app/models/events/RankingInfo.model';
 
 export const getClubUserByNameOrId = createAction(
   '[Admin Dashboard] Get User By Name Or Id',
@@ -64,3 +66,33 @@ export const updateReservationAdminFailure = createAction(
   '[Admin Dashboard] Update Reservation Failure',
   props<{ error: any }>()
 );
+
+// -------------------------------------------------club-page actions----------------------------------------------------
+export const loadLast10ClubMatches = createAction(
+  '[Club Page] Load Last 10 Club Matches',
+  props<{ clubId: number }>()
+);
+export const loadLast10ClubMatchesSuccess = createAction(
+  '[Club Page] Load Last 10 Club Matches Success',
+  props<{ matches: UserMatch[] }>()
+);
+export const loadLast10ClubMatchesFailure = createAction(
+  '[Club Page] Load Last 10 Club Matches Failure',
+  props<{ error: any }>()
+);
+
+export const loadClubRanking = createAction(
+  '[Club Page] Load Club Ranking',
+  props<{ clubId: number }>()
+);
+
+export const loadClubRankingSuccess = createAction(
+  '[Club Page] Load Club Ranking Success',
+  props<{ ranking: GeneralRanking }>()
+);
+
+export const loadClubRankingFailure = createAction(
+  '[Club Page] Load Club Ranking Failure',
+  props<{ error: any }>()
+);
+// -----------------------------------------------------------------------------------------------------

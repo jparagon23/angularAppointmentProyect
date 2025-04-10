@@ -1,0 +1,69 @@
+<div class="bg-white rounded-lg p-6 shadow-lg w-96 md:w-[500px]">
+    <!-- Encabezado -->
+    <div class="flex justify-between items-center border-b pb-3">
+      <h2 class="text-xl font-bold">⚡ Retar a {{ opponent?.name }}</h2>
+      <button (click)="closeModal()" class="text-gray-600 hover:text-red-500">
+        ✖
+      </button>
+    </div>
+
+
+
+    <!-- Selección de Fecha y Hora -->
+    <div class="mt-4">
+      <label class="font-semibold block">📅 Fecha y Hora</label>
+      <input
+        type="datetime-local"
+        [(ngModel)]="selectedDate"
+        class="w-full border rounded-md p-2 mt-1"
+      />
+    </div>
+
+    <!-- Tipo de Partido -->
+    <div class="mt-4">
+      <label class="font-semibold block">🎾 Tipo de Partido</label>
+      <div class="flex gap-4">
+        <button
+          (click)="selectMatchType('SINGLES')"
+          [class.bg-green-600]="selectedMatchType === 'SINGLES'"
+          class="border rounded-md px-4 py-2 hover:bg-green-500 transition"
+        >
+          Sencillos
+        </button>
+        <button
+          (click)="selectMatchType('DOUBLES')"
+          [class.bg-green-600]="selectedMatchType === 'DOUBLES'"
+          class="border rounded-md px-4 py-2 hover:bg-green-500 transition"
+        >
+          Dobles
+        </button>
+      </div>
+    </div>
+
+    <!-- Mensaje Opcional -->
+    <div class="mt-4">
+      <label class="font-semibold block">💬 Mensaje Opcional</label>
+      <textarea
+        [(ngModel)]="challengeMessage"
+        class="w-full border rounded-md p-2 mt-1"
+        rows="3"
+        placeholder="Escribe un mensaje para tu oponente..."
+      ></textarea>
+    </div>
+
+    <!-- Botones de Acción -->
+    <div class="flex justify-between items-center mt-6">
+      <button
+        (click)="closeModal()"
+        class="border px-4 py-2 rounded-md hover:bg-gray-200"
+      >
+        Cancelar
+      </button>
+      <button
+        (click)="sendChallenge()"
+        class="bg-green-600 text-white px-5 py-2 rounded-md shadow-md font-bold transition hover:bg-green-700"
+      >
+        ⚡ Enviar Reto
+      </button>
+    </div>
+  </div>

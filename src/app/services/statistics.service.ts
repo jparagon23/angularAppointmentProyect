@@ -50,4 +50,13 @@ export class StatisticsService {
       headers: this.setHeaders(),
     });
   }
+
+  getClubRanking(clubId: number): Observable<GeneralRanking> {
+    const url = `${environment.API_URL}/statistics/clubRanking/${clubId}`;
+    const params = { userId: this.userId?.toString() ?? '' };
+    return this.http.get<GeneralRanking>(url, {
+      headers: this.setHeaders(),
+      params,
+    });
+  }
 }

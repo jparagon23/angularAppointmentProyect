@@ -1,0 +1,61 @@
+<div
+  class="max-w-sm bg-white rounded-2xl shadow-lg p-6 flex items-center transition-transform transform hover:shadow-xl duration-300 hover:scale-105 sm:hover:scale-105 sm:hover:shadow-xl"
+>
+  <!-- Avatar del usuario -->
+  <div class="w-24 h-24 flex-shrink-0 relative">
+    <img
+      *ngIf="membership.profileImage"
+      [src]="membership.profileImage"
+      alt="User Avatar"
+      class="w-full h-full object-cover rounded-full border-4 border-[#418622] shadow-md"
+    />
+    <div
+      *ngIf="!membership.profileImage"
+      class="w-full h-full flex items-center justify-center bg-gray-200 rounded-full border-4 border-[#418622] shadow-md"
+    >
+      <i class="fas fa-user text-[#418622] text-3xl"></i>
+    </div>
+  </div>
+
+  <!-- Información -->
+  <div class="ml-5 flex flex-col w-full">
+    <h2 class="text-xl font-bold text-gray-800">
+      {{ membership.userName }} {{ membership.userLastname }}
+    </h2>
+
+    <p
+      class="text-sm text-gray-500 flex items-center mt-1 truncate max-w-[14rem]"
+    >
+      <i class="fas fa-envelope mr-2 text-[#418622] flex-shrink-0"></i>
+      {{ membership.userEmail }}
+    </p>
+
+    <p class="text-sm text-gray-500 flex items-center mt-1">
+      <i class="fas fa-building mr-2 text-[#418622]"></i>
+      {{ membership.clubName }}
+    </p>
+
+    <!-- Botones -->
+    <div class="flex gap-3 mt-4">
+      <button
+        (click)="approve()"
+        [disabled]="isLoading"
+        class="bg-[#418622] hover:bg-[#326d1a] text-white text-sm font-semibold px-4 py-1.5 rounded-full transition flex items-center gap-2"
+      >
+        <span *ngIf="!isLoading"> Aprobar</span>
+        <span
+          *ngIf="isLoading"
+          class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"
+        ></span>
+      </button>
+
+      <button
+        (click)="reject()"
+        [disabled]="isLoading"
+        class="bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-4 py-1.5 rounded-full transition"
+      >
+        Rechazar
+      </button>
+    </div>
+  </div>
+</div>

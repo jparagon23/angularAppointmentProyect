@@ -10,16 +10,25 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { of, Subject } from 'rxjs';
-import { debounceTime, takeUntil, tap, map, distinctUntilChanged, filter, take, switchMap } from 'rxjs/operators';
+import {
+  debounceTime,
+  takeUntil,
+  tap,
+  map,
+  distinctUntilChanged,
+  filter,
+  take,
+  switchMap,
+} from 'rxjs/operators';
 
 import { AppState } from 'src/app/state/app.state';
 import { ClubUser } from 'src/app/models/clubUsers.model';
 import { LightUser } from 'src/app/models/LightUser.model';
-import { getClubUserByNameOrId } from 'src/app/state/actions/club.actions';
+import { getClubUserByNameOrId } from 'src/app/state/club/club.actions';
 import {
   selectClubUsers,
   selectLoadingClubUsers,
-} from 'src/app/state/selectors/club.selectors';
+} from 'src/app/state/club/club.selectors';
 import { CreateLightUserModalComponent } from '../../../admin/modals/create-light-user-modal/create-light-user-modal.component';
 import { UserListReturn } from 'src/app/models/UserListReturn.model';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -62,70 +71,68 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
   }
 
   private setupUserSearch(): void {
-    this.userControl.valueChanges.pipe(
-      tap(() => {
-        this.selectedUser = undefined; // Limpia la selección previa
-        this.queryCompleted = false; // Reinicia el estado de carga
-      }),
-      debounceTime(400),
-      distinctUntilChanged(),
-      filter(searchTerm => !!searchTerm && searchTerm.length >= 3),
-      tap(searchTerm => {
-        this.queryCompleted = false; // Muestra "Cargando..." mientras busca
-        this.searchUserIfNeeded(searchTerm);
-      }),
-      takeUntil(this.destroy$)
-    ).subscribe();    
+    this.userControl.valueChanges
+      .pipe(
+        tap(() => {
+          this.selectedUser = undefined; // Limpia la selección previa
+          this.queryCompleted = false; // Reinicia el estado de carga
+        }),
+        debounceTime(400),
+        distinctUntilChanged(),
+        filter((searchTerm) => !!searchTerm && searchTerm.length >= 3),
+        tap((searchTerm) => {
+          this.queryCompleted = false; // Muestra "Cargando..." mientras busca
+          this.searchUserIfNeeded(searchTerm);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe();
   }
-  
-  
+
   private searchUserIfNeeded(searchTerm: string): void {
     if (this.selectedUser) return;
-  
+
     this.queryCompleted = false;
-  
+
     if (this.userCache.has(searchTerm)) {
       this.filteredUsers$ = of(this.userCache.get(searchTerm)!);
       setTimeout(() => (this.queryCompleted = true), 500);
     } else {
       this.store.dispatch(getClubUserByNameOrId({ nameOrId: searchTerm }));
-  
+
       this.store
         .select(selectLoadingClubUsers)
         .pipe(
-          filter(loading => !loading), // 🔹 Espera a que termine la carga
+          filter((loading) => !loading), // 🔹 Espera a que termine la carga
           take(1),
           switchMap(() => this.store.select(selectClubUsers).pipe(take(1))) // Obtiene los usuarios después de la carga
         )
-        .subscribe(users => {
-          this.filteredUsers$ = of(users);
-          this.queryCompleted = true;
-        }, error => {
-          this.queryCompleted = true;
-        });
+        .subscribe(
+          (users) => {
+            this.filteredUsers$ = of(users);
+            this.queryCompleted = true;
+          },
+          (error) => {
+            this.queryCompleted = true;
+          }
+        );
     }
   }
-  
-  
-  
-  
-  
-
 
   onUserSelected(user: ClubUser): void {
     this.selectedUser = user;
-  
+
     this.userReturn.emit({
       userId: this.selectedUser?.userId?.toString() ?? '',
       completeName: this.selectedUser?.completeName ?? '',
       profileImage: this.selectedUser?.profileImage ?? '',
       lightUser: this.selectedUser?.userId ? null : this.lightUser,
+      userClubMemberships: this.selectedUser?.userClubMemberships ?? [],
     });
-  
+
     // 🔹 Resetear correctamente el FormControl
     this.userControl.setValue('', { emitEvent: false }); // Evita disparar valueChanges innecesariamente
   }
-  
 
   displayUserName(user?: ClubUser): string {
     return user?.completeName ?? '';
@@ -155,6 +162,7 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
       completeName: `${result.name} ${result.lastName}`,
       profileImage: '',
       userStatus: 0,
+      userClubMemberships: [],
     };
 
     this.selectedUser = newUser;
@@ -166,6 +174,7 @@ export class UserSearchListComponent implements OnInit, OnDestroy {
       lightUser: this.selectedUser?.userId ? null : this.lightUser,
       completeName: this.selectedUser?.completeName ?? '',
       profileImage: '',
+      userClubMemberships: this.selectedUser?.userClubMemberships ?? [],
     });
   }
 

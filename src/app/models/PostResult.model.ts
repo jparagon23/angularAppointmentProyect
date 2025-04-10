@@ -16,4 +16,5 @@ export interface MatchResultDto {
   loserId: number;
   matchDate: string;
   sets: SetDto[];
+  clubId: number | null;
 }

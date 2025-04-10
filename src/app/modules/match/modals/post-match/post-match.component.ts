@@ -1,9 +1,9 @@
 import { CLUB_ADMIN_ROLE } from 'src/app/modules/shared/constants/Constants.constants';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { MatchResultDto } from 'src/app/models/PostResult.model';
-import { User } from 'src/app/models/user.model';
+import { ClubMembership, User } from 'src/app/models/user.model';
 import { UserListReturn } from 'src/app/models/UserListReturn.model';
 import {
   publishMatchResult,
@@ -25,14 +25,37 @@ export class PostMatchComponent implements OnInit, OnDestroy {
   matchDate: string = '';
 
   winner: string | null = null;
+  publishForClub: boolean | null = null;
 
   user$ = this.store.select(selectUser);
   status$ = this.store.select(selectPostScoreStatus);
+  sharedClubs: { clubId: number; name: string }[] | [] = [];
+  sharedClub: { clubId: number; name: string } | null = null;
 
-  player1: { id: number; name: string; image: string } | null = null;
-  player2: { id: number; name: string; image: string } | null = null;
-  player3: { id: number; name: string; image: string } | null = null;
-  player4: { id: number; name: string; image: string } | null = null;
+  player1: {
+    id: number;
+    name: string;
+    image: string;
+    clubMemberships: ClubMembership[];
+  } | null = null;
+  player2: {
+    id: number;
+    name: string;
+    image: string;
+    clubMemberships: ClubMembership[];
+  } | null = null;
+  player3: {
+    id: number;
+    name: string;
+    image: string;
+    clubMemberships: ClubMembership[];
+  } | null = null;
+  player4: {
+    id: number;
+    name: string;
+    image: string;
+    clubMemberships: ClubMembership[];
+  } | null = null;
 
   user: User | null = null;
 
@@ -63,7 +86,10 @@ export class PostMatchComponent implements OnInit, OnDestroy {
           id: Number(user!.id),
           name: user!.name.concat(' ', user!.lastname),
           image: user!.profileImage ?? '',
+          clubMemberships: user!.userClubMemberships,
         };
+        this.sharedClubs = this.getSharedApprovedClubs();
+        this.handleClubPublishing();
       }
     });
 
@@ -118,7 +144,10 @@ export class PostMatchComponent implements OnInit, OnDestroy {
       id: Number(player.userId),
       name: player.completeName,
       image: player.profileImage,
+      clubMemberships: player.userClubMemberships,
     };
+    this.sharedClubs = this.getSharedApprovedClubs();
+    this.handleClubPublishing();
   }
 
   onUserSelectedP1(player: UserListReturn | null): void {
@@ -130,7 +159,10 @@ export class PostMatchComponent implements OnInit, OnDestroy {
       id: Number(player.userId),
       name: player.completeName,
       image: player.profileImage,
+      clubMemberships: player.userClubMemberships,
     };
+    this.sharedClubs = this.getSharedApprovedClubs();
+    this.handleClubPublishing();
   }
 
   onUserSelectedP3(player: UserListReturn | null): void {
@@ -142,7 +174,10 @@ export class PostMatchComponent implements OnInit, OnDestroy {
       id: Number(player.userId),
       name: player.completeName,
       image: player.profileImage,
+      clubMemberships: player.userClubMemberships,
     };
+    this.sharedClubs = this.getSharedApprovedClubs();
+    this.handleClubPublishing();
   }
 
   onUserSelectedP4(player: UserListReturn | null): void {
@@ -154,7 +189,10 @@ export class PostMatchComponent implements OnInit, OnDestroy {
       id: Number(player.userId),
       name: player.completeName,
       image: player.profileImage,
+      clubMemberships: player.userClubMemberships,
     };
+    this.sharedClubs = this.getSharedApprovedClubs();
+    this.handleClubPublishing();
   }
 
   handleResult(result: any): void {
@@ -221,6 +259,7 @@ export class PostMatchComponent implements OnInit, OnDestroy {
       matchDate: this.matchDate,
       sets: this.setResults.sets,
       groupId: null,
+      clubId: this.sharedClub?.clubId ?? null,
     };
 
     this.store.dispatch(publishMatchResult({ matchResult: json }));
@@ -236,5 +275,75 @@ export class PostMatchComponent implements OnInit, OnDestroy {
 
   selectMatchType(type: string): void {
     this.matchType = type as 'SINGLES' | 'DOUBLES';
+  }
+
+  private getSharedApprovedClubs(): { clubId: number; name: string }[] {
+    const players = [this.player1, this.player2];
+    if (this.matchType === 'DOUBLES') {
+      if (!this.player3 || !this.player4) return [];
+      players.push(this.player3, this.player4);
+    }
+
+    if (players.some((p) => !p?.clubMemberships)) return [];
+
+    const clubLists = players.map((p) =>
+      p!.clubMemberships
+        .filter((m) => m.status === 'APPROVED' && m.club.allowMatchReporting)
+        .map((m) => ({ clubId: m.club.id, name: m.club.name }))
+    );
+
+    // Intersección de todos los clubes
+    return clubLists.reduce((acc, list) =>
+      acc.filter((club) => list.some((c) => c.clubId === club.clubId))
+    );
+  }
+
+  private handleClubPublishing(): void {
+    const sharedClubs = this.getSharedApprovedClubs();
+
+    if (sharedClubs.length === 1) {
+      Swal.fire({
+        icon: 'question',
+        title: '¿Deseas publicar este partido por el club?',
+        text: `Ambos jugadores pertenecen al club "${sharedClubs[0].name}".`,
+        showCancelButton: true,
+        confirmButtonText: 'Sí, publicar por el club',
+        cancelButtonText: 'No',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.publishForClub = true;
+          this.sharedClub = sharedClubs[0];
+        } else {
+          this.publishForClub = false;
+        }
+      });
+    } else if (sharedClubs.length > 1) {
+      Swal.fire({
+        title: '¿Por cuál club deseas publicar el partido?',
+        input: 'select',
+        inputOptions: sharedClubs.reduce((acc, c) => {
+          acc[c.clubId] = c.name;
+          return acc;
+        }, {} as Record<number, string>),
+        inputPlaceholder: 'Selecciona un club',
+        showCancelButton: true,
+        inputValidator: (value) => {
+          return !value ? 'Debes seleccionar un club' : null;
+        },
+      }).then((result) => {
+        if (result.isConfirmed && result.value) {
+          const selectedClub = sharedClubs.find(
+            (c) => c.clubId === +result.value
+          );
+          this.publishForClub = true;
+          this.sharedClub = selectedClub ?? null;
+        } else {
+          this.publishForClub = false;
+        }
+      });
+    } else {
+      this.publishForClub = false;
+      this.sharedClub = null;
+    }
   }
 }

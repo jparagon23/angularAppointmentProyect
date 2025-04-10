@@ -5,6 +5,7 @@ import {
   loadUserFailure,
   loadUserSuccess,
   resertUpdateUserStatus,
+  updateStoreUser,
   updateUser,
   updateUserFailure,
   updateUserSuccess,
@@ -56,6 +57,10 @@ export const profileReducer = createReducer(
     updateUserLoading: false,
     updateUserSuccess: false,
     updateUserFailure: false,
+  })),
+  on(updateStoreUser, (state, { user }) => ({
+    ...state,
+    user: { ...state.user, ...user },
   })),
   on(logout, () => initialState)
 );

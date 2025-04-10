@@ -27,7 +27,7 @@ import { ReservationInfoModalComponent } from 'src/app/modules/admin/modals/rese
 import {
   selectedClubDate,
   updateReservationAdmin,
-} from 'src/app/state/actions/club.actions';
+} from 'src/app/state/club/club.actions';
 import { loadCourts } from 'src/app/state/actions/clubConfiguration.actions';
 import {
   loadCancelReservationCauses,
@@ -37,7 +37,7 @@ import {
   selectUpdateReservationFailure,
   selectUpdateReservationLoader,
   selectUpdateReservationSuccess,
-} from 'src/app/state/selectors/club.selectors';
+} from 'src/app/state/club/club.selectors';
 import { selectCourts } from 'src/app/state/selectors/clubConfiguration.selectors';
 import {
   selectClubReservations,

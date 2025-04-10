@@ -22,6 +22,8 @@ import {
   resetUserProfileState,
 } from 'src/app/state/user-profile/user-profile.actions';
 import { selectUserProfileStatus } from 'src/app/state/user-profile/user-profile.selectors';
+import { MatDialog } from '@angular/material/dialog';
+import { ChallengeModalComponent } from 'src/app/modules/match/modals/challenge-modal/challenge-modal.component';
 
 @Component({
   selector: 'app-user-profile',
@@ -46,7 +48,7 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly store: Store<AppState>,
     private readonly router: Router,
-    private readonly datePipe: DatePipe
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -140,5 +142,13 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
     return this.userMatches
       ? this.userMatches.filter((match) => match.status === 'CONFIRMED') || []
       : [];
+  }
+
+  openChallengeUser(): void {
+    this.dialog.open(ChallengeModalComponent, {
+      maxWidth: '95vw',
+      maxHeight: '95vh',
+      panelClass: 'custom-dialog-container',
+    });
   }
 }

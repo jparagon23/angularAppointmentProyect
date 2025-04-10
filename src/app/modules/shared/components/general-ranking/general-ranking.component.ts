@@ -10,5 +10,7 @@ export class GeneralRankingComponent {
     singleRanking: [],
     doublesRanking: [],
   };
+  @Input() title:string= "Ranking general"
   rankingTab: string = 'SINGLES';
+
 }

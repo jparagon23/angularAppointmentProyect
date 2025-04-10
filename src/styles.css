@@ -38,7 +38,7 @@ body {
 }
 
 .swal2-html-container {
-  overflow-y: scroll;
+  overflow-y: auto;
   width: 100%;
 }
 

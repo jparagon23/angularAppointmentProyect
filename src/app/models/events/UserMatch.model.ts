@@ -1,3 +1,5 @@
+import { ClubInfo } from '../ClubInfo.model';
+
 export interface User {
   id: number;
   name: string;
@@ -5,11 +7,11 @@ export interface User {
 }
 
 export interface Set {
-  setNumber: number;
-  winnerGames: number;
-  loserGames: number;
-  winnerTieBreak: number;
-  loserTieBreak: number;
+  setNumber: number | undefined;
+  winnerGames: number | undefined;
+  loserGames: number | undefined;
+  winnerTieBreak: number | undefined;
+  loserTieBreak: number | undefined;
 }
 
 export interface UserMatch {
@@ -24,6 +26,7 @@ export interface UserMatch {
   loser2: User;
   sets: Set[];
   pendingConfirmationUsers: number[] | null;
+  club: ClubInfo;
 }
 
 export interface Pageable {
