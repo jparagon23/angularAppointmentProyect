@@ -17,6 +17,7 @@ import { ShortScrollMembershipSectionComponent } from './components/short-scroll
     ShortScrollMembershipSectionComponent,
   ],
   exports: [MembershipCardComponent, ShortScrollMembershipSectionComponent],
+
   imports: [CommonModule, ClubsRoutingModule, SharedModule],
 })
 export class ClubsModule {}

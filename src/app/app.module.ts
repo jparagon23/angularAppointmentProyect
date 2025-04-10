@@ -33,6 +33,7 @@ import { DashboardEffects } from './state/dashboard-state/dashboard.effects';
 import { ClubsModule } from './modules/clubs/clubs.module';
 import { MembershipEffects } from './state/membership/membership.effects';
 
+
 registerLocaleData(localeEs, 'es');
 
 @NgModule({

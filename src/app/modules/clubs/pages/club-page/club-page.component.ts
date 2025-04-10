@@ -1,3 +1,4 @@
+
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -17,6 +18,7 @@ import { selectMembershipClubs } from 'src/app/state/membership/membership.selec
 import { selectRankingState } from 'src/app/state/selectors/event.selectors';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-club-page',
@@ -204,3 +206,4 @@ export class ClubPageComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 }
+

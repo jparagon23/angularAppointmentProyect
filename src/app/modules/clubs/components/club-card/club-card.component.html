@@ -5,11 +5,13 @@
     <img
       *ngIf="clubInfo.clubLogo"
       [src]="clubInfo.clubLogo"
+
       alt="Club Logo"
       class="w-full h-full object-cover rounded-full border-4 border-[#418622] shadow-md"
     />
     <div
       *ngIf="!clubInfo.clubLogo"
+
       class="w-full h-full flex items-center justify-center bg-gray-200 rounded-full border-4 border-[#418622] shadow-md"
     >
       <i class="fas fa-user text-[#418622] text-4xl"></i>
@@ -31,6 +33,7 @@
       <span class="material-icons text-[#418622] mr-1">groups</span>
       {{ clubInfo.members }} miembros
     </p>
+
 
     <app-button
       class="self-start mt-4 px-5 py-2.5 rounded-3xl text-sm font-bold"
