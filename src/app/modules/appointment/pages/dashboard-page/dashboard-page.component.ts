@@ -70,11 +70,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         if (user?.id) {
           const singles = dashboardState.last10SinglesMatches ?? [];
           const doubles = dashboardState.last10DoublesMatches ?? [];
-          const userMatches =
-            this.matchType === 'SINGLES'
-              ? singles
-              : doubles;
-          
+          const userMatches = this.matchType === 'SINGLES' ? singles : doubles;
+
           const allUserMatches = [...singles, ...doubles];
 
           if (userMatches) {
@@ -87,27 +84,27 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   private filterPendingMatches(userMatches: UserMatch[], userId: number): void {
     console.log(userMatches);
-    
+
     this.pendingMatches = userMatches.filter(
       (match) =>
         match.status === 'PENDING' &&
         match.pendingConfirmationUsers?.includes(userId)
     );
-    
   }
 
   private filterMatches(userMatches: UserMatch[], userId: number): void {
     console.log(userMatches);
-    
+
     this.confirmedMatches = userMatches.filter(
       (match) =>
         (match.status === 'CONFIRMED' && match.matchType === this.matchType) ||
+        (match.status === 'AUTO_APPROVED' &&
+          match.matchType === this.matchType) ||
         (match.status === 'PENDING' &&
           match.pendingConfirmationUsers &&
           !match.pendingConfirmationUsers.includes(userId) &&
           match.matchType === this.matchType)
     );
-    
   }
 
   private handleCancelReservationSuccess(): void {
