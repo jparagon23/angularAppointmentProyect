@@ -88,6 +88,9 @@ export class RegisterFormComponent implements OnInit {
     this.authService.getInitialSignUpData().subscribe({
       next: (data) => {
         this.initialData = data;
+        this.initialData.categories = this.initialData.categories.filter(
+          (category) => category.description.toLowerCase() !== 'iniciante'
+        );
       },
       error: () => {},
     });
