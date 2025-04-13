@@ -61,7 +61,7 @@ export class ClubEffects {
     this.actions$.pipe(
       ofType(loadLast10ClubMatches),
       switchMap(({ clubId }) =>
-        this.matchService.getClubMatches(clubId, 'ALL', 'CONFIRMED').pipe(
+        this.matchService.getClubMatches(clubId, 'ALL').pipe(
           map((matches) =>
             loadLast10ClubMatchesSuccess({
               matches: matches._embedded?.matchResponseDTOList ?? [],

@@ -43,7 +43,7 @@ export class UserProfileEffects {
     this.actions$.pipe(
       ofType(loadUserProfileMatches),
       switchMap(({ id }) =>
-        this.matchService.getUserMatches(id, 'ALL', 'CONFIRMED').pipe(
+        this.matchService.getUserMatches(id, 'ALL').pipe(
           map((matches) =>
             loadUserProfileMatchesSuccess({
               matches: matches._embedded?.matchResponseDTOList ?? [],
