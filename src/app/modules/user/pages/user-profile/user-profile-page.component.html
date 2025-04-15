@@ -40,23 +40,33 @@
             {{ userProfile?.userProfile?.name | titlecase }}
             {{ userProfile?.userProfile?.lastname | titlecase }}
           </div>
-          <div>
+          <!-- Rankings -->
+          <div class="flex flex-col md:flex-row gap-2 mt-3">
+            <!-- Sencillos -->
             <div
-              class="text-base md:text-lg text-gray-600 font-medium mt-1"
+              class="flex items-center gap-2 px-4 py-2 bg-white border border-green-500 rounded-xl shadow-sm"
               *ngIf="userProfile.userProfile?.userRanking"
             >
-              Ranking
-              <span class="text-green-700 font-semibold">
-                #{{ userProfile.userProfile?.userRanking }}
-              </span>
+              <span class="text-green-700 text-xl">🎾</span>
+              <div class="text-gray-700 text-sm md:text-base">
+                <span class="font-semibold">Ranking en Sencillos:</span>
+                <span class="text-green-800 font-bold"
+                  >#{{ userProfile.userProfile?.userRanking }}</span
+                >
+              </div>
             </div>
 
+            <!-- Dobles -->
             <div
-              class="text-base md:text-lg text-gray-600 font-medium mt-1"
-              *ngIf="!userProfile.userProfile?.userRanking"
+              class="flex items-center gap-2 px-4 py-2 bg-white border border-green-500 rounded-xl shadow-sm"
+              *ngIf="userProfile.userProfile?.userDoublesRanking"
             >
-              <div>
-                No tines suficientes partidos para clasificar al ranking
+              <span class="text-green-700 text-xl">🤝</span>
+              <div class="text-gray-700 text-sm md:text-base">
+                <span class="font-semibold">Ranking en Dobles:</span>
+                <span class="text-green-800 font-bold"
+                  >#{{ userProfile.userProfile?.userDoublesRanking }}</span
+                >
               </div>
             </div>
           </div>
@@ -70,7 +80,7 @@
             >
               <i class="fas fa-edit"></i> Editar Perfil
             </button>
-          
+
             <button
               *ngIf="!showEditButton"
               (click)="openChallengeUser()"
@@ -79,8 +89,6 @@
               <i class="fas fa-bolt"></i> Retar al jugador
             </button>
           </div>
-          
-          
         </div>
       </div>
     </div>

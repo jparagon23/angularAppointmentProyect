@@ -25,6 +25,7 @@ export interface User {
   doublesRating: number;
   doublesRatingType: number;
   userRanking: number;
+  userDoublesRanking: number;
   lastMatchConfirmed: string;
   lastDoubleMatchConfirmed: string;
   userClubMemberships: ClubMembership[];
