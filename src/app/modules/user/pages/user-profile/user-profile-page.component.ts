@@ -140,7 +140,10 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
   // ✅ Getter para los partidos confirmados
   get confirmedMatches() {
     return this.userMatches
-      ? this.userMatches.filter((match) => match.status === 'CONFIRMED') || []
+      ? this.userMatches.filter(
+          (match) =>
+            match.status === 'CONFIRMED' || match.status === 'AUTO_APPROVED'
+        ) || []
       : [];
   }
 
