@@ -1,11 +1,15 @@
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 import { ClubInfo } from 'src/app/models/ClubInfo.model';
+import { MembershipDTO } from 'src/app/models/MembershipDTO.model';
 import { ClubMembership, User } from 'src/app/models/user.model';
+import {
+  CLUB_ADMIN_ROLE,
+  SUPER_ADMIN_ROLE,
+} from 'src/app/modules/shared/constants/Constants.constants';
 import { ClubService } from 'src/app/services/club.service';
 import { updateStoreUser } from 'src/app/state/actions/users.actions';
 import {
@@ -19,13 +23,13 @@ import { selectRankingState } from 'src/app/state/selectors/event.selectors';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-club-page',
   templateUrl: './club-page.component.html',
 })
 export class ClubPageComponent implements OnInit, OnDestroy {
   clubInfo!: ClubInfo;
+  clubMembers!: MembershipDTO[];
   selectGeneralRankingStatus$ = this.store.select(selectRankingState);
   selectDashboardState$ = this.store.select(selectDashboardState);
 
@@ -38,6 +42,10 @@ export class ClubPageComponent implements OnInit, OnDestroy {
   pendingMemberRequest = false;
   private readonly destroy$ = new Subject<void>();
 
+  activeTab = 'overview';
+  isClubAdmin = false;
+  clubId: string | null = null;
+
   constructor(
     private readonly store: Store<any>,
     private readonly clubService: ClubService,
@@ -46,14 +54,17 @@ export class ClubPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // Get the ID from the URL
-    const clubId = this.route.snapshot.paramMap.get('id');
+    this.clubId = this.route.snapshot.paramMap.get('id');
+    this.checkIfUserIsClubAdmin(Number(this.clubId));
 
-    if (clubId) {
-      this.loadClubData(parseInt(clubId, 10));
+    if (this.clubId) {
+      this.loadClubData(parseInt(this.clubId, 10));
       this.store.dispatch(
-        loadLast10ClubMatches({ clubId: parseInt(clubId, 10) })
+        loadLast10ClubMatches({ clubId: parseInt(this.clubId, 10) })
       );
-      this.store.dispatch(loadClubRanking({ clubId: parseInt(clubId, 10) }));
+      this.store.dispatch(
+        loadClubRanking({ clubId: parseInt(this.clubId, 10) })
+      );
     }
   }
 
@@ -89,6 +100,17 @@ export class ClubPageComponent implements OnInit, OnDestroy {
 
         this.pendingMemberRequest = membership?.status === 'PENDING';
         this.isMember = membership?.status === 'APPROVED';
+      }
+    });
+  }
+
+  private checkIfUserIsClubAdmin(clubId: number): void {
+    this.selectUser$.pipe(first()).subscribe((user) => {
+      if (user) {
+        const isAdmin =
+          (user.userAdminClub == clubId && user.role == CLUB_ADMIN_ROLE) ||
+          user.role == SUPER_ADMIN_ROLE;
+        this.isClubAdmin = isAdmin;
       }
     });
   }
@@ -206,4 +228,3 @@ export class ClubPageComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 }
-

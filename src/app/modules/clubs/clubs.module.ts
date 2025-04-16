@@ -7,6 +7,10 @@ import { SharedModule } from '../shared/shared.module';
 import { ClubPageComponent } from './pages/club-page/club-page.component';
 import { MembershipCardComponent } from './components/membership-card/membership-card.component';
 import { ShortScrollMembershipSectionComponent } from './components/short-scroll-membership-section/short-scroll-membership-section.component';
+import { ClubProfileHeaderComponent } from './components/club-profile-header/club-profile-header.component';
+import { MatchModule } from '../match/match.module';
+import { ClubMembersTableComponent } from './components/club-members-table/club-members-table.component';
+import { ClubMatchesSectionComponent } from './components/club-matches-section/club-matches-section.component';
 
 @NgModule({
   declarations: [
@@ -15,9 +19,12 @@ import { ShortScrollMembershipSectionComponent } from './components/short-scroll
     ClubPageComponent,
     MembershipCardComponent,
     ShortScrollMembershipSectionComponent,
+    ClubProfileHeaderComponent,
+    ClubMembersTableComponent,
+    ClubMatchesSectionComponent,
   ],
   exports: [MembershipCardComponent, ShortScrollMembershipSectionComponent],
 
-  imports: [CommonModule, ClubsRoutingModule, SharedModule],
+  imports: [CommonModule, ClubsRoutingModule, SharedModule, MatchModule],
 })
 export class ClubsModule {}

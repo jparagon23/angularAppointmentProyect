@@ -72,3 +72,4 @@ export const TERMS_AND_CONDITIONS = `
 `;
 
 export const CLUB_ADMIN_ROLE = 2;
+export const SUPER_ADMIN_ROLE = 3;

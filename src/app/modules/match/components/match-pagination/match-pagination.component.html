@@ -1,0 +1,36 @@
+<app-loader *ngIf="matches.length === 0"></app-loader>
+
+<div *ngIf="matches.length > 0">
+  <div class="flex flex-wrap justify-start gap-4">
+    <div class="w-full sm:w-[200px] md:w-[450px]" *ngFor="let match of matches">
+      <app-match-result-card
+        [matchData]="match"
+        [userCanConfirm]="false"
+      ></app-match-result-card>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <div
+    class="flex justify-center mt-5 space-x-4"
+    *ngIf="!(currentPage == 0 && matches.length < pageSize)"
+  >
+    <button
+      class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+      (click)="prevPage()"
+      [disabled]="currentPage === 0"
+    >
+      Anterior
+    </button>
+
+    <span class="text-lg font-semibold">Página {{ currentPage + 1 }}</span>
+
+    <button
+      class="px-4 py-2 bg-gray-300 rounded disabled:opacity-50"
+      (click)="nextPage()"
+      [disabled]="matches.length < pageSize"
+    >
+      Siguiente
+    </button>
+  </div>
+</div>

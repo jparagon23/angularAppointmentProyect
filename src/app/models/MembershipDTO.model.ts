@@ -7,4 +7,5 @@ export interface MembershipDTO {
   clubName: string;
   status: string;
   profileImage: string;
+  joinedAt: string; // ISO format
 }

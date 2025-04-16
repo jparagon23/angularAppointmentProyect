@@ -1,0 +1,45 @@
+<div class="overflow-x-auto rounded-xl shadow-md border border-gray-200">
+  <table class="min-w-full text-sm text-left text-gray-700">
+    <thead class="bg-gray-100 text-xs uppercase tracking-wide text-gray-600">
+      <tr>
+        <th class="px-6 py-4">Nombre y Apellido</th>
+        <th class="px-6 py-4">Correo</th>
+        <th class="px-6 py-4">Fecha de suscripción</th>
+        <th class="px-6 py-4 text-center">Acción</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-100">
+      <tr
+        *ngFor="let member of clubMembers"
+        class="hover:bg-gray-50 transition-colors"
+      >
+        <td class="px-6 py-4 flex items-center gap-4">
+          <img
+            *ngIf="member.profileImage"
+            [src]="member.profileImage"
+            alt="Foto"
+            class="w-10 h-10 rounded-full object-cover border border-gray-300"
+          />
+          <span>{{ member.userName }} {{ member.userLastname }}</span>
+        </td>
+
+        <td class="px-6 py-4 text-gray-600">
+          {{ member.userEmail }}
+        </td>
+
+        <td class="px-6 py-4 text-gray-600">
+          {{ member.joinedAt | date : "dd/MM/yyyy" }}
+        </td>
+
+        <td class="px-6 py-4 text-center">
+          <button
+            (click)="removeMembership(member.userId)"
+            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full text-xs font-semibold shadow transition duration-150"
+          >
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

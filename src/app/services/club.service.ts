@@ -55,14 +55,16 @@ export class ClubService {
     });
   }
 
-  unsubscribeToClub(clubId: number) {
+  unsubscribeToClub(clubId: number, userId?: number) {
     if (!this.userId) {
       throw new Error('User ID is not defined');
     }
 
+    userId = userId ?? this.userId;
+
     const url = `${environment.API_URL}/club/cancel`;
     const params = {
-      userId: this.userId.toString(),
+      userId: userId.toString(),
       clubId: clubId.toString(),
     };
 
@@ -105,6 +107,13 @@ export class ClubService {
   getPendingMembershipRequests(): Observable<MembershipDTO[]> {
     const clubId = this.user.userAdminClub;
     const url = `${environment.API_URL}/club/${clubId}/pendingMembershipRequests`;
+    return this.http.get<MembershipDTO[]>(url, {
+      headers: this.setHeaders(),
+    });
+  }
+
+  getAllActiveClubMembers(clubId: number): Observable<MembershipDTO[]> {
+    const url = `${environment.API_URL}/club/${clubId}/active-members`;
     return this.http.get<MembershipDTO[]>(url, {
       headers: this.setHeaders(),
     });

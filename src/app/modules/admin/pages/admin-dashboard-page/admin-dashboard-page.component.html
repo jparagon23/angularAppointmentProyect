@@ -12,6 +12,11 @@
     class="w-full mx-5 my-5 md:w-2/3 md:my-0"
     *ngIf="adminPostedMatchesState$ | async as state"
   >
+    <app-result-short-section
+      [matchToShow]="pendingMatches"
+      [title]="'Partidos Pendientes por confirmar'"
+      [canConfirm]="true"
+    ></app-result-short-section>
     <app-short-scroll-membership-section
       [memberships]="memberships"
       [title]="'Solicitudes para unirse al club'"
