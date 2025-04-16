@@ -83,8 +83,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   private filterPendingMatches(userMatches: UserMatch[], userId: number): void {
-    console.log(userMatches);
-
     this.pendingMatches = userMatches.filter(
       (match) =>
         match.status === 'PENDING' &&
@@ -93,8 +91,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   private filterMatches(userMatches: UserMatch[], userId: number): void {
-    console.log(userMatches);
-
     this.confirmedMatches = userMatches.filter(
       (match) =>
         (match.status === 'CONFIRMED' && match.matchType === this.matchType) ||

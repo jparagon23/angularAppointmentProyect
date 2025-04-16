@@ -62,8 +62,6 @@ export class AdminDashboardPageComponent implements OnInit {
   }
 
   private filterPendingMatches(userMatches: UserMatch[], userId: number): void {
-    console.log(userMatches);
-
     this.pendingMatches = userMatches.filter(
       (match) =>
         match.status === 'PENDING' &&
