@@ -91,6 +91,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   private filterMatches(userMatches: UserMatch[], userId: number): void {
+
     this.confirmedMatches = userMatches.filter(
       (match) =>
         (match.status === 'CONFIRMED' && match.matchType === this.matchType) ||
