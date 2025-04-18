@@ -36,7 +36,7 @@ export class UserService {
   }
 
   getClubUserByNameOrId(name: string): Observable<ClubUser[]> {
-    const url = `${environment.API_URL}/reservation/club/${this.user.userAdminClub}/members?nameOrId=${name}`;
+    const url = `${environment.API_URL}/active-users?nameOrId=${name}`;
     return this.http.get<ClubUser[]>(url, { headers: this.setHeaders() });
   }
 
@@ -46,7 +46,7 @@ export class UserService {
   }
 
   getUserById(id: number): Observable<User> {
-    const url = `${environment.API_URL}/user/${id}`;
+    const url = `${environment.API_URL}/profile/${id}`;
     return this.http
       .get<{ data: User[] }>(url, { headers: this.setHeaders() })
       .pipe(map((response) => response.data?.[0]));

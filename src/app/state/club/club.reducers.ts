@@ -13,9 +13,17 @@ import {
   updateReservationAdmin,
   updateReservationAdminFailure,
   updateReservationAdminSuccess,
-} from '../actions/club.actions';
+  loadLast10ClubMatches,
+  loadLast10ClubMatchesSuccess,
+  loadLast10ClubMatchesFailure,
+  loadClubRanking,
+  loadClubRankingSuccess,
+  loadClubRankingFailure,
+} from '../club/club.actions';
 import { createReducer, on } from '@ngrx/store';
 import { logout } from '../actions/auth.actions';
+import { UserMatch } from 'src/app/models/events/UserMatch.model';
+import { GeneralRanking } from 'src/app/models/events/RankingInfo.model';
 export interface ClubState {
   clubUsers: ClubUser[];
   loadingClubUsers: boolean;
@@ -27,6 +35,10 @@ export interface ClubState {
   updateReservationLoading: boolean;
   updateReservationSuccess: boolean;
   updateReservationFailure: boolean;
+  lastClubMatches: UserMatch[];
+  loadingClubMatches: boolean;
+  clubRanking: GeneralRanking;
+  loadingClubRanking: boolean;
 }
 
 export const initialState: ClubState = {
@@ -40,6 +52,13 @@ export const initialState: ClubState = {
   updateReservationLoading: true,
   updateReservationSuccess: false,
   updateReservationFailure: false,
+  lastClubMatches: [],
+  loadingClubMatches: false,
+  clubRanking: {
+    singleRanking: [],
+    doublesRanking: [],
+  },
+  loadingClubRanking: false,
 };
 
 export const clubReducer = createReducer(
@@ -104,5 +123,33 @@ export const clubReducer = createReducer(
     ...state,
     updateReservationLoading: false,
     updateReservationFailure: true,
+  })),
+  on(loadLast10ClubMatches, (state: ClubState) => ({
+    ...state,
+    loadingClubMatches: true,
+  })),
+  on(loadLast10ClubMatchesSuccess, (state: ClubState, { matches }) => ({
+    ...state,
+    lastClubMatches: matches,
+    loadingClubMatches: false,
+  })),
+  on(loadLast10ClubMatchesFailure, (state: ClubState, { error }) => ({
+    ...state,
+    loadingClubMatches: false,
+    error,
+  })),
+  on(loadClubRanking, (state: ClubState) => ({
+    ...state,
+    loadingClubRanking: true,
+  })),
+  on(loadClubRankingSuccess, (state: ClubState, { ranking }) => ({
+    ...state,
+    clubRanking: ranking,
+    loadingClubRanking: false,
+  })),
+  on(loadClubRankingFailure, (state: ClubState, { error }) => ({
+    ...state,
+    loadingClubRanking: false,
+    error,
   }))
 );

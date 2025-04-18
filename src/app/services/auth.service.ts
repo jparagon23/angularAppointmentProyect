@@ -125,7 +125,7 @@ export class AuthService {
   getProfile() {
     const token = this.tokenService.getToken();
     return this.http
-      .get<UserData>(`${this.apiUrl}/auth/profile`, {
+      .get<UserData>(`${this.apiUrl}/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

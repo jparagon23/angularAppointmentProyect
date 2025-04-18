@@ -1,0 +1,101 @@
+<div class="full mx-auto p-6 bg-white text-black min-h-screen font-sans">
+  <!-- Encabezado del club -->
+  <app-club-profile-header
+    [clubInfo]="clubInfo"
+    [isMember]="isMember"
+    [isClubAdmin]="isClubAdmin"
+    [pendingMemberRequest]="pendingMemberRequest"
+    (joinClub)="register()"
+    (leaveClub)="unregister()"
+  ></app-club-profile-header>
+
+  <!-- Separador -->
+  <hr class="my-8 border-gray-300" />
+
+  <!-- Navbar interno -->
+  <nav class="mb-6 border-b border-gray-300">
+    <ul class="flex gap-6 text-sm md:text-base font-medium text-gray-600">
+      <li>
+        <button
+          class="pb-2 border-b-2"
+          [class.border-green-600]="activeTab === 'overview'"
+          (click)="activeTab = 'overview'"
+        >
+          🏠 General
+        </button>
+      </li>
+      <li *ngIf="isClubAdmin">
+        <button
+          class="pb-2 border-b-2"
+          [class.border-green-600]="activeTab === 'members'"
+          (click)="activeTab = 'members'"
+        >
+          👥 Socios
+        </button>
+      </li>
+      <li *ngIf="isClubAdmin">
+        <button
+          class="pb-2 border-b-2"
+          [class.border-green-600]="activeTab === 'matches'"
+          (click)="activeTab = 'matches'"
+        >
+          🎾 Todos los Partidos
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Contenido de pestañas -->
+  <ng-container *ngIf="selectClubPageInfo$ | async as clubInfo">
+    <!-- 🏠 Overview (pública) -->
+    <div
+      *ngIf="activeTab === 'overview'"
+      class="flex flex-col md:flex-row gap-8 w-full"
+    >
+      <!-- Últimos partidos -->
+      <div class="w-full md:w-2/3">
+        <h2
+          class="text-2xl md:text-4xl font-bold border-b-4 border-gray-300 mb-4"
+        >
+          Últimos 10 partidos registrados en el club
+        </h2>
+
+        <ng-container
+          *ngIf="clubInfo.last10ClubMatches.length > 0; else noMatches"
+        >
+          <app-result-short-section
+            [matchToShow]="clubInfo.last10ClubMatches"
+          ></app-result-short-section>
+        </ng-container>
+
+        <ng-template #noMatches>
+          <div class="text-gray-500 text-center py-6">
+            <p class="text-lg">Aún no hay partidos registrados en este club.</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Ranking del club -->
+      <div class="w-full md:w-1/3 mt-6 md:mt-0">
+        <app-general-ranking
+          [genralRanking]="clubInfo.clubRanking"
+          title="Ranking"
+        ></app-general-ranking>
+      </div>
+    </div>
+
+    <!-- 👥 Tabla de socios (solo admins) -->
+    <div *ngIf="activeTab === 'members' && isClubAdmin">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Socios del Club</h2>
+      <app-club-members-table [clubId]="clubId"></app-club-members-table>
+    </div>
+
+    <!-- 🎾 Todos los partidos (solo admins) -->
+    <div *ngIf="activeTab === 'matches' && isClubAdmin">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">
+        Todos los partidos registrados
+      </h2>
+      <app-club-matches-section [clubId]="clubId"></app-club-matches-section>
+    </div>
+  </ng-container>
+</div>

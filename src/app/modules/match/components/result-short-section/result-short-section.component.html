@@ -14,30 +14,20 @@
   <div class="text-xl font-semibold text-gray-800 mb-4">
     {{ title }}
   </div>
-  <div class="flex flex-wrap justify-start gap-4">
+
+  <!-- Contenedor de partidos con scroll lateral -->
+  <div
+    class="flex gap-4 overflow-x-auto px-1 scroll-smooth snap-x snap-mandatory"
+    *ngIf="matchToShow.length > 0"
+  >
     <div
-      class="w-full sm:w-[200px] md:w-[350px]"
-      *ngFor="let matchData of matchToShow | slice : 0 : pendingSliceLimit"
+      class="w-full sm:max-w-sm md:max-w-sm snap-start shrink-0"
+      *ngFor="let matchData of matchToShow"
     >
       <app-match-result-card
         [matchData]="matchData"
         [userCanConfirm]="canConfirm"
       ></app-match-result-card>
     </div>
-  </div>
-
-  <!-- Show 'See More' button if there are more results than the slice limit -->
-  <div class="mt-4 flex justify-center" *ngIf="matchToShow.length > limit">
-    <a
-      href="#"
-      class="text-cyan-600 hover:text-cyan-800 font-semibold"
-      (click)="toggleResults($event)"
-    >
-      {{
-        pendingSliceLimit < matchToShow.length
-          ? "Ver más resultados"
-          : "Ver menos resultados"
-      }}
-    </a>
   </div>
 </div>

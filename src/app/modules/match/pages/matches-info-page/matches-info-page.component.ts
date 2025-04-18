@@ -28,16 +28,14 @@ export class MatchesInfoPageComponent implements OnChanges, OnInit {
       map((state) => state.loading) // Obtiene el estado de carga
     );
 
-    this.matches$ = this.store
-      .select(selectGetUserMatchesStatus)
-      .pipe(
-        map(
-          (matchesData) =>
-            matchesData.userMatch?._embedded.matchResponseDTOList?.filter(
-              (match) => match.matchType === this.matchType
-            ) || []
-        )
-      );
+    this.matches$ = this.store.select(selectGetUserMatchesStatus).pipe(
+      map(
+        (matchesData) =>
+          matchesData.userMatch?._embedded?.matchResponseDTOList?.filter(
+            (match) => match.matchType === this.matchType
+          ) ?? [] // Fallback si algo es null/undefined
+      )
+    );
   }
 
   ngOnInit(): void {

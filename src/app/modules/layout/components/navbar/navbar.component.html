@@ -49,6 +49,13 @@
           <app-button
             typeBtn="button"
             color="navbar"
+            (click)="redirectToClubsPage()"
+          >
+            Clubs
+          </app-button>
+          <app-button
+            typeBtn="button"
+            color="navbar"
             (click)="openPostResult()"
           >
             Publicar resultado
@@ -85,7 +92,7 @@
         class="hidden sm:flex sm:items-center sm:space-x-6 w-full sm:w-auto justify-end"
       >
         <!-- Botones adicionales: Configuración y Reportes -->
-        <div class="flex space-x-2" *ngIf="user?.role === 2">
+        <!-- <div class="flex space-x-2" *ngIf="user?.role === 2">
           <app-button
             typeBtn="button"
             color="navbar"
@@ -100,7 +107,7 @@
           >
             Reportes
           </app-button>
-        </div>
+        </div> -->
 
         <div class="flex items-center space-x-4 relative">
           <!-- Campana de notificaciones -->

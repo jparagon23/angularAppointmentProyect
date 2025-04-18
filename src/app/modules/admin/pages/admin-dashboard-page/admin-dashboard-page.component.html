@@ -9,14 +9,24 @@
   </div>
 
   <div
-    class="w-full my-5 md:w-2/3 md:my-0"
+    class="w-full mx-5 my-5 md:w-2/3 md:my-0"
     *ngIf="adminPostedMatchesState$ | async as state"
   >
+    <app-result-short-section
+      [matchToShow]="pendingMatches"
+      [title]="'Partidos Pendientes por confirmar'"
+      [canConfirm]="true"
+    ></app-result-short-section>
+    <app-short-scroll-membership-section
+      [memberships]="memberships"
+      [title]="'Solicitudes para unirse al club'"
+    ></app-short-scroll-membership-section>
     <app-result-short-section
       [matchToShow]="state.adminPostedMatches"
       [isLoading]="state.loading"
       [title]="'Partidos publicados'"
       [canConfirm]="false"
+      [showWhenEmpty]="true"
     ></app-result-short-section>
   </div>
 </div>

@@ -1,11 +1,23 @@
 <div
-  class="mx-auto bg-white border border-gray-200 rounded-lg shadow-md p-6 flex flex-col gap-4"
+  class="mx-auto rounded-lg shadow-md p-6 flex flex-col gap-4"
+  [ngClass]="{
+    'bg-white border border-gray-200': !matchData.club,
+    ' border border-[#418622]': matchData.club
+  }"
 >
   <!-- Header -->
   <div class="flex justify-between items-center">
     <!-- Contenedor a la izquierda para el título y la fecha -->
     <div class="flex items-center space-x-2">
-      <span class="text-sm font-bold text-[#418622] uppercase">Tennis</span>
+      <ng-container *ngIf="matchData.club; else regularTitle">
+        <span class="text-sm font-bold text-[#418622] uppercase"
+          >Club Match</span
+        >
+      </ng-container>
+      <ng-template #regularTitle>
+        <span class="text-sm font-bold text-[#418622] uppercase">Tennis</span>
+      </ng-template>
+
       <span class="text-base text-gray-500">
         {{ matchData.matchDate | timeFormat : "medium" }}
       </span>
@@ -13,7 +25,6 @@
 
     <!-- Contenedor a la derecha para el estado y el icono de basura -->
     <div class="flex items-center space-x-3">
-      <!-- Si userCanConfirm es true, mostramos los botones de aceptar y rechazar -->
       <ng-container *ngIf="userCanConfirm; else statusTemplate">
         <div class="flex gap-2">
           <button (click)="onAccept()" class="text-green-500">
@@ -31,7 +42,6 @@
         </span>
       </ng-template>
 
-      <!-- Icono de basura en rojo -->
       <button *ngIf="canDelete" (click)="onDelete()" class="text-red-500">
         <i class="fas fa-trash text-lg"></i>
       </button>
@@ -88,33 +98,17 @@
         </div>
       </div>
       <div class="flex gap-4 text-gray-800 text-lg">
-        <div class="relative">
-          <span
-            *ngIf="matchData.sets[0]?.winnerTieBreak !== 0"
-            class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
-          >
-            {{ matchData.sets[0]?.winnerTieBreak }}
-          </span>
-          <span>{{ matchData.sets[0]?.winnerGames ?? "-" }}</span>
-        </div>
-        <div class="relative">
-          <span
-            *ngIf="matchData.sets[1]?.winnerTieBreak !== 0"
-            class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
-          >
-            {{ matchData.sets[1]?.winnerTieBreak }}
-          </span>
-          <span>{{ matchData.sets[1]?.winnerGames ?? "-" }}</span>
-        </div>
-        <div class="relative">
-          <span
-            *ngIf="matchData.sets[2]?.winnerTieBreak !== 0"
-            class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
-          >
-            {{ matchData.sets[2]?.winnerTieBreak }}
-          </span>
-          <span>{{ matchData.sets[2]?.winnerGames ?? "-" }}</span>
-        </div>
+        <ng-container *ngFor="let set of matchData.sets">
+          <div class="relative">
+            <span
+              *ngIf="set.winnerTieBreak !== 0"
+              class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
+            >
+              {{ set.winnerTieBreak }}
+            </span>
+            <span>{{ set.winnerGames ?? "-" }}</span>
+          </div>
+        </ng-container>
       </div>
     </div>
 
@@ -164,33 +158,17 @@
         </div>
       </div>
       <div class="flex gap-4 text-gray-800 text-lg">
-        <div class="relative">
-          <span
-            *ngIf="matchData.sets[0]?.loserTieBreak !== 0"
-            class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
-          >
-            {{ matchData.sets[0]?.loserTieBreak }}
-          </span>
-          <span>{{ matchData.sets[0]?.loserGames ?? "-" }}</span>
-        </div>
-        <div class="relative">
-          <span
-            *ngIf="matchData.sets[1]?.loserTieBreak !== 0"
-            class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
-          >
-            {{ matchData.sets[1]?.loserTieBreak }}
-          </span>
-          <span>{{ matchData.sets[1]?.loserGames ?? "-" }}</span>
-        </div>
-        <div class="relative">
-          <span
-            *ngIf="matchData.sets[2]?.loserTieBreak !== 0"
-            class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
-          >
-            {{ matchData.sets[2]?.loserTieBreak }}
-          </span>
-          <span>{{ matchData.sets[2]?.loserGames ?? "-" }}</span>
-        </div>
+        <ng-container *ngFor="let set of matchData.sets">
+          <div class="relative">
+            <span
+              *ngIf="set.loserTieBreak !== 0"
+              class="text-xs text-gray-500 absolute -top-[0.4rem] right-[-0.45rem]"
+            >
+              {{ set.loserTieBreak }}
+            </span>
+            <span>{{ set.loserGames ?? "-" }}</span>
+          </div>
+        </ng-container>
       </div>
     </div>
   </div>

@@ -43,7 +43,7 @@ export class DashboardEffects {
         this.matchService.getUserMatches(undefined, 'DOUBLES').pipe(
           map((matches) =>
             getLast10DoublesMatchesSuccess({
-              matches: matches._embedded.matchResponseDTOList,
+              matches: matches._embedded?.matchResponseDTOList ?? [],
             })
           ),
           catchError((error) => of(getLast10DoublesMatchesFailure({ error })))

@@ -19,12 +19,12 @@ import {
   loadingCreateReservation,
   reservationCreatedFailure,
   selectReservationCreated,
-} from 'src/app/state/selectors/club.selectors';
+} from 'src/app/state/club/club.selectors';
 import {
   createReservationAdmin,
   resetClubUsers,
   resetReservationCreated,
-} from 'src/app/state/actions/club.actions';
+} from 'src/app/state/club/club.actions';
 import { AppState } from 'src/app/state/app.state';
 import { isModalOpen } from 'src/app/state/selectors/modals.selectors';
 import { openModal } from 'src/app/state/actions/modals.actions';

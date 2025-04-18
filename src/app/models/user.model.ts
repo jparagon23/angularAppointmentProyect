@@ -25,10 +25,22 @@ export interface User {
   doublesRating: number;
   doublesRatingType: number;
   userRanking: number;
+  userDoublesRanking: number;
   lastMatchConfirmed: string;
   lastDoubleMatchConfirmed: string;
+  userClubMemberships: ClubMembership[];
 }
 
 export interface UserData {
   data: User[];
+}
+
+export interface ClubMembership {
+  club: {
+    id: number;
+    name: string;
+    allowMatchReporting: boolean;
+  };
+  status: 'APPROVED' | 'PENDING' | 'REJECTED'; // Ajusta según tus enums
+  registerDate: string; // ISO format
 }

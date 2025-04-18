@@ -79,14 +79,16 @@ export class EventEffects {
     this.actions$.pipe(
       ofType(getUserMatches),
       switchMap(({ matchtype, page, size }) =>
-        this.matchService.getUserMatches(undefined, matchtype, page, size).pipe(
-          map((matches) =>
-            getUserMatchesSuccess({
-              matches: matches,
-            })
-          ),
-          catchError((error) => of(getUserMatchesFailure({ error })))
-        )
+        this.matchService
+          .getUserMatches(undefined, matchtype, null, page, size)
+          .pipe(
+            map((matches) =>
+              getUserMatchesSuccess({
+                matches: matches,
+              })
+            ),
+            catchError((error) => of(getUserMatchesFailure({ error })))
+          )
       )
     )
   );

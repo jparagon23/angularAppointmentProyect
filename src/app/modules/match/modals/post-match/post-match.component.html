@@ -195,30 +195,53 @@
           ></app-user-card>
         </div>
       </div>
-
-      <!-- Botones con tamaños iguales -->
-      <div
-        class="flex flex-col sm:flex-row sm:justify-between mt-1 sm:mt-2 w-full"
-      >
-        <!-- Botón para publicar el resultado -->
-        <app-button
-          class="w-full sm:w-64 pt-4 sm:order-2 text-xl sm:text-2xl font-semibold"
-          color="success"
-          [disabled]="!canPublishResult"
-          (click)="publishResult()"
-        >
-          Publicar Resultado
-        </app-button>
-
-        <!-- Botón para cancelar -->
-        <app-button
-          class="w-full sm:w-64 pt-4 sm:order-1 text-xl sm:text-2xl font-semibold"
-          color="danger"
-          [mat-dialog-close]="true"
-        >
-          Cancelar
-        </app-button>
+    </div>
+    <div *ngIf="(sharedClubs?.length ?? 0) > 0">
+      <div>
+        {{
+          sharedClubs.length === 1
+            ? '¿Deseas publicar este resultado como parte del club "' +
+              sharedClubs[0].name +
+              '"?'
+            : "¿Por cuál club deseas publicar este resultado?"
+        }}
       </div>
+
+      <select [(ngModel)]="publishForClub">
+        <ng-container *ngIf="sharedClubs.length === 1">
+          <option [ngValue]="true">Sí</option>
+          <option [ngValue]="false">No</option>
+        </ng-container>
+        <ng-container *ngIf="sharedClubs.length > 1">
+          <option *ngFor="let club of sharedClubs" [ngValue]="club.clubId">
+            {{ club.name }}
+          </option>
+        </ng-container>
+      </select>
+    </div>
+
+    <!-- Botones con tamaños iguales -->
+    <div
+      class="flex flex-col sm:flex-row sm:justify-between mt-1 sm:mt-2 w-full"
+    >
+      <!-- Botón para publicar el resultado -->
+      <app-button
+        class="w-full sm:w-64 pt-4 sm:order-2 text-xl sm:text-2xl font-semibold"
+        color="success"
+        [disabled]="!canPublishResult"
+        (click)="publishResult()"
+      >
+        Publicar Resultado
+      </app-button>
+
+      <!-- Botón para cancelar -->
+      <app-button
+        class="w-full sm:w-64 pt-4 sm:order-1 text-xl sm:text-2xl font-semibold"
+        color="danger"
+        [mat-dialog-close]="true"
+      >
+        Cancelar
+      </app-button>
     </div>
   </div>
 </div>
