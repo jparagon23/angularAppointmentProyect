@@ -11,40 +11,51 @@ import {
   templateUrl: './club-matches-section.component.html',
 })
 export class ClubMatchesSectionComponent implements OnInit {
-  @Input() clubId: string | null = null; // El clubId es de tipo string o null
 
-  matches$: Observable<UserMatchResponse> = new Observable(); // Observable para el response del servicio
-  matchesList: UserMatch[] = []; // Lista de partidos (matchResponseDTOList)
+  @Input() clubId: string | null = null;
+
+  matches$: Observable<UserMatchResponse> = new Observable();
+  matchesList: UserMatch[] = [];
+
   page: number = 0;
   size: number = 10;
+
+  isLoading: boolean = true;
+
 
   constructor(private readonly matchService: MatchService) {}
 
   ngOnInit(): void {
     this.loadMatches();
   }
-
-  // Método para cargar los partidos
   loadMatches(): void {
+    this.isLoading = true;
+
     this.matches$ = this.matchService.getClubMatches(
-      this.clubId ? Number(this.clubId) : undefined, // Convertimos clubId a number si no es null
-      'ALL', // Tipo de partido: 'ALL'
-      null, // status opcional: null si no se pasa
-      this.page, // Página actual
-      this.size, // Tamaño de la página
-      'match_date', // Ordenar por fecha de partido
-      'desc' // Dirección de ordenamiento
+      this.clubId ? Number(this.clubId) : undefined,
+      'ALL',
+      null,
+      this.page,
+      this.size,
+      'match_date',
+      'desc'
     );
 
-    // Suscripción a la respuesta para actualizar los partidos
-    this.matches$.subscribe((response: UserMatchResponse) => {
-      this.matchesList = response._embedded.matchResponseDTOList; // Asignar los partidos
+    this.matches$.subscribe({
+      next: (response: UserMatchResponse) => {
+        this.matchesList = response._embedded?.matchResponseDTOList || [];
+        this.isLoading = false;
+      },
+      error: () => {
+        this.matchesList = [];
+        this.isLoading = false;
+      },
     });
   }
 
-  // Método para manejar el cambio de página
   onPageChange(page: number): void {
-    this.page = page; // Actualizamos la página actual
-    this.loadMatches(); // Cargamos los partidos de la nueva página
+    this.page = page;
+    this.loadMatches();
+
   }
 }
