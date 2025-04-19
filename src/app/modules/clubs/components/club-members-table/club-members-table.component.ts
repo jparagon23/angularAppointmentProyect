@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 export class ClubMembersTableComponent implements OnInit {
   @Input() clubId: string | null = null;
   clubMembers: MembershipDTO[] = [];
+  isLoading: boolean = true;
 
   constructor(private readonly clubService: ClubService) {}
 
@@ -19,11 +20,15 @@ export class ClubMembersTableComponent implements OnInit {
       this.clubService.getAllActiveClubMembers(clubIdNumber).subscribe({
         next: (members) => {
           this.clubMembers = members;
+          this.isLoading = false;
         },
         error: () => {
+          this.isLoading = false;
           Swal.fire('Error', 'No se pudo cargar la lista de socios.', 'error');
         },
       });
+    } else {
+      this.isLoading = false;
     }
   }
 
