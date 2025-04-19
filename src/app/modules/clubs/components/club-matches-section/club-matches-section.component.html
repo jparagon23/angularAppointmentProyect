@@ -1,4 +1,17 @@
+<!-- Loader -->
+<app-loader *ngIf="isLoading"></app-loader>
+
+<!-- Mensaje si no hay partidos y ya terminó la carga -->
+<div
+  *ngIf="!isLoading && matchesList.length === 0"
+  class="text-center text-gray-600 mt-8"
+>
+  No hay partidos disponibles por ahora.
+</div>
+
+<!-- Paginador si hay partidos -->
 <app-match-pagination
+  *ngIf="!isLoading && matchesList.length > 0"
   [matches]="matchesList"
   [currentPage]="page"
   [pageSize]="size"
