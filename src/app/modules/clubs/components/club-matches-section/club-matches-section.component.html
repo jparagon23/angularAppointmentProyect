@@ -1,3 +1,4 @@
+
 <!-- Loader -->
 <app-loader *ngIf="isLoading"></app-loader>
 
@@ -12,6 +13,7 @@
 <!-- Paginador si hay partidos -->
 <app-match-pagination
   *ngIf="!isLoading && matchesList.length > 0"
+
   [matches]="matchesList"
   [currentPage]="page"
   [pageSize]="size"

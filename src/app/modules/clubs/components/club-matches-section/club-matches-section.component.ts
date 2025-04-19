@@ -11,6 +11,7 @@ import {
   templateUrl: './club-matches-section.component.html',
 })
 export class ClubMatchesSectionComponent implements OnInit {
+
   @Input() clubId: string | null = null;
 
   matches$: Observable<UserMatchResponse> = new Observable();
@@ -21,12 +22,12 @@ export class ClubMatchesSectionComponent implements OnInit {
 
   isLoading: boolean = true;
 
+
   constructor(private readonly matchService: MatchService) {}
 
   ngOnInit(): void {
     this.loadMatches();
   }
-
   loadMatches(): void {
     this.isLoading = true;
 
@@ -55,5 +56,6 @@ export class ClubMatchesSectionComponent implements OnInit {
   onPageChange(page: number): void {
     this.page = page;
     this.loadMatches();
+
   }
 }
