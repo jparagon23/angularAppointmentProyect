@@ -1,4 +1,19 @@
-<div class="overflow-x-auto rounded-xl shadow-md border border-gray-200">
+<!-- Loader mientras se cargan los miembros -->
+<app-loader *ngIf="isLoading"></app-loader>
+
+<!-- Mensaje si no hay miembros y ya se terminó de cargar -->
+<div
+  *ngIf="!isLoading && clubMembers.length === 0"
+  class="text-center text-gray-600 mt-8"
+>
+  No hay miembros activos en este club.
+</div>
+
+<!-- Tabla si hay miembros -->
+<div
+  class="overflow-x-auto rounded-xl shadow-md border border-gray-200"
+  *ngIf="!isLoading && clubMembers.length > 0"
+>
   <table class="min-w-full text-sm text-left text-gray-700">
     <thead class="bg-gray-100 text-xs uppercase tracking-wide text-gray-600">
       <tr>
