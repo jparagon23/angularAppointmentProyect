@@ -26,8 +26,14 @@ const routes: Routes = [
   {
     path: 'clubs',
     loadChildren: () =>
-      import('../clubs/clubs.module').then((m) => m.ClubsModule),
+      import('../clubs/clubs.module').then((m) => m.ClubsModule), 
   },
+  {
+    path:'events',
+    loadChildren:() =>
+      import('../events/events.module').then((m)=>m.EventsModule)
+
+  }
 ];
 
 @NgModule({

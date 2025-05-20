@@ -143,6 +143,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['home/user/clubs']);
   }
 
+  redirectToEventsPage() {
+    this.router.navigate(['home/user/events']);
+  }
+
   redirectToConfigurationComponent() {
     this.router.navigate(['home/admin/configuration']);
   }

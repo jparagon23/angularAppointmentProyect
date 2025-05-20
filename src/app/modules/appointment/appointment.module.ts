@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ReservationCalendarComponent } from './components/reservation-calendar/reservation-calendar.component';
 import { MatchModule } from '../match/match.module';
+import { EventsModule } from '../events/events.module';
 
 @NgModule({
   declarations: [
@@ -38,8 +39,7 @@ import { MatchModule } from '../match/match.module';
     MatInputModule,
     ReactiveFormsModule,
     MatProgressSpinnerModule,
-    MatchModule,
-  ],
+    MatchModule  ],
   exports: [
     MakeReservationModalComponent,
     ReservationCardComponent,
