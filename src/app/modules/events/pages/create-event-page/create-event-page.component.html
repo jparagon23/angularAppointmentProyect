@@ -1,0 +1,127 @@
+<div class="p-6">
+    <div class="text-center mb-10">
+        <div class="text-5xl font-extrabold text-gray-800 mb-2">Crear un evento de tenis</div>
+        <p class="text-lg text-gray-600">¡Empieza a organizar tu próximo evento!</p>
+      </div>
+      
+
+
+    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-md space-y-12">
+
+      <!-- Paso 1 -->
+      <section class="space-y-6 border-l-4 border-blue-500 pl-6">
+        <h3 class="text-2xl font-semibold text-gray-800">Paso 1: Información básica</h3>
+        <div>
+          <label class="block text-gray-700 font-medium">Nombre del torneo</label>
+          <input formControlName="nombre" type="text" class="mt-1 block w-full rounded-md border border-gray-300 p-2" placeholder="Ej. Torneo de Primavera">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium">Ubicación del torneo</label>
+          <input formControlName="ubicacion" type="text" class="mt-1 block w-full rounded-md border border-gray-300 p-2" placeholder="Ej. Club Forehapp">
+        </div>
+      </section>
+  
+      <!-- Paso 2 -->
+      <section class="space-y-6 border-l-4 border-blue-500 pl-6">
+        <h3 class="text-2xl font-semibold text-gray-800">Paso 2: Fechas</h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-gray-700 font-medium">Fecha inicio del torneo</label>
+            <input formControlName="fechaInicio" type="date" class="mt-1 block w-full rounded-md border border-gray-300 p-2">
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium">Fecha fin del torneo</label>
+            <input formControlName="fechaFin" type="date" class="mt-1 block w-full rounded-md border border-gray-300 p-2">
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium">Inicio de registro</label>
+            <input formControlName="registroInicio" type="date" class="mt-1 block w-full rounded-md border border-gray-300 p-2">
+          </div>
+          <div>
+            <label class="block text-gray-700 font-medium">Fin de registro</label>
+            <input formControlName="registroFin" type="date" class="mt-1 block w-full rounded-md border border-gray-300 p-2">
+          </div>
+        </div>
+      </section>
+  
+      <!-- Paso 3 -->
+      <section class="space-y-6 border-l-4 border-blue-500 pl-6">
+        <h3 class="text-2xl font-semibold text-gray-800">Paso 3: Categorías</h3>
+  
+        <div formArrayName="categorias">
+          <div *ngFor="let categoria of categorias.controls; let i = index" [formGroupName]="i" class="border p-6 rounded-xl bg-gray-50 space-y-6">
+  
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-gray-700 font-medium">Nombre de la categoría</label>
+                <input formControlName="nombre" type="text" class="mt-1 w-full border border-gray-300 rounded-md p-2">
+              </div>
+              <div>
+                <label class="block text-gray-700 font-medium">Género</label>
+                <select formControlName="genero" class="mt-1 w-full border border-gray-300 rounded-md p-2">
+                  <option>Masculino</option>
+                  <option>Femenino</option>
+                  <option>Mixto</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-gray-700 font-medium">Precio</label>
+                <input formControlName="precio" type="number" class="mt-1 w-full border border-gray-300 rounded-md p-2">
+              </div>
+            </div>
+  
+            <!-- Formato -->
+            <div>
+              <label class="block text-gray-700 font-medium mb-2">Formato</label>
+              <div class="flex gap-4">
+                <label class="flex-1 cursor-pointer">
+                  <input type="radio" [value]="'Sencillos'" formControlName="formato" class="peer hidden">
+                  <div class="border rounded-lg p-3 text-center peer-checked:bg-blue-600 peer-checked:text-white border-gray-300 hover:border-blue-500">Sencillos</div>
+                </label>
+                <label class="flex-1 cursor-pointer">
+                  <input type="radio" [value]="'Dobles'" formControlName="formato" class="peer hidden">
+                  <div class="border rounded-lg p-3 text-center peer-checked:bg-blue-600 peer-checked:text-white border-gray-300 hover:border-blue-500">Dobles</div>
+                </label>
+              </div>
+            </div>
+  
+            <!-- Premios -->
+            <div formArrayName="premios">
+              <label class="block text-gray-700 font-medium mb-2">Premios</label>
+              <div *ngFor="let premio of getPremios(i).controls; let j = index" [formGroupName]="j" class="flex items-center gap-2 mb-2">
+                <select formControlName="posicion" class="border border-gray-300 rounded-md p-2">
+                  <option>1er Lugar</option>
+                  <option>2do Lugar</option>
+                  <option>3er Lugar</option>
+                </select>
+                <input formControlName="descripcion" type="text" class="w-full border border-gray-300 rounded-md p-2" placeholder="Ej. $100, Trofeo, etc">
+              </div>
+              <button type="button" (click)="agregarPremio(i)" class="text-blue-600 hover:underline text-sm">+ Añadir otro premio</button>
+            </div>
+  
+            <!-- Opciones adicionales -->
+            <div class="grid grid-cols-3 gap-4">
+              <div>
+                <label class="block text-gray-700 font-medium">Máx. jugadores</label>
+                <input formControlName="maxJugadores" type="number" class="mt-1 w-full border border-gray-300 rounded-md p-2" step="4">
+              </div>
+              <div>
+                <label class="block text-gray-700 font-medium">Rango de edad</label>
+                <input formControlName="rangoEdad" type="range" min="0" max="100" class="w-full">
+              </div>
+              <div>
+                <label class="block text-gray-700 font-medium">Rango de ranking</label>
+                <input formControlName="rangoRanking" type="range" min="0" max="12" step="0.5" class="w-full">
+              </div>
+            </div>
+          </div>
+          <button type="button" (click)="agregarCategoria()" class="text-blue-600 hover:underline mt-2">+ Añadir otra categoría</button>
+        </div>
+      </section>
+  
+      <div class="flex justify-end">
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700">Crear torneo</button>
+      </div>
+    </form>
+  </div>
+  
