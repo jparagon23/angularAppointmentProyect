@@ -1,127 +1,282 @@
-<div class="p-6">
-    <div class="text-center mb-10">
-        <div class="text-5xl font-extrabold text-gray-800 mb-2">Crear un evento de tenis</div>
-        <p class="text-lg text-gray-600">¡Empieza a organizar tu próximo evento!</p>
-      </div>
-      
-
-
-    <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-md space-y-12">
-
-      <!-- Paso 1 -->
-      <section class="space-y-6 border-l-4 border-blue-500 pl-6">
-        <h3 class="text-2xl font-semibold text-gray-800">Paso 1: Información básica</h3>
-        <div>
-          <label class="block text-gray-700 font-medium">Nombre del torneo</label>
-          <input formControlName="nombre" type="text" class="mt-1 block w-full rounded-md border border-gray-300 p-2" placeholder="Ej. Torneo de Primavera">
-        </div>
-        <div>
-          <label class="block text-gray-700 font-medium">Ubicación del torneo</label>
-          <input formControlName="ubicacion" type="text" class="mt-1 block w-full rounded-md border border-gray-300 p-2" placeholder="Ej. Club Forehapp">
-        </div>
-      </section>
-  
-      <!-- Paso 2 -->
-      <section class="space-y-6 border-l-4 border-blue-500 pl-6">
-        <h3 class="text-2xl font-semibold text-gray-800">Paso 2: Fechas</h3>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-gray-700 font-medium">Fecha inicio del torneo</label>
-            <input formControlName="fechaInicio" type="date" class="mt-1 block w-full rounded-md border border-gray-300 p-2">
-          </div>
-          <div>
-            <label class="block text-gray-700 font-medium">Fecha fin del torneo</label>
-            <input formControlName="fechaFin" type="date" class="mt-1 block w-full rounded-md border border-gray-300 p-2">
-          </div>
-          <div>
-            <label class="block text-gray-700 font-medium">Inicio de registro</label>
-            <input formControlName="registroInicio" type="date" class="mt-1 block w-full rounded-md border border-gray-300 p-2">
-          </div>
-          <div>
-            <label class="block text-gray-700 font-medium">Fin de registro</label>
-            <input formControlName="registroFin" type="date" class="mt-1 block w-full rounded-md border border-gray-300 p-2">
-          </div>
-        </div>
-      </section>
-  
-      <!-- Paso 3 -->
-      <section class="space-y-6 border-l-4 border-blue-500 pl-6">
-        <h3 class="text-2xl font-semibold text-gray-800">Paso 3: Categorías</h3>
-  
-        <div formArrayName="categorias">
-          <div *ngFor="let categoria of categorias.controls; let i = index" [formGroupName]="i" class="border p-6 rounded-xl bg-gray-50 space-y-6">
-  
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label class="block text-gray-700 font-medium">Nombre de la categoría</label>
-                <input formControlName="nombre" type="text" class="mt-1 w-full border border-gray-300 rounded-md p-2">
-              </div>
-              <div>
-                <label class="block text-gray-700 font-medium">Género</label>
-                <select formControlName="genero" class="mt-1 w-full border border-gray-300 rounded-md p-2">
-                  <option>Masculino</option>
-                  <option>Femenino</option>
-                  <option>Mixto</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-gray-700 font-medium">Precio</label>
-                <input formControlName="precio" type="number" class="mt-1 w-full border border-gray-300 rounded-md p-2">
-              </div>
-            </div>
-  
-            <!-- Formato -->
-            <div>
-              <label class="block text-gray-700 font-medium mb-2">Formato</label>
-              <div class="flex gap-4">
-                <label class="flex-1 cursor-pointer">
-                  <input type="radio" [value]="'Sencillos'" formControlName="formato" class="peer hidden">
-                  <div class="border rounded-lg p-3 text-center peer-checked:bg-blue-600 peer-checked:text-white border-gray-300 hover:border-blue-500">Sencillos</div>
-                </label>
-                <label class="flex-1 cursor-pointer">
-                  <input type="radio" [value]="'Dobles'" formControlName="formato" class="peer hidden">
-                  <div class="border rounded-lg p-3 text-center peer-checked:bg-blue-600 peer-checked:text-white border-gray-300 hover:border-blue-500">Dobles</div>
-                </label>
-              </div>
-            </div>
-  
-            <!-- Premios -->
-            <div formArrayName="premios">
-              <label class="block text-gray-700 font-medium mb-2">Premios</label>
-              <div *ngFor="let premio of getPremios(i).controls; let j = index" [formGroupName]="j" class="flex items-center gap-2 mb-2">
-                <select formControlName="posicion" class="border border-gray-300 rounded-md p-2">
-                  <option>1er Lugar</option>
-                  <option>2do Lugar</option>
-                  <option>3er Lugar</option>
-                </select>
-                <input formControlName="descripcion" type="text" class="w-full border border-gray-300 rounded-md p-2" placeholder="Ej. $100, Trofeo, etc">
-              </div>
-              <button type="button" (click)="agregarPremio(i)" class="text-blue-600 hover:underline text-sm">+ Añadir otro premio</button>
-            </div>
-  
-            <!-- Opciones adicionales -->
-            <div class="grid grid-cols-3 gap-4">
-              <div>
-                <label class="block text-gray-700 font-medium">Máx. jugadores</label>
-                <input formControlName="maxJugadores" type="number" class="mt-1 w-full border border-gray-300 rounded-md p-2" step="4">
-              </div>
-              <div>
-                <label class="block text-gray-700 font-medium">Rango de edad</label>
-                <input formControlName="rangoEdad" type="range" min="0" max="100" class="w-full">
-              </div>
-              <div>
-                <label class="block text-gray-700 font-medium">Rango de ranking</label>
-                <input formControlName="rangoRanking" type="range" min="0" max="12" step="0.5" class="w-full">
-              </div>
-            </div>
-          </div>
-          <button type="button" (click)="agregarCategoria()" class="text-blue-600 hover:underline mt-2">+ Añadir otra categoría</button>
-        </div>
-      </section>
-  
-      <div class="flex justify-end">
-        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700">Crear torneo</button>
-      </div>
-    </form>
+<div class="p-2 md:p-6">
+  <div class="text-center mb-10">
+    <div class="text-5xl font-extrabold text-gray-800 mb-2">
+      Crear un evento de tenis
+    </div>
+    <p class="text-lg text-gray-600">¡Empieza a organizar tu próximo evento!</p>
   </div>
-  
+
+  <form
+    [formGroup]="eventForm"
+    (ngSubmit)="onSubmit()"
+    class="max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-md space-y-12"
+  >
+    <!-- Paso 1 -->
+    <section class="space-y-6 border-l-4 border-green-600 pl-4 md:pl-6">
+      <h3 class="text-2xl font-semibold text-gray-800">
+        Paso 1: Información básica
+      </h3>
+      <div>
+        <app-input
+          *ngIf="getControl('name') as control"
+          [control]="control"
+          [name]="'Nombre del torneo'"
+        ></app-input>
+      </div>
+      <div>
+        <app-input
+          *ngIf="getControl('location') as control"
+          [control]="control"
+          [name]="'Ubicación del torneo'"
+        ></app-input>
+      </div>
+
+      <div>
+        <app-input
+          *ngIf="getControl('eventDescription') as control"
+          [control]="control"
+          [name]="'Descripción del evento'"
+        ></app-input>
+      </div>
+    </section>
+
+    <!-- Paso 2 -->
+    <section class="space-y-6 border-l-4 border-green-600 pl-4 md:pl-6">
+      <h3 class="text-2xl font-semibold text-gray-800">Paso 2: Fechas</h3>
+      <div class="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
+        <div>
+          <label class="block text-gray-700 font-medium"
+            >Fecha inicio del torneo</label
+          >
+          <input
+            formControlName="initialEventDate"
+            type="date"
+            class="mt-1 block w-full rounded-md border border-gray-300 p-2"
+            [min]="minInitialDate"
+            [class.border-red-500]="isInvalidAndTouched('initialEventDate')"
+          />
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium"
+            >Fecha fin del torneo</label
+          >
+          <input
+            formControlName="endEventDate"
+            type="date"
+            class="mt-1 block w-full rounded-md border border-gray-300 p-2"
+            [min]="minInitialDate"
+            [class.border-red-500]="isInvalidAndTouched('endEventDate')"
+          />
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium"
+            >Inicio de registro</label
+          >
+          <input
+            formControlName="initialRegisterDate"
+            type="date"
+            class="mt-1 block w-full rounded-md border border-gray-300 p-2"
+            [min]="minInitialDate"
+            [class.border-red-500]="isInvalidAndTouched('initialRegisterDate')"
+          />
+          <div
+            *ngIf="getControl('initialRegisterDate')?.errors?.['dateAfterEnd']"
+            class="text-red-600"
+          >
+            La fecha de inicio de registro no puede ser posterior a la fecha de
+            finalización del evento.
+          </div>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium">Fin de registro</label>
+          <input
+            formControlName="endRegisterDate"
+            type="date"
+            class="mt-1 block w-full rounded-md border border-gray-300 p-2"
+            [class.border-red-500]="isInvalidAndTouched('endRegisterDate')"
+          />
+          <div
+            *ngIf="getControl('endRegisterDate')?.errors?.['dateAfterEnd']"
+            class="text-red-600"
+          >
+            La fecha de fin de registro no puede ser posterior a la fecha de
+            finalización del evento.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Paso 3: Mobile First -->
+    <section class="space-y-6 border-l-4 border-green-600 pl-4 md:pl-6">
+      <h3 class="text-2xl font-semibold text-gray-800">Paso 3: Categorías</h3>
+
+      <div formArrayName="categories">
+        <div
+          *ngFor="let category of categories.controls; let i = index"
+          [formGroupName]="i"
+          class="border p-4 md:p-6 rounded-xl bg-gray-50 space-y-6 relative mb-6 shadow-sm"
+        >
+          <h4 class="text-lg font-semibold text-green-800">
+            Categoría {{ i + 1 }}
+          </h4>
+
+          <!-- Botón eliminar categoría -->
+          <button
+            *ngIf="i > 0"
+            type="button"
+            (click)="deleteCategory(i)"
+            class="absolute top-4 right-4 text-red-600 hover:underline text-sm"
+          >
+            Eliminar categoría
+          </button>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <app-input
+                *ngIf="getCategoryControl(i, 'categoryName') as control"
+                [control]="control"
+                [name]="'Nombre de la categoría'"
+              ></app-input>
+            </div>
+            <div>
+              <app-select
+                *ngIf="getCategoryControl(i, 'categoryGender') as control"
+                [control]="control"
+                [name]="'Genero'"
+                [options]="genderOptions"
+              ></app-select>
+            </div>
+            <div>
+              <app-input
+                *ngIf="getCategoryControl(i, 'categoryPrice') as control"
+                [control]="control"
+                [name]="'Precio de la suscripción'"
+                [type]="'number'"
+              ></app-input>
+            </div>
+            <div>
+              <app-input
+                *ngIf="getCategoryControl(i, 'CategoryMaxPlayers') as control"
+                [control]="control"
+                [name]="'Máx. jugadores'"
+                [type]="'number'"
+              ></app-input>
+            </div>
+          </div>
+
+          <!-- Formato -->
+          <div>
+            <label class="block text-gray-700 font-medium mb-2">Formato</label>
+            <div class="flex flex-col sm:flex-row gap-4">
+              <label class="flex-1 cursor-pointer">
+                <input
+                  type="radio"
+                  [value]="'Sencillos'"
+                  formControlName="categoryFormat"
+                  class="peer hidden"
+                />
+                <div
+                  class="border rounded-lg p-3 text-center peer-checked:bg-green-600 peer-checked:text-white border-gray-300 hover:border-green-500"
+                >
+                  Sencillos
+                </div>
+              </label>
+              <label class="flex-1 cursor-pointer">
+                <input
+                  type="radio"
+                  [value]="'Dobles'"
+                  formControlName="categoryFormat"
+                  class="peer hidden"
+                />
+                <div
+                  class="border rounded-lg p-3 text-center peer-checked:bg-green-600 peer-checked:text-white border-gray-300 hover:border-green-500"
+                >
+                  Dobles
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Premios -->
+          <div formArrayName="categoryPrizes" class="mb-6">
+            <label class="block text-gray-700 font-semibold text-base mb-3">
+              Premios
+            </label>
+
+            <div
+              *ngFor="let prize of getPrizes(i).controls; let j = index"
+              [formGroupName]="j"
+              class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-3"
+            >
+              <!-- Select de posición -->
+              <div class="w-full sm:w-1/3">
+                <app-select
+                  *ngIf="getPrizeControl(i, j, 'position') as control"
+                  [control]="control"
+                  [displayLabel]="false"
+                  [name]="'Posición'"
+                  [options]="prizesPositions"
+                ></app-select>
+              </div>
+
+              <!-- Input de descripción del premio -->
+              <div class="w-full sm:w-2/3">
+                <app-input
+                  *ngIf="getPrizeControl(i, j, 'description') as control"
+                  [control]="control"
+                  [displayLabel]="false"
+                  [name]="'Premio'"
+                  [type]="'text'"
+                  [placeholder]="'Ej. $100, Trofeo, etc'"
+                ></app-input>
+              </div>
+
+              <!-- Botón eliminar -->
+              <div class="sm:w-auto sm:ml-2">
+                <button
+                  type="button"
+                  (click)="deletePrize(i, j)"
+                  class="text-red-600 hover:underline text-sm"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+
+            <!-- Botón añadir -->
+            <button
+              type="button"
+              (click)="addPrize(i)"
+              class="text-green-700 hover:underline text-sm mt-2"
+            >
+              + Añadir un premio
+            </button>
+          </div>
+        </div>
+
+        <!-- Botón para añadir categoría -->
+        <button
+          type="button"
+          (click)="addCategory()"
+          class="text-green-900 hover:underline mt-2"
+        >
+          + Añadir otra categoría
+        </button>
+      </div>
+    </section>
+    <div class="flex justify-center gap-4 mt-6">
+      <button
+        type="button"
+        class="text-lg rounded-lg font-montserrat font-bold px-5 py-2.5 text-center bg-white hover:bg-gray-100 border border-gray-300 text-gray-800"
+      >
+        Guardar borrador
+      </button>
+      <button
+        type="submit"
+        class="text-lg rounded-lg font-montserrat font-bold px-5 py-2.5 text-center bg-green-600 hover:bg-green-700 text-white"
+      >
+        Crear evento
+      </button>
+    </div>
+  </form>
+</div>

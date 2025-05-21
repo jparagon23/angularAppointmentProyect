@@ -1,67 +1,180 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { CommonType } from 'src/app/models/InitialSignUpData.interface';
 
 @Component({
   selector: 'app-create-event-page',
   templateUrl: './create-event-page.component.html',
-  styleUrls: ['./create-event-page.component.css']
+  styleUrls: ['./create-event-page.component.css'],
 })
 export class CreateEventPageComponent {
-
   eventForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
-    this.eventForm = this.fb.group({
-      nombre: ['', Validators.required],
-      ubicacion: ['', Validators.required],
-      fechaInicio: ['', Validators.required],
-      fechaFin: ['', Validators.required],
-      registroInicio: ['', Validators.required],
-      registroFin: ['', Validators.required],
-      categorias: this.fb.array([this.crearCategoria()])
+  genderOptions: CommonType[] = [
+    { id: 'M', description: 'Masculino' },
+    { id: 'F', description: 'Femenino' },
+    { id: 'MX', description: 'Mixto' },
+  ];
+
+  prizesPositions: CommonType[] = [
+    { id: 1, description: '1er lugar' },
+    { id: 2, description: '2do lugar' },
+    { id: 3, description: '3er lugar' },
+    { id: 4, description: '4to lugar' },
+  ];
+
+  minInitialDate: string = new Date().toISOString().split('T')[0];
+
+  rangoEdad: number = 25; // valor por defecto
+
+  constructor(private readonly fb: FormBuilder) {
+    this.eventForm = this.fb.group(
+      {
+        name: ['', Validators.required],
+        location: ['', Validators.required],
+        eventDescription: ['', Validators.required],
+        initialEventDate: ['', Validators.required],
+        endEventDate: ['', Validators.required],
+        initialRegisterDate: ['', Validators.required],
+        endRegisterDate: ['', Validators.required],
+        categories: this.fb.array([this.createCategory()]),
+      },
+      { validators: this.validateDates }
+    );
+
+    this.eventForm.get('initialEventDate')?.valueChanges.subscribe((value) => {
+      if (value) {
+        const eventDate = new Date(value);
+        const oneDayBefore = new Date(eventDate);
+        oneDayBefore.setDate(eventDate.getDate() - 1);
+
+        const isoDate = oneDayBefore.toISOString().split('T')[0];
+        this.eventForm.get('endRegisterDate')?.setValue(isoDate);
+      }
     });
   }
 
+  validateDates(control: AbstractControl): null {
+    const group = control as FormGroup;
+
+    const endEventDate = new Date(group.get('endEventDate')?.value);
+    const initialRegisterDateControl = group.get('initialRegisterDate');
+    const endRegisterDateControl = group.get('endRegisterDate');
+
+    if (
+      !initialRegisterDateControl ||
+      !endRegisterDateControl ||
+      !endEventDate
+    ) {
+      return null;
+    }
+
+    const initialRegisterDate = new Date(initialRegisterDateControl.value);
+    const endRegisterDate = new Date(endRegisterDateControl.value);
+
+    // Limpiar errores anteriores
+    initialRegisterDateControl.setErrors(null);
+    endRegisterDateControl.setErrors(null);
+
+    // Validación: initialRegisterDate > endEventDate
+    if (initialRegisterDate > endEventDate) {
+      initialRegisterDateControl.setErrors({ dateAfterEnd: true });
+    }
+
+    // Validación: endRegisterDate > endEventDate
+    if (endRegisterDate > endEventDate) {
+      endRegisterDateControl.setErrors({ dateAfterEnd: true });
+    }
+
+    return null; // no error a nivel de formulario
+  }
+
   // Acceso rápido al FormArray de categorías
-  get categorias(): FormArray {
-    return this.eventForm.get('categorias') as FormArray;
+  get categories(): FormArray {
+    return this.eventForm.get('categories') as FormArray;
   }
 
   // Acceso rápido al FormArray de premios de una categoría
-  getPremios(categoriaIndex: number): FormArray {
-    return this.categorias.at(categoriaIndex).get('premios') as FormArray;
+  getPrizes(categoryIndex: number): FormArray {
+    return this.categories.at(categoryIndex).get('categoryPrizes') as FormArray;
+  }
+
+  get nameControl(): FormControl {
+    return this.eventForm.get('name') as FormControl;
+  }
+
+  getControl(name: string): FormControl | null {
+    const control = this.eventForm.get(name);
+    return control instanceof FormControl ? control : null;
+  }
+
+  getCategoryControl(index: number, controlName: string): FormControl | null {
+    const group = this.categories.at(index) as FormGroup;
+    const control = group.get(controlName);
+    return control instanceof FormControl ? control : null;
+  }
+
+  getPrizeControl(
+    categoryIndex: number,
+    prizeIndex: number,
+    controlName: string
+  ): FormControl | null {
+    const prizeGroup = this.getPrizes(categoryIndex).at(
+      prizeIndex
+    ) as FormGroup;
+
+    const control = prizeGroup.get(controlName);
+
+    return control instanceof FormControl ? control : null;
   }
 
   // Crea una nueva categoría con campos iniciales
-  crearCategoria(): FormGroup {
+  createCategory(): FormGroup {
     return this.fb.group({
-      nombre: ['', Validators.required],
-      genero: ['Masculino', Validators.required],
-      precio: [0, [Validators.required, Validators.min(0)]],
-      formato: ['Sencillos', Validators.required],
-      premios: this.fb.array([this.crearPremio()]),
-      maxJugadores: [0, Validators.min(0)],
-      rangoEdad: [100, Validators.min(0)],
-      rangoRanking: [6, Validators.min(0)]
+      categoryName: ['', Validators.required],
+      categoryGender: ['M', Validators.required],
+      categoryPrice: [0, [Validators.required, Validators.min(0)]],
+      categoryFormat: ['Sencillos', Validators.required],
+      categoryPrizes: this.fb.array([]),
+      CategoryMaxPlayers: [0, Validators.min(0)],
     });
   }
 
   // Crea un nuevo premio dentro de una categoría
-  crearPremio(): FormGroup {
+  createPrice(position: number = 1): FormGroup {
     return this.fb.group({
-      posicion: ['1er Lugar', Validators.required],
-      descripcion: ['']
+      position: [position, Validators.required],
+      description: [''],
     });
   }
 
   // Agrega una nueva categoría al formulario
-  agregarCategoria(): void {
-    this.categorias.push(this.crearCategoria());
+  addCategory(): void {
+    this.categories.push(this.createCategory());
+  }
+  deleteCategory(index: number): void {
+    this.categories.removeAt(index);
   }
 
   // Agrega un premio a la categoría correspondiente
-  agregarPremio(categoriaIndex: number): void {
-    this.getPremios(categoriaIndex).push(this.crearPremio());
+  addPrize(categoriaIndex: number): void {
+    const premios = this.getPrizes(categoriaIndex);
+    const nextPosition = premios.length + 1;
+    premios.push(this.createPrice(nextPosition));
+  }
+
+  deletePrize(i: number, j: number) {
+    const premios = this.getPrizes(i);
+    if (premios.length > 0) {
+      premios.removeAt(j);
+    }
   }
 
   // Enviar formulario
@@ -73,5 +186,10 @@ export class CreateEventPageComponent {
       console.log('Formulario inválido');
       this.eventForm.markAllAsTouched();
     }
+  }
+
+  isInvalidAndTouched(controlName: string): boolean {
+    const control = this.eventForm.get(controlName);
+    return !!(control && control.invalid && (control.touched || control.dirty));
   }
 }

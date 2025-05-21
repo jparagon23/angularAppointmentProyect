@@ -1,1 +1,113 @@
-<p>events-page works!</p>
+<section class="max-w-7xl mx-auto p-6">
+  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <!-- Card de torneo -->
+    <div
+      class="bg-white shadow-md rounded-lg overflow-hidden border border-green-700 hover:shadow-xl transition-shadow duration-300"
+    >
+      <img
+        src="https://s3.abcstatics.com/media/bienestar/2019/08/02/tenis-abecedario-kgNF--1248x698@abc.jpg"
+        alt="Torneo de tenis"
+        class="w-full h-40 object-cover"
+      />
+      <div class="p-5 flex flex-col justify-between h-56">
+        <div>
+          <h2 class="text-xl font-semibold text-green-800 mb-2">
+            Torneo Nacional de Tenis 2025
+          </h2>
+          <p class="text-sm text-green-700 mb-1">📅 10 - 15 Octubre, 2025</p>
+          <p class="text-sm text-green-700 mb-3">📍 Club Los Andes – Bogotá</p>
+          <p class="text-sm text-gray-600 mb-4">
+            Categorías: Sencillos, Dobles | Inscripción desde $30.000
+          </p>
+        </div>
+        <div class="flex items-center justify-between">
+          <span
+            class="px-3 py-1 rounded-full bg-green-200 text-green-900 font-semibold text-xs"
+            >Inscripción Abierta</span
+          >
+          <button
+            class="bg-green-800 hover:bg-green-900 text-white font-semibold py-2 px-4 rounded transition"
+            type="button"
+            (click)="sendToEventnfo()"
+          >
+            Ver detalles
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card de torneo (ejemplo 2) -->
+    <div
+      class="bg-white shadow-md rounded-lg overflow-hidden border border-green-700 hover:shadow-xl transition-shadow duration-300"
+    >
+      <img
+        src="https://media.gq.com.mx/photos/65dcbc483fecdd5a25838239/16:9/w_2560%2Cc_limit/Tenis_Novak_Djokovic_1558638881.jpg"
+        alt="Torneo de tenis"
+        class="w-full h-40 object-cover"
+      />
+      <div class="p-5 flex flex-col justify-between h-56">
+        <div>
+          <h2 class="text-xl font-semibold text-green-800 mb-2">
+            Copa Primavera 2025
+          </h2>
+          <p class="text-sm text-green-700 mb-1">📅 5 - 10 Abril, 2025</p>
+          <p class="text-sm text-green-700 mb-3">
+            📍 Club La Sabana – Medellín
+          </p>
+          <p class="text-sm text-gray-600 mb-4">
+            Categorías: Juvenil, Sencillos | Inscripción desde $20.000
+          </p>
+        </div>
+        <div class="flex items-center justify-between">
+          <span
+            class="px-3 py-1 rounded-full bg-yellow-200 text-yellow-900 font-semibold text-xs"
+            >Inscripción Próxima</span
+          >
+          <button
+            class="bg-green-800 hover:bg-green-900 text-white font-semibold py-2 px-4 rounded transition"
+            type="button"
+            (click)="sendToEventnfo()"
+          >
+            Ver detalles
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card de torneo (ejemplo 3) -->
+    <div
+      class="bg-white shadow-md rounded-lg overflow-hidden border border-green-700 hover:shadow-xl transition-shadow duration-300"
+    >
+      <img
+        src="https://compartirenfamilia.com/wp-content/uploads/2022/09/beneficios-tenis.jpg"
+        alt="Torneo de tenis"
+        class="w-full h-40 object-cover"
+      />
+      <div class="p-5 flex flex-col justify-between h-56">
+        <div>
+          <h2 class="text-xl font-semibold text-green-800 mb-2">
+            Open de Otoño 2024
+          </h2>
+          <p class="text-sm text-green-700 mb-1">📅 20 - 25 Octubre, 2024</p>
+          <p class="text-sm text-green-700 mb-3">📍 Club San Fernando – Cali</p>
+          <p class="text-sm text-gray-600 mb-4">
+            Categorías: Dobles, Sencillos | Inscripción desde $25.000
+          </p>
+        </div>
+        <div class="flex items-center justify-between">
+          <span
+            class="px-3 py-1 rounded-full bg-red-200 text-red-900 font-semibold text-xs"
+            >Inscripción Cerrada</span
+          >
+          <button
+            class="bg-gray-400 cursor-not-allowed text-white font-semibold py-2 px-4 rounded opacity-70"
+            type="button"
+            disabled
+          >
+            Ver detalles
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
