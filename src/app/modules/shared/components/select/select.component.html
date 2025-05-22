@@ -1,18 +1,21 @@
 <div>
   <div *ngIf="displayLabel">
-    <label for="email" class="block mb-2 text-sm font-medium text-gray-900">{{
-      description || functions.splitAndCapitalizeFirstLetter(name)
-    }}</label>
+    <label
+      [for]="name"
+      class="block mb-2 text-sm font-medium text-gray-900"
+    >
+      {{ description || functions.splitAndCapitalizeFirstLetter(name) }}
+    </label>
   </div>
+
   <select
     [formControl]="control"
     [id]="name"
     [ngClass]="{
-      'border-red-500': shouldApplyRedBorder(),
-      'bg-gray-200': !shouldApplyRedBorder(),
-      'border border-gray-300': true,
-      'text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5': true,
-      'bg-white': (control.valid && control.dirty) || control.value !== ''
+      'border border-red-500 focus:ring-red-500 focus:border-red-500': shouldApplyRedBorder(),
+      'border border-gray-300 focus:ring-primary-600 focus:border-primary-600': !shouldApplyRedBorder(),
+      'text-gray-900 sm:text-sm rounded-lg block w-full p-2.5': true,
+      'bg-white': true
     }"
   >
     <option value>
@@ -25,6 +28,7 @@
       }}
     </option>
   </select>
+
   <div *ngIf="blurred">
     <app-error-message [control]="control"></app-error-message>
   </div>

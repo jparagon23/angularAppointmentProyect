@@ -17,17 +17,25 @@
         Paso 1: Información básica
       </h3>
       <div>
+        <app-select
+        *ngIf="getControl('eventType') as control"
+        [control]="control"
+        [name]="'Tipo de evento'"
+        [options]="eventTypes"
+      ></app-select>
+      </div>
+      <div>
         <app-input
           *ngIf="getControl('name') as control"
           [control]="control"
-          [name]="'Nombre del torneo'"
+          [name]="'Nombre del evento'"
         ></app-input>
       </div>
       <div>
         <app-input
           *ngIf="getControl('location') as control"
           [control]="control"
-          [name]="'Ubicación del torneo'"
+          [name]="'Ubicación del evento'"
         ></app-input>
       </div>
 
@@ -46,7 +54,7 @@
       <div class="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
         <div>
           <label class="block text-gray-700 font-medium"
-            >Fecha inicio del torneo</label
+            >Fecha inicio del evento</label
           >
           <input
             formControlName="initialEventDate"
@@ -58,7 +66,7 @@
         </div>
         <div>
           <label class="block text-gray-700 font-medium"
-            >Fecha fin del torneo</label
+            >Fecha fin del evento</label
           >
           <input
             formControlName="endEventDate"

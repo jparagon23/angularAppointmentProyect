@@ -30,6 +30,12 @@ export class CreateEventPageComponent {
     { id: 4, description: '4to lugar' },
   ];
 
+  eventTypes: CommonType[] = [
+    { id: 1, description: 'Round Robin' },
+    { id: 2, description: 'Eliminación directa' },
+    { id: 3, description: 'Round robin + eliminación directa' }
+  ];
+
   minInitialDate: string = new Date().toISOString().split('T')[0];
 
   rangoEdad: number = 25; // valor por defecto
@@ -37,6 +43,7 @@ export class CreateEventPageComponent {
   constructor(private readonly fb: FormBuilder) {
     this.eventForm = this.fb.group(
       {
+        eventType:['',Validators.required],
         name: ['', Validators.required],
         location: ['', Validators.required],
         eventDescription: ['', Validators.required],
