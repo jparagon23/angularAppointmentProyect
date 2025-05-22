@@ -10,7 +10,7 @@ const routes: Routes = [
     component: EventsPageComponent,
   },
   {
-    path: 'createEvent',
+    path: 'create',
     component: CreateEventPageComponent,
   },
   {
