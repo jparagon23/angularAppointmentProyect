@@ -146,6 +146,9 @@ export class NavbarComponent implements OnInit {
   redirectToEventsPage() {
     this.router.navigate(['home/user/events']);
   }
+  redirectToCreateEventsPage() {
+    this.router.navigate(['home/user/events/create']);
+  }
 
   redirectToConfigurationComponent() {
     this.router.navigate(['home/admin/configuration']);

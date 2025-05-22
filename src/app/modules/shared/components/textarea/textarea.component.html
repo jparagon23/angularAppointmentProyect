@@ -1,0 +1,37 @@
+<div>
+    <div *ngIf="displayLabel">
+      <label
+        [for]="name"
+        class="block mb-2 text-sm font-medium"
+        [ngClass]="{
+          'text-gray-900': displayErrorMessage,
+          'text-red-500': !displayErrorMessage
+        }"
+      >
+        {{ description || functions.splitAndCapitalizeFirstLetter(name) }}
+      </label>
+    </div>
+  
+    <div class="relative">
+      <textarea
+        [name]="name"
+        [id]="name"
+        [rows]="rows"
+        [placeholder]="placeholder"
+        [formControl]="control"
+        (blur)="markAsBlurred()"
+        (input)="onValueChange($event)"
+        [ngClass]="{
+          'border-red-500': shouldApplyRedBorder(),
+          'border border-gray-300': true,
+          'text-gray-900 sm:text-sm rounded-3xl focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5': true,
+          'bg-white': (control.valid && control.dirty) || control.value !== ''
+        }"
+      ></textarea>
+    </div>
+  
+    <div *ngIf="blurred && displayErrorMessage">
+      <app-error-message [control]="control"></app-error-message>
+    </div>
+  </div>
+  

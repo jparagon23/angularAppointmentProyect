@@ -30,6 +30,7 @@ import { TabSelectorComponent } from './components/tab-selector/tab-selector.com
 import { StatsBoardComponent } from './components/stats-board/stats-board.component';
 import { GeneralRankingComponent } from './components/general-ranking/general-ranking.component';
 import { NameShortFormatPipe } from './pipes/name-short-format.pipe';
+import { TextareaComponent } from './components/textarea/textarea.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,7 @@ import { NameShortFormatPipe } from './pipes/name-short-format.pipe';
     StatsBoardComponent,
     GeneralRankingComponent,
     NameShortFormatPipe,
-  ],
+    TextareaComponent  ],
 
   imports: [
     CommonModule,
@@ -88,6 +89,7 @@ import { NameShortFormatPipe } from './pipes/name-short-format.pipe';
     StatsBoardComponent,
     GeneralRankingComponent,
     NameShortFormatPipe,
+    TextareaComponent
   ],
 })
 export class SharedModule {}
