@@ -16,14 +16,7 @@
       <h3 class="text-2xl font-semibold text-gray-800">
         Paso 1: Información básica
       </h3>
-      <div>
-        <app-select
-        *ngIf="getControl('eventType') as control"
-        [control]="control"
-        [name]="'Tipo de evento'"
-        [options]="eventTypes"
-      ></app-select>
-      </div>
+      
       <div>
         <app-input
           *ngIf="getControl('name') as control"
@@ -37,6 +30,14 @@
           [control]="control"
           [name]="'Ubicación del evento'"
         ></app-input>
+      </div>
+      <div>
+        <app-select
+        *ngIf="getControl('eventType') as control"
+        [control]="control"
+        [name]="'Tipo de evento'"
+        [options]="eventTypes"
+      ></app-select>
       </div>
 
       <div>
@@ -75,6 +76,12 @@
             [min]="minInitialDate"
             [class.border-red-500]="isInvalidAndTouched('endEventDate')"
           />
+          <div
+            *ngIf="getControl('endEventDate')?.errors?.['dateAfterEnd']"
+            class="text-red-600"
+          >
+            La fecha fin del evento no puede ser menos a la fecha de inicio.
+          </div>
         </div>
         <div>
           <label class="block text-gray-700 font-medium"

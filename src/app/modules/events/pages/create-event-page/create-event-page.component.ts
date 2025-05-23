@@ -71,7 +71,13 @@ export class CreateEventPageComponent {
   validateDates(control: AbstractControl): null {
     const group = control as FormGroup;
 
+    
+    const startEventDate = new Date(group.get('initialEventDate')?.value); 
     const endEventDate = new Date(group.get('endEventDate')?.value);
+
+    const startEventDateControl = group.get('initialEventDate');
+    const endEventDateControl = group.get('endEventDate');
+
     const initialRegisterDateControl = group.get('initialRegisterDate');
     const endRegisterDateControl = group.get('endRegisterDate');
 
@@ -82,7 +88,7 @@ export class CreateEventPageComponent {
     ) {
       return null;
     }
-
+    
     const initialRegisterDate = new Date(initialRegisterDateControl.value);
     const endRegisterDate = new Date(endRegisterDateControl.value);
 
@@ -98,6 +104,11 @@ export class CreateEventPageComponent {
     // Validación: endRegisterDate > endEventDate
     if (endRegisterDate > endEventDate) {
       endRegisterDateControl.setErrors({ dateAfterEnd: true });
+    }
+
+    if(startEventDate>endEventDate){
+      endEventDateControl?.setErrors({ dateAfterEnd: true })
+
     }
 
     return null; // no error a nivel de formulario
