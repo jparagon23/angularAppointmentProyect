@@ -12,30 +12,55 @@ export class ChallengeModalComponent {
   @Output() close = new EventEmitter<void>();
   @Output() challengeSent = new EventEmitter<Challenge>();
 
-  selectedClub: number | null = null;
   selectedDate: string | null = null;
-  selectedMatchType:'SINGLES' | 'DOUBLES' | null = null;
+  selectedMatchType: 'SINGLES' | 'DOUBLES' | null = null;
   challengeMessage: string = '';
-  challengerUser:number=1;
+  challengerUser: number = 1; // <-- Puedes cambiar esto según tu autenticación
+
+  // Nuevas variables para selección de ubicación
+  useCustomLocation: boolean = false;
+  selectedClub: number | null = null;
+  customLocation: string = '';
+
+  // Simulación de clubes disponibles (puedes cargarlos desde API)
+  availableClubs: { id: number, name: string }[] = [
+    { id: 1, name: 'Club Los Andes' },
+    { id: 2, name: 'Club La Raqueta' }
+    // Puedes agregar más o cargarlos desde un servicio
+  ];
 
   selectMatchType(type: 'SINGLES' | 'DOUBLES') {
-this.selectedMatchType= type;
+    this.selectedMatchType = type;
   }
 
   sendChallenge() {
-    if (!this.selectedClub || !this.selectedDate || !this.selectedMatchType) {
-      alert('Por favor completa todos los campos.');
+    // Validaciones básicas
+    if (!this.selectedDate || !this.selectedMatchType) {
+      alert('Debes seleccionar la fecha y el tipo de partido.');
+      return;
+    }
+
+    // Validación de lugar
+    if (!this.useCustomLocation && !this.selectedClub) {
+      alert('Selecciona un club.');
+      return;
+    }
+
+    if (this.useCustomLocation && this.customLocation.trim() === '') {
+      alert('Especifica la dirección del lugar.');
       return;
     }
 
     const challenge: Challenge = {
-      challengerId:this.challengerUser,
+      challengerId: this.challengerUser,
       opponentId: this.opponent?.id!,
-      clubId: this.selectedClub!,
       matchDate: this.selectedDate!,
       matchType: this.selectedMatchType === 'SINGLES' ? MatchType.SINGLES : MatchType.DOUBLES,
+
       message: this.challengeMessage,
       status: ChallengeStatus.PENDING,
+      clubId: !this.useCustomLocation ? this.selectedClub! : undefined,
+      customLocation: this.useCustomLocation ? this.customLocation : undefined
     };
 
     this.challengeSent.emit(challenge);
@@ -44,5 +69,4 @@ this.selectedMatchType= type;
   closeModal() {
     this.close.emit();
   }
-
 }

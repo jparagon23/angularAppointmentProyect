@@ -15,11 +15,12 @@ export enum MatchType {
     id?: number;
     challengerId: number; // Usuario que envió el reto
     opponentId: number; // Usuario retado
-    clubId: number; // Club donde se jugará el partido
+    clubId: number | undefined; // Club donde se jugará el partido
     matchDate: string; // Fecha y hora en formato ISO
     matchType: MatchType; // SINGLES o DOUBLES
     message?: string; // Mensaje opcional
     status: ChallengeStatus; // Estado del reto
+    customLocation: string | undefined
   }
   
   

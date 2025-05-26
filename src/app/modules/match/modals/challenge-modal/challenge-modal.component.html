@@ -39,6 +39,50 @@
         </button>
       </div>
     </div>
+    <!-- Selección de ubicación -->
+<div class="mt-4">
+  <label class="font-semibold block">📍 Lugar del reto</label>
+  <div class="flex gap-4 mt-2">
+    <button
+      (click)="useCustomLocation = false"
+      [class.bg-blue-600]="!useCustomLocation"
+      class="border rounded-md px-4 py-2 hover:bg-blue-500 transition"
+    >
+      Club registrado
+    </button>
+    <button
+      (click)="useCustomLocation = true"
+      [class.bg-blue-600]="useCustomLocation"
+      class="border rounded-md px-4 py-2 hover:bg-blue-500 transition"
+    >
+      Otro lugar
+    </button>
+  </div>
+</div>
+
+<!-- Si es club -->
+<div *ngIf="!useCustomLocation" class="mt-2">
+  <label class="font-semibold block">🏟️ Club</label>
+  <select [(ngModel)]="selectedClub" class="w-full border rounded-md p-2 mt-1">
+    <option [ngValue]="null">Selecciona un club</option>
+    <option *ngFor="let club of availableClubs" [value]="club.id">
+      {{ club.name }}
+    </option>
+  </select>
+</div>
+
+<!-- Si es otro lugar -->
+<div *ngIf="useCustomLocation" class="mt-2">
+  <label class="font-semibold block">🏠 Dirección del lugar</label>
+  <input
+    type="text"
+    [(ngModel)]="customLocation"
+    class="w-full border rounded-md p-2 mt-1"
+    placeholder="Ej. Calle 123 #45-67, Ciudad"
+  />
+</div>
+
+
 
     <!-- Mensaje Opcional -->
     <div class="mt-4">
