@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, EventEmitter, Output } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ClubMembership, User } from 'src/app/models/user.model';
 import { Challenge, ChallengeStatus, MatchType } from 'src/app/models/Challenge.model';
 import { UserListReturn } from 'src/app/models/UserListReturn.model';
@@ -59,7 +59,8 @@ export class ChallengeModalComponent {
 ];;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<ChallengeModalComponent>
   ) {
     // Asignar el dato pasado por el modal
     if (data?.opponent) {
@@ -67,9 +68,6 @@ export class ChallengeModalComponent {
     }
   }
 
-
-  @Output() close = new EventEmitter<void>();
-  @Output() challengeSent = new EventEmitter<Challenge>();
 
   selectedDate: string | null = null;
   selectedMatchType: 'SINGLES' | 'DOUBLES' | null = "SINGLES";
@@ -145,11 +143,10 @@ export class ChallengeModalComponent {
       customLocation: this.useCustomLocation ? this.customLocation : undefined
     };
 
-    this.challengeSent.emit(challenge);
   }
 
   closeModal() {
-    this.close.emit();
+    this.dialogRef.close();
   }
 
   selectRecommendedOpponent(user: any) {
