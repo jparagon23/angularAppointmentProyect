@@ -8,7 +8,7 @@ import { UserListReturn } from 'src/app/models/UserListReturn.model';
   selector: 'app-challenge-modal',
   templateUrl: './challenge-modal.component.html'
 })
-export class ChallengeModalComponent implements OnInit {
+export class ChallengeModalComponent {
   opponent: {
     id: number;
     name: string;
@@ -16,18 +16,57 @@ export class ChallengeModalComponent implements OnInit {
     clubMemberships: ClubMembership[];
   } | null = null;
 
+  recommendedUsers: {
+  id: number;
+  rating:number;
+  city:string;
+  name: string;
+  image: string;
+  clubMemberships: { clubName: string }[];
+}[] =  [
+  {
+    id: 2,
+    rating:4.3,
+    city:"cali",
+    name: 'Carlos Rodríguez',
+    image: 'https://i.pravatar.cc/150?img=12',
+    clubMemberships: [{ clubName: 'Club La Raqueta' }]
+  },
+  {
+    id: 3,
+    rating:4.3,
+    city:"cali",
+    name: 'Lucía Gómez',
+    image: 'https://i.pravatar.cc/150?img=24',
+    clubMemberships: [{ clubName: 'Club Las Palmas' }]
+  },
+   {
+    id: 3,
+    rating:4.3,
+    city:"cali",
+    name: 'Carlos Perez',
+    image: 'https://i.pravatar.cc/150?img=12',
+    clubMemberships: [{ clubName: 'Club La Raqueta' }]
+  },
+  {
+    id: 4,
+    rating:4.3,
+    city:"cali",
+    name: 'Lucía Hijema',
+    image: 'https://i.pravatar.cc/150?img=24',
+    clubMemberships: [{ clubName: 'Club Las Palmas' }]
+  },
+];;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     // Asignar el dato pasado por el modal
     if (data?.opponent) {
-      this.opponent = data.opponent;
+      this.opponent = null;
     }
   }
 
-  ngOnInit(): void {
-    console.log('Oponente recibido:', this.opponent);
-  }
 
   @Output() close = new EventEmitter<void>();
   @Output() challengeSent = new EventEmitter<Challenge>();
@@ -112,4 +151,18 @@ export class ChallengeModalComponent implements OnInit {
   closeModal() {
     this.close.emit();
   }
+
+  selectRecommendedOpponent(user: any) {
+  if (user.id === this.challengerUser) {
+    alert('No puedes retarte a ti mismo.');
+    return;
+  }
+
+  this.opponent = {
+    id: user.id,
+    name: user.name,
+    image: user.image,
+    clubMemberships: user.clubMemberships
+  };
+}
 }

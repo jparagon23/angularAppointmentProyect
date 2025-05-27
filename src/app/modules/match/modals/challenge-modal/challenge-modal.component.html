@@ -10,35 +10,73 @@
   </div>
 
   <!-- Jugador a retar -->
-  <div>
-    <label class="font-semibold text-gray-700 block mb-2 text-sm">🎯 Jugador a retar</label>
+<div>
+  <label class="font-semibold text-gray-700 block mb-2 text-sm">🎯 Jugador a retar</label>
 
-    <!-- Buscar oponente -->
-    <div *ngIf="!opponent">
-      <app-user-search-list
-        (userReturn)="onUserSelectedFromSearch($event)"
-        [allowCreateUser]="false"
-        [filterUserStatus]="[2]"
-      ></app-user-search-list>
+  <!-- Mostrar jugadores recomendados si no hay oponente aún -->
+  <div *ngIf="!opponent && recommendedUsers?.length" class="space-y-2 mb-4">
+  <p class="text-sm text-gray-600">Jugadores recomendados para ti:</p>
+
+  <div class="flex overflow-x-auto space-x-4 pb-2">
+  <div
+    *ngFor="let user of recommendedUsers"
+    class="flex-shrink-0 min-w-[240px] flex items-center gap-3 border border-gray-200 rounded-xl p-3 bg-white shadow-sm hover:shadow-md transition cursor-pointer"
+    (click)="selectRecommendedOpponent(user)"
+  >
+    <img
+      [src]="user.image || '/default-avatar.png'"
+      alt="{{ user.name }}"
+      class="w-12 h-12 rounded-full object-cover border border-gray-300"
+    />
+
+    <div class="flex flex-col text-sm w-full">
+      <p class="text-gray-800 font-semibold truncate">{{ user.name }}</p>
+      <p class="text-green-600 font-semibold">FTL: {{ user.rating || 'N/A' }}</p>
+      <p class="text-gray-500 truncate">
+        🏟 {{ user.clubMemberships[0]?.clubName || 'Sin club' }}
+      </p>
+      <p class="text-gray-400 truncate">📍 {{ user.city || 'Ciudad no disponible' }}</p>
     </div>
 
-    <!-- Mostrar oponente seleccionado -->
-    <div *ngIf="opponent" class="bg-gray-100 border border-gray-300 rounded-lg p-4 flex items-center justify-between mt-2">
-      <div class="flex items-center gap-2">
-        <span class="text-xl">🎾</span>
-        <div>
-          <p class="font-medium text-gray-800">{{ opponent.name }}</p>
-          <p class="text-sm text-gray-500">Jugador seleccionado</p>
-        </div>
-      </div>
-      <button
-        (click)="opponent = null"
-        class="text-blue-600 text-sm hover:underline transition"
-      >
-        Cambiar
-      </button>
-    </div>
   </div>
+</div>
+
+
+  <hr class="my-2">
+  <p class="text-sm text-gray-500 italic">O usa el buscador para encontrar a otro jugador:</p>
+</div>
+
+
+  <!-- Buscar oponente -->
+  <div *ngIf="!opponent">
+    <app-user-search-list
+      (userReturn)="onUserSelectedFromSearch($event)"
+      [allowCreateUser]="false"
+      [filterUserStatus]="[2]"
+    ></app-user-search-list>
+  </div>
+
+  <!-- Mostrar oponente seleccionado -->
+  <div
+    *ngIf="opponent"
+    class="bg-gray-100 border border-gray-300 rounded-lg p-4 flex items-center justify-between mt-2"
+  >
+    <div class="flex items-center gap-2">
+      <span class="text-xl">🎾</span>
+      <div>
+        <p class="font-medium text-gray-800">{{ opponent.name }}</p>
+        <p class="text-sm text-gray-500">Jugador seleccionado</p>
+      </div>
+    </div>
+    <button
+      (click)="opponent = null"
+      class="text-blue-600 text-sm hover:underline transition"
+    >
+      Cambiar
+    </button>
+  </div>
+</div>
+
 
   <!-- Fecha y Hora -->
   <div>
