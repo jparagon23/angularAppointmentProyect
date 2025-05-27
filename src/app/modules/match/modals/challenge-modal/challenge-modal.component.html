@@ -57,16 +57,16 @@
       <button
         (click)="selectMatchType('SINGLES')"
         [class.bg-green-600]="selectedMatchType === 'SINGLES'"
-        class="border rounded-md px-4 py-2 hover:bg-green-500 transition text-white"
-        [ngClass]="selectedMatchType === 'SINGLES' ? 'bg-green-600' : 'bg-gray-300 text-gray-800'"
+        class="border rounded-md px-4 py-2 hover:bg-green-700 transition text-white"
+        [ngClass]="selectedMatchType === 'SINGLES' ? 'bg-green-700' : 'bg-gray-300 text-gray-800'"
       >
         Sencillos
       </button>
       <button
         (click)="selectMatchType('DOUBLES')"
         [class.bg-green-600]="selectedMatchType === 'DOUBLES'"
-        class="border rounded-md px-4 py-2 hover:bg-green-500 transition text-white"
-        [ngClass]="selectedMatchType === 'DOUBLES' ? 'bg-green-600' : 'bg-gray-300 text-gray-800'"
+        class="border rounded-md px-4 py-2 hover:bg-green-700 transition text-white"
+        [ngClass]="selectedMatchType === 'DOUBLES' ? 'bg-green-700' : 'bg-gray-300 text-gray-800'"
       >
         Dobles
       </button>
@@ -79,15 +79,15 @@
     <div class="flex gap-4">
       <button
         (click)="useCustomLocation = false"
-        [ngClass]="useCustomLocation ? 'bg-gray-300 text-gray-800' : 'bg-blue-600 text-white'"
-        class="border rounded-md px-4 py-2 hover:bg-blue-500 transition"
+        [ngClass]="useCustomLocation ? 'bg-gray-300 text-gray-800' : 'bg-green-700 text-white'"
+        class="border rounded-md px-4 py-2 hover:bg-green-700 transition"
       >
         Club registrado
       </button>
       <button
         (click)="useCustomLocation = true"
-        [ngClass]="useCustomLocation ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-800'"
-        class="border rounded-md px-4 py-2 hover:bg-blue-500 transition"
+        [ngClass]="useCustomLocation ? 'bg-green-700 text-white' : 'bg-gray-300 text-gray-800'"
+        class="border rounded-md px-4 py-2 hover:bg-green-700 transition"
       >
         Otro lugar
       </button>

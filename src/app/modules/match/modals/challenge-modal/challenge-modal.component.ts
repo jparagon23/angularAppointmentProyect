@@ -33,7 +33,7 @@ export class ChallengeModalComponent implements OnInit {
   @Output() challengeSent = new EventEmitter<Challenge>();
 
   selectedDate: string | null = null;
-  selectedMatchType: 'SINGLES' | 'DOUBLES' | null = null;
+  selectedMatchType: 'SINGLES' | 'DOUBLES' | null = "SINGLES";
   challengeMessage: string = '';
   challengerUser: number = 1;
 
