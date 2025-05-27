@@ -1,46 +1,90 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Inject, OnInit, EventEmitter, Output } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ClubMembership, User } from 'src/app/models/user.model';
 import { Challenge, ChallengeStatus, MatchType } from 'src/app/models/Challenge.model';
-import { User } from 'src/app/models/user.model';
+import { UserListReturn } from 'src/app/models/UserListReturn.model';
 
 @Component({
   selector: 'app-challenge-modal',
   templateUrl: './challenge-modal.component.html'
 })
-export class ChallengeModalComponent {
+export class ChallengeModalComponent implements OnInit {
+  opponent: {
+    id: number;
+    name: string;
+    image: string;
+    clubMemberships: ClubMembership[];
+  } | null = null;
 
-  @Input() opponent: User | null = null;
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {
+    // Asignar el dato pasado por el modal
+    if (data?.opponent) {
+      this.opponent = data.opponent;
+    }
+  }
+
+  ngOnInit(): void {
+    console.log('Oponente recibido:', this.opponent);
+  }
+
   @Output() close = new EventEmitter<void>();
   @Output() challengeSent = new EventEmitter<Challenge>();
 
   selectedDate: string | null = null;
   selectedMatchType: 'SINGLES' | 'DOUBLES' | null = null;
   challengeMessage: string = '';
-  challengerUser: number = 1; // <-- Puedes cambiar esto según tu autenticación
+  challengerUser: number = 1;
 
-  // Nuevas variables para selección de ubicación
   useCustomLocation: boolean = false;
   selectedClub: number | null = null;
   customLocation: string = '';
 
-  // Simulación de clubes disponibles (puedes cargarlos desde API)
   availableClubs: { id: number, name: string }[] = [
     { id: 1, name: 'Club Los Andes' },
     { id: 2, name: 'Club La Raqueta' }
-    // Puedes agregar más o cargarlos desde un servicio
   ];
 
   selectMatchType(type: 'SINGLES' | 'DOUBLES') {
     this.selectedMatchType = type;
   }
 
+  onUserSelectedFromSearch(user: UserListReturn | null) {
+    if (!user) {
+      this.opponent = null;
+      return;
+    }
+
+    const selectedUserId = Number(user.userId);
+    if (selectedUserId === this.challengerUser) {
+      alert('No puedes retarte a ti mismo.');
+      return;
+    }
+
+    this.opponent = {
+      id: selectedUserId,
+      name: user.completeName,
+      image: user.profileImage,
+      clubMemberships: user.userClubMemberships,
+    };
+  }
+
+  clearOpponent() {
+    this.opponent = null;
+  }
+
   sendChallenge() {
-    // Validaciones básicas
+    if (!this.opponent) {
+      alert('Selecciona un oponente.');
+      return;
+    }
+
     if (!this.selectedDate || !this.selectedMatchType) {
       alert('Debes seleccionar la fecha y el tipo de partido.');
       return;
     }
 
-    // Validación de lugar
     if (!this.useCustomLocation && !this.selectedClub) {
       alert('Selecciona un club.');
       return;
@@ -53,10 +97,9 @@ export class ChallengeModalComponent {
 
     const challenge: Challenge = {
       challengerId: this.challengerUser,
-      opponentId: this.opponent?.id!,
-      matchDate: this.selectedDate!,
+      opponentId: this.opponent.id,
+      matchDate: this.selectedDate,
       matchType: this.selectedMatchType === 'SINGLES' ? MatchType.SINGLES : MatchType.DOUBLES,
-
       message: this.challengeMessage,
       status: ChallengeStatus.PENDING,
       clubId: !this.useCustomLocation ? this.selectedClub! : undefined,
