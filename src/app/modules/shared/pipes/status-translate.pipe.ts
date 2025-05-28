@@ -10,6 +10,8 @@ export class StatusTranslatePipe implements PipeTransform {
     REJECTED: 'RECHAZADO',
     AUTO_APPROVED: 'CONFIRMADO',
     CANCELLED: 'CANCELADO',
+    SINGLES: 'SENCILLOS',
+    DOUBLES: 'DOBLES',
   };
 
   transform(value: string): string {

@@ -8,9 +8,21 @@
       [genralRanking]="ratings.ranking"
     ></app-general-ranking>
   </div>
-  <!--  -->
+
   <!-- PARTIDOS -->
-  <div class="w-full flex md:w-2/3">
+  <div class="w-full md:w-2/3">
+    <div class="w-full" *ngIf="selectUserChallenges$ | async as challenges">
+      <div class="w-full overflow-x-auto px-4 py-2">
+        <div class="flex gap-4">
+          <app-challenge-card
+            *ngFor="let challenge of challenges"
+            [challenge]="challenge"
+            class="flex-shrink-0"
+          ></app-challenge-card>
+        </div>
+      </div>
+    </div>
+
     <div
       class="w-full mb-5"
       *ngIf="selectDashboardState$ | async as matchesData"

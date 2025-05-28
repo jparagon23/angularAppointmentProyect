@@ -34,6 +34,7 @@ import { ChallengeCardComponent } from './components/challenge-card/challenge-ca
     ResultShortSectionComponent,
     MatchesInfoPageComponent,
     MatchPaginationComponent,
+    ChallengeCardComponent,
   ],
 })
 export class MatchModule {}

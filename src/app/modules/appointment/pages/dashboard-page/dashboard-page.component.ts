@@ -17,6 +17,7 @@ import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { User } from 'src/app/models/user.model';
 import { takeUntil } from 'rxjs/operators';
 import { selectDashboardState } from 'src/app/state/dashboard-state/dashboard.selectors';
+import { selectUserChallenges } from 'src/app/state/challenges/challenges.selectos';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -43,6 +44,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   selectGeneralRankingStatus$ = this.store.select(selectRankingState);
 
   selectDashboardState$ = this.store.select(selectDashboardState);
+
+  selectUserChallenges$ = this.store.select(selectUserChallenges);
 
   matchType: string = 'SINGLES';
 
@@ -91,7 +94,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   private filterMatches(userMatches: UserMatch[], userId: number): void {
-
     this.confirmedMatches = userMatches.filter(
       (match) =>
         (match.status === 'CONFIRMED' && match.matchType === this.matchType) ||

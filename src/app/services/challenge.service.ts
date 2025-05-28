@@ -6,6 +6,8 @@ import { Store } from '@ngrx/store';
 import { selectUser } from '../state/selectors/users.selectors';
 import { environment } from 'src/environments/environment';
 import { Challenge } from '../models/Challenge.model';
+import { ChallengePageResponse } from '../models/challenges/UserChallenges.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -43,6 +45,66 @@ export class ChallengeService {
   createChallenge(createChallenge: Challenge) {
     const url = `${environment.API_URL}/challenge`;
     return this.http.post(url, createChallenge, {
+      headers: this.setHeaders(),
+    });
+  }
+
+  getUserChallenges(
+    userId?: number,
+    matchType?: string,
+    challengeStatus?: string,
+    page: number = 0,
+    size: number = 10,
+    sortBy: string = 'challengeDateTime',
+    sortDir: 'asc' | 'desc' = 'desc'
+  ): Observable<ChallengePageResponse> {
+    // Usa el userId proporcionado o el almacenado en el servicio
+    const finalUserId = userId ?? this.userId;
+
+    if (!finalUserId) {
+      throw new Error('User ID is undefined');
+    }
+
+    const params: any = {
+      page,
+      size,
+      sortBy,
+      sortDir,
+    };
+
+    if (matchType) {
+      params.matchType = matchType;
+    }
+
+    if (challengeStatus) {
+      params.challengeStatus = challengeStatus;
+    }
+
+    const url = `${environment.API_URL}/challenge/${finalUserId}`;
+
+    return this.http.get<ChallengePageResponse>(url, {
+      headers: this.setHeaders(),
+      params,
+    });
+  }
+
+  acceptChallenge(challengeId: number) {
+    const url = `${environment.API_URL}/challenge/${challengeId}/accept`;
+    return this.http.patch(url, null, {
+      headers: this.setHeaders(),
+    });
+  }
+
+  rejectChallenge(challengeId: number) {
+    const url = `${environment.API_URL}/challenge/${challengeId}/reject`;
+    return this.http.patch(url, null, {
+      headers: this.setHeaders(),
+    });
+  }
+
+  deleteChallenge(challengeId: number) {
+    const url = `${environment.API_URL}/challenge/${challengeId}`;
+    return this.http.delete(url, {
       headers: this.setHeaders(),
     });
   }

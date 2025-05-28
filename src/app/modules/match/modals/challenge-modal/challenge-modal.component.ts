@@ -9,12 +9,19 @@ import {
 import { UserListReturn } from 'src/app/models/UserListReturn.model';
 import { ChallengeService } from 'src/app/services/challenge.service';
 import Swal from 'sweetalert2';
+import { Store } from '@ngrx/store';
+import { createChallenge } from 'src/app/state/challenges/challenges.actions';
+import { selectCreateChallengeStatus } from 'src/app/state/challenges/challenges.selectos';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-challenge-modal',
   templateUrl: './challenge-modal.component.html',
 })
 export class ChallengeModalComponent implements OnInit {
+  postChallengeStatus$ = this.store.select(selectCreateChallengeStatus);
+  private destroy$ = new Subject<void>();
+
   opponent: {
     id: number;
     name: string;
@@ -75,7 +82,8 @@ export class ChallengeModalComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private readonly dialogRef: MatDialogRef<ChallengeModalComponent>,
-    private readonly challengeService: ChallengeService
+    private readonly challengeService: ChallengeService,
+    private readonly store: Store<any>
   ) {
     if (data?.opponent) {
       this.opponent = null;
@@ -83,6 +91,33 @@ export class ChallengeModalComponent implements OnInit {
   }
   ngOnInit(): void {
     this.setMinDateTime();
+
+    this.postChallengeStatus$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(({ loading, success, failure }) => {
+        if (loading) {
+          Swal.fire({
+            title: 'Retando al jugador...',
+            text: 'Por favor espera',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+        } else if (success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'El reto ha sido creado!',
+            text: 'El resultado se publicó correctamente.',
+          }).then(() => this.dialogRef.close());
+        } else if (failure) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al publicar el reto',
+            text: 'Hubo un problema al publicar el reto. Por favor, inténtalo de nuevo.',
+          });
+        }
+      });
   }
 
   selectMatchType(type: 'SINGLES' | 'DOUBLES') {
@@ -160,6 +195,8 @@ export class ChallengeModalComponent implements OnInit {
       clubId: !this.useCustomLocation ? this.selectedClub! : undefined,
       customLocation: this.useCustomLocation ? this.customLocation : undefined,
     };
+
+    this.store.dispatch(createChallenge({ challenge }));
 
     this.challengeService.createChallenge(challenge).subscribe({
       next: () => {

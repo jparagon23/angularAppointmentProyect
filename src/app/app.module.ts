@@ -32,7 +32,7 @@ import { UserModule } from './modules/user/user.module';
 import { DashboardEffects } from './state/dashboard-state/dashboard.effects';
 import { ClubsModule } from './modules/clubs/clubs.module';
 import { MembershipEffects } from './state/membership/membership.effects';
-
+import { ChallengesEffects } from './state/challenges/challenges.effects';
 
 registerLocaleData(localeEs, 'es');
 
@@ -69,6 +69,7 @@ registerLocaleData(localeEs, 'es');
       UserProfileEffects,
       DashboardEffects,
       MembershipEffects,
+      ChallengesEffects,
     ]),
     SharedModule,
     UserModule,
