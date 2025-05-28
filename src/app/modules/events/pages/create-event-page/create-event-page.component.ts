@@ -23,6 +23,26 @@ export class CreateEventPageComponent {
     { id: 'MX', description: 'Mixto' },
   ];
 
+  eventCities: CommonType[] = [
+    { id: 1, description: 'Lima' },
+    { id: 2, description: 'Arequipa' },
+    { id: 3, description: 'Trujillo' },
+    { id: 4, description: 'Piura' },
+    { id: 5, description: 'Cusco' },
+    { id: 6, description: 'Iquitos' },
+    { id: 7, description: 'Tacna' },
+    { id: 8, description: 'Huancayo' },
+    { id: 9, description: 'Puno' },
+    { id: 10, description: 'Chiclayo' },
+  ];
+
+  categoryLevels: CommonType[] = [
+    { id: 1, description: 'Principiantes' },
+    { id: 2, description: 'Intermedio' },
+    { id: 3, description: 'Avanzado' },
+    { id: 4, description: 'Pro' },
+  ];
+
   prizesPositions: CommonType[] = [
     { id: 1, description: '1er lugar' },
     { id: 2, description: '2do lugar' },
@@ -33,7 +53,7 @@ export class CreateEventPageComponent {
   eventTypes: CommonType[] = [
     { id: 1, description: 'Round Robin' },
     { id: 2, description: 'Eliminación directa' },
-    { id: 3, description: 'Round robin + eliminación directa' }
+    { id: 3, description: 'Round robin + eliminación directa' },
   ];
 
   minInitialDate: string = new Date().toISOString().split('T')[0];
@@ -43,9 +63,10 @@ export class CreateEventPageComponent {
   constructor(private readonly fb: FormBuilder) {
     this.eventForm = this.fb.group(
       {
-        eventType:['',Validators.required],
-        name: ['', Validators.required],
-        location: ['', Validators.required],
+        eventName: ['', Validators.required],
+        eventCityId: ['', Validators.required],
+        eventLocation: ['', Validators.required],
+        eventType: ['', Validators.required],
         eventDescription: ['', Validators.required],
         initialEventDate: ['', Validators.required],
         endEventDate: ['', Validators.required],
@@ -71,11 +92,9 @@ export class CreateEventPageComponent {
   validateDates(control: AbstractControl): null {
     const group = control as FormGroup;
 
-    
-    const startEventDate = new Date(group.get('initialEventDate')?.value); 
+    const startEventDate = new Date(group.get('initialEventDate')?.value);
     const endEventDate = new Date(group.get('endEventDate')?.value);
 
-    const startEventDateControl = group.get('initialEventDate');
     const endEventDateControl = group.get('endEventDate');
 
     const initialRegisterDateControl = group.get('initialRegisterDate');
@@ -88,7 +107,7 @@ export class CreateEventPageComponent {
     ) {
       return null;
     }
-    
+
     const initialRegisterDate = new Date(initialRegisterDateControl.value);
     const endRegisterDate = new Date(endRegisterDateControl.value);
 
@@ -106,9 +125,8 @@ export class CreateEventPageComponent {
       endRegisterDateControl.setErrors({ dateAfterEnd: true });
     }
 
-    if(startEventDate>endEventDate){
-      endEventDateControl?.setErrors({ dateAfterEnd: true })
-
+    if (startEventDate > endEventDate) {
+      endEventDateControl?.setErrors({ dateAfterEnd: true });
     }
 
     return null; // no error a nivel de formulario
@@ -157,11 +175,12 @@ export class CreateEventPageComponent {
   createCategory(): FormGroup {
     return this.fb.group({
       categoryName: ['', Validators.required],
+      categoryLevelId: ['', Validators.required],
       categoryGender: ['M', Validators.required],
       categoryPrice: [0, [Validators.required, Validators.min(0)]],
       categoryFormat: ['Sencillos', Validators.required],
       categoryPrizes: this.fb.array([]),
-      CategoryMaxPlayers: [0, Validators.min(0)],
+      categoryMaxPlayers: [0, Validators.min(0)],
     });
   }
 

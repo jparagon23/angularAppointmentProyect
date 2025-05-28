@@ -16,28 +16,36 @@
       <h3 class="text-2xl font-semibold text-gray-800">
         Paso 1: Información básica
       </h3>
-      
+
       <div>
         <app-input
-          *ngIf="getControl('name') as control"
+          *ngIf="getControl('eventName') as control"
           [control]="control"
           [name]="'Nombre del evento'"
         ></app-input>
       </div>
       <div>
+        <app-select
+          *ngIf="getControl('eventCityId') as control"
+          [control]="control"
+          [name]="'Ciudad del evento'"
+          [options]="eventCities"
+        ></app-select>
+      </div>
+      <div>
         <app-input
-          *ngIf="getControl('location') as control"
+          *ngIf="getControl('eventLocation') as control"
           [control]="control"
           [name]="'Ubicación del evento'"
         ></app-input>
       </div>
       <div>
         <app-select
-        *ngIf="getControl('eventType') as control"
-        [control]="control"
-        [name]="'Tipo de evento'"
-        [options]="eventTypes"
-      ></app-select>
+          *ngIf="getControl('eventType') as control"
+          [control]="control"
+          [name]="'Tipo de evento'"
+          [options]="eventTypes"
+        ></app-select>
       </div>
 
       <div>
@@ -155,6 +163,14 @@
             </div>
             <div>
               <app-select
+                *ngIf="getCategoryControl(i, 'categoryLevelId') as control"
+                [control]="control"
+                [name]="'Nivel de la categoría'"
+                [options]="categoryLevels"
+              ></app-select>
+            </div>
+            <div>
+              <app-select
                 *ngIf="getCategoryControl(i, 'categoryGender') as control"
                 [control]="control"
                 [name]="'Genero'"
@@ -171,7 +187,7 @@
             </div>
             <div>
               <app-input
-                *ngIf="getCategoryControl(i, 'CategoryMaxPlayers') as control"
+                *ngIf="getCategoryControl(i, 'categoryMaxPlayers') as control"
                 [control]="control"
                 [name]="'Máx. jugadores'"
                 [type]="'number'"
