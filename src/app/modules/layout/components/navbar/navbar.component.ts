@@ -25,6 +25,7 @@ import { MatchConfirmationModalComponent } from 'src/app/modules/match/modals/ma
 import { markNotificationAsRead } from 'src/app/state/actions/notification.actions';
 import { selectUserNotifications } from 'src/app/state/selectors/notification.selectors';
 import { MatchActionModalComponent } from 'src/app/modules/match/modals/match-action-modal/match-action-modal.component';
+import { ChallengeModalComponent } from 'src/app/modules/match/modals/challenge-modal/challenge-modal.component';
 
 interface ButtonConfig {
   label: string;
@@ -124,6 +125,14 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  openChallenge(): void {
+    this.dialog.open(ChallengeModalComponent, {
+      maxWidth: '95vw',
+      maxHeight: '95vh',
+      panelClass: 'custom-dialog-container',
+    });
+  }
+
   redirectToDashboard() {
     this.user$.subscribe((user) => {
       if (user.role === 2) {
@@ -178,7 +187,7 @@ export class NavbarComponent implements OnInit {
 
   markAllAsRead() {
     this.notifications.forEach((notification) => {
-      if (notification.status !== 'READ') return;
+      if (notification.status == 'READ') return;
       this.markAsRead(notification);
     });
   }

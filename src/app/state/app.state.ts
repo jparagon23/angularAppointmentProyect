@@ -29,6 +29,10 @@ import {
   MembershipState,
 } from './membership/membership.reducers';
 import { clubReducer, ClubState } from './club/club.reducers';
+import {
+  challengesReducer,
+  ChallengesState,
+} from './challenges/challenges.reducers';
 
 export interface AppState {
   user: UserState;
@@ -44,6 +48,7 @@ export interface AppState {
   userProfileView: UserProfileState;
   dashboard: DashboardState;
   membership: MembershipState;
+  challenges: ChallengesState;
 }
 
 export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
@@ -60,4 +65,5 @@ export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
   userProfileView: userProfileReducer,
   dashboard: dashboardReducer,
   membership: membershipReducer,
+  challenges: challengesReducer,
 };
