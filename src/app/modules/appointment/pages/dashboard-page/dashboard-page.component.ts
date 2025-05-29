@@ -17,12 +17,11 @@ import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { User } from 'src/app/models/user.model';
 import { takeUntil } from 'rxjs/operators';
 import { selectDashboardState } from 'src/app/state/dashboard-state/dashboard.selectors';
-import { selectUserChallenges } from 'src/app/state/challenges/challenges.selectos';
-import { Challenge } from 'src/app/models/Challenge.model';
 import { ChallengeResponseDTO } from 'src/app/models/challenges/UserChallenges.model';
 import { ChallengeModalComponent } from 'src/app/modules/match/modals/challenge-modal/challenge-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PostMatchComponent } from 'src/app/modules/match/modals/post-match/post-match.component';
+import { selectUserChallengesState } from 'src/app/state/challenges/challenges.selectos';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -50,7 +49,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   selectDashboardState$ = this.store.select(selectDashboardState);
 
-  selectUserChallenges$ = this.store.select(selectUserChallenges);
+  selectUserChallengesState$ = this.store.select(selectUserChallengesState);
 
   matchType: string = 'SINGLES';
 
@@ -77,7 +76,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     combineLatest([
       this.user$,
       this.selectDashboardState$,
-      this.selectUserChallenges$,
+      this.selectUserChallengesState$,
     ])
       .pipe(takeUntil(this.destroy$))
       .subscribe(([user, dashboardState, challenges]) => {
@@ -94,7 +93,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
           }
 
           this.orderChallenge = this.orderPendingChallenges(
-            challenges,
+            challenges.userChallenges,
             user.id
           );
         }

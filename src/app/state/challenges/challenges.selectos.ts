@@ -3,9 +3,14 @@ import { AppState } from '../app.state';
 import { createSelector, select } from '@ngrx/store';
 
 export const selectChallengeFeature = (state: AppState) => state.challenges;
-export const selectUserChallenges = createSelector(
+export const selectUserChallengesState = createSelector(
   selectChallengeFeature,
-  (state: ChallengesState) => state.userChallenges
+  (state: ChallengesState) => ({
+    userChallenges: state.userChallenges,
+    loading: state.userChallengesLoading,
+    success: state.userChallengesSuccess,
+    error: state.userChallengesError,
+  })
 );
 
 export const selectChallengesResultActionStatus = createSelector(
