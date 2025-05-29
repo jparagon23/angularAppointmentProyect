@@ -30,15 +30,6 @@ import { StatisticsService } from 'src/app/services/statistics.service';
 
 @Injectable()
 export class ClubEffects {
-  constructor(
-    private readonly actions$: Actions,
-    private readonly userService: UserService,
-    private readonly clubService: ClubService,
-    private readonly reservationService: ReservationService,
-    private readonly matchService: MatchService,
-    private readonly statisticsService: StatisticsService,
-    private readonly store: Store<any>
-  ) {}
   getClubUserByNameOrId$ = createEffect(() =>
     this.actions$.pipe(
       ofType(getClubUserByNameOrId),
@@ -141,4 +132,14 @@ export class ClubEffects {
       ),
     { dispatch: false }
   );
+
+  constructor(
+    private readonly actions$: Actions,
+    private readonly userService: UserService,
+    private readonly clubService: ClubService,
+    private readonly reservationService: ReservationService,
+    private readonly matchService: MatchService,
+    private readonly statisticsService: StatisticsService,
+    private readonly store: Store<any>
+  ) {}
 }

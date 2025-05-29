@@ -25,7 +25,6 @@ import { MatchConfirmationModalComponent } from 'src/app/modules/match/modals/ma
 import { markNotificationAsRead } from 'src/app/state/actions/notification.actions';
 import { selectUserNotifications } from 'src/app/state/selectors/notification.selectors';
 import { MatchActionModalComponent } from 'src/app/modules/match/modals/match-action-modal/match-action-modal.component';
-import { ChallengeModalComponent } from 'src/app/modules/match/modals/challenge-modal/challenge-modal.component';
 
 interface ButtonConfig {
   label: string;
@@ -119,14 +118,6 @@ export class NavbarComponent implements OnInit {
 
   openPostResult(): void {
     this.dialog.open(PostMatchComponent, {
-      maxWidth: '95vw',
-      maxHeight: '95vh',
-      panelClass: 'custom-dialog-container',
-    });
-  }
-
-  openChallenge(): void {
-    this.dialog.open(ChallengeModalComponent, {
       maxWidth: '95vw',
       maxHeight: '95vh',
       panelClass: 'custom-dialog-container',

@@ -24,7 +24,6 @@ import {
 import { selectUserProfileStatus } from 'src/app/state/user-profile/user-profile.selectors';
 import { MatDialog } from '@angular/material/dialog';
 import { ChallengeModalComponent } from 'src/app/modules/match/modals/challenge-modal/challenge-modal.component';
-import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -39,8 +38,6 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
   initialDateParsed!: Date;
   formattedLastMatchDate: string = '';
   formattedLastDoublesMatchDate: string = '';
-
-  userProfile: User | null = null;
 
   userMatches: UserMatch[] = []; // Variable para almacenar los datos del perfil
 
@@ -94,7 +91,6 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         this.userMatches = userProfile?.userMatches ?? [];
-        this.userProfile = userProfile.userProfile;
       });
   }
 
@@ -153,16 +149,6 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
 
   openChallengeUser(): void {
     this.dialog.open(ChallengeModalComponent, {
-      data: {
-        opponent: {
-          id: this.userProfile?.id,
-          name: this.userProfile?.name
-            .concat(' ')
-            .concat(this.userProfile.lastname),
-          image: this.userProfile?.profileImage,
-          clubMemberships: this.userProfile?.userClubMemberships,
-        },
-      },
       maxWidth: '95vw',
       maxHeight: '95vh',
       panelClass: 'custom-dialog-container',
