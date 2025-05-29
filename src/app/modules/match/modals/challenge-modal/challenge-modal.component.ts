@@ -175,6 +175,14 @@ export class ChallengeModalComponent implements OnInit, OnDestroy {
       );
       return;
     }
+    if (new Date(this.selectedDate) < new Date()) {
+      Swal.fire(
+        'Fecha inválida',
+        'La fecha seleccionada no puede ser anterior a la fecha y hora actual.',
+        'warning'
+      );
+      return;
+    }
 
     if (!this.useCustomLocation && !this.selectedClub) {
       Swal.fire('Club requerido', 'Selecciona un club.', 'warning');
