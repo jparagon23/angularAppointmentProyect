@@ -21,6 +21,9 @@ import {
 } from 'src/app/state/challenges/challenges.selectos';
 import { Subject, takeUntil } from 'rxjs';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
+import { selectMembershipClubs } from 'src/app/state/membership/membership.selectors';
+import { ClubInfo } from 'src/app/models/ClubInfo.model';
+import { getActiveClubs } from 'src/app/state/membership/membership.actions';
 
 @Component({
   selector: 'app-challenge-modal',
@@ -29,6 +32,8 @@ import { selectUser } from 'src/app/state/selectors/users.selectors';
 export class ChallengeModalComponent implements OnInit, OnDestroy {
   postChallengeStatus$ = this.store.select(selectCreateChallengeStatus);
   challengeRecommendations$ = this.store.select(selectChallengeRecommendations);
+  clubs$ = this.store.select(selectMembershipClubs);
+
   private readonly destroy$ = new Subject<void>();
 
   opponent: {
@@ -50,10 +55,7 @@ export class ChallengeModalComponent implements OnInit, OnDestroy {
   selectedClub: number | null = null;
   customLocation: string = '';
 
-  availableClubs = [
-    { id: 1, name: 'Club Los Andes' },
-    { id: 2, name: 'Club La Raqueta' },
-  ];
+  availableClubs: ClubInfo[] = [];
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -67,14 +69,27 @@ export class ChallengeModalComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.setMinDateTime();
 
+    // Dispatch acciones
+    this.store.dispatch(getActiveClubs());
     this.store.dispatch(getChallengeRecomendations({}));
 
-    this.challengeRecommendations$.subscribe((recommendations) => {
-      if (recommendations) {
-        this.recommendedUsers = recommendations.recommendations;
+    // Suscripción a clubes activos
+    this.clubs$.pipe(takeUntil(this.destroy$)).subscribe((clubs) => {
+      if (clubs) {
+        this.availableClubs = clubs.activeClubs;
       }
     });
 
+    // Suscripción a recomendaciones
+    this.challengeRecommendations$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((recommendations) => {
+        if (recommendations) {
+          this.recommendedUsers = recommendations.recommendations;
+        }
+      });
+
+    // Usuario actual
     this.store
       .select(selectUser)
       .pipe(takeUntil(this.destroy$))
@@ -84,6 +99,7 @@ export class ChallengeModalComponent implements OnInit, OnDestroy {
         }
       });
 
+    // Estado del reto
     this.postChallengeStatus$
       .pipe(takeUntil(this.destroy$))
       .subscribe(({ loading, success, failure }) => {
