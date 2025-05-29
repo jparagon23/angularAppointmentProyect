@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { ChallengeResponseDTO } from 'src/app/models/challenges/UserChallenges.model';
@@ -7,6 +7,7 @@ import {
   acceptChallenge,
   deleteChallenge,
   rejectChallenge,
+  resetChallengeCardState,
 } from 'src/app/state/challenges/challenges.actions';
 import { selectChallengesResultActionStatus } from 'src/app/state/challenges/challenges.selectos';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
@@ -16,8 +17,9 @@ import Swal from 'sweetalert2';
   selector: 'app-challenge-card',
   templateUrl: './challenge-card.component.html',
 })
-export class ChallengeCardComponent implements OnInit {
+export class ChallengeCardComponent implements OnInit, OnDestroy {
   @Input() challenge: ChallengeResponseDTO | undefined;
+  challengesActions$ = this.store.select(selectChallengesResultActionStatus);
 
   getUser$ = this.store;
 
@@ -25,7 +27,6 @@ export class ChallengeCardComponent implements OnInit {
   userCanDelete: boolean = false;
 
   user$: Observable<User | null> = this.store.select(selectUser);
-  challengesActions$ = this.store.select(selectChallengesResultActionStatus);
   private readonly destroy$ = new Subject<void>();
 
   constructor(private readonly store: Store<any>) {}
@@ -130,5 +131,11 @@ export class ChallengeCardComponent implements OnInit {
         );
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.store.dispatch(resetChallengeCardState());
   }
 }

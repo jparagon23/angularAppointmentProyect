@@ -19,6 +19,7 @@ import {
   rejectChallenge,
   rejectChallengeFailure,
   rejectChallengeSuccess,
+  resetChallengeCardState,
   resetChallengeModalState,
 } from './challenges.actions';
 import { ChallengeRecommendation } from 'src/app/models/challenges/ChallengeRecommendation.model';
@@ -173,6 +174,19 @@ export const challengesReducer = createReducer(
     acceptChallengeFailure: null,
     rejectChallengeSuccess: false,
     rejectChallengeFailure: null,
+    deleteChallengeSuccess: false,
+    deleteChallengeFailure: null,
+  })),
+  on(resetChallengeCardState, (state: ChallengesState) => ({
+    ...state,
+    challengeResultActionLoading: false,
+
+    acceptChallengeSuccess: false,
+    acceptChallengeFailure: null,
+
+    rejectChallengeSuccess: false,
+    rejectChallengeFailure: null,
+
     deleteChallengeSuccess: false,
     deleteChallengeFailure: null,
   }))

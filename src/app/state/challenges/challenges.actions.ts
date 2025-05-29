@@ -93,3 +93,7 @@ export const getChallengeRecomendationsFailure = createAction(
 export const resetChallengeModalState = createAction(
   '[Challenges] Reset Challenge Modal State'
 );
+
+export const resetChallengeCardState = createAction(
+  '[Challenges] Reset Challenge Card State'
+);
