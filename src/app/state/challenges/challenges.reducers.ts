@@ -10,13 +10,18 @@ import {
   deleteChallenge,
   deleteChallengeFailure,
   deleteChallengeSuccess,
+  getChallengeRecomendations,
+  getChallengeRecomendationsFailure,
+  getChallengeRecomendationsSuccess,
   getUserChallenges,
   getUserChallengesFailure,
   getUserChallengesSuccess,
   rejectChallenge,
   rejectChallengeFailure,
   rejectChallengeSuccess,
+  resetChallengeModalState,
 } from './challenges.actions';
+import { ChallengeRecommendation } from 'src/app/models/challenges/ChallengeRecommendation.model';
 
 export interface ChallengesState {
   userChallenges: ChallengeResponseDTO[];
@@ -38,6 +43,10 @@ export interface ChallengesState {
   createChallengeSuccess?: boolean;
   createChallengeFailure?: any;
 
+  challengeRecommendations: ChallengeRecommendation[];
+  challengeRecommendationsLoading?: boolean;
+  challengeRecommendationsError?: any;
+
   userChallengesError: any;
 }
 
@@ -46,6 +55,7 @@ export const initialState: ChallengesState = {
   userChallengesSuccess: false,
   userChallengesLoading: false,
   userChallengesError: null,
+  challengeRecommendations: [],
 };
 
 export const challengesReducer = createReducer(
@@ -130,5 +140,40 @@ export const challengesReducer = createReducer(
     ...state,
     createChallengeLoading: false,
     createChallengeFailure: error,
+  })),
+  on(getChallengeRecomendations, (state: ChallengesState) => ({
+    ...state,
+    challengeRecommendationsLoading: true,
+    challengeRecommendationsError: null,
+  })),
+  on(
+    getChallengeRecomendationsSuccess,
+    (state: ChallengesState, { challengeRecommendations }) => ({
+      ...state,
+      challengeRecommendations: challengeRecommendations,
+      challengeRecommendationsLoading: false,
+      challengeRecommendationsError: null,
+    })
+  ),
+  on(
+    getChallengeRecomendationsFailure,
+    (state: ChallengesState, { error }) => ({
+      ...state,
+      challengeRecommendationsLoading: false,
+      challengeRecommendationsError: error,
+    })
+  ),
+  on(resetChallengeModalState, (state: ChallengesState) => ({
+    ...state,
+    createChallengeLoading: false,
+    createChallengeSuccess: false,
+    createChallengeFailure: null,
+    challengeResultActionLoading: false,
+    acceptChallengeSuccess: false,
+    acceptChallengeFailure: null,
+    rejectChallengeSuccess: false,
+    rejectChallengeFailure: null,
+    deleteChallengeSuccess: false,
+    deleteChallengeFailure: null,
   }))
 );

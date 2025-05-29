@@ -19,7 +19,7 @@
 
         <!-- Botones principales para móviles y desktop -->
         <div
-          class="flex m:flex-row justify-center sm:justify-end w-full sm:w-auto sm:space-x-4 sm:space-y-0"
+          class="flex m:flex-row justify-center sm:justify-end w-full sm:w-auto sm:space-x-3 sm:space-y-0"
         >
           <app-button
             typeBtn="button"
@@ -50,7 +50,6 @@
             typeBtn="button"
             color="navbar"
             class="hidden sm:flex"
-
             (click)="redirectToClubsPage()"
           >
             Clubs
@@ -62,19 +61,9 @@
           >
             Publicar resultado
           </app-button>
-
-          <div
-            class="relative flex items-center w-full sm:w-[500px] lg:w-[500px]"
-          >
-            <app-user-search-list
-              (userReturn)="redirectToUserInformation($event?.userId)"
-              [allowCreateUser]="false"
-              [filterUserStatus]="[2]"
-              [message]="'Buscar usuario'"
-              [showIcon]="true"
-              class="w-full"
-            ></app-user-search-list>
-          </div>
+          <app-button typeBtn="button" color="navbar" (click)="openChallenge()">
+            Crear reto
+          </app-button>
 
           <!-- Botón de menú hamburguesa para móviles -->
           <div class="sm:hidden mt-2">
@@ -112,6 +101,16 @@
         </div> -->
 
         <div class="flex items-center space-x-4 relative">
+          <div class="relative flex items-center w-full sm:w-[300px]">
+            <app-user-search-list
+              (userReturn)="redirectToUserInformation($event?.userId)"
+              [allowCreateUser]="false"
+              [filterUserStatus]="[2]"
+              [message]="'Buscar usuario'"
+              [showIcon]="true"
+              class="w-full"
+            ></app-user-search-list>
+          </div>
           <!-- Campana de notificaciones -->
           <div
             cdkOverlayOrigin
@@ -163,12 +162,12 @@
         Partidos
       </app-button>
       <app-button
-      typeBtn="button"
-      color="navbar"
-      (click)="redirectToClubsPage()"
-    >
-      Clubs
-    </app-button>
+        typeBtn="button"
+        color="navbar"
+        (click)="redirectToClubsPage()"
+      >
+        Clubs
+      </app-button>
       <app-button
         typeBtn="button"
         color="navbar"

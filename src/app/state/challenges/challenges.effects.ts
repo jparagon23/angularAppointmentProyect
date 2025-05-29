@@ -11,6 +11,9 @@ import {
   deleteChallenge,
   deleteChallengeFailure,
   deleteChallengeSuccess,
+  getChallengeRecomendations,
+  getChallengeRecomendationsFailure,
+  getChallengeRecomendationsSuccess,
   getUserChallenges,
   getUserChallengesFailure,
   getUserChallengesSuccess,
@@ -98,7 +101,9 @@ export class ChallengesEffects {
         deleteChallengeSuccess,
         createChallengeSuccess
       ),
-      mergeMap(() => [getUserChallenges({})])
+      mergeMap(() => [
+        getUserChallenges({ challengeStatus: ['PENDING', 'ACCEPTED'] }),
+      ])
     )
   );
 
@@ -109,6 +114,24 @@ export class ChallengesEffects {
         this.challengeService.createChallenge(challenge).pipe(
           map(() => createChallengeSuccess()),
           catchError((error) => of(createChallengeFailure({ error })))
+        )
+      )
+    )
+  );
+
+  getChallengeRecommendations$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(getChallengeRecomendations),
+      switchMap((userId) =>
+        this.challengeService.getChallengeRecommendations(userId.userId).pipe(
+          map((response) =>
+            getChallengeRecomendationsSuccess({
+              challengeRecommendations: response,
+            })
+          ),
+          catchError((error) =>
+            of(getChallengeRecomendationsFailure({ error }))
+          )
         )
       )
     )

@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import { Challenge } from '../models/Challenge.model';
 import { ChallengePageResponse } from '../models/challenges/UserChallenges.model';
 import { Observable } from 'rxjs';
+import { ChallengeRecommendation } from '../models/challenges/ChallengeRecommendation.model';
 
 @Injectable({
   providedIn: 'root',
@@ -52,7 +53,7 @@ export class ChallengeService {
   getUserChallenges(
     userId?: number,
     matchType?: string,
-    challengeStatus?: string,
+    challengeStatus?: string[],
     page: number = 0,
     size: number = 10,
     sortBy: string = 'challengeDateTime',
@@ -105,6 +106,16 @@ export class ChallengeService {
   deleteChallenge(challengeId: number) {
     const url = `${environment.API_URL}/challenge/${challengeId}`;
     return this.http.delete(url, {
+      headers: this.setHeaders(),
+    });
+  }
+
+  getChallengeRecommendations(
+    userId?: number
+  ): Observable<ChallengeRecommendation[]> {
+    userId ??= this.userId;
+    const url = `${environment.API_URL}/recommendations/challenges/${userId}`;
+    return this.http.get<ChallengeRecommendation[]>(url, {
       headers: this.setHeaders(),
     });
   }

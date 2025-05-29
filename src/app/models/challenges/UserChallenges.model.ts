@@ -19,7 +19,14 @@ export interface ChallengeResponseDTO {
   pendingConfirmationUsers: number[];
   club: ClubSummaryDTO;
   customLocation: string | null;
-  status: 'PENDING' | 'ACCEPTED' | 'REJECTED' | 'CANCELLED';
+  status:
+    | 'PENDING'
+    | 'ACCEPTED'
+    | 'REJECTED'
+    | 'CANCELLED'
+    | 'EXPIRED'
+    | 'COMPLETED'
+    | 'PENDING_SCORE';
   message: string | null;
   respondedAt: string | null;
 }

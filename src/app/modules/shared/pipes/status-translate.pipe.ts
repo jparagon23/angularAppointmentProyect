@@ -12,6 +12,7 @@ export class StatusTranslatePipe implements PipeTransform {
     CANCELLED: 'CANCELADO',
     SINGLES: 'SENCILLOS',
     DOUBLES: 'DOBLES',
+    ACCEPTED: 'ACEPTADO',
   };
 
   transform(value: string): string {

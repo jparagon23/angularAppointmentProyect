@@ -40,7 +40,7 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
   formattedLastMatchDate: string = '';
   formattedLastDoublesMatchDate: string = '';
 
-  userProfile:User|null=null;
+  userProfile: User | null = null;
 
   userMatches: UserMatch[] = []; // Variable para almacenar los datos del perfil
 
@@ -94,7 +94,7 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         this.userMatches = userProfile?.userMatches ?? [];
-        this.userProfile=userProfile.userProfile;
+        this.userProfile = userProfile.userProfile;
       });
   }
 
@@ -152,15 +152,17 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   openChallengeUser(): void {
-    console.log("Hola soy yo",this.userProfile);
-    
     this.dialog.open(ChallengeModalComponent, {
-      data: { opponent: {
-            id: this.userProfile?.id,
-            name: this.userProfile?.name.concat(" ").concat(this.userProfile.lastname),
-            image: this.userProfile?.profileImage,
-            clubMemberships: this.userProfile?.userClubMemberships
-          } },
+      data: {
+        opponent: {
+          id: this.userProfile?.id,
+          name: this.userProfile?.name
+            .concat(' ')
+            .concat(this.userProfile.lastname),
+          image: this.userProfile?.profileImage,
+          clubMemberships: this.userProfile?.userClubMemberships,
+        },
+      },
       maxWidth: '95vw',
       maxHeight: '95vh',
       panelClass: 'custom-dialog-container',

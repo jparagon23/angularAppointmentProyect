@@ -1,5 +1,12 @@
 <div
-  class="max-w-sm mx-auto bg-white shadow-xl rounded-2xl px-4 py-5 hover:shadow-2xl transition duration-300 border-l-8 border-yellow-600"
+  class="max-w-sm mx-auto bg-white shadow-xl rounded-2xl px-4 py-4 hover:shadow-2xl transition duration-300 border-l-8"
+  [ngClass]="{
+    'border-red-600':
+      challenge.status === 'REJECTED' || challenge.status === 'CANCELLED',
+    'border-yellow-600': challenge.status === 'PENDING',
+    'border-green-600': challenge.status === 'ACCEPTED',
+    'border-blue-600': challenge.status === 'COMPLETED'
+  }"
   *ngIf="challenge"
 >
   <!-- Estado -->
@@ -22,7 +29,17 @@
       </ng-container>
 
       <ng-template #statusTemplate>
-        <span class="text-sm font-medium text-yellow-600">
+        <span
+          class="text-sm font-medium"
+          [ngClass]="{
+            'text-yellow-600': challenge.status === 'PENDING',
+            'text-red-600':
+              challenge.status === 'REJECTED' ||
+              challenge.status === 'CANCELLED',
+            'text-green-600': challenge.status === 'ACCEPTED',
+            'text-blue-600': challenge.status === 'COMPLETED'
+          }"
+        >
           {{ challenge.status | statusTranslate }}
         </span>
       </ng-template>
@@ -98,7 +115,7 @@
     <div>
       <div class="text-xs text-black font-bold">Ubicación</div>
       <div class="text-sm">
-        {{ challenge.club.name || challenge.customLocation }}
+        {{ challenge.club ? challenge.club.name : challenge.customLocation }}
       </div>
     </div>
   </div>

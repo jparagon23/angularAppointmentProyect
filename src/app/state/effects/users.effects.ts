@@ -63,7 +63,7 @@ export class ProfileEffects {
         getLast10DoublesMatches(),
         getRanking(),
         loadReservations(),
-        getUserChallenges({}),
+        getUserChallenges({ challengeStatus: ['PENDING', 'ACCEPTED'] }),
       ])
     )
   );

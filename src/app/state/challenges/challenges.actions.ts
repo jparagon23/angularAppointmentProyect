@@ -1,5 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import { Challenge } from 'src/app/models/Challenge.model';
+import { ChallengeRecommendation } from 'src/app/models/challenges/ChallengeRecommendation.model';
 import { ChallengeResponseDTO } from 'src/app/models/challenges/UserChallenges.model';
 
 export const getUserChallenges = createAction(
@@ -7,7 +8,7 @@ export const getUserChallenges = createAction(
   props<{
     userId?: number;
     matchType?: string;
-    challengeStatus?: string;
+    challengeStatus?: string[];
     page?: number;
     size?: number;
     sortBy?: string;
@@ -72,4 +73,23 @@ export const createChallengeSuccess = createAction(
 export const createChallengeFailure = createAction(
   '[Challenges] Create Challenge Failure',
   props<{ error: any }>()
+);
+
+export const getChallengeRecomendations = createAction(
+  '[Challenges] Get Challenge Recommendations',
+  props<{
+    userId?: number;
+  }>()
+);
+export const getChallengeRecomendationsSuccess = createAction(
+  '[Challenges] Get Challenge Recommendations Success',
+  props<{ challengeRecommendations: ChallengeRecommendation[] }>()
+);
+export const getChallengeRecomendationsFailure = createAction(
+  '[Challenges] Get Challenge Recommendations Failure',
+  props<{ error: any }>()
+);
+
+export const resetChallengeModalState = createAction(
+  '[Challenges] Reset Challenge Modal State'
 );

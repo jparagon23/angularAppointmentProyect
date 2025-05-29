@@ -1,6 +1,6 @@
 import { ChallengesState } from './challenges.reducers';
 import { AppState } from '../app.state';
-import { createSelector } from '@ngrx/store';
+import { createSelector, select } from '@ngrx/store';
 
 export const selectChallengeFeature = (state: AppState) => state.challenges;
 export const selectUserChallenges = createSelector(
@@ -27,5 +27,14 @@ export const selectCreateChallengeStatus = createSelector(
     loading: state.createChallengeLoading,
     success: state.createChallengeSuccess,
     failure: state.createChallengeFailure,
+  })
+);
+
+export const selectChallengeRecommendations = createSelector(
+  selectChallengeFeature,
+  (state: ChallengesState) => ({
+    recommendations: state.challengeRecommendations,
+    loading: state.challengeRecommendationsLoading,
+    error: state.challengeRecommendationsError,
   })
 );

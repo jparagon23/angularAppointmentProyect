@@ -18,6 +18,11 @@ import { User } from 'src/app/models/user.model';
 import { takeUntil } from 'rxjs/operators';
 import { selectDashboardState } from 'src/app/state/dashboard-state/dashboard.selectors';
 import { selectUserChallenges } from 'src/app/state/challenges/challenges.selectos';
+import { Challenge } from 'src/app/models/Challenge.model';
+import { ChallengeResponseDTO } from 'src/app/models/challenges/UserChallenges.model';
+import { ChallengeModalComponent } from 'src/app/modules/match/modals/challenge-modal/challenge-modal.component';
+import { MatDialog } from '@angular/material/dialog';
+import { PostMatchComponent } from 'src/app/modules/match/modals/post-match/post-match.component';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -53,6 +58,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   confirmedMatches: UserMatch[] = [];
   pendingMatches: UserMatch[] = [];
 
+  orderChallenge: ChallengeResponseDTO[] = [];
+
   confirmedSliceLimit = 6;
   pendingSliceLimit = 6;
   initialLimit = 6;
@@ -60,16 +67,20 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   private isLoading = false;
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private readonly store: Store<any>) {}
+  constructor(private readonly store: Store<any>, public dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.handleCancelReservationSuccess();
     this.handleCancelReservationFailure();
     this.trackLoadingState();
 
-    combineLatest([this.user$, this.selectDashboardState$])
+    combineLatest([
+      this.user$,
+      this.selectDashboardState$,
+      this.selectUserChallenges$,
+    ])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(([user, dashboardState]) => {
+      .subscribe(([user, dashboardState, challenges]) => {
         if (user?.id) {
           const singles = dashboardState.last10SinglesMatches ?? [];
           const doubles = dashboardState.last10DoublesMatches ?? [];
@@ -81,8 +92,41 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
             this.filterMatches(userMatches, user.id);
             this.filterPendingMatches(allUserMatches, user.id);
           }
+
+          this.orderChallenge = this.orderPendingChallenges(
+            challenges,
+            user.id
+          );
         }
       });
+  }
+
+  private orderPendingChallenges(
+    userChallenges: ChallengeResponseDTO[],
+    userId: number
+  ): ChallengeResponseDTO[] {
+    const pendingConfirmation = userChallenges.filter(
+      (c) =>
+        c.status === 'PENDING' && c.pendingConfirmationUsers.includes(userId)
+    );
+
+    const pendingScore = userChallenges.filter(
+      (c) => c.status === 'PENDING_SCORE'
+    );
+
+    const accepted = userChallenges.filter((c) => c.status === 'ACCEPTED');
+
+    const others = userChallenges.filter(
+      (c) =>
+        !(
+          (c.status === 'PENDING' &&
+            c.pendingConfirmationUsers.includes(userId)) ||
+          c.status === 'PENDING_SCORE' ||
+          c.status === 'ACCEPTED'
+        )
+    );
+
+    return [...pendingConfirmation, ...pendingScore, ...accepted, ...others];
   }
 
   private filterPendingMatches(userMatches: UserMatch[], userId: number): void {
@@ -198,6 +242,21 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
             }
           });
       }
+    });
+  }
+
+  createChallenge() {
+    this.dialog.open(ChallengeModalComponent, {
+      maxWidth: '95vw',
+      maxHeight: '95vh',
+      panelClass: 'custom-dialog-container',
+    });
+  }
+  createMatchResult() {
+    this.dialog.open(PostMatchComponent, {
+      maxWidth: '95vw',
+      maxHeight: '95vh',
+      panelClass: 'custom-dialog-container',
     });
   }
 
