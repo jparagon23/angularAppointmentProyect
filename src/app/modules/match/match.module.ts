@@ -13,6 +13,7 @@ import { MatchesStatsPageComponent } from './pages/matches-stats-page/matches-st
 import { ResultShortSectionComponent } from './components/result-short-section/result-short-section.component';
 import { ChallengeModalComponent } from './modals/challenge-modal/challenge-modal.component';
 import { MatchPaginationComponent } from './components/match-pagination/match-pagination.component';
+import { ChallengeCardComponent } from './components/challenge-card/challenge-card.component';
 
 @NgModule({
   declarations: [
@@ -26,12 +27,14 @@ import { MatchPaginationComponent } from './components/match-pagination/match-pa
     ResultShortSectionComponent,
     ChallengeModalComponent,
     MatchPaginationComponent,
+    ChallengeCardComponent,
   ],
   imports: [CommonModule, FormsModule, SharedModule, MatDialogModule],
   exports: [
     ResultShortSectionComponent,
     MatchesInfoPageComponent,
     MatchPaginationComponent,
+    ChallengeCardComponent,
   ],
 })
 export class MatchModule {}
