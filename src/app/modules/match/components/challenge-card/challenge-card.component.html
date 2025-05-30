@@ -90,16 +90,6 @@
 
     <!-- Jugador 2 -->
     <div class="flex items-center gap-2 mr-5">
-      <img
-        [src]="challenge.challenged.profileImage"
-        *ngIf="challenge.challenged.profileImage"
-        alt="Opponent"
-        class="w-10 h-10 rounded-full border-2 border-red-600"
-      />
-      <i
-        *ngIf="!challenge.challenged.profileImage"
-        class="fas fa-user text-gray-500 text-3xl md:text-4xl"
-      ></i>
       <div class="text-sm text-right leading-tight">
         <div class="font-bold text-gray-800">
           {{
@@ -112,6 +102,16 @@
         <div class="text-gray-500 text-xs">Retado</div>
       </div>
     </div>
+    <img
+      [src]="challenge.challenged.profileImage"
+      *ngIf="challenge.challenged.profileImage"
+      alt="Opponent"
+      class="w-10 h-10 rounded-full border-2 border-red-600"
+    />
+    <i
+      *ngIf="!challenge.challenged.profileImage"
+      class="fas fa-user text-gray-500 text-3xl md:text-4xl"
+    ></i>
   </div>
 
   <!-- Información del partido -->
