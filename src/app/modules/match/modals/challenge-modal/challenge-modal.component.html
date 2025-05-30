@@ -1,69 +1,257 @@
-<div class="bg-white rounded-lg p-6 shadow-lg w-96 md:w-[500px]">
-    <!-- Encabezado -->
-    <div class="flex justify-between items-center border-b pb-3">
-      <h2 class="text-xl font-bold">⚡ Retar a {{ opponent?.name }}</h2>
-      <button (click)="closeModal()" class="text-gray-600 hover:text-red-500">
-        ✖
+<div class="bg-white rounded-xl p-6 shadow-lg w-96 md:w-[500px] space-y-6">
+  <!-- Encabezado -->
+  <div class="flex justify-between items-center border-b pb-3">
+    <h2 class="text-2xl font-bold text-gray-800">
+      ⚡ Retar a {{ opponent ? opponent.name : "un jugador" }}
+    </h2>
+    <button
+      (click)="closeModal()"
+      class="text-gray-500 hover:text-red-500 text-xl"
+    >
+      ✖
+    </button>
+  </div>
+
+  <div class="space-y-4">
+    <label class="font-semibold text-gray-700 block mb-2 text-sm"
+      >🎯 Jugador a retar</label
+    >
+
+    <!-- Mostrar jugadores recomendados si no hay oponente aún -->
+    <div *ngIf="!opponent">
+      <ng-container *ngIf="recommendedUsers.length > 0; else noRecommendations">
+        <div class="space-y-2 mb-4">
+          <p class="text-sm text-gray-600">Jugadores recomendados para ti:</p>
+
+          <div class="flex overflow-x-auto space-x-4 pb-2">
+            <div
+              *ngFor="let user of recommendedUsers"
+              class="flex-shrink-0 min-w-[240px] flex items-center gap-3 border border-gray-200 rounded-xl p-3 bg-white shadow-sm hover:shadow-md transition cursor-pointer"
+              (click)="selectRecommendedOpponent(user)"
+            >
+              <img
+                *ngIf="user.image"
+                [src]="user.image"
+                alt="{{ user.name }}"
+                class="w-12 h-12 rounded-full object-cover border border-gray-300"
+              />
+              <div
+                *ngIf="!user.image"
+                class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-2xl"
+              >
+                <i class="fas fa-user"></i>
+              </div>
+
+              <div class="flex flex-col text-sm w-full">
+                <p class="text-gray-800 font-semibold truncate">
+                  {{ user.name }}
+                </p>
+                <p class="text-green-600 font-semibold">
+                  FTL: {{ user.rating || "N/A" }}
+                </p>
+                <p class="text-gray-500 truncate">
+                  🏟 {{ user.clubName || "Sin club" }}
+                </p>
+                <p class="text-gray-400 truncate">
+                  📍 {{ user.city || "Ciudad no disponible" }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="my-2" />
+          <p class="text-sm text-gray-500 italic">
+            O usa el buscador para encontrar a otro jugador:
+          </p>
+        </div>
+      </ng-container>
+
+      <ng-template #noRecommendations>
+        <div
+          class="bg-yellow-50 text-yellow-800 border border-yellow-200 rounded-lg p-4 text-sm mt-2"
+        >
+          Lamentablemente, por el momento no hay recomendaciones de jugadores
+          para ti.
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Buscar oponente -->
+    <div *ngIf="!opponent">
+      <app-user-search-list
+        (userReturn)="onUserSelectedFromSearch($event)"
+        [allowCreateUser]="false"
+        [filterUserStatus]="[2]"
+      ></app-user-search-list>
+    </div>
+
+    <!-- Mostrar oponente seleccionado -->
+    <div
+      *ngIf="opponent"
+      class="bg-white shadow-md border border-gray-200 rounded-xl p-4 flex items-center justify-between my-4 transition-all"
+    >
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14">
+          <img
+            *ngIf="opponent.image"
+            [src]="opponent.image"
+            alt="{{ opponent.name }}"
+            class="w-14 h-14 rounded-full object-cover border-2 border-blue-200 shadow-sm"
+          />
+          <div
+            *ngIf="!opponent.image"
+            class="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-2xl"
+          >
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+
+        <div>
+          <p class="text-lg font-semibold text-gray-800">{{ opponent.name }}</p>
+          <p class="text-sm text-gray-500">Jugador seleccionado</p>
+        </div>
+      </div>
+
+      <button
+        (click)="opponent = null"
+        class="text-blue-600 hover:text-blue-800 text-sm font-medium hover:underline transition-colors duration-200"
+      >
+        Cambiar
       </button>
     </div>
 
-
-
-    <!-- Selección de Fecha y Hora -->
-    <div class="mt-4">
-      <label class="font-semibold block">📅 Fecha y Hora</label>
+    <!-- Fecha y Hora -->
+    <div>
+      <label class="font-semibold text-gray-700 block mb-2 text-sm"
+        >📅 Fecha y Hora</label
+      >
       <input
         type="datetime-local"
+        [min]="minDateTime"
+        [step]="1800"
         [(ngModel)]="selectedDate"
-        class="w-full border rounded-md p-2 mt-1"
+        class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-green-500"
       />
     </div>
 
     <!-- Tipo de Partido -->
-    <div class="mt-4">
-      <label class="font-semibold block">🎾 Tipo de Partido</label>
+    <div>
+      <label class="font-semibold text-gray-700 block mb-2 text-sm"
+        >🎾 Tipo de Partido</label
+      >
       <div class="flex gap-4">
         <button
           (click)="selectMatchType('SINGLES')"
           [class.bg-green-600]="selectedMatchType === 'SINGLES'"
-          class="border rounded-md px-4 py-2 hover:bg-green-500 transition"
+          class="border rounded-md px-4 py-2 hover:bg-green-700 transition text-white"
+          [ngClass]="
+            selectedMatchType === 'SINGLES'
+              ? 'bg-green-700'
+              : 'bg-gray-300 text-gray-800'
+          "
         >
           Sencillos
         </button>
         <button
           (click)="selectMatchType('DOUBLES')"
           [class.bg-green-600]="selectedMatchType === 'DOUBLES'"
-          class="border rounded-md px-4 py-2 hover:bg-green-500 transition"
+          class="border rounded-md px-4 py-2 hover:bg-green-700 transition text-white"
+          [ngClass]="
+            selectedMatchType === 'DOUBLES'
+              ? 'bg-green-700'
+              : 'bg-gray-300 text-gray-800'
+          "
         >
           Dobles
         </button>
       </div>
     </div>
 
+    <!-- Lugar del reto -->
+    <div>
+      <label class="font-semibold text-gray-700 block mb-2 text-sm"
+        >📍 Lugar del reto</label
+      >
+      <div class="flex gap-4">
+        <button
+          (click)="useCustomLocation = false"
+          [ngClass]="
+            useCustomLocation
+              ? 'bg-gray-300 text-gray-800'
+              : 'bg-green-700 text-white'
+          "
+          class="border rounded-md px-4 py-2 hover:bg-green-700 transition"
+        >
+          Club registrado
+        </button>
+        <button
+          (click)="useCustomLocation = true"
+          [ngClass]="
+            useCustomLocation
+              ? 'bg-green-700 text-white'
+              : 'bg-gray-300 text-gray-800'
+          "
+          class="border rounded-md px-4 py-2 hover:bg-green-700 transition"
+        >
+          Otro lugar
+        </button>
+      </div>
+    </div>
+
+    <!-- Selección de Club -->
+    <div *ngIf="!useCustomLocation">
+      <label class="font-semibold text-gray-700 block mb-2 text-sm mt-2"
+        >🏟️ Club</label
+      >
+      <select [(ngModel)]="selectedClub" class="w-full border rounded-md p-2">
+        <option [ngValue]="null">Selecciona un club</option>
+        <option *ngFor="let club of availableClubs" [value]="club.id">
+          {{ club.name }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Otro lugar -->
+    <div *ngIf="useCustomLocation">
+      <label class="font-semibold text-gray-700 block mb-2 text-sm mt-2"
+        >🏠 Dirección del lugar</label
+      >
+      <input
+        type="text"
+        [(ngModel)]="customLocation"
+        class="w-full border rounded-md p-2"
+        placeholder="Ej. Calle 123 #45-67, Ciudad"
+      />
+    </div>
+
     <!-- Mensaje Opcional -->
-    <div class="mt-4">
-      <label class="font-semibold block">💬 Mensaje Opcional</label>
+    <div>
+      <label class="font-semibold text-gray-700 block mb-2 text-sm"
+        >💬 Mensaje Opcional</label
+      >
       <textarea
         [(ngModel)]="challengeMessage"
-        class="w-full border rounded-md p-2 mt-1"
+        class="w-full border rounded-md p-2"
         rows="3"
         placeholder="Escribe un mensaje para tu oponente..."
       ></textarea>
     </div>
 
-    <!-- Botones de Acción -->
-    <div class="flex justify-between items-center mt-6">
+    <!-- Botones -->
+    <div class="flex justify-between items-center pt-4 border-t">
       <button
         (click)="closeModal()"
-        class="border px-4 py-2 rounded-md hover:bg-gray-200"
+        class="border px-4 py-2 rounded-md hover:bg-gray-100"
       >
         Cancelar
       </button>
       <button
         (click)="sendChallenge()"
-        class="bg-green-600 text-white px-5 py-2 rounded-md shadow-md font-bold transition hover:bg-green-700"
+        [disabled]="!opponent"
+        class="bg-green-600 text-white px-5 py-2 rounded-md shadow-md font-bold transition hover:bg-green-700 disabled:opacity-50"
       >
         ⚡ Enviar Reto
       </button>
     </div>
   </div>
+</div>

@@ -1,61 +1,152 @@
 <div class="block md:flex md:flex-row-reverse">
   <!-- RANKING -->
-  <div
-    class="w-full my-5 md:w-1/3 md:my-0"
-    *ngIf="selectGeneralRankingStatus$ | async as ratings"
-  >
-    <app-general-ranking
-      [genralRanking]="ratings.ranking"
-    ></app-general-ranking>
+  <div class="w-full my-5 md:w-1/3 md:my-0">
+    <ng-container
+      *ngIf="selectGeneralRankingStatus$ | async as ratings; else rankingLoader"
+    >
+      <app-general-ranking
+        [genralRanking]="ratings.ranking"
+      ></app-general-ranking>
+    </ng-container>
+
+    <ng-template #rankingLoader>
+      <div class="h-40 bg-gray-200 animate-pulse rounded-lg"></div>
+    </ng-template>
   </div>
-  <!--  -->
-  <!-- PARTIDOS -->
-  <div class="w-full flex md:w-2/3">
+
+  <div class="w-full md:w-2/3 mr-5">
+    <!-- Retos -->
+    <div *ngIf="selectUserChallengesState$ | async as challenges">
+      <ng-container *ngIf="challenges.loading; else loadedContent">
+        <div class="flex gap-4 overflow-x-auto">
+          <div
+            *ngFor="let i of [1, 2, 3]"
+            class="w-64 h-40 bg-gray-200 animate-pulse rounded-lg"
+          ></div>
+        </div>
+      </ng-container>
+
+      <ng-template #loadedContent>
+        <ng-container
+          *ngIf="
+            challenges.userChallenges.length > 0;
+            else noChallengesTemplate
+          "
+        >
+          <div class="w-full mb-5">
+            <div
+              class="text-2xl md:text-4xl font-bold border-b-4 border-gray-300 mb-5"
+            >
+              Retos pendientes
+            </div>
+            <div class="w-full overflow-x-auto px-2 py-2">
+              <div class="flex gap-4">
+                <app-challenge-card
+                  *ngFor="let challenge of orderChallenge"
+                  [challenge]="challenge"
+                  class="flex-shrink-0"
+                ></app-challenge-card>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-template>
+
+      <ng-template #noChallengesTemplate>
+        <div
+          class="w-full mb-5 p-6 bg-yellow-50 border border-yellow-300 rounded-lg text-center"
+        >
+          <p class="text-lg font-semibold text-yellow-800 mb-2">
+            No tienes retos aún.
+          </p>
+          <p class="text-yellow-700">
+            ¡Anímate a crear tu primer reto y desafía a otros jugadores! 🎾🔥
+          </p>
+          <button
+            (click)="createChallenge()"
+            class="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+          >
+            Crear mi primer reto
+          </button>
+        </div>
+      </ng-template>
+    </div>
     <div
       class="w-full mb-5"
       *ngIf="selectDashboardState$ | async as matchesData"
     >
-      <div>
-        <div
-          class="text-2xl md:text-4xl font-bold border-b-4 border-gray-300 mb-5"
-        >
-          Últimos resultados
+      <ng-container *ngIf="matchesData.loadingMatches; else loadedResults">
+        <!-- Loader mientras carga -->
+        <div class="space-y-4">
+          <div class="h-8 w-2/3 bg-gray-200 animate-pulse rounded"></div>
+          <div class="h-40 bg-gray-100 animate-pulse rounded"></div>
+          <div class="h-40 bg-gray-100 animate-pulse rounded"></div>
         </div>
+      </ng-container>
 
-        <div class="flex items-center gap-2">
-          <div class="text-xl text-[#418622]">Mostrar:</div>
-          <app-tab-selector
-            [tabs]="[
-              { label: 'Sencillos', value: 'SINGLES' },
-              { label: 'Dobles', value: 'DOUBLES' }
-            ]"
-            [selectedTab]="matchType"
-            (tabChange)="selectMatchTab($event)"
-          ></app-tab-selector>
+      <ng-template #loadedResults>
+        <div>
+          <div
+            class="text-2xl md:text-4xl font-bold border-b-4 border-gray-300 mb-5"
+          >
+            Últimos resultados
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div class="text-xl text-[#418622]">Mostrar:</div>
+            <app-tab-selector
+              [tabs]="[
+                { label: 'Sencillos', value: 'SINGLES' },
+                { label: 'Dobles', value: 'DOUBLES' }
+              ]"
+              [selectedTab]="matchType"
+              (tabChange)="selectMatchTab($event)"
+            ></app-tab-selector>
+          </div>
+
+          <ng-container
+            *ngIf="
+              confirmedMatches.length === 0 && pendingMatches.length === 0;
+              else resultsExist
+            "
+          >
+            <div
+              class="text-center text-gray-700 mt-5 md:mt-10 p-6 bg-yellow-50 border border-yellow-300 rounded-lg"
+            >
+              <p class="text-lg font-semibold mb-2">
+                No has publicado resultados aún.
+              </p>
+              <p class="mb-4">
+                ¡Anímate a publicar tu primer resultado y muestra tu progreso!
+                🎾🔥
+              </p>
+              <button
+                (click)="createMatchResult()"
+                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition"
+              >
+                Publicar primer resultado
+              </button>
+            </div>
+          </ng-container>
+
+          <ng-template #resultsExist>
+            <div>
+              <app-result-short-section
+                *ngIf="pendingMatches.length > 0"
+                [matchToShow]="pendingMatches"
+                [title]="'Partidos Pendientes por confirmar'"
+                [canConfirm]="true"
+              ></app-result-short-section>
+
+              <app-result-short-section
+                *ngIf="confirmedMatches.length > 0"
+                [matchToShow]="confirmedMatches.slice(0, 10)"
+                [title]="'Últimos 10 partidos Publicados'"
+              ></app-result-short-section>
+            </div>
+          </ng-template>
         </div>
-      </div>
-      <!-- Condición para verificar si no hay partidos -->
-      <div
-        *ngIf="confirmedMatches.length === 0 && pendingMatches.length === 0"
-        class="text-center text-gray-500 mt-5 md:mt-10"
-      >
-        No has publicado resultados
-      </div>
-
-      <div *ngIf="confirmedMatches.length > 0 || pendingMatches.length > 0">
-        <app-result-short-section
-          [matchToShow]="pendingMatches"
-          [title]="'Partidos Pendientes por confirmar'"
-          [canConfirm]="true"
-        ></app-result-short-section>
-
-        <!-- Sección de Partidos Confirmados -->
-
-        <app-result-short-section
-          [matchToShow]="confirmedMatches.slice(0, 10)"
-          [title]="'Ultimos 10 partidos Publicados'"
-        ></app-result-short-section>
-      </div>
+      </ng-template>
     </div>
 
     <ng-container *ngIf="userReservations$ | async as reservations">
