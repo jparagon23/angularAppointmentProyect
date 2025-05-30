@@ -12,8 +12,6 @@ export class SelectComponent {
   @Input() name!: string;
   @Input() description!: string;
   @Input() options!: CommonType[];
-  @Input() displayLabel: boolean = true;
-
   blurred: boolean = false;
   functions = Functions;
 

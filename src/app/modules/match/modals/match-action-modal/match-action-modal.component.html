@@ -1,25 +1,45 @@
-<div class="p-6">
-  <!-- Mensaje basado en el tipo de notificación -->
-  <h2 class="text-gray-700 text-center mb-6">
+<div
+  class="p-6 bg-white rounded-xl shadow-lg border border-gray-200 max-w-xl mx-auto"
+>
+  <!-- Encabezado de notificación -->
+  <div
+    class="flex items-center justify-center gap-3 p-4 rounded-lg"
+    [ngClass]="{
+      'bg-green-50 text-green-700': data.type === 'MATCH_CONFIRMED',
+      'bg-red-50 text-red-700': data.type === 'MATCH_REJECTED',
+      'bg-gray-100 text-gray-600':
+        data.type !== 'MATCH_CONFIRMED' && data.type !== 'MATCH_REJECTED'
+    }"
+  >
     <ng-container [ngSwitch]="data.type">
       <ng-container *ngSwitchCase="'MATCH_CONFIRMED'">
-        ✅ El siguiente partido ha sido
-        <span class="font-bold text-green-600">CONFIRMADO</span>.
+        <span class="text-2xl">✅</span>
+        <span class="text-lg font-semibold">
+          El partido ha sido
+          <span class="font-bold underline">CONFIRMADO</span>.
+        </span>
       </ng-container>
       <ng-container *ngSwitchCase="'MATCH_REJECTED'">
-        ❌ El siguiente partido ha sido
-        <span class="font-bold text-red-600">RECHAZADO</span>.
+        <span class="text-2xl">❌</span>
+        <span class="text-lg font-semibold">
+          El partido ha sido <span class="font-bold underline">RECHAZADO</span>.
+        </span>
       </ng-container>
       <ng-container *ngSwitchDefault>
-        ℹ️ Estado desconocido para este partido.
+        <span class="text-2xl">ℹ️</span>
+        <span class="text-lg font-semibold">
+          Estado desconocido para este partido.
+        </span>
       </ng-container>
     </ng-container>
-  </h2>
+  </div>
 
-  <!-- Detalles adicionales del partido o loader -->
-  <div class="mb-6">
+  <!-- Detalles del partido -->
+  <div class="my-6">
     <ng-container *ngIf="!isMatchLoading; else loadingMatch">
-      <app-match-result-card [matchData]="selectedMatch!"></app-match-result-card>
+      <app-match-result-card
+        [matchData]="selectedMatch!"
+      ></app-match-result-card>
     </ng-container>
 
     <ng-template #loadingMatch>
@@ -27,11 +47,11 @@
     </ng-template>
   </div>
 
-  <!-- Botones de acción -->
-  <div class="flex justify-center mt-6">
+  <!-- Botón -->
+  <div class="flex justify-center mt-4">
     <button
       mat-button
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg shadow-md transition duration-300"
       (click)="dialogRef.close()"
     >
       Cerrar

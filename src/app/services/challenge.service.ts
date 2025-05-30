@@ -6,7 +6,10 @@ import { Store } from '@ngrx/store';
 import { selectUser } from '../state/selectors/users.selectors';
 import { environment } from 'src/environments/environment';
 import { Challenge } from '../models/Challenge.model';
-import { ChallengePageResponse } from '../models/challenges/UserChallenges.model';
+import {
+  ChallengePageResponse,
+  ChallengeResponseDTO,
+} from '../models/challenges/UserChallenges.model';
 import { Observable } from 'rxjs';
 import { ChallengeRecommendation } from '../models/challenges/ChallengeRecommendation.model';
 
@@ -81,7 +84,7 @@ export class ChallengeService {
       params.challengeStatus = challengeStatus;
     }
 
-    const url = `${environment.API_URL}/challenge/${finalUserId}`;
+    const url = `${environment.API_URL}/challenge/user/${finalUserId}`;
 
     return this.http.get<ChallengePageResponse>(url, {
       headers: this.setHeaders(),
@@ -116,6 +119,13 @@ export class ChallengeService {
     userId ??= this.userId;
     const url = `${environment.API_URL}/recommendations/challenges/${userId}`;
     return this.http.get<ChallengeRecommendation[]>(url, {
+      headers: this.setHeaders(),
+    });
+  }
+
+  getChallengeById(challengeId: number): Observable<ChallengeResponseDTO> {
+    const url = `${environment.API_URL}/challenge/${challengeId}`;
+    return this.http.get<ChallengeResponseDTO>(url, {
       headers: this.setHeaders(),
     });
   }

@@ -4,7 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'statusTranslate',
 })
 export class StatusTranslatePipe implements PipeTransform {
-  private statusMap: { [key: string]: string } = {
+  private readonly statusMap: { [key: string]: string } = {
     PENDING: 'PENDIENTE',
     CONFIRMED: 'CONFIRMADO',
     REJECTED: 'RECHAZADO',
@@ -13,6 +13,8 @@ export class StatusTranslatePipe implements PipeTransform {
     SINGLES: 'SENCILLOS',
     DOUBLES: 'DOBLES',
     ACCEPTED: 'ACEPTADO',
+    COMPLETED: 'COMPLETADO',
+    EXPIRED: 'EXPIRADO',
   };
 
   transform(value: string): string {

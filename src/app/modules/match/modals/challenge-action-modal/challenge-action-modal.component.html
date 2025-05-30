@@ -1,0 +1,48 @@
+<div class="p-6">
+  <!-- Mensaje basado en el tipo de notificación -->
+  <h2 class="text-gray-700 text-center mb-6">
+    <ng-container [ngSwitch]="data.type">
+      <ng-container *ngSwitchCase="'CHALLENGE_ACCEPTED'">
+        ✅ El desafío ha sido
+        <span class="font-bold text-green-600">ACEPTADO</span>.
+      </ng-container>
+      <ng-container *ngSwitchCase="'CHALLENGE_REJECTED'">
+        ❌ El desafío ha sido
+        <span class="font-bold text-red-600">RECHAZADO</span>.
+      </ng-container>
+      <ng-container *ngSwitchCase="'CHALLENGE_CANCELED'">
+        ⚠️ El desafío ha sido
+        <span class="font-bold text-yellow-600">CANCELADO</span>.
+      </ng-container>
+      <ng-container *ngSwitchCase="'CHALLENGE_EXPIRED'">
+        ⏰ El desafío ha
+        <span class="font-bold text-gray-500">EXPIRADO</span>.
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        ℹ️ Estado desconocido para este desafío.
+      </ng-container>
+    </ng-container>
+  </h2>
+
+  <!-- Detalles adicionales del desafío o loader -->
+  <div class="mb-6">
+    <ng-container *ngIf="!isChallengeLoading; else loadingChallenge">
+      <app-challenge-card [challenge]="selectedChallenge!"></app-challenge-card>
+    </ng-container>
+
+    <ng-template #loadingChallenge>
+      <app-loader></app-loader>
+    </ng-template>
+  </div>
+
+  <!-- Botones de acción -->
+  <div class="flex justify-center mt-6">
+    <button
+      mat-button
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      (click)="dialogRef.close()"
+    >
+      Cerrar
+    </button>
+  </div>
+</div>
