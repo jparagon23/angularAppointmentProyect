@@ -7,8 +7,8 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 })
 export class ButtonComponent {
   @Input() disabled = false;
-  @Input() typeBtn: 'reset' | 'submit' | 'button' = 'button';
   @Input() loading = false;
+  @Input() typeBtn: 'reset' | 'submit' | 'button' = 'button';
   @Input() color:
     | 'success'
     | 'primary'

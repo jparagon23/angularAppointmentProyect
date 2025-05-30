@@ -1,9 +1,9 @@
 <div>
-  <div *ngIf="displayLabel">
-    <label for="email" class="block mb-2 text-sm font-medium text-gray-900">{{
-      description || functions.splitAndCapitalizeFirstLetter(name)
-    }}</label>
-  </div>
+  <label
+    for="email"
+    class="block mb-2 text-sm font-medium text-gray-900 "
+    >{{ description || functions.splitAndCapitalizeFirstLetter(name) }}</label
+  >
   <select
     [formControl]="control"
     [id]="name"

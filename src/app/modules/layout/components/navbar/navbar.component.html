@@ -1,7 +1,5 @@
 <ng-container *ngIf="user$ | async as user">
-  <nav
-    class="fixed top-0 left-0 w-full bg-green-700 border-gray-200 px-4 py-3 shadow-md z-50"
-  >
+  <nav class="bg-green-700 border-gray-200 px-4 py-3 shadow-md">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
       <div
         class="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto"
@@ -56,20 +54,6 @@
           >
             Clubs
           </app-button>
-          <app-button
-            typeBtn="button"
-            color="navbar"
-            (click)="redirectToEventsPage()"
-          >
-            Eventos
-          </app-button>
-          <app-button
-          typeBtn="button"
-          color="navbar"
-          (click)="redirectToCreateEventsPage()"
-        >
-          crear Evento
-        </app-button>
           <app-button
             typeBtn="button"
             color="navbar"
