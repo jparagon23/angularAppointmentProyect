@@ -40,6 +40,8 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
           this.userCanDelete =
             !this.challenge.pendingConfirmationUsers?.includes(user.id) ||
             false;
+        } else if (this.challenge.status === 'ACCEPTED') {
+          this.userCanDelete = true;
         } else {
           this.userCanDelete = false;
           this.userCanConfirm = false;

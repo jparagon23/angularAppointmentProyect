@@ -21,10 +21,7 @@ import { ChallengeResponseDTO } from 'src/app/models/challenges/UserChallenges.m
 import { ChallengeModalComponent } from 'src/app/modules/match/modals/challenge-modal/challenge-modal.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PostMatchComponent } from 'src/app/modules/match/modals/post-match/post-match.component';
-import {
-  selectChallengesResultActionStatus,
-  selectUserChallengesState,
-} from 'src/app/state/challenges/challenges.selectos';
+import { selectUserChallengesState } from 'src/app/state/challenges/challenges.selectos';
 
 @Component({
   selector: 'app-dashboard-page',
