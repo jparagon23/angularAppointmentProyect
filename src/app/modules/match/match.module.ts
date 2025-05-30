@@ -14,6 +14,7 @@ import { ResultShortSectionComponent } from './components/result-short-section/r
 import { ChallengeModalComponent } from './modals/challenge-modal/challenge-modal.component';
 import { MatchPaginationComponent } from './components/match-pagination/match-pagination.component';
 import { ChallengeCardComponent } from './components/challenge-card/challenge-card.component';
+import { ChallengeActionModalComponent } from './modals/challenge-action-modal/challenge-action-modal.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ChallengeCardComponent } from './components/challenge-card/challenge-ca
     ChallengeModalComponent,
     MatchPaginationComponent,
     ChallengeCardComponent,
+    ChallengeActionModalComponent,
   ],
   imports: [CommonModule, FormsModule, SharedModule, MatDialogModule],
   exports: [

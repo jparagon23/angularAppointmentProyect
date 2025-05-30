@@ -26,6 +26,7 @@ import { markNotificationAsRead } from 'src/app/state/actions/notification.actio
 import { selectUserNotifications } from 'src/app/state/selectors/notification.selectors';
 import { MatchActionModalComponent } from 'src/app/modules/match/modals/match-action-modal/match-action-modal.component';
 import { ChallengeModalComponent } from 'src/app/modules/match/modals/challenge-modal/challenge-modal.component';
+import { ChallengeActionModalComponent } from 'src/app/modules/match/modals/challenge-action-modal/challenge-action-modal.component';
 
 interface ButtonConfig {
   label: string;
@@ -207,6 +208,18 @@ export class NavbarComponent implements OnInit {
       this.markAsRead(notification);
 
       this.dialog.open(MatchActionModalComponent, {
+        data: notification,
+      });
+    } else if (
+      (notification.actionUrl !== null &&
+        notification.type === 'CHALLENGE_EXPIRED') ||
+      notification.type === 'CHALLENGE_REJECTED' ||
+      notification.type === 'CHALLENGE_CONFIRMED' ||
+      notification.type === 'CHALLENGE_ACCEPTED'
+    ) {
+      this.markAsRead(notification);
+
+      this.dialog.open(ChallengeActionModalComponent, {
         data: notification,
       });
     }

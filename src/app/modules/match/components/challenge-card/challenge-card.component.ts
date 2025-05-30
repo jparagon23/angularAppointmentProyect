@@ -121,7 +121,7 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
   onDelete(): void {
     Swal.fire({
       title: '¿Estás seguro?',
-      text: '¿Quieres eliminar este reto?',
+      text: '¿Quieres cancelar este reto?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar',
