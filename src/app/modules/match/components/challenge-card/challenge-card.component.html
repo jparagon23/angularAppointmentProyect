@@ -4,14 +4,23 @@
     'border-red-600':
       challenge.status === 'REJECTED' || challenge.status === 'CANCELLED',
     'border-yellow-600': challenge.status === 'PENDING',
-    'border-green-600': challenge.status === 'ACCEPTED',
-    'border-blue-600': challenge.status === 'COMPLETED'
+    'border-green-600': challenge.status === 'COMPLETED',
+    'border-blue-600': challenge.status === 'ACCEPTED'
   }"
   *ngIf="challenge"
 >
   <!-- Estado -->
   <div class="flex justify-between items-start mb-4">
-    <div class="text-sm font-bold text-[#418622] uppercase">
+    <div
+      class="text-sm font-bold uppercase"
+      [ngClass]="{
+        'text-yellow-600': challenge.status === 'PENDING',
+        'text-red-600':
+          challenge.status === 'REJECTED' || challenge.status === 'CANCELLED',
+        'text-green-600': challenge.status === 'COMPLETED',
+        'text-blue-600': challenge.status === 'ACCEPTED'
+      }"
+    >
       {{ challenge.matchType | statusTranslate }}
     </div>
 
@@ -36,8 +45,8 @@
             'text-red-600':
               challenge.status === 'REJECTED' ||
               challenge.status === 'CANCELLED',
-            'text-green-600': challenge.status === 'ACCEPTED',
-            'text-blue-600': challenge.status === 'COMPLETED'
+            'text-green-600': challenge.status === 'COMPLETED',
+            'text-blue-600': challenge.status === 'ACCEPTED'
           }"
         >
           {{ challenge.status | statusTranslate }}
