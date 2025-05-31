@@ -128,4 +128,10 @@
       </div>
     </div>
   </div>
+  <div *ngIf="challenge.message" class="mt-4">
+    <div class="text-xs text-black font-bold">Mensaje</div>
+    <div class="text-sm">
+      {{ challenge.message }}
+    </div>
+  </div>
 </div>
