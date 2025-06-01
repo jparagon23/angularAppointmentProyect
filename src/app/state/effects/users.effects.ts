@@ -19,6 +19,7 @@ import {
   getLast10DoublesMatches,
   getLast10SinglesMatches,
 } from '../dashboard-state/dashboard.actions';
+import { getUserChallenges } from '../challenges/challenges.actions';
 
 @Injectable()
 export class ProfileEffects {
@@ -62,6 +63,7 @@ export class ProfileEffects {
         getLast10DoublesMatches(),
         getRanking(),
         loadReservations(),
+        getUserChallenges({ challengeStatus: ['PENDING', 'ACCEPTED'] }),
       ])
     )
   );

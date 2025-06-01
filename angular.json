@@ -59,6 +59,20 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "qa": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.qa.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractLicenses": true,
+              "namedChunks": false,
+              "vendorChunk": false
             }
           },
           "defaultConfiguration": "production"
@@ -71,6 +85,9 @@
             },
             "development": {
               "browserTarget": "front-appointment-proyect-v2:build:development"
+            },
+            "qa": {
+              "browserTarget": "front-appointment-proyect-v2:build:qa"
             }
           },
           "defaultConfiguration": "development"
