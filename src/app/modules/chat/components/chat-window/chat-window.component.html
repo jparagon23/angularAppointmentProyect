@@ -20,13 +20,17 @@
     <span class="text-gray-400 cursor-pointer">...</span>
   </div>
 
-  <!-- Mensajes -->
-  <div
-    #scrollContainer
-    class="px-4 py-4 space-y-2 overflow-y-auto"
-    [ngClass]="{ 'flex-1': participantId !== null }"
-  >
-    <ng-container *ngIf="messages.length > 0; else maybeEmpty">
+  <!-- Contenedor de mensajes con altura ajustable y scroll interno -->
+ <!-- Contenedor de mensajes con altura ajustable y scroll interno -->
+<div class="flex-1 overflow-y-auto px-4 py-4 space-y-2">
+  <ng-container *ngIf="isLoadingMessages; else messagesLoaded">
+    <div class="flex justify-center items-center h-full">
+      <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-green-500"></div>
+    </div>
+  </ng-container>
+
+  <ng-template #messagesLoaded>
+    <ng-container *ngIf="messages.length > 0; else noMessages">
       <app-message-item
         *ngFor="let msg of messages"
         [message]="msg"
@@ -34,14 +38,16 @@
       ></app-message-item>
     </ng-container>
 
-    <ng-template #maybeEmpty>
+    <ng-template #noMessages>
       <ng-container *ngIf="conversationId && conversationId !== 0">
         <p class="text-gray-400 text-sm">
           No hay mensajes en esta conversación.
         </p>
       </ng-container>
     </ng-template>
-  </div>
+  </ng-template>
+</div>
+
 
   <!-- Input -->
   <div class="border-t border-gray-200 p-3" *ngIf="participantId">

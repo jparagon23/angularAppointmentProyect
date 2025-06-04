@@ -14,6 +14,7 @@ import { Message } from '../../models/Message.model';
 import { ChatService } from '../../services/chat.service';
 import Swal from 'sweetalert2';
 import { Conversation } from '../../models/Conversation.model';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-chat-window',
@@ -29,6 +30,7 @@ export class ChatWindowComponent implements OnInit, OnChanges {
   @Output() newConversationStarted = new EventEmitter<number>();
 
   messages: Message[] = [];
+  isLoadingMessages = true;
 
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
@@ -38,6 +40,7 @@ export class ChatWindowComponent implements OnInit, OnChanges {
     if (this.conversationId && this.conversationId !== 0) {
       this.loadMessages();
     }
+    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -46,14 +49,17 @@ export class ChatWindowComponent implements OnInit, OnChanges {
     }
   }
 
-  loadMessages(): void {
-    this.chatService
-      .getMessagesBetweenUsers(this.conversationId)
-      .subscribe((msgs) => {
-        this.messages = msgs;
-        this.scrollToBottom();
-      });
-  }
+ loadMessages(): void {
+  this.isLoadingMessages = true; // 🟢 activa loader
+
+  this.chatService
+    .getMessagesBetweenUsers(this.conversationId)
+    .pipe(finalize(() => (this.isLoadingMessages = false)))
+    .subscribe((msgs) => {
+      this.messages = msgs;
+      this.scrollToBottom();
+    });
+}
 
   handleSend(content: string): void {
     if (!this.participantId) return;
