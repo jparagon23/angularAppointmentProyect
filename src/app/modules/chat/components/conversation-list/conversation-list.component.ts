@@ -8,6 +8,7 @@ import { Conversation } from '../../models/Conversation.model';
 export class ConversationListComponent {
   @Input() conversations: Conversation[] = [];
   @Input() selectedConversationId!: number | null;
+  @Input() isLoadingConversations:boolean=true;
   @Output() conversationSelected = new EventEmitter<number>();
 
   @Output() newConversation = new EventEmitter<void>();

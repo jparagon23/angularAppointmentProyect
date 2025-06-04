@@ -14,6 +14,7 @@ export class ChatComponent implements OnInit {
   selectedConversationId: number | null = null;
   currentUserId!: number;
   screenIsMediumUp = false;
+  isLoadingConversations = true;
 
   constructor(
     private readonly chatService: ChatService,
@@ -25,7 +26,6 @@ export class ChatComponent implements OnInit {
     .subscribe(result => this.screenIsMediumUp = result.matches);
   }
 
-  
 
   ngOnInit(): void {
     const userId = this.authService.getUserId();
@@ -41,6 +41,7 @@ export class ChatComponent implements OnInit {
     this.chatService.getUserConversations(this.currentUserId).subscribe({
       next: (conversations) => {
         this.conversations = conversations;
+        this.isLoadingConversations=false;
 
         // Si se recibió un ID a seleccionar, usarlo
         if (selectId && selectId !== 0) {
