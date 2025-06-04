@@ -3,6 +3,8 @@ import { Conversation } from '../../models/Conversation.model';
 import { ChatService } from '../../services/chat.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { ActivatedRoute, Router } from '@angular/router';
+import { first } from 'rxjs';
 
 
 @Component({
@@ -16,10 +18,15 @@ export class ChatComponent implements OnInit {
   screenIsMediumUp = false;
   isLoadingConversations = true;
 
+  targetUserId: number | null = null;
+  targetUserName: string | null = null;
+
   constructor(
     private readonly chatService: ChatService,
     private readonly authService: AuthService,
-    private breakpointObserver: BreakpointObserver
+    private breakpointObserver: BreakpointObserver,
+      private readonly route: ActivatedRoute,
+      private readonly router: Router
   ) {
      this.breakpointObserver
     .observe(['(min-width: 768px)'])
@@ -28,42 +35,75 @@ export class ChatComponent implements OnInit {
 
 
   ngOnInit(): void {
-    const userId = this.authService.getUserId();
-    if (userId === undefined) {
-      throw new Error('Usuario no autenticado');
+
+    console.log("lanzando el oninit");
+    
+    
+  const userId = this.authService.getUserId();
+  if (userId === undefined) {
+    throw new Error('Usuario no autenticado');
+  }
+
+  this.currentUserId = userId;
+
+  // Capturar el targetUserId primero
+  let targetUserId: number | null = null;
+
+  this.route.queryParams
+  .pipe(first()) // 👈 solo toma la primera vez
+  .subscribe(params => {
+    const userIdParam = +params['userId'];
+    const userName = params['userName'];
+
+    if (!isNaN(userIdParam)) {
+      this.targetUserId = userIdParam;
+      this.targetUserName = userName;
+      this.loadConversations(undefined, this.targetUserId);
+    } else {
+      this.loadConversations();
     }
+  });
+}
 
-    this.currentUserId = userId;
-    this.loadConversations();
-  }
 
-  loadConversations(selectId?: number): void {
-    this.chatService.getUserConversations(this.currentUserId).subscribe({
-      next: (conversations) => {
-        this.conversations = conversations;
-        this.isLoadingConversations=false;
+  loadConversations(selectId?: number, targetUserId?: number | null): void {
+    console.log("iniciamos con ",this.selectedConversationId);
+    
+  this.chatService.getUserConversations(this.currentUserId).subscribe({
+    next: (conversations) => {
+      this.conversations = conversations;
+      this.isLoadingConversations = false;
 
-        // Si se recibió un ID a seleccionar, usarlo
-        if (selectId && selectId !== 0) {
-          this.selectedConversationId = selectId;
+      if (targetUserId) {
+        const existingConversation = this.conversations.find(
+          (c) => c.participantId === targetUserId
+        );
+
+        if (existingConversation) {
+          console.log("Ya existe conversación con:", targetUserId);
+          this.selectedConversationId = existingConversation.id;
+          
+        } else {
+          console.log("No existe conversación, creando nueva");
+          this.onNewConversation();
         }
-        // Si no hay conversación seleccionada y hay conversaciones disponibles, seleccionar la primera
-        else if (
-          this.selectedConversationId != null &&
-          conversations.length > 0
-        ) {
-          this.selectedConversationId = conversations[0].id;
-          console.log(
-            'Seleccionando conversación por defecto:',
-            this.selectedConversationId
-          );
-        }
-      },
-      error: (error) => {
-        console.error('Error al cargar las conversaciones:', error);
-      },
-    });
-  }
+      } else if (selectId && selectId !== 0) {
+        this.selectedConversationId = selectId;
+      } else if (
+      this.selectedConversationId == 0 &&
+        conversations.length > 0
+      ) {
+        this.selectedConversationId = conversations[0].id;
+        console.log('Seleccionando conversación por defecto:', this.selectedConversationId);
+      }
+      this.clearRoute();
+    },
+    error: (error) => {
+      console.error('Error al cargar las conversaciones:', error);
+    },
+  });
+}
+
 
   onSelectConversation(id: number): void {
     this.selectedConversationId = id;
@@ -80,24 +120,49 @@ export class ChatComponent implements OnInit {
   }
 
   getParticipantName(): string {
-    return (
-      this.conversations.find((c) => c.id === this.selectedConversationId)
-        ?.participantName ?? ''
-    );
+  const conversation = this.conversations.find(
+    (c) => c.id === this.selectedConversationId
+  );
+
+  if (conversation) {
+    return conversation.participantName;
   }
 
-  getParticipantId(): number | null {
-    return (
-      this.conversations.find((c) => c.id === this.selectedConversationId)
-        ?.participantId ?? null
-    );
+  return this.targetUserName ?? '';
+}
+
+getParticipantId(): number | null {
+  // Si ya hay una conversación seleccionada, devuélvela
+  const conversation = this.conversations.find(
+    (c) => c.id === this.selectedConversationId
+  );
+
+  if (conversation) {
+    return conversation.participantId;
   }
+
+
+  // Si no hay conversación aún pero vino desde URL, usar ese ID
+  return this.targetUserId ?? null;
+}
 
   onNewConversation(): void {
     this.selectedConversationId = 0; // Valor especial para mostrar el buscador de nuevo chat
   }
 
   onNewMessageCreated(conversationId?: number): void {
-    this.loadConversations(conversationId);
+    console.log("conversationId",conversationId);
+    
+    this.loadConversations(conversationId ,null);
+  }
+
+  clearRoute(){
+    console.log("limpiando la ruta");
+    
+  this.router.navigate([], {
+    relativeTo: this.route,
+    queryParams: {},
+    replaceUrl: true
+  });
   }
 }

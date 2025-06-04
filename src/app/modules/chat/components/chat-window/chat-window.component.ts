@@ -30,7 +30,7 @@ export class ChatWindowComponent implements OnInit, OnChanges {
   @Output() newConversationStarted = new EventEmitter<number>();
 
   messages: Message[] = [];
-  isLoadingMessages = true;
+  isLoadingMessages = false;
 
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
