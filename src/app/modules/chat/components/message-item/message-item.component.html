@@ -17,7 +17,11 @@
         'text-gray-500': !isOwnMessage
       }"
     >
-      {{ message.timestamp | date : "shortTime" }}
+      {{
+        isToday(message.timestamp)
+          ? (message.timestamp | date: 'shortTime')
+          : (message.timestamp | date: 'shortDate')
+      }}
     </div>
   </div>
 </div>

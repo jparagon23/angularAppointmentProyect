@@ -7,9 +7,13 @@
       <span class="font-medium text-sm text-gray-900">
         {{ conversation.participantName }}
       </span>
-      <span class="text-xs text-gray-500">
-        {{ conversation.timestamp | date : "shortTime" }}
-      </span>
+<span class="text-xs text-gray-500">
+  {{
+    isToday(conversation.timestamp)
+      ? (conversation.timestamp | date: 'shortTime')
+      : (conversation.timestamp | date: 'shortDate')
+  }}
+</span>
     </div>
 
     <div class="text-xs text-gray-600 truncate">
