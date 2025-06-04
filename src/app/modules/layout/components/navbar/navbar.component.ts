@@ -8,6 +8,7 @@ import {
   faUser,
   faBars,
   faTimes,
+  faComments,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { MatDialog } from '@angular/material/dialog';
@@ -46,6 +47,7 @@ export class NavbarComponent implements OnInit {
   faUser = faUser;
   faBars = faBars;
   faTimes = faTimes;
+  faComments = faComments;
 
   isOpenOverlayAvatar = false;
   isOpenMobileMenu = false;
@@ -229,5 +231,8 @@ export class NavbarComponent implements OnInit {
     return this.notifications.filter(
       (notification) => notification.status !== 'READ'
     ).length;
+  }
+  goToChat(): void {
+    this.router.navigate(['home/chat']);
   }
 }

@@ -22,6 +22,12 @@ const routes: Routes = [
         loadChildren: () =>
           import('../admin/admin.module').then((m) => m.AdminModule),
       },
+      {
+        path: 'chat',
+        title: 'Forehapp',
+        loadChildren: () =>
+          import('../chat/chat.module').then((m) => m.ChatModule),
+      },
     ],
   },
 ];

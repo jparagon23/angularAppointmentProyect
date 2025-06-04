@@ -2,12 +2,15 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { TokenService } from '../services/token.service';
 
-export const redirectGuard: CanActivateFn = () => {
-  console.log('redirectGuard');
+export const redirectGuard: CanActivateFn = (route, state) => {
+  const tokenService = inject(TokenService);
+  const router = inject(Router);
+  const isValidToken = tokenService.isValidToken();
 
-  const isValidToken: string | unknown = inject(TokenService).isValidToken();
-  if (isValidToken) {
-    inject(Router).navigate(['/home']);
+  if (isValidToken && (state.url === '/login' || state.url === '/register')) {
+    router.navigate(['/home']);
+    return false;
   }
+
   return true;
 };
