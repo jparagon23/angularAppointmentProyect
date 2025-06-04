@@ -9,18 +9,21 @@ import { loadUser } from 'src/app/state/actions/users.actions';
 
 let hasRedirected = false;
 
-export const roleGuard: CanActivateFn = () => {
-  console.log('roleGuard');
+export const roleGuard: CanActivateFn = (route, state) => {
   const store = inject(Store<AppState>);
   const router = inject(Router);
+  const url = state.url;
 
   return store.select(selectUser).pipe(
     take(1),
     switchMap((user) => {
       if (user) {
-        if (!hasRedirected) {
-          hasRedirected = true; // Evita redirecciones adicionales
-          if (user.role == 2) {
+        if (
+          !hasRedirected &&
+          (url === '/' || url === '/home' || url === '/login')
+        ) {
+          hasRedirected = true;
+          if (user.role === 2) {
             router.navigate(['home/admin']);
           } else {
             router.navigate(['home/user']);
@@ -29,20 +32,25 @@ export const roleGuard: CanActivateFn = () => {
         return of(true);
       } else {
         store.dispatch(loadUser());
-        store
-          .select(selectUser)
-          .pipe(
-            filter((user) => !!user),
-            take(1)
-          )
-          .subscribe((user) => {
-            if (user!.role == 2) {
-              router.navigate(['home/admin']);
-            } else {
-              router.navigate(['home/user']);
+
+        return store.select(selectUser).pipe(
+          filter((u) => !!u),
+          take(1),
+          tap((u) => {
+            if (
+              !hasRedirected &&
+              (url === '/' || url === '/home' || url === '/login')
+            ) {
+              hasRedirected = true;
+              if (u!.role === 2) {
+                router.navigate(['home/admin']);
+              } else {
+                router.navigate(['home/user']);
+              }
             }
-          });
-        return of(true);
+          }),
+          map(() => true)
+        );
       }
     })
   );
