@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Conversation } from '../../models/Conversation.model';
 import { ChatService } from '../../services/chat.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+
 
 @Component({
   selector: 'app-chat',
@@ -11,11 +13,19 @@ export class ChatComponent implements OnInit {
   conversations: Conversation[] = [];
   selectedConversationId: number | null = null;
   currentUserId!: number;
+  screenIsMediumUp = false;
 
   constructor(
     private readonly chatService: ChatService,
-    private readonly authService: AuthService
-  ) {}
+    private readonly authService: AuthService,
+    private breakpointObserver: BreakpointObserver
+  ) {
+     this.breakpointObserver
+    .observe(['(min-width: 768px)'])
+    .subscribe(result => this.screenIsMediumUp = result.matches);
+  }
+
+  
 
   ngOnInit(): void {
     const userId = this.authService.getUserId();

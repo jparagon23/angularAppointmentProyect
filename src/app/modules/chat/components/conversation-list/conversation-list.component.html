@@ -15,7 +15,7 @@
   <div class="flex-1 overflow-y-auto">
     <div *ngFor="let conversation of conversations">
       <app-conversation-item
-        [conversation]="conversation"
+        [conversation]="conversation"a
         [isSelected]="conversation.id === selectedConversationId"
         (click)="selectConversation(conversation.id)"
       ></app-conversation-item>
