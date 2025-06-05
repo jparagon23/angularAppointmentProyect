@@ -85,4 +85,17 @@ export class ChatService {
     const headers = this.setHeaders();
     return this.http.put<void>(url, null, { headers });
   }
+
+  getUserUnreadMessagesCount(): Observable<number> {
+    const url = `${environment.API_URL}/chat/unread-messages`;
+    const headers = this.setHeaders();
+    const params = new HttpParams().set(
+      'userId',
+      (this.userId ?? '').toString()
+    );
+    return this.http.get<number>(url, {
+      headers,
+      params,
+    });
+  }
 }
