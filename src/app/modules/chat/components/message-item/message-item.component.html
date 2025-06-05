@@ -5,22 +5,16 @@
   <div
     class="max-w-xs md:max-w-md px-4 py-2 rounded-2xl shadow-sm text-sm transition-all duration-200"
     [ngClass]="{
-      'bg-green-500 text-white rounded-br-none': isOwnMessage,
-      'bg-gray-100 text-gray-800 rounded-bl-none': !isOwnMessage
+      'bg-green-600 !text-white rounded-br-none': isOwnMessage,
+      'bg-gray-600 text-white rounded-bl-none': !isOwnMessage
     }"
   >
     {{ message.content }}
-    <div
-      class="text-[10px] text-right mt-1"
-      [ngClass]="{
-        'text-white/70': isOwnMessage,
-        'text-gray-500': !isOwnMessage
-      }"
-    >
+    <div class="text-[10px] text-right mt-1 text-white">
       {{
         isToday(message.timestamp)
-          ? (message.timestamp | date: 'shortTime')
-          : (message.timestamp | date: 'shortDate')
+          ? (message.timestamp | date : "shortTime")
+          : (message.timestamp | date : "short")
       }}
     </div>
   </div>

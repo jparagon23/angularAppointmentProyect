@@ -20,6 +20,7 @@ import {
   getLast10SinglesMatches,
 } from '../dashboard-state/dashboard.actions';
 import { getUserChallenges } from '../challenges/challenges.actions';
+import { loadUnreadMessagesCount } from '../chat/chat.actions';
 
 @Injectable()
 export class ProfileEffects {
@@ -64,6 +65,7 @@ export class ProfileEffects {
         getRanking(),
         loadReservations(),
         getUserChallenges({ challengeStatus: ['PENDING', 'ACCEPTED'] }),
+        loadUnreadMessagesCount(),
       ])
     )
   );
