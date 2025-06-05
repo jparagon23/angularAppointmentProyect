@@ -12,6 +12,7 @@ import {
 import { selectChallengesResultActionStatus } from 'src/app/state/challenges/challenges.selectos';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import Swal from 'sweetalert2';
+import { Router } from '@angular/router'; // ✅ AÑADIR
 
 @Component({
   selector: 'app-challenge-card',
@@ -19,27 +20,31 @@ import Swal from 'sweetalert2';
 })
 export class ChallengeCardComponent implements OnInit, OnDestroy {
   @Input() challenge: ChallengeResponseDTO | undefined;
-  challengesActions$ = this.store.select(selectChallengesResultActionStatus);
 
-  getUser$ = this.store;
+  challengesActions$ = this.store.select(selectChallengesResultActionStatus);
+  user$: Observable<User | null> = this.store.select(selectUser);
 
   userCanConfirm: boolean = false;
   userCanDelete: boolean = false;
+  currentUserId!: number;
 
-  user$: Observable<User | null> = this.store.select(selectUser);
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private readonly store: Store<any>) {}
+  constructor(
+    private readonly store: Store<any>,
+    private readonly router: Router // ✅ INYECTAR
+  ) {}
 
   ngOnInit(): void {
-    this.user$.subscribe((user) => {
+    this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
       if (user && this.challenge) {
+        this.currentUserId = user.id; // ✅ GUARDAMOS currentUserId
+
         if (this.challenge.status === 'PENDING') {
           this.userCanConfirm =
             this.challenge.pendingConfirmationUsers?.includes(user.id) || false;
           this.userCanDelete =
-            !this.challenge.pendingConfirmationUsers?.includes(user.id) ||
-            false;
+            !this.challenge.pendingConfirmationUsers?.includes(user.id) || false;
         } else if (this.challenge.status === 'ACCEPTED') {
           this.userCanDelete = true;
         } else {
@@ -49,7 +54,6 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Monitor loading state and results for showing loader and messages
     this.challengesActions$
       .pipe(takeUntil(this.destroy$))
       .subscribe((status) => {
@@ -84,6 +88,12 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
       });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+    this.store.dispatch(resetChallengeCardState());
+  }
+
   onAccept(): void {
     Swal.fire({
       title: '¿Estás seguro?',
@@ -93,9 +103,9 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Sí, aceptar',
       cancelButtonText: 'No, cancelar',
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isConfirmed && this.challenge) {
         this.store.dispatch(
-          acceptChallenge({ challengeId: this.challenge!.id })
+          acceptChallenge({ challengeId: this.challenge.id })
         );
       }
     });
@@ -110,9 +120,9 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Sí, rechazar',
       cancelButtonText: 'No, cancelar',
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isConfirmed && this.challenge) {
         this.store.dispatch(
-          rejectChallenge({ challengeId: this.challenge!.id })
+          rejectChallenge({ challengeId: this.challenge.id })
         );
       }
     });
@@ -127,17 +137,40 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'No, cancelar',
     }).then((result) => {
-      if (result.isConfirmed) {
+      if (result.isConfirmed && this.challenge) {
         this.store.dispatch(
-          deleteChallenge({ challengeId: this.challenge!.id })
+          deleteChallenge({ challengeId: this.challenge.id })
         );
       }
     });
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-    this.store.dispatch(resetChallengeCardState());
+  // ✅ MÉTODO DE CHAT
+  redirectToChat(): void {
+    if (!this.challenge) return;
+
+    const targetUserId =
+      this.challenge.challenger.id === this.currentUserId
+        ? this.challenge.challenged.id
+        : this.challenge.challenger.id;
+
+    const targetUserName =
+      this.challenge.challenger.id === this.currentUserId
+        ? `${this.challenge.challenged.name} ${this.challenge.challenged.lastname}`
+        : `${this.challenge.challenger.name} ${this.challenge.challenger.lastname}`;
+
+    this.router.navigate(['/home/chat'], {
+      queryParams: {
+        userId: targetUserId,
+        userName: targetUserName,
+      },
+    });
+  }
+
+  getChatTargetName(): string {
+    if (!this.challenge) return '';
+    return this.challenge.challenger.id === this.currentUserId
+      ? this.challenge.challenged.name
+      : this.challenge.challenger.name;
   }
 }

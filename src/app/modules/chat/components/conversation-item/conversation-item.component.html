@@ -1,0 +1,29 @@
+<div
+  class="cursor-pointer px-4 py-3 hover:bg-green-200 border-b border-gray-200 transition flex items-center"
+  [ngClass]="{ 'bg-green-300': isSelected }"
+>
+  <div class="flex-1">
+    <div class="flex justify-between items-center mb-1">
+      <span class="font-medium text-sm text-gray-900">
+        {{ conversation.participantName }}
+      </span>
+<span class="text-xs text-gray-500">
+  {{
+    isToday(conversation.timestamp)
+      ? (conversation.timestamp | date: 'shortTime')
+      : (conversation.timestamp | date: 'shortDate')
+  }}
+</span>
+    </div>
+
+    <div class="text-xs text-gray-600 truncate">
+      {{ conversation.lastMessage }}
+    </div>
+  </div>
+
+  <div *ngIf="conversation.unreadCount > 0" class="ml-2">
+    <span class="text-xs bg-blue-500 text-white rounded-full px-2 py-0.5">{{
+      conversation.unreadCount
+    }}</span>
+  </div>
+</div>

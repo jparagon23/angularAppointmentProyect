@@ -168,4 +168,11 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
       panelClass: 'custom-dialog-container',
     });
   }
+
+  redirectToChat(){
+        this.router.navigate(['home/chat'], {
+          queryParams: { userId:this.userId, userName:this.userProfile?.name.concat(" ").concat(this.userProfile.lastname) },
+        });
+
+  }
 }
