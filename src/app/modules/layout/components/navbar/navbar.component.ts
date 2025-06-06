@@ -8,6 +8,7 @@ import {
   faUser,
   faBars,
   faTimes,
+  faComments,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { MatDialog } from '@angular/material/dialog';
@@ -27,6 +28,9 @@ import { selectUserNotifications } from 'src/app/state/selectors/notification.se
 import { MatchActionModalComponent } from 'src/app/modules/match/modals/match-action-modal/match-action-modal.component';
 import { ChallengeModalComponent } from 'src/app/modules/match/modals/challenge-modal/challenge-modal.component';
 import { ChallengeActionModalComponent } from 'src/app/modules/match/modals/challenge-action-modal/challenge-action-modal.component';
+import { ChatService } from 'src/app/modules/chat/services/chat.service';
+import { selectUnreadMessagesCount } from 'src/app/state/chat/chat.selectors';
+
 
 interface ButtonConfig {
   label: string;
@@ -46,6 +50,7 @@ export class NavbarComponent implements OnInit {
   faUser = faUser;
   faBars = faBars;
   faTimes = faTimes;
+  faComments = faComments;
 
   isOpenOverlayAvatar = false;
   isOpenMobileMenu = false;
@@ -56,6 +61,9 @@ export class NavbarComponent implements OnInit {
   );
 
   notifications: NotificationItem[] = [];
+  unreadMessagesCount$: Observable<number> = this.store.select(
+    selectUnreadMessagesCount
+  );
 
   user$: Observable<User> = new Observable<User>();
 
@@ -65,7 +73,8 @@ export class NavbarComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private readonly store: Store<any>,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly chatService: ChatService
   ) {}
 
   ngOnInit(): void {
@@ -229,5 +238,8 @@ export class NavbarComponent implements OnInit {
     return this.notifications.filter(
       (notification) => notification.status !== 'READ'
     ).length;
+  }
+  goToChat(): void {
+    this.router.navigate(['home/chat']);
   }
 }

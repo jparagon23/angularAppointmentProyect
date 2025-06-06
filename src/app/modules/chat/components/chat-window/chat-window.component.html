@@ -1,0 +1,55 @@
+<div class="flex flex-col h-full bg-white">
+  <!-- 🔍 Barra de búsqueda para nuevo chat -->
+  <div *ngIf="!participantId" class="p-4 border-b border-gray-200">
+    <app-user-search-list
+      (userReturn)="selectUser($event)"
+      [allowCreateUser]="false"
+      [filterUserStatus]="[2]"
+      [message]="'Buscar usuario'"
+      [showIcon]="true"
+      class="w-full"
+    ></app-user-search-list>
+  </div>
+
+  <!-- Cabecera del chat (solo si hay participante seleccionado) -->
+  <div
+    *ngIf="participantName"
+    class="px-4 py-3 border-b border-gray-300 flex items-center justify-between"
+  >
+    <h2 class="text-md font-medium text-gray-800">{{ participantName }}</h2>
+    <span class="text-gray-400 cursor-pointer">...</span>
+  </div>
+
+ <!-- Contenedor de mensajes con altura ajustable y scroll interno -->
+<div #scrollContainer class="flex-1 overflow-y-auto px-4 py-4 space-y-2">
+  <ng-container *ngIf="isLoadingMessages; else messagesLoaded">
+    <div class="flex justify-center items-center h-full">
+      <div class="animate-spin rounded-full h-6 w-6 border-t-2 border-green-500"></div>
+    </div>
+  </ng-container>
+
+  <ng-template #messagesLoaded>
+    <ng-container *ngIf="messages.length > 0; else noMessages">
+      <app-message-item
+        *ngFor="let msg of messages"
+        [message]="msg"
+        [isOwnMessage]="msg.senderId === currentUserId"
+      ></app-message-item>
+    </ng-container>
+
+    <ng-template #noMessages>
+      <ng-container *ngIf="conversationId && conversationId !== 0">
+        <p class="text-gray-400 text-sm">
+          No hay mensajes en esta conversación.
+        </p>
+      </ng-container>
+    </ng-template>
+  </ng-template>
+</div>
+
+
+  <!-- Input -->
+  <div class="border-t border-gray-200 p-3" *ngIf="participantId">
+    <app-message-input (send)="handleSend($event)"></app-message-input>
+  </div>
+</div>

@@ -101,6 +101,8 @@
         </div> -->
 
         <div class="flex items-center space-x-4 relative">
+          <!-- Buscador de usuarios -->
+
           <div class="relative flex items-center w-full sm:w-[300px]">
             <app-user-search-list
               (userReturn)="redirectToUserInformation($event?.userId)"
@@ -111,7 +113,30 @@
               class="w-full"
             ></app-user-search-list>
           </div>
-          <!-- Campana de notificaciones -->
+
+          <!-- 🗨️ Botón para ir al chat -->
+          <div class="relative">
+            <button
+              type="button"
+              class="text-white flex items-center justify-center"
+              aria-label="Chat"
+              (click)="goToChat()"
+            >
+              <fa-icon [icon]="faComments" class="h-5 w-5"></fa-icon>
+            </button>
+
+            <ng-container *ngIf="unreadMessagesCount$ | async as count">
+              <span
+                *ngIf="count > 0"
+                class="absolute top-[-8px] right-[-6px] bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center"
+              >
+                {{ count }}
+              </span>
+            </ng-container>
+          </div>
+
+          <!-- 🔔 Campana de notificaciones -->
+
           <div
             cdkOverlayOrigin
             #notificationOverlay="cdkOverlayOrigin"
@@ -125,7 +150,8 @@
             >
               <fa-icon [icon]="faBell" class="h-5 w-5"></fa-icon>
             </button>
-            <!-- Indicador de notificaciones -->
+
+            <!-- 🔴 Indicador de notificaciones -->
             <span
               *ngIf="getUnreadNotificationsCount() > 0"
               class="absolute top-[-8px] right-[-6px] bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center"
@@ -134,7 +160,7 @@
             </span>
           </div>
 
-          <!-- Botón de usuario -->
+          <!-- 👤 Botón de usuario -->
           <app-button
             typeBtn="button"
             color="navbar"
@@ -203,6 +229,14 @@
       >
         <fa-icon [icon]="faBell" class="h-5 w-5"></fa-icon>
       </app-button>
+      <button
+        type="button"
+        class="text-white flex items-center justify-center"
+        aria-label="Chat"
+        (click)="goToChat()"
+      >
+        <fa-icon [icon]="faComments" class="h-5 w-5"></fa-icon>
+      </button>
 
       <div></div>
     </div>

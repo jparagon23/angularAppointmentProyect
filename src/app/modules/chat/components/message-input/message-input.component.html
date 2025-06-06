@@ -1,0 +1,17 @@
+<div class="flex items-center p-2 border-t border-gray-300 bg-white">
+  <input
+    type="text"
+    [(ngModel)]="messageText"
+    (keyup.enter)="onSend()"
+    placeholder="Escribe un mensaje..."
+    class="flex-1 px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+  />
+
+  <button
+    (click)="onSend()"
+    class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"
+    [disabled]="!messageText.trim()"
+  >
+    Enviar
+  </button>
+</div>

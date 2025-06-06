@@ -1,0 +1,52 @@
+<div class="flex flex-col md:flex-row max-h-screen bg-gray-100 p-4 gap-4">
+  <!-- Lista de conversaciones -->
+  <div
+    class="w-full md:w-1/3 bg-white rounded-2xl shadow-md overflow-hidden border border-gray-200  h-[80vh]"
+    [ngClass]="{
+      'hidden': selectedConversationId !== null && !screenIsMediumUp,
+      'block': selectedConversationId === null || screenIsMediumUp
+    }"
+  >
+    <app-conversation-list
+      [conversations]="conversations"
+      [selectedConversationId]="selectedConversationId"
+      (conversationSelected)="onSelectConversation($event)"
+      (newConversation)="onNewConversation()"
+      [isLoadingConversations]="isLoadingConversations"
+    ></app-conversation-list>
+  </div>
+
+  <!-- Ventana de chat -->
+  <div
+    class="w-full md:w-2/3 bg-white rounded-2xl shadow-md border border-gray-200 h-[75vh] md:h-[80vh]"
+    [ngClass]="{
+      'hidden': selectedConversationId === null && !screenIsMediumUp,
+      'block': selectedConversationId !== null || screenIsMediumUp
+    }"
+  >
+    <!-- Botón solo visible en móvil -->
+    <button
+      class="md:hidden text-sm text-green-800 px-4 py-2"
+      (click)="selectedConversationId = null"
+    >
+      ← Volver a conversaciones
+    </button>
+
+    <ng-container *ngIf="selectedConversationId !== null ; else emptyState">
+      <app-chat-window
+        [conversationId]="selectedConversationId!"
+        [participantName]="getParticipantName()"
+        [currentUserId]="currentUserId"
+        [participantId]="getParticipantId()"
+        (newConversationStarted)="onNewMessageCreated($event)"
+        [conversations]="conversations"
+      ></app-chat-window>
+    </ng-container>
+
+    <ng-template #emptyState>
+      <div class="flex items-center justify-center h-[80vh] text-gray-400 text-lg font-medium">
+        Selecciona una conversación
+      </div>
+    </ng-template>
+  </div>
+</div>
