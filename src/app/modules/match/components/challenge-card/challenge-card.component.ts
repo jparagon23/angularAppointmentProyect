@@ -12,7 +12,9 @@ import {
 import { selectChallengesResultActionStatus } from 'src/app/state/challenges/challenges.selectos';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import Swal from 'sweetalert2';
+
 import { Router } from '@angular/router'; // ✅ AÑADIR
+
 
 @Component({
   selector: 'app-challenge-card',
@@ -40,11 +42,14 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
       if (user && this.challenge) {
         this.currentUserId = user.id; // ✅ GUARDAMOS currentUserId
 
+
         if (this.challenge.status === 'PENDING') {
           this.userCanConfirm =
             this.challenge.pendingConfirmationUsers?.includes(user.id) || false;
           this.userCanDelete =
+
             !this.challenge.pendingConfirmationUsers?.includes(user.id) || false;
+
         } else if (this.challenge.status === 'ACCEPTED') {
           this.userCanDelete = true;
         } else {
@@ -53,6 +58,7 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
         }
       }
     });
+
 
     this.challengesActions$
       .pipe(takeUntil(this.destroy$))
@@ -88,11 +94,13 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
       });
   }
 
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
     this.store.dispatch(resetChallengeCardState());
   }
+
 
   onAccept(): void {
     Swal.fire({
@@ -103,9 +111,11 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Sí, aceptar',
       cancelButtonText: 'No, cancelar',
     }).then((result) => {
+
       if (result.isConfirmed && this.challenge) {
         this.store.dispatch(
           acceptChallenge({ challengeId: this.challenge.id })
+
         );
       }
     });
@@ -120,9 +130,11 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Sí, rechazar',
       cancelButtonText: 'No, cancelar',
     }).then((result) => {
+
       if (result.isConfirmed && this.challenge) {
         this.store.dispatch(
           rejectChallenge({ challengeId: this.challenge.id })
+
         );
       }
     });
@@ -137,6 +149,7 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
       confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'No, cancelar',
     }).then((result) => {
+
       if (result.isConfirmed && this.challenge) {
         this.store.dispatch(
           deleteChallenge({ challengeId: this.challenge.id })
@@ -172,5 +185,6 @@ export class ChallengeCardComponent implements OnInit, OnDestroy {
     return this.challenge.challenger.id === this.currentUserId
       ? this.challenge.challenged.name
       : this.challenge.challenger.name;
+
   }
 }

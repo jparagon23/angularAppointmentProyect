@@ -35,6 +35,7 @@ import { MembershipEffects } from './state/membership/membership.effects';
 import { ChallengesEffects } from './state/challenges/challenges.effects';
 import { ChatEffects } from './state/chat/chat.effects';
 
+
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -71,7 +72,9 @@ registerLocaleData(localeEs, 'es');
       DashboardEffects,
       MembershipEffects,
       ChallengesEffects,
+
       ChatEffects,
+
     ]),
     SharedModule,
     UserModule,

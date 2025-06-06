@@ -33,7 +33,9 @@ import {
   challengesReducer,
   ChallengesState,
 } from './challenges/challenges.reducers';
+
 import { chatReducer, ChatState } from './chat/chat.reducers';
+
 
 export interface AppState {
   user: UserState;
@@ -50,7 +52,9 @@ export interface AppState {
   dashboard: DashboardState;
   membership: MembershipState;
   challenges: ChallengesState;
+
   chat: ChatState;
+
 }
 
 export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
@@ -68,5 +72,7 @@ export const ROOT_REDUCERS: ActionReducerMap<AppState> = {
   dashboard: dashboardReducer,
   membership: membershipReducer,
   challenges: challengesReducer,
+
   chat: chatReducer,
+
 };

@@ -102,6 +102,7 @@
 
         <div class="flex items-center space-x-4 relative">
           <!-- Buscador de usuarios -->
+
           <div class="relative flex items-center w-full sm:w-[300px]">
             <app-user-search-list
               (userReturn)="redirectToUserInformation($event?.userId)"
@@ -135,6 +136,7 @@
           </div>
 
           <!-- 🔔 Campana de notificaciones -->
+
           <div
             cdkOverlayOrigin
             #notificationOverlay="cdkOverlayOrigin"
