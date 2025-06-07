@@ -40,14 +40,18 @@ export class MatchResultCardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.user$.pipe(takeUntil(this.destroy$)).subscribe((user) => {
-      if (
-        user &&
-        this.matchData.pendingConfirmationUsers &&
-        this.matchData.status === 'PENDING'
-      ) {
-        this.canDelete = !this.matchData.pendingConfirmationUsers.includes(
+      if (user && this.matchData.status === 'PENDING') {
+        const isPlayer =
+          user.id === this.matchData.winner?.id ||
+          user.id === this.matchData.loser?.id ||
+          user.id === this.matchData.winner2?.id ||
+          user.id === this.matchData.loser2?.id;
+
+        const isPending = this.matchData.pendingConfirmationUsers?.includes(
           user.id
         );
+
+        this.canDelete = isPlayer && !isPending;
         this.userId = user.id;
       } else {
         this.canDelete = false;
