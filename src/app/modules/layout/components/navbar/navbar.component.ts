@@ -54,6 +54,8 @@ export class NavbarComponent implements OnInit {
 
   isOpenOverlayAvatar = false;
   isOpenMobileMenu = false;
+isOpenMobileOverlayAvatar = false; // Móvil
+isOpenMobileNotifications=false;
 
   isOpenNotifications = false; // Controla el estado del menú desplegable
   notifications$: Observable<NotificationItem[]> = this.store.select(
@@ -93,6 +95,8 @@ export class NavbarComponent implements OnInit {
     this.notifications$.subscribe((notifications) => {
       this.notifications = notifications;
     });
+
+
   }
 
   initializeButtons(userRole: number): void {

@@ -1,64 +1,68 @@
 <ng-container *ngIf="user$ | async as user">
   <nav class="bg-green-700 border-gray-200 px-4 py-3 shadow-md">
     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-      <div
-        class="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto"
-      >
-        <!-- Logo -->
-        <div
-          class="flex justify-center sm:justify-start w-full sm:w-auto mb-2 sm:mb-0"
-        >
-          <img
-            loading="lazy"
-            class="mr-4"
-            src="/assets/svg/FOREHAPP.svg"
-            alt="logo"
-            style="height: 44px"
-          />
+      <div class="flex flex-col sm:flex-row items-center justify-between w-full sm:w-auto">
+        <!-- Contenedor principal con justificación entre elementos en móvil -->
+        <div class="flex justify-between items-center w-full sm:w-auto mb-2 sm:mb-0">
+
+          <!-- Logo centrado en móviles -->
+          <div class="flex justify-center w-full sm:justify-start sm:w-auto">
+            <img loading="lazy" class="mr-4" src="/assets/svg/FOREHAPP.svg" alt="logo" style="height: 44px" />
+          </div>
+
+          <!-- Botones móviles alineados a la derecha -->
+          <div class="flex items-center space-x-1 sm:hidden">
+            <!-- Chat -->
+            <app-button typeBtn="button" color="navbar" (click)="goToChat()" class="relative">
+              <fa-icon [icon]="faComments" class="h-5 w-5"></fa-icon>
+              <ng-container *ngIf="unreadMessagesCount$ | async as count">
+                <span *ngIf="count > 0"
+                  class="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                  {{ count }}
+                </span>
+              </ng-container>
+            </app-button>
+
+            <!-- Notificaciones -->
+            <div cdkOverlayOrigin #mobileNotificationOverlay="cdkOverlayOrigin" class="relative">
+              <button type="button" class="text-white flex items-center justify-center" aria-label="Notificaciones"
+                (click)="isOpenNotifications = !isOpenNotifications">
+                <fa-icon [icon]="faBell" class="h-5 w-5"></fa-icon>
+              </button>
+
+              <!-- 🔴 Indicador de notificaciones -->
+              <span *ngIf="getUnreadNotificationsCount() > 0"
+                class="absolute top-[-8px] right-[-6px] bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
+                {{ getUnreadNotificationsCount() }}
+              </span>
+            </div>
+
+            <!-- Botón de perfil -->
+            <app-button typeBtn="button" color="navbar" (click)="isOpenMobileOverlayAvatar = !isOpenMobileOverlayAvatar"
+              cdkOverlayOrigin #mobileMenuOverlay="cdkOverlayOrigin">
+              <fa-icon [icon]="faUser"></fa-icon>
+            </app-button>
+          </div>
         </div>
 
+
         <!-- Botones principales para móviles y desktop -->
-        <div
-          class="flex m:flex-row justify-center sm:justify-end w-full sm:w-auto sm:space-x-3 sm:space-y-0"
-        >
-          <app-button
-            typeBtn="button"
-            color="navbar"
-            (click)="redirectToDashboard()"
-          >
+        <div class="flex m:flex-row justify-center sm:justify-end w-full sm:w-auto sm:space-x-3 sm:space-y-0">
+          <app-button typeBtn="button" color="navbar" (click)="redirectToDashboard()">
             Inicio
           </app-button>
 
-          <app-button
-            *ngIf="false"
-            typeBtn="button"
-            color="navbar"
-            (click)="OpenDialog()"
-          >
+          <app-button *ngIf="false" typeBtn="button" color="navbar" (click)="OpenDialog()">
             Crear Reserva
           </app-button>
 
-          <app-button
-            typeBtn="button"
-            color="navbar"
-            class="hidden sm:flex"
-            (click)="redirectToMatchPage()"
-          >
+          <app-button typeBtn="button" color="navbar" class="hidden sm:flex" (click)="redirectToMatchPage()">
             Partidos
           </app-button>
-          <app-button
-            typeBtn="button"
-            color="navbar"
-            class="hidden sm:flex"
-            (click)="redirectToClubsPage()"
-          >
+          <app-button typeBtn="button" color="navbar" class="hidden sm:flex" (click)="redirectToClubsPage()">
             Clubs
           </app-button>
-          <app-button
-            typeBtn="button"
-            color="navbar"
-            (click)="openPostResult()"
-          >
+          <app-button typeBtn="button" color="navbar" (click)="openPostResult()">
             Publicar resultado
           </app-button>
           <app-button typeBtn="button" color="navbar" (click)="openChallenge()">
@@ -67,11 +71,7 @@
 
           <!-- Botón de menú hamburguesa para móviles -->
           <div class="sm:hidden mt-2">
-            <button
-              type="button"
-              class="text-white"
-              (click)="isOpenMobileMenu = !isOpenMobileMenu"
-            >
+            <button type="button" class="text-white" (click)="isOpenMobileMenu = !isOpenMobileMenu">
               <fa-icon [icon]="faBars"></fa-icon>
             </button>
           </div>
@@ -79,9 +79,7 @@
       </div>
 
       <!-- Opciones visibles en desktop -->
-      <div
-        class="hidden sm:flex sm:items-center sm:space-x-6 w-full sm:w-auto justify-end"
-      >
+      <div class="hidden sm:flex sm:items-center sm:space-x-6 w-full sm:w-auto justify-end">
         <!-- Botones adicionales: Configuración y Reportes -->
         <!-- <div class="flex space-x-2" *ngIf="user?.role === 2">
           <app-button
@@ -104,71 +102,41 @@
           <!-- Buscador de usuarios -->
 
           <div class="relative flex items-center w-full sm:w-[300px]">
-            <app-user-search-list
-              (userReturn)="redirectToUserInformation($event?.userId)"
-              [allowCreateUser]="false"
-              [filterUserStatus]="[2]"
-              [message]="'Buscar usuario'"
-              [showIcon]="true"
-              class="w-full"
-            ></app-user-search-list>
+            <app-user-search-list (userReturn)="redirectToUserInformation($event?.userId)" [allowCreateUser]="false"
+              [filterUserStatus]="[2]" [message]="'Buscar usuario'" [showIcon]="true"
+              class="w-full"></app-user-search-list>
           </div>
 
           <!-- 🗨️ Botón para ir al chat -->
-          <div class="relative">
-            <button
-              type="button"
-              class="text-white flex items-center justify-center"
-              aria-label="Chat"
-              (click)="goToChat()"
-            >
-              <fa-icon [icon]="faComments" class="h-5 w-5"></fa-icon>
-            </button>
+          <app-button typeBtn="button" color="navbar" (click)="goToChat()" class="relative">
+            <fa-icon [icon]="faComments" class="h-5 w-5"></fa-icon>
 
             <ng-container *ngIf="unreadMessagesCount$ | async as count">
-              <span
-                *ngIf="count > 0"
-                class="absolute top-[-8px] right-[-6px] bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center"
-              >
+              <span *ngIf="count > 0"
+                class="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
                 {{ count }}
               </span>
             </ng-container>
-          </div>
+          </app-button>
 
           <!-- 🔔 Campana de notificaciones -->
 
-          <div
-            cdkOverlayOrigin
-            #notificationOverlay="cdkOverlayOrigin"
-            class="relative"
-          >
-            <button
-              type="button"
-              class="text-white flex items-center justify-center"
-              aria-label="Notificaciones"
-              (click)="isOpenNotifications = !isOpenNotifications"
-            >
+          <div cdkOverlayOrigin #notificationOverlay="cdkOverlayOrigin" class="relative">
+            <button type="button" class="text-white flex items-center justify-center" aria-label="Notificaciones"
+              (click)="isOpenNotifications = !isOpenNotifications">
               <fa-icon [icon]="faBell" class="h-5 w-5"></fa-icon>
             </button>
 
             <!-- 🔴 Indicador de notificaciones -->
-            <span
-              *ngIf="getUnreadNotificationsCount() > 0"
-              class="absolute top-[-8px] right-[-6px] bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center"
-            >
+            <span *ngIf="getUnreadNotificationsCount() > 0"
+              class="absolute top-[-8px] right-[-6px] bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center">
               {{ getUnreadNotificationsCount() }}
             </span>
           </div>
 
           <!-- 👤 Botón de usuario -->
-          <app-button
-            typeBtn="button"
-            color="navbar"
-            aria-expanded="false"
-            (click)="isOpenOverlayAvatar = !isOpenOverlayAvatar"
-            cdkOverlayOrigin
-            #menuOverlay="cdkOverlayOrigin"
-          >
+          <app-button typeBtn="button" color="navbar" aria-expanded="false"
+            (click)="isOpenOverlayAvatar = !isOpenOverlayAvatar" cdkOverlayOrigin #menuOverlay="cdkOverlayOrigin">
             <fa-icon [icon]="faUser" class="h-5 w-5"></fa-icon>
           </app-button>
         </div>
@@ -176,93 +144,42 @@
     </div>
 
     <!-- Menú colapsable para móviles -->
-    <div
-      *ngIf="isOpenMobileMenu"
-      class="flex flex-col sm:hidden space-y-2 mt-3"
-    >
-      <app-button
-        typeBtn="button"
-        color="navbar"
-        (click)="redirectToMatchPage()"
-      >
+    <div *ngIf="isOpenMobileMenu" class="flex flex-col sm:hidden space-y-2 mt-3">
+
+      <!-- Navegación principal -->
+      <app-button typeBtn="button" color="navbar" (click)="redirectToMatchPage()">
         Partidos
       </app-button>
-      <app-button
-        typeBtn="button"
-        color="navbar"
-        (click)="redirectToClubsPage()"
-      >
+
+      <app-button typeBtn="button" color="navbar" (click)="redirectToClubsPage()">
         Clubs
       </app-button>
-      <app-button
-        typeBtn="button"
-        color="navbar"
-        (click)="redirectToConfigurationComponent()"
-        *ngIf="user?.role === 2"
-      >
+
+      <!-- Opciones de administración (solo para rol 2) -->
+      <app-button *ngIf="user?.role === 2" typeBtn="button" color="navbar" (click)="redirectToConfigurationComponent()">
         Configuración club
       </app-button>
-      <app-button
-        typeBtn="button"
-        color="navbar"
-        (click)="redirectToReportComponent()"
-        *ngIf="user?.role === 2"
-      >
+
+      <app-button *ngIf="user?.role === 2" typeBtn="button" color="navbar" (click)="redirectToReportComponent()">
         Reportes
       </app-button>
-      <app-button
-        typeBtn="button"
-        color="navbar"
-        (click)="isOpenOverlayAvatar = !isOpenOverlayAvatar"
-        cdkOverlayOrigin
-        #menuOverlay="cdkOverlayOrigin"
-      >
-        <fa-icon [icon]="faUser"></fa-icon>
-      </app-button>
 
-      <app-button
-        type="button"
-        color="navbar"
-        (click)="isOpenNotifications = !isOpenNotifications"
-        cdkOverlayOrigin
-        #notificationOverlay="cdkOverlayOrigin"
-      >
-        <fa-icon [icon]="faBell" class="h-5 w-5"></fa-icon>
-      </app-button>
-      <button
-        type="button"
-        class="text-white flex items-center justify-center"
-        aria-label="Chat"
-        (click)="goToChat()"
-      >
-        <fa-icon [icon]="faComments" class="h-5 w-5"></fa-icon>
-      </button>
 
-      <div></div>
     </div>
+
   </nav>
 
   <!-- Menú de usuario -->
-  <ng-template
-    cdkConnectedOverlay
-    [cdkConnectedOverlayOrigin]="menuOverlay"
-    [cdkConnectedOverlayOpen]="isOpenOverlayAvatar"
-    (overlayOutsideClick)="isOpenOverlayAvatar = !isOpenOverlayAvatar"
-  >
-    <div
-      class="z-50 my-4 w-full sm:w-60 text-base list-none bg-white rounded divide-y divide-gray-100 shadow"
-    >
+  <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="menuOverlay"
+    [cdkConnectedOverlayOpen]="isOpenOverlayAvatar" (overlayOutsideClick)="isOpenOverlayAvatar = !isOpenOverlayAvatar">
+    <div class="z-50 my-4 w-full sm:w-60 text-base list-none bg-white rounded divide-y divide-gray-100 shadow">
       <div class="py-2 px-4 text-center relative">
-        <button
-          (click)="isOpenOverlayAvatar = !isOpenOverlayAvatar"
-          class="block text-sm text-gray-900 absolute right-3 top-3"
-        >
+        <button (click)="isOpenOverlayAvatar = !isOpenOverlayAvatar"
+          class="block text-sm text-gray-900 absolute right-3 top-3">
           <fa-icon [icon]="faClose"></fa-icon>
         </button>
       </div>
-      <div
-        class="py-3 px-4 flex items-center space-x-4 max-w-md overflow-hidden break-words"
-      >
+      <div class="py-3 px-4 flex items-center space-x-4 max-w-md overflow-hidden break-words">
         <div class="space-y-1">
           <div class="text-lg font-semibold text-gray-900">
             {{ user?.name || "" | nameShortFormat : user?.lastname || "" }}
@@ -278,75 +195,161 @@
 
       <ul class="py-1">
         <li>
-          <a
-            routerLink="/app/profile"
-            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
-            (click)="redirectToUserInformation()"
-            >Perfil</a
-          >
+          <a routerLink="/app/profile" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
+            (click)="redirectToUserInformation()">Perfil</a>
         </li>
       </ul>
       <ul class="py-1">
         <li>
-          <button
-            class="block py-2 px-4 text-sm text-gray-700"
-            (click)="logout()"
-          >
+          <button class="block py-2 px-4 text-sm text-gray-700" (click)="logout()">
             Cerrar sesión
           </button>
         </li>
       </ul>
     </div>
   </ng-template>
-
-  <div class="relative">
-    <ng-template
-      cdkConnectedOverlay
-      [cdkConnectedOverlayOrigin]="notificationOverlay"
-      [cdkConnectedOverlayOpen]="isOpenNotifications"
-      (overlayOutsideClick)="isOpenNotifications = !isOpenNotifications"
-    >
-      <!-- Panel de notificaciones -->
-      <div
-        class="z-50 my-4 w-full sm:w-80 text-base bg-white rounded-lg shadow-lg border border-gray-200"
+  <!-- Menú de usuario (móvil) -->
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="mobileMenuOverlay"
+  [cdkConnectedOverlayOpen]="isOpenMobileOverlayAvatar"
+  (overlayOutsideClick)="isOpenMobileOverlayAvatar = false"
+>
+  <div class="z-50 my-4 w-full text-base list-none bg-white rounded divide-y divide-gray-100 shadow">
+    <div class="py-2 px-4 text-center relative">
+      <button
+        (click)="isOpenMobileOverlayAvatar = false"
+        class="block text-sm text-gray-900 absolute right-3 top-3"
       >
-        <!-- Encabezado -->
-        <div
-          class="py-4 px-5 flex items-center justify-between border-b border-gray-100"
-        >
-          <h3 class="text-lg font-semibold text-gray-800">Notificaciones</h3>
-          <button
-            (click)="isOpenNotifications = !isOpenNotifications"
-            class="text-gray-500 hover:text-gray-800 transition"
-          >
-            <fa-icon [icon]="faClose" size="lg"></fa-icon>
-          </button>
+        <fa-icon [icon]="faClose"></fa-icon>
+      </button>
+    </div>
+    <div class="py-3 px-4 flex items-center space-x-4 max-w-md overflow-hidden break-words">
+      <div class="space-y-1">
+        <div class="text-lg font-semibold text-gray-900">
+          {{ user?.name || "" | nameShortFormat : user?.lastname || "" }}
         </div>
-
-        <!-- Lista de notificaciones -->
-        <ul class="max-h-72 overflow-y-auto divide-y divide-gray-100">
-          <li
-            *ngFor="let notification of notifications"
-            (click)="markAsRead(notification)"
-            class="hover:bg-gray-50 transition"
-          >
-            <app-notification-item
-              [notification]="notification"
-              (notificationClick)="openNotificationModal(notification)"
-            ></app-notification-item>
-          </li>
-        </ul>
-
-        <!-- Pie del panel -->
-        <div class="py-3 px-5 bg-gray-50 text-center">
-          <button
-            (click)="markAllAsRead()"
-            class="text-sm text-blue-600 hover:text-blue-800 transition"
-          >
-            Marcar todas como leídas
-          </button>
+        <div class="text-sm text-gray-500 max-w-[200px] truncate">
+          {{ user?.email }}
+        </div>
+        <div *ngIf="user.ratingType == 2" class="text-sm text-gray-500">
+          Rating: {{ user?.rating }}
         </div>
       </div>
-    </ng-template>
+    </div>
+
+    <ul class="py-1">
+      <li>
+        <a
+          routerLink="/app/profile"
+          class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
+          (click)="redirectToUserInformation()"
+        >
+          Perfil
+        </a>
+      </li>
+    </ul>
+    <ul class="py-1">
+      <li>
+        <button class="block py-2 px-4 text-sm text-gray-700" (click)="logout()">
+          Cerrar sesión
+        </button>
+      </li>
+    </ul>
   </div>
-</ng-container>
+</ng-template>
+
+
+  <!-- Panel de notificaciones (desktop) -->
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="notificationOverlay"
+  [cdkConnectedOverlayOpen]="isOpenNotifications"
+  (overlayOutsideClick)="isOpenNotifications = false"
+>
+  <div class="z-50 my-4 w-full sm:w-80 text-base bg-white rounded-lg shadow-lg border border-gray-200">
+    <!-- Encabezado -->
+    <div class="py-4 px-5 flex items-center justify-between border-b border-gray-100">
+      <h3 class="text-lg font-semibold text-gray-800">Notificaciones</h3>
+      <button
+        (click)="isOpenNotifications = false"
+        class="text-gray-500 hover:text-gray-800 transition"
+      >
+        <fa-icon [icon]="faClose" size="lg"></fa-icon>
+      </button>
+    </div>
+
+    <!-- Lista de notificaciones -->
+    <ul class="max-h-72 overflow-y-auto divide-y divide-gray-100">
+      <li
+        *ngFor="let notification of notifications"
+        (click)="markAsRead(notification)"
+        class="hover:bg-gray-50 transition"
+      >
+        <app-notification-item
+          [notification]="notification"
+          (notificationClick)="openNotificationModal(notification)"
+        ></app-notification-item>
+      </li>
+    </ul>
+
+    <!-- Pie del panel -->
+    <div class="py-3 px-5 bg-gray-50 text-center">
+      <button
+        (click)="markAllAsRead()"
+        class="text-sm text-blue-600 hover:text-blue-800 transition"
+      >
+        Marcar todas como leídas
+      </button>
+    </div>
+  </div>
+</ng-template>
+<!-- Panel de notificaciones (móvil) -->
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="mobileNotificationOverlay"
+  [cdkConnectedOverlayOpen]="isOpenMobileNotifications"
+  (overlayOutsideClick)="isOpenMobileNotifications = false"
+  [cdkConnectedOverlayFlexibleDimensions]="true"
+  [cdkConnectedOverlayPush]="true"
+  [cdkConnectedOverlayOffsetY]="10"
+>
+  <div class="z-40 mt-2 max-w-sm w-full mx-auto text-base bg-white rounded-lg shadow-lg border border-gray-200">
+    <!-- Encabezado -->
+    <div class="py-4 px-5 flex items-center justify-between border-b border-gray-100">
+      <h3 class="text-lg font-semibold text-gray-800">Notificaciones</h3>
+      <button
+        (click)="isOpenMobileNotifications = false"
+        class="text-gray-500 hover:text-gray-800 transition"
+      >
+        <fa-icon [icon]="faClose" size="lg"></fa-icon>
+      </button>
+    </div>
+
+    <!-- Lista de notificaciones -->
+    <ul class="max-h-72 overflow-y-auto divide-y divide-gray-100">
+      <li
+        *ngFor="let notification of notifications"
+        (click)="markAsRead(notification)"
+        class="hover:bg-gray-50 transition"
+      >
+        <app-notification-item
+          [notification]="notification"
+          (notificationClick)="openNotificationModal(notification)"
+        ></app-notification-item>
+      </li>
+    </ul>
+
+    <!-- Pie del panel -->
+    <div class="py-3 px-5 bg-gray-50 text-center">
+      <button
+        (click)="markAllAsRead()"
+        class="text-sm text-blue-600 hover:text-blue-800 transition"
+      >
+        Marcar todas como leídas
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+
