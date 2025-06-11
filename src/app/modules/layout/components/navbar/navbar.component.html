@@ -6,9 +6,15 @@
         <div class="flex justify-between items-center w-full sm:w-auto mb-2 sm:mb-0">
 
           <!-- Logo centrado en móviles -->
-          <div class="flex justify-center w-full sm:justify-start sm:w-auto">
-            <img loading="lazy" class="mr-4" src="/assets/svg/FOREHAPP.svg" alt="logo" style="height: 44px" />
-          </div>
+<div class="flex justify-center w-full sm:justify-start sm:w-auto" (click)="redirectToDashboard()" style="cursor: pointer;">
+  <img 
+    loading="lazy" 
+    class="mr-4" 
+    src="/assets/svg/FOREHAPP.svg" 
+    alt="logo" 
+    style="height: 44px;" 
+  />
+</div>
 
           <!-- Botones móviles alineados a la derecha -->
           <div class="flex items-center space-x-1 sm:hidden">
