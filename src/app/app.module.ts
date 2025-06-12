@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -34,6 +34,7 @@ import { ClubsModule } from './modules/clubs/clubs.module';
 import { MembershipEffects } from './state/membership/membership.effects';
 import { ChallengesEffects } from './state/challenges/challenges.effects';
 import { ChatEffects } from './state/chat/chat.effects';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 
 registerLocaleData(localeEs, 'es');
@@ -79,6 +80,12 @@ registerLocaleData(localeEs, 'es');
     SharedModule,
     UserModule,
     ClubsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [
     {
