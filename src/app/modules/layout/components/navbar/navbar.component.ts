@@ -132,12 +132,8 @@ isOpenMobileNotifications=false;
   }
 
   openPostResult(): void {
-    this.dialog.open(PostMatchComponent, {
-      maxWidth: '95vw',
-      maxHeight: '95vh',
-      panelClass: 'custom-dialog-container',
-    });
-  }
+  this.router.navigate(['home/user/post-match']);
+}
 
   openChallenge(): void {
     this.dialog.open(ChallengeModalComponent, {
