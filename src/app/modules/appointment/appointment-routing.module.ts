@@ -5,6 +5,7 @@ import { UserInformationPageComponent } from '../shared/pages/user-information-p
 import { MatchesPageComponent } from '../match/pages/matches-page/matches-page.component';
 import { UserProfileComponent } from '../user/pages/user-profile/user-profile-page.component';
 import { PostMatchComponent } from '../match/modals/post-match/post-match.component';
+import { ChallengeModalComponent } from '../match/modals/challenge-modal/challenge-modal.component';
 
 const routes: Routes = [
   {
@@ -30,9 +31,9 @@ const routes: Routes = [
       import('../clubs/clubs.module').then((m) => m.ClubsModule),
   },
   {
-    path:"post-match",
-    component:PostMatchComponent
-  }
+    path: 'post-match',
+    component: PostMatchComponent,
+  },
 ];
 
 @NgModule({
