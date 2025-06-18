@@ -15,6 +15,7 @@ import { selectUser } from 'src/app/state/selectors/users.selectors';
 import Swal from 'sweetalert2';
 import { Subject, takeUntil } from 'rxjs';
 import { format, toZonedTime } from 'date-fns-tz';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-post-match',
@@ -74,7 +75,8 @@ export class PostMatchComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<AppState>,
-    public dialogRef: MatDialogRef<PostMatchComponent>
+    private readonly router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -110,7 +112,9 @@ export class PostMatchComponent implements OnInit, OnDestroy {
             icon: 'success',
             title: 'Resultado publicado!',
             text: 'El resultado se publicó correctamente.',
-          }).then(() => this.dialogRef.close()); // Cerrar modal tras éxito
+          }).then(() =>
+            this.router.navigate(['../'], { relativeTo: this.route })
+          ); // Cerrar modal tras éxito
         } else if (failure) {
           Swal.fire({
             icon: 'error',

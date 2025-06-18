@@ -31,7 +31,6 @@ import { ChallengeActionModalComponent } from 'src/app/modules/match/modals/chal
 import { ChatService } from 'src/app/modules/chat/services/chat.service';
 import { selectUnreadMessagesCount } from 'src/app/state/chat/chat.selectors';
 
-
 interface ButtonConfig {
   label: string;
   role: number; // role number associated with the button
@@ -54,8 +53,8 @@ export class NavbarComponent implements OnInit {
 
   isOpenOverlayAvatar = false;
   isOpenMobileMenu = false;
-isOpenMobileOverlayAvatar = false; // Móvil
-isOpenMobileNotifications=false;
+  isOpenMobileOverlayAvatar = false; // Móvil
+  isOpenMobileNotifications = false;
 
   isOpenNotifications = false; // Controla el estado del menú desplegable
   notifications$: Observable<NotificationItem[]> = this.store.select(
@@ -95,8 +94,6 @@ isOpenMobileNotifications=false;
     this.notifications$.subscribe((notifications) => {
       this.notifications = notifications;
     });
-
-
   }
 
   initializeButtons(userRole: number): void {
@@ -132,11 +129,7 @@ isOpenMobileNotifications=false;
   }
 
   openPostResult(): void {
-    this.dialog.open(PostMatchComponent, {
-      maxWidth: '95vw',
-      maxHeight: '95vh',
-      panelClass: 'custom-dialog-container',
-    });
+    this.router.navigate(['home/user/post-match']);
   }
 
   openChallenge(): void {

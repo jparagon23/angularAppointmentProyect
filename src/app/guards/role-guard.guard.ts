@@ -26,7 +26,7 @@ export const roleGuard: CanActivateFn = () => {
             router.navigate(['home/user']);
           }
         }
-        return of(true);
+        return of(false);
       } else {
         store.dispatch(loadUser());
         store
