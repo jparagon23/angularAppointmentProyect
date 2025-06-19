@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { es } from 'date-fns/locale';
 import {
   Component,
@@ -169,10 +168,14 @@ export class UserProfileComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  redirectToChat(){
-        this.router.navigate(['home/chat'], {
-          queryParams: { userId:this.userId, userName:this.userProfile?.name.concat(" ").concat(this.userProfile.lastname) },
-        });
-
+  redirectToChat() {
+    this.router.navigate(['home/chat'], {
+      queryParams: {
+        userId: this.userId,
+        userName: this.userProfile?.name
+          .concat(' ')
+          .concat(this.userProfile.lastname),
+      },
+    });
   }
 }

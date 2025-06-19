@@ -20,7 +20,6 @@ import { Store } from '@ngrx/store';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { distinctUntilChanged, take } from 'rxjs/operators';
 import { logout } from 'src/app/state/actions/auth.actions';
-import { PostMatchComponent } from 'src/app/modules/match/modals/post-match/post-match.component';
 import { NotificationItem } from 'src/app/models/notification/NotificationItem.model';
 import { MatchConfirmationModalComponent } from 'src/app/modules/match/modals/match-confirmation-modal/match-confirmation-modal.component';
 import { markNotificationAsRead } from 'src/app/state/actions/notification.actions';
