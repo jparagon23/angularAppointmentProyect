@@ -6,16 +6,16 @@ import {
   HttpRequest,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, retryWhen, delay, scan, tap } from 'rxjs/operators';
+import { Observable, throwError, timer } from 'rxjs';
+import { catchError, retryWhen, delay, scan, tap, retry } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ModalService } from '../services/modal.service';
 import { TokenService } from '../services/token.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  private readonly maxRetries = 3;
   private readonly retryDelayMs = 8000;
+  private isRedirecting = false;
 
   constructor(
     private readonly router: Router,
@@ -28,23 +28,22 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     return next.handle(this.addAuthToken(req)).pipe(
-      retryWhen((errors) =>
-        errors.pipe(
-          tap(() => console.log('Retrying request...')),
-          scan((retryCount, error) => {
-            if (
-              retryCount >= this.maxRetries ||
-              !(error instanceof HttpErrorResponse) ||
-              error.status !== 0
-            ) {
-              throw error; // Stop retrying if max retries reached or error is not a network error
-            }
-            return retryCount + 1; // Increment the retry count
-          }, 0),
-          delay(this.retryDelayMs) // Wait before retrying
-        )
-      ),
-      catchError((error: HttpErrorResponse) => this.handleAuthError(error))
+      retry({
+        count: 4,
+        delay: (error, retryCount) => {
+          const isNetworkError =
+            error instanceof HttpErrorResponse && error.status === 0;
+          const isGetMethod = req.method === 'GET';
+
+          if (!isNetworkError || !isGetMethod) {
+            throw error;
+          }
+
+          console.warn(`Retrying request... Attempt ${retryCount}`);
+          return timer(this.retryDelayMs); // 8000 ms
+        },
+      }),
+      catchError((error: HttpErrorResponse) => this.handleAuthError(error, req))
     );
   }
 
@@ -66,21 +65,32 @@ export class AuthInterceptor implements HttpInterceptor {
   /**
    * Handles HTTP errors, specifically dealing with unauthorized errors
    */
-  private handleAuthError(error: HttpErrorResponse): Observable<never> {
-    console.error('HTTP Error:', error);
+  private handleAuthError(
+    error: HttpErrorResponse,
+    req: HttpRequest<any>
+  ): Observable<never> {
+    console.error(`HTTP Error on ${req.url}:`, error);
+
     if (error.status === 401) {
       this.handleUnauthorizedError();
     }
+
     return throwError(() => error);
   }
 
   /**
    * Handles 401 Unauthorized errors by removing the token, closing modals,
-   * and redirecting to the login page
+   * and redirecting to the login page only once
    */
   private handleUnauthorizedError(): void {
+    if (this.isRedirecting) return;
+
+    this.isRedirecting = true;
     this.tokenService.removeToken();
     this.modalService.closeAllModals();
-    this.router.navigate(['/login']);
+
+    this.router.navigate(['/login']).finally(() => {
+      this.isRedirecting = false;
+    });
   }
 }
