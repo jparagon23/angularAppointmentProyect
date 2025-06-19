@@ -36,8 +36,6 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('lanzando el oninit');
-
     const userId = this.authService.getUserId();
     if (userId === undefined) {
       throw new Error('Usuario no autenticado');
@@ -65,8 +63,6 @@ export class ChatComponent implements OnInit {
   }
 
   loadConversations(selectId?: number, targetUserId?: number | null): void {
-    console.log('iniciamos con ', this.selectedConversationId);
-
     this.chatService.getUserConversations(this.currentUserId).subscribe({
       next: (conversations) => {
         this.conversations = conversations;
@@ -78,10 +74,8 @@ export class ChatComponent implements OnInit {
           );
 
           if (existingConversation) {
-            console.log('Ya existe conversación con:', targetUserId);
             this.selectedConversationId = existingConversation.id;
           } else {
-            console.log('No existe conversación, creando nueva');
             this.onNewConversation();
           }
         } else if (selectId && selectId !== 0) {
@@ -91,10 +85,6 @@ export class ChatComponent implements OnInit {
           conversations.length > 0
         ) {
           this.selectedConversationId = conversations[0].id;
-          console.log(
-            'Seleccionando conversación por defecto:',
-            this.selectedConversationId
-          );
         }
         this.clearRoute();
       },
@@ -161,14 +151,10 @@ export class ChatComponent implements OnInit {
   }
 
   onNewMessageCreated(conversationId?: number): void {
-    console.log('conversationId', conversationId);
-
     this.loadConversations(conversationId, null);
   }
 
   clearRoute() {
-    console.log('limpiando la ruta');
-
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {},

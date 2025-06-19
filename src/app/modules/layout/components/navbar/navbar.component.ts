@@ -20,7 +20,6 @@ import { Store } from '@ngrx/store';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { distinctUntilChanged, take } from 'rxjs/operators';
 import { logout } from 'src/app/state/actions/auth.actions';
-import { PostMatchComponent } from 'src/app/modules/match/modals/post-match/post-match.component';
 import { NotificationItem } from 'src/app/models/notification/NotificationItem.model';
 import { MatchConfirmationModalComponent } from 'src/app/modules/match/modals/match-confirmation-modal/match-confirmation-modal.component';
 import { markNotificationAsRead } from 'src/app/state/actions/notification.actions';
@@ -30,7 +29,6 @@ import { ChallengeModalComponent } from 'src/app/modules/match/modals/challenge-
 import { ChallengeActionModalComponent } from 'src/app/modules/match/modals/challenge-action-modal/challenge-action-modal.component';
 import { ChatService } from 'src/app/modules/chat/services/chat.service';
 import { selectUnreadMessagesCount } from 'src/app/state/chat/chat.selectors';
-
 
 interface ButtonConfig {
   label: string;
@@ -54,8 +52,8 @@ export class NavbarComponent implements OnInit {
 
   isOpenOverlayAvatar = false;
   isOpenMobileMenu = false;
-isOpenMobileOverlayAvatar = false; // Móvil
-isOpenMobileNotifications=false;
+  isOpenMobileOverlayAvatar = false; // Móvil
+  isOpenMobileNotifications = false;
 
   isOpenNotifications = false; // Controla el estado del menú desplegable
   notifications$: Observable<NotificationItem[]> = this.store.select(
@@ -95,8 +93,6 @@ isOpenMobileNotifications=false;
     this.notifications$.subscribe((notifications) => {
       this.notifications = notifications;
     });
-
-
   }
 
   initializeButtons(userRole: number): void {
@@ -132,11 +128,7 @@ isOpenMobileNotifications=false;
   }
 
   openPostResult(): void {
-    this.dialog.open(PostMatchComponent, {
-      maxWidth: '95vw',
-      maxHeight: '95vh',
-      panelClass: 'custom-dialog-container',
-    });
+    this.router.navigate(['home/user/post-match']);
   }
 
   openChallenge(): void {

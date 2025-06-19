@@ -40,7 +40,6 @@ export class ChatWindowComponent implements OnInit, OnChanges {
     if (this.conversationId && this.conversationId !== 0) {
       this.loadMessages();
     }
-    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -49,17 +48,17 @@ export class ChatWindowComponent implements OnInit, OnChanges {
     }
   }
 
- loadMessages(): void {
-  this.isLoadingMessages = true; // 🟢 activa loader
+  loadMessages(): void {
+    this.isLoadingMessages = true; // 🟢 activa loader
 
-  this.chatService
-    .getMessagesBetweenUsers(this.conversationId)
-    .pipe(finalize(() => (this.isLoadingMessages = false)))
-    .subscribe((msgs) => {
-      this.messages = msgs;
-      this.scrollToBottom();
-    });
-}
+    this.chatService
+      .getMessagesBetweenUsers(this.conversationId)
+      .pipe(finalize(() => (this.isLoadingMessages = false)))
+      .subscribe((msgs) => {
+        this.messages = msgs;
+        this.scrollToBottom();
+      });
+  }
 
   handleSend(content: string): void {
     if (!this.participantId) return;
@@ -115,14 +114,9 @@ export class ChatWindowComponent implements OnInit, OnChanges {
         text: `Ya tienes un chat con ${userSelected.completeName}`,
         confirmButtonColor: '#418622',
       });
-      console.log('Conversación existente:', existingConversation);
 
       // ✅ Emitir el ID de esa conversación al padre
       this.newConversationStarted.emit(existingConversation.id);
-      console.log(
-        'Emitiendo ID de conversación existente:',
-        existingConversation.id
-      );
 
       return;
     }

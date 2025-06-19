@@ -15,13 +15,13 @@
     {{ title }}
   </div>
 
-  <!-- Contenedor de partidos con scroll lateral -->
+  <!-- Contenedor de partidos con scroll horizontal solo en pantallas medianas o más -->
   <div
-    class="flex gap-4 overflow-x-auto px-1 scroll-smooth snap-x snap-mandatory"
+    class="flex flex-col md:flex-row gap-4 md:overflow-x-auto px-1 scroll-smooth md:snap-x md:snap-mandatory"
     *ngIf="matchToShow.length > 0"
   >
     <div
-      class="w-full sm:max-w-sm md:max-w-sm snap-start shrink-0"
+      class="w-full sm:max-w-sm md:max-w-sm md:snap-start md:shrink-0"
       *ngFor="let matchData of matchToShow"
     >
       <app-match-result-card

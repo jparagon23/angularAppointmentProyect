@@ -4,6 +4,7 @@ import { DashboardPageComponent } from './pages/dashboard-page/dashboard-page.co
 import { UserInformationPageComponent } from '../shared/pages/user-information-page/user-information-page.component';
 import { MatchesPageComponent } from '../match/pages/matches-page/matches-page.component';
 import { UserProfileComponent } from '../user/pages/user-profile/user-profile-page.component';
+import { PostMatchComponent } from '../match/modals/post-match/post-match.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
     path: 'clubs',
     loadChildren: () =>
       import('../clubs/clubs.module').then((m) => m.ClubsModule),
+  },
+  {
+    path: 'post-match',
+    component: PostMatchComponent,
   },
 ];
 

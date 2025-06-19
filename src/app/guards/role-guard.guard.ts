@@ -1,7 +1,7 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { inject } from '@angular/core';
-import { map, filter, switchMap, take, tap } from 'rxjs/operators';
+import { filter, switchMap, take } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { selectUser } from 'src/app/state/selectors/users.selectors';
 import { AppState } from 'src/app/state/app.state';
@@ -26,7 +26,7 @@ export const roleGuard: CanActivateFn = () => {
             router.navigate(['home/user']);
           }
         }
-        return of(true);
+        return of(false);
       } else {
         store.dispatch(loadUser());
         store
