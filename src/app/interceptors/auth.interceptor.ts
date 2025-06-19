@@ -31,11 +31,14 @@ export class AuthInterceptor implements HttpInterceptor {
       retry({
         count: 4,
         delay: (error, retryCount) => {
-          const isNetworkError =
-            error instanceof HttpErrorResponse && error.status === 0;
+
+          const isRetryableError =
+            error instanceof HttpErrorResponse &&
+            (error.status === 0 || error.status === 504);
           const isGetMethod = req.method === 'GET';
 
-          if (!isNetworkError || !isGetMethod) {
+          if (!isRetryableError || !isGetMethod) {
+
             throw error;
           }
 
