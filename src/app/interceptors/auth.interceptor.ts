@@ -7,7 +7,7 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, throwError, timer } from 'rxjs';
-import { catchError, retryWhen, delay, scan, tap, retry } from 'rxjs/operators';
+import { catchError, retry } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ModalService } from '../services/modal.service';
 import { TokenService } from '../services/token.service';
@@ -31,28 +31,24 @@ export class AuthInterceptor implements HttpInterceptor {
       retry({
         count: 4,
         delay: (error, retryCount) => {
-
           const isRetryableError =
             error instanceof HttpErrorResponse &&
-            (error.status === 0 || error.status === 504);
-          const isGetMethod = req.method === 'GET';
+            (error.status === 504 || error.status === 0);
 
-          if (!isRetryableError || !isGetMethod) {
-
+          if (!isRetryableError) {
             throw error;
           }
 
-          console.warn(`Retrying request... Attempt ${retryCount}`);
-          return timer(this.retryDelayMs); // 8000 ms
+          console.warn(
+            `Retrying ${req.method} ${req.url} due to ${error.status}. Attempt #${retryCount}`
+          );
+          return timer(this.retryDelayMs);
         },
       }),
       catchError((error: HttpErrorResponse) => this.handleAuthError(error, req))
     );
   }
 
-  /**
-   * Adds the authentication token to the request if available
-   */
   private addAuthToken(req: HttpRequest<any>): HttpRequest<any> {
     const token = this.tokenService.getToken();
     if (token) {
@@ -65,9 +61,6 @@ export class AuthInterceptor implements HttpInterceptor {
     return req;
   }
 
-  /**
-   * Handles HTTP errors, specifically dealing with unauthorized errors
-   */
   private handleAuthError(
     error: HttpErrorResponse,
     req: HttpRequest<any>
@@ -81,10 +74,6 @@ export class AuthInterceptor implements HttpInterceptor {
     return throwError(() => error);
   }
 
-  /**
-   * Handles 401 Unauthorized errors by removing the token, closing modals,
-   * and redirecting to the login page only once
-   */
   private handleUnauthorizedError(): void {
     if (this.isRedirecting) return;
 
