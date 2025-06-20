@@ -7,7 +7,7 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, throwError, timer } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
+import { catchError, delay, retry, retryWhen, scan } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ModalService } from '../services/modal.service';
 import { TokenService } from '../services/token.service';
@@ -24,30 +24,40 @@ export class AuthInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    return next.handle(this.addAuthToken(req)).pipe(
-      retry({
-        count: 4,
-        delay: (error, retryCount) => {
+  req: HttpRequest<any>,
+  next: HttpHandler
+): Observable<HttpEvent<any>> {
+  return next.handle(this.addAuthToken(req)).pipe(
+    retryWhen((errors) =>
+      errors.pipe(
+        scan((retryCount, error) => {
+
+          
           const isRetryableError =
             error instanceof HttpErrorResponse &&
             (error.status === 504 || error.status === 0);
 
-          if (!isRetryableError) {
+            console.log("is retryable",isRetryableError);
+            
+
+          if (!isRetryableError || retryCount >= 4) {
             throw error;
           }
 
           console.warn(
-            `Retrying ${req.method} ${req.url} due to ${error.status}. Attempt #${retryCount}`
+            `Retrying ${req.method} ${req.url} due to ${error.status}. Attempt #${retryCount + 1}`
           );
-          return timer(this.retryDelayMs);
-        },
-      }),
-      catchError((error: HttpErrorResponse) => this.handleAuthError(error, req))
-    );
-  }
+          return retryCount + 1;
+        }, 0),
+        // Espera 8 segundos antes del siguiente intento
+        delay(this.retryDelayMs)
+      )
+    ),
+    catchError((error: HttpErrorResponse) =>
+      this.handleAuthError(error, req)
+    )
+  );
+}
 
   private addAuthToken(req: HttpRequest<any>): HttpRequest<any> {
     const token = this.tokenService.getToken();
